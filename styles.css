@@ -324,6 +324,37 @@ ul.clean li::before {
   display: grid;
   gap: 12px;
 }
+.day-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.day-link {
+  display: block;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(18, 40, 44, .035);
+}
+.day-link strong {
+  display: block;
+  color: var(--teal-dark);
+  font-size: 16px;
+  line-height: 1.35;
+}
+.day-link span {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.day-link.current {
+  border-color: rgba(0,169,157,.35);
+  background: linear-gradient(135deg, var(--teal-tint), #fff);
+}
 .archive-card {
   display: grid;
   grid-template-columns: 88px 1fr;
@@ -393,4 +424,5 @@ footer .line {
   .hero { padding: 50px 20px 38px; }
   main { padding: 20px 14px 10px; }
   .archive-card { grid-template-columns: 78px 1fr; }
+  .day-nav { grid-template-columns: 1fr; }
 }
