@@ -58,15 +58,23 @@ a { color: inherit; text-decoration: none; }
     radial-gradient(circle at 10% 95%, rgba(255,255,255,.12), transparent 34%),
     linear-gradient(135deg, #00a99d 0%, #008b81 55%, #00645d 100%);
 }
-.review-menu {
+.review-menu,
+.group-menu {
   position: absolute;
   z-index: 3;
   top: 18px;
-  right: 18px;
-  width: min(390px, calc(100% - 36px));
   color: var(--ink);
 }
-.review-menu summary {
+.review-menu {
+  right: 18px;
+  width: min(390px, calc(100% - 36px));
+}
+.group-menu {
+  left: 18px;
+  width: min(320px, calc(100% - 36px));
+}
+.review-menu summary,
+.group-menu summary {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +94,11 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
   font-weight: 700;
 }
-.review-menu summary::-webkit-details-marker { display: none; }
+.group-menu summary {
+  margin-left: 0;
+}
+.review-menu summary::-webkit-details-marker,
+.group-menu summary::-webkit-details-marker { display: none; }
 .review-options {
   margin-top: 8px;
   padding: 14px;
@@ -102,6 +114,45 @@ a { color: inherit; text-decoration: none; }
   width: min(390px, calc(100vw - 36px));
   max-height: calc(100vh - 78px);
   overflow: auto;
+}
+.group-options {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.97);
+  border: 1px solid rgba(255,255,255,.46);
+  box-shadow: 0 14px 38px rgba(0, 55, 51, .2);
+}
+.group-menu[open] .group-options {
+  position: fixed;
+  top: 62px;
+  left: max(18px, calc((100vw - 760px) / 2 + 18px));
+  width: min(320px, calc(100vw - 36px));
+  max-height: calc(100vh - 78px);
+  overflow: auto;
+}
+.group-options a {
+  display: block;
+  padding: 11px 12px;
+  border-radius: 12px;
+  color: var(--ink-2);
+}
+.group-options a + a { margin-top: 4px; }
+.group-options a.current {
+  color: var(--teal-dark);
+  background: var(--teal-tint);
+}
+.group-options strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.group-options span {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.5;
 }
 .calendar-panel {
   display: grid;
@@ -524,11 +575,17 @@ footer .line {
 
 @media (max-width: 520px) {
   .site-shell { max-width: 100%; }
-  .hero { padding: 62px 20px 38px; }
+  .hero { padding: 66px 20px 38px; }
   .review-menu { top: 12px; right: 12px; width: min(340px, calc(100% - 24px)); }
+  .group-menu { top: 12px; left: 12px; width: min(260px, calc(100% - 24px)); }
   .review-menu[open] .review-options {
     top: 54px;
     right: 12px;
+    width: calc(100vw - 24px);
+  }
+  .group-menu[open] .group-options {
+    top: 54px;
+    left: 12px;
     width: calc(100vw - 24px);
   }
   main { padding: 20px 14px 10px; }
