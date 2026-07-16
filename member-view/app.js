@@ -200,13 +200,21 @@ function setupAmbientParticles() {
 
 function day() { return days[state.day]; }
 
-function selectDate(key) {
+const availableViews = ['overview', 'actions', 'resources', 'discussion', 'members'];
+
+function navigateView(view) {
+  if (!availableViews.includes(view) || state.view === view) return;
+  state.view = view;
+  render('push');
+}
+
+function selectDate(key, historyMode = 'push') {
   const selected = parseDate(key);
   state.day = key;
   state.lens = 'all';
   if (state.view === 'members') state.view = 'overview';
   state.calendarMonth = new Date(selected.getFullYear(), selected.getMonth(), 1);
-  render();
+  render(historyMode);
 }
 
 function renderCalendar() {
@@ -326,7 +334,7 @@ function renderMissingDay() {
   return `<section class="missing-day"><div class="missing-day-inner"><div class="missing-mark">日</div><p class="kicker">${readableDate(state.day)}</p><h1>这一天还没有日报</h1><p>日期已经可以正常跳转。以后补齐 30 天、60 天的群聊记录后，对应日报会直接出现在这个位置。</p><button type="button" class="today-button" data-today><span>回到今天</span><strong>${today.getMonth() + 1} 月 ${today.getDate()} 日</strong></button></div></section>`;
 }
 
-function render() {
+function render(historyMode = 'replace') {
   const data = day();
   const isMembersView = state.view === 'members';
   const selectedDateLabel = data?.dateLabel || readableDate(state.day);
@@ -350,14 +358,16 @@ function render() {
   else if (state.view === 'resources') content.innerHTML = renderResources();
   else if (state.view === 'discussion') content.innerHTML = renderDiscussion();
   else content.innerHTML = renderOverview();
-  history.replaceState(null, '', `#${state.day}/${state.view}`);
+  const nextUrl = `#${state.day}/${state.view}`;
+  if (historyMode === 'push') history.pushState({ day: state.day, view: state.view }, '', nextUrl);
+  else if (historyMode === 'replace') history.replaceState({ day: state.day, view: state.view }, '', nextUrl);
   bindDynamicEvents();
   document.querySelector('.workspace-scroll').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function bindDynamicEvents() {
-  content.querySelectorAll('[data-lens]').forEach((button) => button.addEventListener('click', () => { state.lens = button.dataset.lens; render(); }));
-  content.querySelectorAll('[data-go-view]').forEach((button) => button.addEventListener('click', () => { state.view = button.dataset.goView; render(); }));
+  content.querySelectorAll('[data-lens]').forEach((button) => button.addEventListener('click', () => { state.lens = button.dataset.lens; render('none'); }));
+  content.querySelectorAll('[data-go-view]').forEach((button) => button.addEventListener('click', () => navigateView(button.dataset.goView)));
   content.querySelectorAll('[data-action]').forEach((input) => input.addEventListener('change', () => {
     const key = `growth-action-${input.dataset.action}`;
     if (input.checked) localStorage.setItem(key, 'done'); else localStorage.removeItem(key);
@@ -370,8 +380,8 @@ function bindDynamicEvents() {
   });
 }
 
-document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => { state.view = button.dataset.view; render(); }));
-document.querySelector('[data-member-entry]').addEventListener('click', () => { state.view = 'members'; render(); });
+document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => navigateView(button.dataset.view)));
+document.querySelector('[data-member-entry]').addEventListener('click', () => navigateView('members'));
 document.querySelector('.sidebar [data-today]').addEventListener('click', () => selectDate(todayKey));
 document.querySelector('[data-calendar-prev]').addEventListener('click', () => {
   state.calendarMonth = new Date(state.calendarMonth.getFullYear(), state.calendarMonth.getMonth() - 1, 1);
@@ -401,8 +411,19 @@ if (isValidDateKey(hashDay)) {
   const selected = parseDate(hashDay);
   state.calendarMonth = new Date(selected.getFullYear(), selected.getMonth(), 1);
 }
-if (['overview', 'actions', 'resources', 'discussion', 'members'].includes(hashView)) state.view = hashView;
+if (availableViews.includes(hashView)) state.view = hashView;
 render();
+window.addEventListener('popstate', () => {
+  const [previousDay, previousView] = window.location.hash.slice(1).split('/');
+  if (isValidDateKey(previousDay)) {
+    state.day = previousDay;
+    const selected = parseDate(previousDay);
+    state.calendarMonth = new Date(selected.getFullYear(), selected.getMonth(), 1);
+  }
+  state.view = availableViews.includes(previousView) ? previousView : 'overview';
+  state.lens = 'all';
+  render('none');
+});
 setupAmbientParticles();
 refreshMembers();
 window.setInterval(refreshMembers, 60_000);
