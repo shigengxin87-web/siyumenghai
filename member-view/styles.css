@@ -430,40 +430,14 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
   .member-entry-copy strong { font-size: 15px; }
   .sidebar-note { display: none; }
 
-  .workspace-header { min-height: 54px; padding-block: 5px; }
-  .current-context p { font-size: 11px; }
-  .current-context h2 { margin-top: 1px; font-size: 18px; }
-  .copy-button { min-height: 36px; padding: 6px 14px; font-size: 12px; }
-  .view-tabs { min-height: 44px; padding-block: 3px; }
-  .view-tab { min-height: 34px; padding: 5px 11px; font-size: 13px; }
-  .view-tab span { width: 22px; height: 22px; }
-  .workspace-scroll { padding-top: 8px; padding-bottom: 8px; }
-  .dashboard-grid { gap: 8px; }
-  .lead-card, .stats-card { height: 150px; min-height: 150px; }
-  .lead-card { justify-content: flex-start; padding: 13px 20px; }
-  .lead-card::before { height: 5px; }
-  .lead-card h1 { margin: 3px 0 5px; font-size: clamp(25px, 2.6vw, 30px); line-height: 1.08; letter-spacing: -.7px; }
-  .lead-card > p:last-child { display: -webkit-box; overflow: hidden; font-size: 13px; line-height: 1.42; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-  .stats-card { padding: 9px; gap: 6px; }
-  .stat { padding: 9px; border-radius: 12px; }
-  .stat strong { font-size: 28px; }
-  .stat span { margin-top: 4px; font-size: 11px; }
-  .insights-card, .preview-card { height: 194px; overflow: hidden; padding: 12px 14px; }
-  .card-heading { margin-bottom: 6px; }
-  .card-heading h2 { margin-top: 1px; font-size: 18px; }
-  .kicker { font-size: 10px; }
-  .lens-options { gap: 3px; }
-  .lens-chip { min-height: 24px; padding: 2px 7px; font-size: 10px; }
-  .insight-stack { gap: 4px; }
-  .insight-row { grid-template-columns: 30px minmax(0, 1fr); gap: 7px; padding: 4px 8px; border-radius: 10px; }
-  .insight-row > span { width: 28px; height: 28px; border-radius: 8px; font-size: 10px; }
-  .insight-row .kicker { display: none; }
-  .insight-row h3 { overflow: hidden; font-size: 14px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
-  .insight-row p:last-child { overflow: hidden; margin-top: 1px; font-size: 11px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
-  .preview-card ol { gap: 2px; }
-  .preview-card li { grid-template-columns: 23px 1fr; gap: 7px; padding: 3px 0; font-size: 12px; }
-  .preview-card li span { width: 21px; height: 21px; border-radius: 6px; font-size: 9px; }
-  .text-button { padding: 5px 9px; font-size: 11px; }
+  .workspace-header { min-height: 62px; padding-block: 8px; }
+  .view-tabs { min-height: 48px; padding-block: 4px; }
+  .view-tab { min-height: 36px; }
+  .workspace-scroll { padding-top: 14px; padding-bottom: 18px; }
+  .lead-card { justify-content: flex-start; min-height: 0; padding: 22px 26px; }
+  .lead-card h1 { margin: 6px 0 9px; font-size: clamp(30px, 3.2vw, 38px); line-height: 1.12; letter-spacing: -1px; }
+  .lead-card > p:last-child { font-size: 15px; line-height: 1.58; }
+  .stats-card { min-height: 0; }
 }
 
 @media (max-width: 760px) {
