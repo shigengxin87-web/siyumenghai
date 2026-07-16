@@ -4,9 +4,9 @@ const days = {
     title: '别急着解决表面问题，先找到真正想要的结果',
     summary: '当客户对一个“痛点”迟迟没有行动，可能不是他不够痛，而是我们只看到了问题，没有看见他真正想得到的身份、结果和选择。',
     insights: [
-      { roles: ['product', 'content'], tag: '产品表达', title: '客户买的不是“改善驼背”，而是更接近理想的自己', text: '同一个解决方案，只要连接到更具体、更渴望的结果，行动意愿就会完全不同。' },
-      { roles: ['product', 'content'], tag: '教育产品', title: '提分只是数字，选择权才是更有力量的价值', text: '“提高十几分”是功能，“超过更多竞争者、拥有更多人生选择”才是意义。' },
-      { roles: ['private', 'content'], tag: '平台风控', title: '投流受限时，先把已有用户接住', text: '暂停硬投，优化承接、转化和交付，同时养备用号，比继续和审核较劲更稳。' }
+      { roles: ['product', 'content'], tag: '产品表达', source: '群内需求讨论', time: '19:01', title: '客户买的不是“改善驼背”，而是更接近理想的自己', text: '同一个解决方案，只要连接到更具体、更渴望的结果，行动意愿就会完全不同。' },
+      { roles: ['product', 'content'], tag: '教育产品', source: '一月语文相关讨论', time: '19:01', title: '提分只是数字，选择权才是更有力量的价值', text: '“提高十几分”是功能，“超过更多竞争者、拥有更多人生选择”才是意义。' },
+      { roles: ['private', 'content'], tag: '平台风控', source: '群友共同讨论', time: '21:54', title: '投流受限时，先把已有用户接住', text: '暂停硬投，优化承接、转化和交付，同时养备用号，比继续和审核较劲更稳。' }
     ],
     actions: [
       { title: '重写一个产品卖点', text: '分别写出客户的“表层问题”和“真正想要的结果”。' },
@@ -31,9 +31,9 @@ const days = {
     title: '平台限制成交动作，但限制不了内容建立信任',
     summary: '抖音卖课受限后，更值得验证的路径是：用高质量内容留下钩子，让公域负责遇见，让私域负责理解、成交和复购。',
     insights: [
-      { roles: ['content', 'private'], tag: '内容获客', title: '不挂车的直播，也可以是一条完整生意链路', text: '讲内容、放钩子、引导进入私域，再完成成交和复购。' },
-      { roles: ['product', 'private'], tag: '专业定位', title: '一个具体标签，胜过一长串能力介绍', text: '【张聪】团队四年专注头部 IP 线下课操盘，形成强烈的专业心智。' },
-      { roles: ['private', 'product'], tag: '资源撮合', title: '好社群会把真实需求快速变成可信连接', text: '从漫剧粉需求到询价、核对供量再建群对接，社群降低了资源匹配成本。' }
+      { roles: ['content', 'private'], tag: '内容获客', source: '群友补充讨论', time: '19:48', title: '不挂车的直播，也可以是一条完整生意链路', text: '讲内容、放钩子、引导进入私域，再完成成交和复购。' },
+      { roles: ['product', 'private'], tag: '专业定位', source: '张聪', time: '13:26', title: '一个具体标签，胜过一长串能力介绍', text: '【张聪】团队四年专注头部 IP 线下课操盘，形成强烈的专业心智。' },
+      { roles: ['private', 'product'], tag: '资源撮合', source: '姚继伟 × 石更新', time: '21:29', title: '好社群会把真实需求快速变成可信连接', text: '从漫剧粉需求到询价、核对供量再建群对接，社群降低了资源匹配成本。' }
     ],
     actions: [
       { title: '画出五步成交链路', text: '标出内容、钩子、私域、成交和复购每一步的动作与数据。' },
@@ -57,9 +57,9 @@ const days = {
     title: '迁移账号，不只是换工具，而是在搬迁信任资产',
     summary: '已有好友和多年朋友圈沉淀的 B 号，比空白 C 号更适合作为企微迁移基础。历史内容和关系链，本身就是新客户判断你的依据。',
     insights: [
-      { roles: ['private', 'content'], tag: '信任资产', title: '多年朋友圈不是旧内容，而是持续工作的信任证明', text: '新客户通过历史内容理解你的身份、专业和做事方式，空白账号很难立刻替代。' },
-      { roles: ['private'], tag: '企微迁移', title: '选择 B 号，是把关系链一起带进新的运营体系', text: '已有合作老师好友、发过多年朋友圈的账号，更适合承接后续家长关系。' },
-      { roles: ['private', 'product'], tag: '经营韧性', title: '个微与企微双备份，是给客户关系增加容错', text: '既保留个人信任，又利用企微管理群权限和客户标签。' }
+      { roles: ['private', 'content'], tag: '信任资产', source: '一月语文 × 石更新', time: '12:54', title: '多年朋友圈不是旧内容，而是持续工作的信任证明', text: '新客户通过历史内容理解你的身份、专业和做事方式，空白账号很难立刻替代。' },
+      { roles: ['private'], tag: '企微迁移', source: '一月语文 × 石更新', time: '12:54', title: '选择 B 号，是把关系链一起带进新的运营体系', text: '已有合作老师好友、发过多年朋友圈的账号，更适合承接后续家长关系。' },
+      { roles: ['private', 'product'], tag: '经营韧性', source: '一月语文 × 石更新', time: '12:54', title: '个微与企微双备份，是给客户关系增加容错', text: '既保留个人信任，又利用企微管理群权限和客户标签。' }
     ],
     actions: [
       { title: '盘点 B 号资产', text: '列出好友结构、朋友圈主题、客户反馈和专业证明。' },
@@ -200,7 +200,7 @@ function setupAmbientParticles() {
 
 function day() { return days[state.day]; }
 
-const availableViews = ['overview', 'actions', 'resources', 'discussion', 'members'];
+const availableViews = ['overview', 'actions', 'weekly', 'topics', 'resources', 'discussion', 'members'];
 
 function navigateView(view) {
   if (!availableViews.includes(view) || state.view === view) return;
@@ -249,7 +249,7 @@ function renderOverview() {
   const data = day();
   const visibleInsights = data.insights.filter((item) => state.lens === 'all' || item.roles.includes(state.lens));
   const insights = visibleInsights.length
-    ? visibleInsights.map((item, index) => `<article class="insight-row"><span>0${index + 1}</span><div><p class="kicker">${item.tag}</p><h3>${item.title}</h3><p>${item.text}</p></div></article>`).join('')
+    ? visibleInsights.map((item, index) => `<article class="insight-row"><span>0${index + 1}</span><div><div class="insight-eyebrow"><p class="kicker">${item.tag}</p><button type="button" class="source-link" data-go-view="discussion">来自 ${item.source} · ${item.time}</button></div><h3>${item.title}</h3><p>${item.text}</p></div></article>`).join('')
     : '<div class="empty-state">今天暂时没有这个方向的内容，换一个筛选看看。</div>';
 
   return `<div class="dashboard-grid">
@@ -263,6 +263,47 @@ function renderOverview() {
 function renderActions() {
   const data = day();
   return `<header class="page-head"><div><p class="kicker">把启发变成动作</p><h1>今天做完这三件小事</h1></div><p>不用一次改变很多。完成一个动作，就让群聊里的信息真正进入你的业务和生活。</p></header><div class="action-grid">${data.actions.map((item, index) => { const key = `${state.day}-${index}`; const checked = localStorage.getItem(`growth-action-${key}`) === 'done'; return `<label class="card action-card"><input type="checkbox" data-action="${key}" ${checked ? 'checked' : ''}><span class="action-number">0${index + 1}</span><h2>${item.title}</h2><p>${item.text}</p></label>`; }).join('')}</div><div class="action-tip"><strong>行动提示：</strong>勾选状态会保存在这台设备上，下次打开仍然保留。</div>`;
+}
+
+function reportEntries() {
+  return Object.entries(days).sort(([left], [right]) => left.localeCompare(right));
+}
+
+function shortDate(key) {
+  const date = parseDate(key);
+  return `${date.getMonth() + 1} 月 ${date.getDate()} 日`;
+}
+
+function completedActionCount() {
+  return reportEntries().reduce((total, [key, report]) => total + report.actions.filter((_, index) => localStorage.getItem(`growth-action-${key}-${index}`) === 'done').length, 0);
+}
+
+function renderWeekly() {
+  const reports = reportEntries();
+  const messageCount = reports.reduce((total, [, report]) => total + report.messages, 0);
+  const themeCount = reports.reduce((total, [, report]) => total + report.themesCount, 0);
+  const actionCount = reports.reduce((total, [, report]) => total + report.actions.length, 0);
+  const completed = completedActionCount();
+  const dayCards = reports.map(([key, report], index) => `<article class="week-day-card"><div class="week-day-index">0${index + 1}</div><div><p>${shortDate(key)} · ${report.weekday}</p><h3>${report.title}</h3><span>${report.messages} 条消息 · ${report.themesCount} 个主题</span></div><button type="button" data-open-day="${key}">查看当天</button></article>`).join('');
+  return `<header class="page-head weekly-head"><div><p class="kicker">WEEKLY REVIEW · 本周回顾</p><h1>三天的讨论，沉淀成一条成长路径</h1></div><p>从找到真实需求，到用内容建立信任，再到把关系沉淀成长期资产。</p></header>
+    <section class="weekly-summary card"><div><p class="kicker">本周主线</p><h2>先看见真正的结果，再用内容与关系把价值留下来</h2><p>这几天的讨论不是三个孤立话题，而是一条完整链路：理解需求 → 表达价值 → 建立信任 → 沉淀关系资产。</p></div><div class="weekly-metrics"><span><strong>${messageCount}</strong>群聊消息</span><span><strong>${themeCount}</strong>讨论主题</span><span><strong>${completed}/${actionCount}</strong>行动完成</span></div></section>
+    <section class="week-day-list" aria-label="本周日报">${dayCards}</section>`;
+}
+
+const topicDefinitions = [
+  { id: 'content', number: '01', label: '做内容', title: '用内容建立理解和信任', description: '从表达钩子、直播路径到朋友圈信任资产，持续积累能被看见的专业证明。' },
+  { id: 'product', number: '02', label: '做产品', title: '从表面问题找到真实结果', description: '把功能表达向后追问，直到看见客户真正想获得的结果、身份和选择。' },
+  { id: 'private', number: '03', label: '做私域', title: '把关系沉淀成经营资产', description: '用承接、迁移、备份和资源连接，让一次触达变成可持续的客户关系。' }
+];
+
+function renderTopics() {
+  const reports = reportEntries();
+  const collections = topicDefinitions.map((topic) => {
+    const items = reports.flatMap(([key, report]) => report.insights.filter((insight) => insight.roles.includes(topic.id)).map((insight) => ({ ...insight, key })));
+    const itemList = items.map((item) => `<li><button type="button" data-open-day="${item.key}"><span>${shortDate(item.key)}</span><strong>${item.title}</strong><small>${item.source} · ${item.time}</small></button></li>`).join('');
+    return `<article class="topic-card card"><div class="topic-number">${topic.number}</div><p class="kicker">${topic.label} · ${items.length} 条沉淀</p><h2>${topic.title}</h2><p>${topic.description}</p><ol>${itemList}</ol></article>`;
+  }).join('');
+  return `<header class="page-head"><div><p class="kicker">KNOWLEDGE PATHS · 专题沉淀</p><h1>不是看完就过去，而是越用越厚</h1></div><p>日报会按主题自动归档。以后即使积累 30 天、60 天，也能从自己的问题出发重新找到内容。</p></header><section class="topic-grid">${collections}</section>`;
 }
 
 function renderResources() {
@@ -339,10 +380,16 @@ function render(historyMode = 'replace') {
   const isMembersView = state.view === 'members';
   const selectedDateLabel = data?.dateLabel || readableDate(state.day);
   const copyButton = document.querySelector('[data-copy]');
-  document.querySelector('[data-current-date]').textContent = isMembersView ? `群友名录 · ${members.length} 位成员` : selectedDateLabel;
+  const contextLabels = {
+    members: `群友名录 · ${members.length} 位成员`,
+    weekly: '本周回顾 · 7 月 14 日—7 月 16 日',
+    topics: '专题沉淀 · 3 个成长方向'
+  };
+  document.querySelector('[data-current-date]').textContent = contextLabels[state.view] || selectedDateLabel;
   copyButton.disabled = !data;
-  copyButton.hidden = isMembersView;
-  document.title = isMembersView ? '【石更新】成长朋友圈 · 群友名录' : `【石更新】成长朋友圈 · ${selectedDateLabel} 群友版`;
+  copyButton.hidden = ['members', 'weekly', 'topics'].includes(state.view);
+  const titleLabels = { members: '群友名录', weekly: '本周回顾', topics: '专题沉淀' };
+  document.title = titleLabels[state.view] ? `【石更新】成长朋友圈 · ${titleLabels[state.view]}` : `【石更新】成长朋友圈 · ${selectedDateLabel} 群友版`;
   renderCalendar();
   document.querySelectorAll('[data-view]').forEach((button) => {
     const active = button.dataset.view === state.view;
@@ -353,6 +400,8 @@ function render(historyMode = 'replace') {
   memberEntry.classList.toggle('is-active', isMembersView);
   memberEntry.setAttribute('aria-selected', String(isMembersView));
   if (state.view === 'members') content.innerHTML = renderMembers();
+  else if (state.view === 'weekly') content.innerHTML = renderWeekly();
+  else if (state.view === 'topics') content.innerHTML = renderTopics();
   else if (!data) content.innerHTML = renderMissingDay();
   else if (state.view === 'actions') content.innerHTML = renderActions();
   else if (state.view === 'resources') content.innerHTML = renderResources();
@@ -368,6 +417,10 @@ function render(historyMode = 'replace') {
 function bindDynamicEvents() {
   content.querySelectorAll('[data-lens]').forEach((button) => button.addEventListener('click', () => { state.lens = button.dataset.lens; render('none'); }));
   content.querySelectorAll('[data-go-view]').forEach((button) => button.addEventListener('click', () => navigateView(button.dataset.goView)));
+  content.querySelectorAll('[data-open-day]').forEach((button) => button.addEventListener('click', () => {
+    state.view = 'overview';
+    selectDate(button.dataset.openDay);
+  }));
   content.querySelectorAll('[data-action]').forEach((input) => input.addEventListener('change', () => {
     const key = `growth-action-${input.dataset.action}`;
     if (input.checked) localStorage.setItem(key, 'done'); else localStorage.removeItem(key);
