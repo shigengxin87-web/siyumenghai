@@ -1,4 +1,5 @@
 :root {
+  --desktop-scale: .9;
   --paper: #f9fafb;
   --surface: #ffffff;
   --ink: #111827;
@@ -38,6 +39,18 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100dvh;
   overflow: hidden;
+}
+
+/* Give laptop visitors the same complete-page view as a 90% browser zoom,
+   while keeping mobile text and touch targets at their original size. */
+@media (min-width: 761px) {
+  body { overflow: hidden; }
+  .app-shell {
+    width: calc(100% / var(--desktop-scale));
+    height: calc(100dvh / var(--desktop-scale));
+    transform: scale(var(--desktop-scale));
+    transform-origin: top left;
+  }
 }
 
 .sidebar {
