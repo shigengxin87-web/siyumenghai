@@ -405,6 +405,41 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
   .member-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
+/* MacBook windows often have much less usable height after browser chrome.
+   This mode keeps the full calendar and directory entry in the first view. */
+@media (min-width: 761px) and (max-height: 650px) {
+  .sidebar { padding: 14px 18px 10px; overflow: hidden; }
+  .brand { gap: 10px; }
+  .brand-mark { width: 40px; height: 40px; border-radius: 11px; font-size: 18px; }
+  .brand strong { font-size: 17px; }
+  .brand small { margin-top: 0; font-size: 11px; }
+  .group-intro { margin-top: 11px; }
+  .group-intro > p { display: none; }
+  .group-intro h1 { font-size: 22px; line-height: 1.24; letter-spacing: -.4px; }
+  .calendar-panel { margin-top: 11px; padding: 11px 12px; border-radius: 16px; }
+  .calendar-heading strong { font-size: 16px; }
+  .nav-label { font-size: 9px; }
+  .calendar-controls button { width: 28px; height: 28px; border-radius: 8px; font-size: 19px; }
+  .today-button { min-height: 32px; margin: 6px 0; padding: 4px 9px; }
+  .calendar-weekdays { margin-bottom: 2px; }
+  .calendar-day { height: 24px; min-height: 0; aspect-ratio: auto; border-radius: 7px; font-size: 11px; }
+  .calendar-day.has-report::after { bottom: 1px; width: 3px; height: 3px; }
+  .calendar-legend { display: none; }
+  .member-entry { grid-template-columns: 40px minmax(0, 1fr) auto; min-height: 52px; margin-top: 7px; padding: 5px 10px; }
+  .member-entry-mark { width: 36px; height: 36px; border-radius: 11px; font-size: 14px; }
+  .member-entry-copy strong { font-size: 15px; }
+  .sidebar-note { display: none; }
+
+  .workspace-header { min-height: 62px; padding-block: 8px; }
+  .view-tabs { min-height: 48px; padding-block: 4px; }
+  .view-tab { min-height: 36px; }
+  .workspace-scroll { padding-top: 14px; padding-bottom: 18px; }
+  .lead-card { justify-content: flex-start; min-height: 0; padding: 22px 26px; }
+  .lead-card h1 { margin: 6px 0 9px; font-size: clamp(30px, 3.2vw, 38px); line-height: 1.12; letter-spacing: -1px; }
+  .lead-card > p:last-child { font-size: 15px; line-height: 1.58; }
+  .stats-card { min-height: 0; }
+}
+
 @media (max-width: 760px) {
   body { font-size: 17px; }
   .app-shell { display: block; height: auto; overflow: visible; }
