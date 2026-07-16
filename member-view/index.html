@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ECFDF5">
+  <title>【石更新】成长朋友圈 · 群友版</title>
+  <meta name="description" content="面向【石更新】成长朋友圈群友的每日启发、行动建议与资源连接。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="成长朋友圈群友版首页">
+        <span class="brand-mark">石</span>
+        <span><strong>成长朋友圈</strong><small>群友学习版</small></span>
+      </a>
+
+      <div class="group-intro">
+        <p><span class="live-dot"></span>单群专属学习站</p>
+        <h1>每天从群里，<br>带走一点真东西</h1>
+      </div>
+
+      <section class="calendar-panel" aria-label="日报日历">
+        <div class="calendar-heading">
+          <div>
+            <p class="nav-label">日报日历</p>
+            <strong data-month-label>2026 年 7 月</strong>
+          </div>
+          <div class="calendar-controls">
+            <button type="button" data-calendar-prev aria-label="上一个月">‹</button>
+            <button type="button" data-calendar-next aria-label="下一个月">›</button>
+          </div>
+        </div>
+
+        <button type="button" class="today-button" data-today>
+          <span>回到今天</span>
+          <strong data-today-label>7 月 16 日</strong>
+        </button>
+
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+        </div>
+        <div class="calendar-grid" data-calendar role="grid" aria-label="选择任意日期"></div>
+        <div class="calendar-legend"><span><i></i>已有日报</span><span>点击任意日期即可跳转</span></div>
+      </section>
+
+      <button type="button" class="member-entry" data-member-entry aria-selected="false">
+        <span class="member-entry-mark">友</span>
+        <span class="member-entry-copy"><small>独立入口</small><strong>群友名录</strong></span>
+        <span class="member-entry-count"><b data-member-count>21</b> 人</span>
+      </button>
+
+      <div class="sidebar-note">
+        <p>内容基于群聊记录整理，帮助群友快速学习和行动，不替代原始讨论。</p>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <canvas class="ambient-particles" data-ambient-particles aria-hidden="true"></canvas>
+      <header class="workspace-header">
+        <div class="current-context">
+          <p>【石更新】成长朋友圈</p>
+          <h2 data-current-date>2026 年 7 月 16 日</h2>
+        </div>
+        <button class="copy-button" type="button" data-copy>复制今日重点</button>
+      </header>
+
+      <nav class="view-tabs" aria-label="内容栏目">
+        <button type="button" data-view="overview" class="view-tab is-active" aria-selected="true"><span>01</span>今日概览</button>
+        <button type="button" data-view="actions" class="view-tab" aria-selected="false"><span>02</span>行动清单</button>
+        <button type="button" data-view="resources" class="view-tab" aria-selected="false"><span>03</span>资源连接</button>
+        <button type="button" data-view="discussion" class="view-tab" aria-selected="false"><span>04</span>原始讨论</button>
+      </nav>
+
+      <main class="workspace-scroll">
+        <div id="app-content" aria-live="polite"></div>
+      </main>
+    </section>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite" hidden>今日重点已复制</div>
+  <script src="./app.js"></script>
+</body>
+</html>
