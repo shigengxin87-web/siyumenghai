@@ -173,6 +173,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 17px;
   cursor: pointer;
 }
+.knowledge-entry { margin-top: 8px; color: inherit; text-decoration: none; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .member-entry-mark { display: grid; place-items: center; width: 44px; height: 44px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 14px; font-size: 16px; font-weight: 900; }
 .member-entry-copy small, .member-entry-copy strong { display: block; line-height: 1.35; }
 .member-entry-copy small { color: var(--green); font-size: 9px; font-weight: 800; letter-spacing: 1.4px; }
