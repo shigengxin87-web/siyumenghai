@@ -1,4 +1,5 @@
 const days = {
+  ...archiveDays,
   '2026-07-14': {
     dateLabel: '2026 年 7 月 14 日', weekday: '星期二', messages: 36, themesCount: 5, readTime: '5 分钟',
     title: '别急着解决表面问题，先找到真正想要的结果',
@@ -281,14 +282,16 @@ function completedActionCount() {
 
 function renderWeekly() {
   const reports = reportEntries();
+  const firstReportDate = shortDate(reports[0][0]);
+  const lastReportDate = shortDate(reports.at(-1)[0]);
   const messageCount = reports.reduce((total, [, report]) => total + report.messages, 0);
   const themeCount = reports.reduce((total, [, report]) => total + report.themesCount, 0);
   const actionCount = reports.reduce((total, [, report]) => total + report.actions.length, 0);
   const completed = completedActionCount();
   const dayCards = reports.map(([key, report], index) => `<article class="week-day-card"><div class="week-day-index">0${index + 1}</div><div><p>${shortDate(key)} · ${report.weekday}</p><h3>${report.title}</h3><span>${report.messages} 条消息 · ${report.themesCount} 个主题</span></div><button type="button" data-open-day="${key}">查看当天</button></article>`).join('');
-  return `<header class="page-head weekly-head"><div><p class="kicker">WEEKLY REVIEW · 本周回顾</p><h1>三天的讨论，沉淀成一条成长路径</h1></div><p>从找到真实需求，到用内容建立信任，再到把关系沉淀成长期资产。</p></header>
-    <section class="weekly-summary card"><div><p class="kicker">本周主线</p><h2>先看见真正的结果，再用内容与关系把价值留下来</h2><p>这几天的讨论不是三个孤立话题，而是一条完整链路：理解需求 → 表达价值 → 建立信任 → 沉淀关系资产。</p></div><div class="weekly-metrics"><span><strong>${messageCount}</strong>群聊消息</span><span><strong>${themeCount}</strong>讨论主题</span><span><strong>${completed}/${actionCount}</strong>行动完成</span></div></section>
-    <section class="week-day-list" aria-label="本周日报">${dayCards}</section>`;
+  return `<header class="page-head weekly-head"><div><p class="kicker">PERIOD REVIEW · 阶段回顾</p><h1>${reports.length} 天的讨论，沉淀成一条成长路径</h1></div><p>${firstReportDate}—${lastReportDate}，从社群启动、内容获客到产品与私域经营。</p></header>
+    <section class="weekly-summary card"><div><p class="kicker">阶段主线</p><h2>先看见真正的结果，再用内容与关系把价值留下来</h2><p>${reports.length} 天的讨论不是孤立话题，而是一条完整链路：理解需求 → 表达价值 → 建立信任 → 沉淀关系资产。</p></div><div class="weekly-metrics"><span><strong>${messageCount}</strong>群聊消息</span><span><strong>${themeCount}</strong>讨论主题</span><span><strong>${completed}/${actionCount}</strong>行动完成</span></div></section>
+    <section class="week-day-list" aria-label="阶段日报">${dayCards}</section>`;
 }
 
 const topicDefinitions = [
@@ -381,9 +384,10 @@ function render(historyMode = 'replace') {
   const isMembersView = state.view === 'members';
   const selectedDateLabel = data?.dateLabel || readableDate(state.day);
   const copyButton = document.querySelector('[data-copy]');
+  const reportDates = Object.keys(days).sort();
   const contextLabels = {
     members: `群友名录 · ${members.length} 位成员`,
-    weekly: '本周回顾 · 7 月 14 日—7 月 16 日',
+    weekly: `阶段回顾 · ${shortDate(reportDates[0])}—${shortDate(reportDates.at(-1))}`,
     topics: '专题沉淀 · 3 个成长方向'
   };
   document.querySelector('[data-current-date]').textContent = contextLabels[state.view] || selectedDateLabel;
