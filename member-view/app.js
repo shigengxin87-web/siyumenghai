@@ -307,7 +307,7 @@ function renderTopics() {
     const itemList = items.map((item) => `<li><button type="button" data-open-day="${item.key}"><span>${shortDate(item.key)}</span><strong>${item.title}</strong><small>${item.source} · ${item.time}</small></button></li>`).join('');
     return `<article class="topic-card card"><div class="topic-number">${topic.number}</div><p class="kicker">${topic.label} · ${items.length} 条沉淀</p><h2>${topic.title}</h2><p>${topic.description}</p><ol>${itemList}</ol></article>`;
   }).join('');
-  return `<header class="page-head"><div><p class="kicker">KNOWLEDGE PATHS · 专题沉淀</p><h1>不是看完就过去，而是越用越厚</h1></div><p>日报会按主题自动归档。以后即使积累 30 天、60 天，也能从自己的问题出发重新找到内容。</p></header><section class="topic-grid">${collections}</section>`;
+  return `<header class="page-head topics-head"><div><p class="kicker">KNOWLEDGE PATHS · 专题沉淀</p><h1>不是看完就过去，而是越用越厚</h1></div><p>日报会按主题自动归档。以后即使积累 30 天、60 天，也能从自己的问题出发重新找到内容。</p></header><section class="topic-grid">${collections}</section>`;
 }
 
 function renderResources() {
