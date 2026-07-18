@@ -80,14 +80,12 @@ a { color: inherit; text-decoration: none; }
 .brand strong { color: var(--ink); font-size: 19px; }
 .brand small { margin-top: 2px; color: var(--muted); font-size: 13px; }
 
-.group-intro { margin-top: 38px; }
-.group-intro > p:first-child { display: flex; align-items: center; gap: 8px; margin: 0 0 9px; color: var(--green); font-size: 12px; font-weight: 800; letter-spacing: 1.5px; }
-.live-dot { display: inline-block; width: 7px; height: 7px; margin-right: 2px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 5px rgba(5, 150, 105, .10); animation: live-pulse 2.8s ease-in-out infinite; }
-.group-intro h1 { margin: 0; color: var(--ink); font-size: 30px; line-height: 1.35; letter-spacing: -.7px; }
-.group-description { max-width: 270px; margin: 14px 0 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.group-intro { margin-top: 18px; }
+.group-intro h1 { margin: 0; color: var(--ink); font-size: 21px; line-height: 1.3; letter-spacing: -.6px; white-space: nowrap; }
+.group-description { max-width: none; margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; white-space: nowrap; }
 
 .calendar-panel {
-  margin-top: 34px;
+  margin-top: 18px;
   padding: 20px;
   background: rgba(255, 255, 255, .84);
   border: 1px solid rgba(5, 150, 105, .14);
@@ -385,10 +383,6 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
 .missing-day .today-button { display: inline-flex; width: auto; gap: 28px; margin: 26px auto 0; padding-inline: 18px; }
 .toast { position: fixed; z-index: 100; left: 50%; bottom: 24px; padding: 11px 18px; color: #fff; background: var(--ink); border-radius: 999px; box-shadow: var(--shadow); transform: translateX(-50%); font-size: 14px; }
 
-@keyframes live-pulse {
-  0%, 100% { box-shadow: 0 0 0 5px rgba(5, 150, 105, .09); }
-  50% { box-shadow: 0 0 0 9px rgba(5, 150, 105, 0); }
-}
 @keyframes content-arrive {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -412,10 +406,10 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
   .sidebar { padding: 22px 24px 16px; }
   .brand-mark { width: 46px; height: 46px; border-radius: 13px; font-size: 20px; }
   .brand strong { font-size: 18px; }
-  .group-intro { margin-top: 25px; }
-  .group-intro h1 { font-size: 27px; }
-  .group-description { margin-top: 9px; font-size: 11px; line-height: 1.5; }
-  .calendar-panel { margin-top: 22px; padding: 16px; border-radius: 18px; }
+  .group-intro { margin-top: 14px; }
+  .group-intro h1 { font-size: 21px; }
+  .group-description { margin-top: 6px; font-size: 11px; line-height: 1.5; }
+  .calendar-panel { margin-top: 14px; padding: 16px; border-radius: 18px; }
   .calendar-heading strong { font-size: 17px; }
   .calendar-controls button { width: 32px; height: 32px; }
   .today-button { min-height: 40px; margin: 11px 0 9px; }
@@ -455,7 +449,7 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
 @media (max-width: 1080px) {
   .app-shell { grid-template-columns: 290px minmax(0, 1fr); }
   .sidebar { padding-inline: 20px; }
-  .group-intro h1 { font-size: 25px; }
+  .group-intro h1 { font-size: 19px; }
   .lead-card, .insights-card { grid-column: span 7; }
   .stats-card, .preview-card { grid-column: span 5; }
   .action-grid, .resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -472,10 +466,9 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
   .brand-mark { width: 40px; height: 40px; border-radius: 11px; font-size: 18px; }
   .brand strong { font-size: 17px; }
   .brand small { margin-top: 0; font-size: 11px; }
-  .group-intro { margin-top: 11px; }
-  .group-intro > p { display: none; }
-  .group-intro h1 { font-size: 22px; line-height: 1.24; letter-spacing: -.4px; }
-  .calendar-panel { margin-top: 11px; padding: 11px 12px; border-radius: 16px; }
+  .group-intro { margin-top: 8px; }
+  .group-intro h1 { font-size: 19px; line-height: 1.24; letter-spacing: -.4px; }
+  .calendar-panel { margin-top: 8px; padding: 11px 12px; border-radius: 16px; }
   .calendar-heading strong { font-size: 16px; }
   .nav-label { font-size: 9px; }
   .calendar-controls button { width: 28px; height: 28px; border-radius: 8px; font-size: 19px; }
@@ -504,9 +497,10 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
   .app-shell { display: block; height: auto; overflow: visible; }
   .sidebar { display: block; min-height: auto; padding: 18px 16px 16px; border-right: 0; border-bottom: 1px solid var(--green-line); overflow: visible; }
   .brand-mark { width: 42px; height: 42px; }
-  .group-intro { margin-top: 22px; }
-  .group-intro h1 { font-size: 28px; }
-  .calendar-panel { margin-top: 22px; padding: 16px; }
+  .group-intro { margin-top: 14px; }
+  .group-intro h1 { font-size: 20px; }
+  .group-description { font-size: 12px; }
+  .calendar-panel { margin-top: 14px; padding: 16px; }
   .member-entry { margin-top: 11px; }
   .calendar-day { min-height: 38px; aspect-ratio: auto; font-size: 13px; }
   .calendar-legend { font-size: 10px; }
@@ -568,6 +562,6 @@ button:focus-visible { outline: 3px solid rgba(5, 150, 105, .24); outline-offset
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
   .ambient-particles { display: none; }
-  .live-dot, .lead-card::after, #app-content > * { animation: none !important; }
+  .lead-card::after, #app-content > * { animation: none !important; }
   .card, .copy-button, .view-tab { transition: none !important; }
 }
