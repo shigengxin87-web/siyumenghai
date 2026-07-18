@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
-  <meta name="description" content="粘贴视频号分享链接，使用第三方在线工具查询并下载视频。">
-  <link rel="stylesheet" href="./portal.css?v=20260718-1">
+  <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
+  <link rel="stylesheet" href="./portal.css?v=20260718-2">
 </head>
 <body>
   <div class="portal-shell tool-shell">
@@ -16,20 +16,58 @@
         <span><strong>视频号下载</strong><small>打开想下载的视频，点击分享找到复制链接</small></span>
       </a>
       <div class="portal-actions">
-        <span class="third-party-note">第三方工具 · 仅用于本人拥有或已获授权的内容</span>
+        <span class="usage-note">仅用于本人拥有或已获授权的内容</span>
         <a class="portal-button" href="./">返回首页</a>
       </div>
     </header>
 
-    <main class="tool-frame-wrap">
-      <iframe
-        class="tool-frame"
-        src="https://sph.litao.workers.dev/"
-        title="视频号视频信息查询与下载工具"
-        referrerpolicy="no-referrer"
-        allow="clipboard-read; clipboard-write"
-      ></iframe>
+    <main class="tool-main">
+      <div class="tool-container">
+        <section class="tool-query-card">
+          <div class="tool-heading">
+            <p>视频号工具</p>
+            <h1>粘贴分享链接，下载视频</h1>
+            <span>打开想下载的视频，点击分享，找到“复制链接”后粘贴到下方。</span>
+          </div>
+
+          <form class="download-form" data-download-form>
+            <label class="visually-hidden" for="share-url">视频号分享链接</label>
+            <input id="share-url" data-share-url type="url" inputmode="url" autocomplete="off" placeholder="粘贴视频号分享链接，如 https://weixin.qq.com/sph/xxx" required>
+            <button type="submit" data-query-button>查询视频</button>
+          </form>
+          <p class="tool-status" data-tool-status role="status" aria-live="polite" hidden></p>
+        </section>
+
+        <section class="video-result" data-video-result hidden aria-live="polite">
+          <header class="result-heading"><span>查询结果</span><small>确认内容后即可下载</small></header>
+          <div class="result-layout">
+            <div class="video-preview">
+              <video data-video controls preload="metadata" playsinline></video>
+            </div>
+            <div class="video-details">
+              <div class="author-row">
+                <img data-author-avatar alt="" hidden>
+                <div><small>视频作者</small><strong data-author-name>视频号作者</strong></div>
+              </div>
+              <p class="video-description" data-video-description></p>
+              <div class="video-stats" data-video-stats></div>
+              <div class="download-actions">
+                <button type="button" class="download-button" data-download-video>下载视频</button>
+                <button type="button" class="download-button is-secondary" data-download-raw>下载原始视频</button>
+              </div>
+              <p class="download-tip">如果手机浏览器没有直接保存，请长按视频或在浏览器菜单中选择下载。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-steps" aria-label="使用步骤">
+          <article><span>01</span><div><strong>复制链接</strong><small>在视频号分享菜单里点击“复制链接”</small></div></article>
+          <article><span>02</span><div><strong>查询视频</strong><small>粘贴到输入框，等待系统解析内容</small></div></article>
+          <article><span>03</span><div><strong>保存文件</strong><small>确认封面和作者后选择需要的版本</small></div></article>
+        </section>
+      </div>
     </main>
   </div>
+  <script src="./video-downloader.js?v=20260718-1"></script>
 </body>
 </html>
