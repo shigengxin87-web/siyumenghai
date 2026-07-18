@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260718-3">
+  <link rel="stylesheet" href="./portal.css?v=20260718-4">
 </head>
 <body>
   <div class="portal-shell tool-shell">
@@ -26,16 +26,61 @@
         <section class="tool-query-card">
           <div class="tool-heading">
             <p>视频号工具</p>
-            <h1>粘贴分享链接，下载视频</h1>
-            <span>打开想下载的视频，点击分享，找到“复制链接”后粘贴到下方。</span>
+            <h1>粘贴分享链接，解析视频</h1>
+            <span>支持单条查询、批量粘贴和 Excel 导入。</span>
           </div>
 
-          <form class="download-form" data-download-form>
-            <label class="visually-hidden" for="share-url">视频号分享链接</label>
-            <input id="share-url" data-share-url type="url" inputmode="url" autocomplete="off" placeholder="粘贴视频号分享链接，如 https://weixin.qq.com/sph/xxx" required>
-            <button type="submit" data-query-button>查询视频</button>
-          </form>
-          <p class="tool-status" data-tool-status role="status" aria-live="polite" hidden></p>
+          <div class="mode-switch" role="tablist" aria-label="解析方式">
+            <button type="button" class="is-active" role="tab" aria-selected="true" data-mode-button="single">单条解析</button>
+            <button type="button" role="tab" aria-selected="false" data-mode-button="batch">批量解析</button>
+          </div>
+
+          <div data-mode-panel="single">
+            <form class="download-form" data-download-form>
+              <label class="visually-hidden" for="share-url">视频号分享链接</label>
+              <input id="share-url" data-share-url type="url" inputmode="url" autocomplete="off" placeholder="粘贴视频号分享链接，如 https://weixin.qq.com/sph/xxx" required>
+              <button type="submit" data-query-button>查询视频</button>
+            </form>
+            <p class="tool-status" data-tool-status role="status" aria-live="polite" hidden></p>
+          </div>
+
+          <div class="batch-panel" data-mode-panel="batch" hidden>
+            <label class="batch-label" for="batch-links">一次粘贴多条链接，每行一条；带文字粘贴也会自动提取链接</label>
+            <textarea id="batch-links" data-batch-input rows="7" placeholder="https://weixin.qq.com/sph/xxx&#10;https://weixin.qq.com/sph/xxx"></textarea>
+            <div class="batch-import-row">
+              <label class="batch-file-button" for="batch-file">上传 Excel</label>
+              <input id="batch-file" data-batch-file type="file" accept=".xlsx,.xls,.csv" hidden>
+              <a class="batch-template-link" href="./assets/video-batch-template.xlsx" download>下载 Excel 模板</a>
+              <span data-batch-file-name>表格只在当前浏览器读取，不会上传</span>
+            </div>
+            <div class="batch-start-row">
+              <span data-batch-count>已识别 0 条链接</span>
+              <button type="button" data-batch-start disabled>开始批量解析</button>
+            </div>
+            <p class="tool-status" data-batch-status role="status" aria-live="polite" hidden></p>
+          </div>
+        </section>
+
+        <section class="batch-progress" data-batch-progress hidden aria-live="polite">
+          <header class="batch-progress-heading">
+            <div><span>批量解析进度</span><small data-batch-summary>准备开始</small></div>
+            <div class="batch-control-actions">
+              <button type="button" data-batch-pause disabled>暂停</button>
+              <button type="button" data-batch-cancel disabled>取消</button>
+            </div>
+          </header>
+          <div class="batch-progress-track"><span data-batch-progress-bar></span></div>
+        </section>
+
+        <section class="batch-results" data-batch-results hidden>
+          <header class="batch-results-heading">
+            <div><span>批量解析结果</span><small>成功的视频可以单独下载，也可以在电脑端依次下载</small></div>
+            <div class="batch-result-actions">
+              <button type="button" data-batch-export>导出 Excel</button>
+              <button type="button" class="is-primary" data-batch-download-all>依次下载（电脑）</button>
+            </div>
+          </header>
+          <div class="batch-result-list" data-batch-result-list></div>
         </section>
 
         <section class="video-result" data-video-result hidden aria-live="polite">
@@ -76,6 +121,8 @@
       </div>
     </main>
   </div>
+  <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./video-downloader.js?v=20260718-2"></script>
+  <script src="./video-batch.js?v=20260718-1"></script>
 </body>
 </html>

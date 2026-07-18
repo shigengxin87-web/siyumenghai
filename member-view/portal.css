@@ -81,7 +81,7 @@ button { color: inherit; font: inherit; }
 .usage-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
 .tool-main { flex: 1; padding: clamp(22px, 4vw, 52px); background: rgba(238, 247, 242, .72); }
 .tool-container { width: min(1120px, 100%); margin: 0 auto; }
-.tool-query-card, .video-result, .download-history {
+.tool-query-card, .video-result, .download-history, .batch-progress, .batch-results {
   background: rgba(255, 255, 255, .96);
   border: 1px solid rgba(5, 150, 105, .16);
   border-radius: 24px;
@@ -92,6 +92,9 @@ button { color: inherit; font: inherit; }
 .tool-heading p { margin: 0; color: var(--green); font-size: 11px; font-weight: 900; letter-spacing: 2px; }
 .tool-heading h1 { margin: 8px 0 9px; color: var(--ink); font-size: clamp(28px, 3.5vw, 42px); line-height: 1.2; letter-spacing: -1px; }
 .tool-heading span { color: var(--muted); font-size: 14px; }
+.mode-switch { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; max-width: 360px; margin: 25px auto 0; padding: 5px; background: #f3f6f4; border-radius: 13px; }
+.mode-switch button { min-height: 39px; color: var(--muted); background: transparent; border: 0; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 800; }
+.mode-switch button.is-active { color: var(--green); background: #fff; box-shadow: 0 5px 14px rgba(17, 24, 39, .07); }
 .download-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; max-width: 880px; margin: 28px auto 0; }
 .download-form input {
   min-width: 0;
@@ -121,6 +124,45 @@ button { color: inherit; font: inherit; }
 .download-form button:disabled, .download-button:disabled { opacity: .55; cursor: wait; }
 .tool-status { max-width: 880px; margin: 14px auto 0; padding: 11px 14px; color: var(--green); background: var(--green-soft); border-radius: 11px; text-align: center; font-size: 13px; }
 .tool-status.is-error { color: #b42318; background: #fef3f2; }
+.batch-panel { max-width: 880px; margin: 23px auto 0; }
+.batch-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 12px; font-weight: 750; }
+.batch-panel textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 16px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 13px; outline: none; font: inherit; font-size: 14px; line-height: 1.65; }
+.batch-panel textarea:focus { border-color: var(--green); box-shadow: 0 0 0 4px rgba(5, 150, 105, .10); }
+.batch-import-row, .batch-start-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.batch-file-button, .batch-template-link { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 7px 12px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 800; }
+.batch-import-row > span { min-width: 0; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.batch-start-row { justify-content: space-between; padding-top: 2px; }
+.batch-start-row > span { color: var(--muted); font-size: 12px; }
+.batch-start-row button { min-height: 44px; padding: 9px 20px; color: #fff; background: linear-gradient(135deg, var(--green), var(--green-bright)); border: 0; border-radius: 11px; cursor: pointer; font-size: 13px; font-weight: 850; }
+.batch-start-row button:disabled { opacity: .45; cursor: not-allowed; }
+.batch-progress, .batch-results { overflow: hidden; margin-top: 18px; }
+.batch-progress-heading, .batch-results-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 22px; }
+.batch-progress-heading span, .batch-progress-heading small, .batch-results-heading span, .batch-results-heading small { display: block; }
+.batch-progress-heading span, .batch-results-heading span { color: var(--ink); font-size: 17px; font-weight: 850; }
+.batch-progress-heading small, .batch-results-heading small { margin-top: 3px; color: var(--muted); font-size: 11px; }
+.batch-control-actions, .batch-result-actions { display: flex; gap: 8px; }
+.batch-control-actions button, .batch-result-actions button { min-height: 36px; padding: 7px 11px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 9px; cursor: pointer; font-size: 11px; font-weight: 800; }
+.batch-control-actions button:disabled, .batch-result-actions button:disabled { opacity: .45; cursor: not-allowed; }
+.batch-result-actions button.is-primary { color: #fff; background: var(--green); border-color: var(--green); }
+.batch-progress-track { height: 8px; margin: 0 22px 20px; overflow: hidden; background: #e8f2ed; border-radius: 999px; }
+.batch-progress-track span { display: block; width: 0; height: 100%; background: linear-gradient(90deg, var(--green), var(--green-bright)); border-radius: inherit; transition: width .25s ease; }
+.batch-results-heading { border-bottom: 1px solid var(--line); }
+.batch-result-list { padding: 12px 18px 18px; }
+.batch-result-item { display: grid; grid-template-columns: 42px 70px minmax(0, 1.4fr) minmax(120px, .6fr) auto; align-items: center; gap: 13px; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+.batch-result-item:last-child { border-bottom: 0; }
+.batch-result-index { display: grid; place-items: center; width: 34px; height: 34px; color: var(--green); background: var(--green-soft); border-radius: 10px; font-size: 11px; font-weight: 900; }
+.batch-result-cover { width: 70px; height: 70px; object-fit: cover; background: var(--green-soft); border-radius: 10px; }
+.batch-result-main { min-width: 0; }
+.batch-result-main strong, .batch-result-main small { display: block; }
+.batch-result-main strong { overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.batch-result-main small { overflow: hidden; margin-top: 5px; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.batch-result-status { font-size: 12px; font-weight: 800; }
+.batch-result-status.is-pending, .batch-result-status.is-working { color: #b7791f; }
+.batch-result-status.is-success { color: var(--green); }
+.batch-result-status.is-failed, .batch-result-status.is-cancelled { color: #b42318; }
+.batch-result-buttons { display: flex; gap: 7px; }
+.batch-result-buttons button { min-height: 34px; padding: 6px 10px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 9px; cursor: pointer; font-size: 11px; font-weight: 800; }
+.batch-result-buttons button:disabled { opacity: .4; cursor: not-allowed; }
 .video-result { overflow: hidden; margin-top: 18px; }
 .result-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 22px; border-bottom: 1px solid var(--line); }
 .result-heading span { color: var(--ink); font-size: 17px; font-weight: 850; }
@@ -172,12 +214,25 @@ button { color: inherit; font: inherit; }
   .portal-actions { gap: 7px; }
   .portal-button { min-height: 40px; padding: 7px 11px; font-size: 12px; }
   .tool-main { padding: 14px; }
-  .tool-query-card, .video-result, .download-history { border-radius: 19px; }
+  .tool-query-card, .video-result, .download-history, .batch-progress, .batch-results { border-radius: 19px; }
   .tool-query-card { padding: 24px 16px; }
   .tool-heading h1 { font-size: 29px; }
   .tool-heading span { display: block; font-size: 13px; line-height: 1.6; }
   .download-form { grid-template-columns: 1fr; margin-top: 21px; }
   .download-form button { width: 100%; }
+  .batch-import-row { flex-wrap: wrap; }
+  .batch-import-row > span { flex-basis: 100%; }
+  .batch-start-row { align-items: stretch; flex-direction: column; }
+  .batch-start-row button { width: 100%; }
+  .batch-progress-heading, .batch-results-heading { align-items: flex-start; flex-direction: column; padding: 14px 16px; }
+  .batch-control-actions, .batch-result-actions { width: 100%; }
+  .batch-control-actions button, .batch-result-actions button { flex: 1; }
+  .batch-progress-track { margin: 0 16px 17px; }
+  .batch-result-list { padding: 6px 14px 14px; }
+  .batch-result-item { grid-template-columns: 34px 60px minmax(0, 1fr); gap: 9px; padding: 13px 0; }
+  .batch-result-cover { width: 60px; height: 60px; }
+  .batch-result-status { grid-column: 3; }
+  .batch-result-buttons { grid-column: 3; }
   .result-heading { padding: 14px 16px; }
   .result-layout { grid-template-columns: 1fr; gap: 20px; padding: 16px; }
   .video-preview { min-height: 0; aspect-ratio: 9 / 13; }
