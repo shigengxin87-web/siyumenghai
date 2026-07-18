@@ -81,7 +81,7 @@ button { color: inherit; font: inherit; }
 .usage-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
 .tool-main { flex: 1; padding: clamp(22px, 4vw, 52px); background: rgba(238, 247, 242, .72); }
 .tool-container { width: min(1120px, 100%); margin: 0 auto; }
-.tool-query-card, .video-result {
+.tool-query-card, .video-result, .download-history {
   background: rgba(255, 255, 255, .96);
   border: 1px solid rgba(5, 150, 105, .16);
   border-radius: 24px;
@@ -141,6 +141,22 @@ button { color: inherit; font: inherit; }
 .download-button { min-height: 48px; }
 .download-button.is-secondary { color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); box-shadow: none; }
 .download-tip { margin: 13px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.download-history { overflow: hidden; margin-top: 18px; }
+.history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 22px; border-bottom: 1px solid var(--line); }
+.history-heading span, .history-heading small { display: block; }
+.history-heading span { color: var(--ink); font-size: 17px; font-weight: 850; }
+.history-heading small { margin-top: 3px; color: var(--muted); font-size: 11px; }
+.history-heading button { padding: 7px 10px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 9px; cursor: pointer; font-size: 11px; }
+.history-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 18px; }
+.history-item { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; padding: 12px; background: #f9fcfa; border: 1px solid rgba(5, 150, 105, .11); border-radius: 15px; }
+.history-cover { width: 92px; height: 92px; object-fit: cover; background: var(--green-soft); border-radius: 11px; }
+.history-content { min-width: 0; }
+.history-author { color: var(--green); font-size: 11px; font-weight: 800; }
+.history-title { display: -webkit-box; overflow: hidden; margin: 5px 0 0; color: var(--ink); font-size: 14px; font-weight: 750; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.history-time { display: block; margin-top: 7px; color: var(--muted); font-size: 10px; }
+.history-actions { display: flex; gap: 7px; margin-top: 9px; }
+.history-actions button { padding: 6px 9px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 750; }
+.history-actions button[data-history-delete] { color: var(--muted); background: #fff; border-color: var(--line); }
 .tool-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
 .tool-steps article { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px; background: rgba(255, 255, 255, .78); border: 1px solid rgba(5, 150, 105, .12); border-radius: 16px; }
 .tool-steps article > span { display: grid; place-items: center; width: 40px; height: 40px; color: var(--green); background: var(--green-soft); border-radius: 12px; font-size: 11px; font-weight: 900; }
@@ -156,7 +172,7 @@ button { color: inherit; font: inherit; }
   .portal-actions { gap: 7px; }
   .portal-button { min-height: 40px; padding: 7px 11px; font-size: 12px; }
   .tool-main { padding: 14px; }
-  .tool-query-card, .video-result { border-radius: 19px; }
+  .tool-query-card, .video-result, .download-history { border-radius: 19px; }
   .tool-query-card { padding: 24px 16px; }
   .tool-heading h1 { font-size: 29px; }
   .tool-heading span { display: block; font-size: 13px; line-height: 1.6; }
@@ -169,5 +185,9 @@ button { color: inherit; font: inherit; }
   .video-description { margin-top: 17px; font-size: 15px; }
   .download-actions { display: grid; grid-template-columns: 1fr; margin-top: 21px; }
   .download-button { width: 100%; }
+  .history-heading { align-items: flex-start; padding: 14px 16px; }
+  .history-list { grid-template-columns: 1fr; padding: 12px; }
+  .history-item { grid-template-columns: 76px minmax(0, 1fr); gap: 11px; }
+  .history-cover { width: 76px; height: 76px; }
   .tool-steps { grid-template-columns: 1fr; gap: 9px; }
 }

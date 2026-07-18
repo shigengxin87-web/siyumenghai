@@ -19,8 +19,89 @@ const descriptionNode = document.querySelector('[data-video-description]');
 const statsNode = document.querySelector('[data-video-stats]');
 const downloadButton = document.querySelector('[data-download-video]');
 const rawDownloadButton = document.querySelector('[data-download-raw]');
+const historySection = document.querySelector('[data-download-history]');
+const historyList = document.querySelector('[data-history-list]');
+const clearHistoryButton = document.querySelector('[data-clear-history]');
+
+const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
+const HISTORY_LIMIT = 20;
 
 let currentVideo = null;
+
+function readHistory() {
+  try {
+    const value = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    return Array.isArray(value) ? value.filter((item) => item?.shareUrl) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeHistory(items) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, HISTORY_LIMIT)));
+  } catch {
+    // Downloading still works when local storage is unavailable.
+  }
+}
+
+function historyTime(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  }).format(date);
+}
+
+function renderHistory() {
+  const items = readHistory();
+  historyList.replaceChildren();
+  historySection.hidden = items.length === 0;
+
+  items.forEach((item, index) => {
+    const article = document.createElement('article');
+    article.className = 'history-item';
+
+    const cover = document.createElement('img');
+    cover.className = 'history-cover';
+    cover.alt = '';
+    cover.loading = 'lazy';
+    if (validHttpUrl(item.coverUrl)) cover.src = item.coverUrl;
+
+    const content = document.createElement('div');
+    content.className = 'history-content';
+    const author = document.createElement('div');
+    author.className = 'history-author';
+    author.textContent = item.author || '视频号作者';
+    const title = document.createElement('p');
+    title.className = 'history-title';
+    title.textContent = item.description || '视频号视频';
+    const time = document.createElement('time');
+    time.className = 'history-time';
+    time.textContent = `下载于 ${historyTime(item.downloadedAt)}`;
+    const actions = document.createElement('div');
+    actions.className = 'history-actions';
+    actions.innerHTML = `<button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
+
+    content.append(author, title, time, actions);
+    article.append(cover, content);
+    historyList.appendChild(article);
+  });
+}
+
+function saveCurrentDownload() {
+  if (!currentVideo?.shareUrl) return;
+  const item = {
+    shareUrl: currentVideo.shareUrl,
+    coverUrl: currentVideo.coverUrl,
+    author: currentVideo.author,
+    description: currentVideo.description,
+    downloadedAt: new Date().toISOString()
+  };
+  const items = readHistory().filter((entry) => entry.shareUrl !== item.shareUrl);
+  writeHistory([item, ...items]);
+  renderHistory();
+}
 
 function showStatus(message, isError = false) {
   statusNode.textContent = message;
@@ -76,7 +157,7 @@ function addStat(label, value) {
   statsNode.appendChild(item);
 }
 
-function renderResult(payload) {
+function renderResult(payload, shareUrl) {
   const feedInfo = payload?.data?.feedInfo;
   const authorInfo = payload?.data?.authorInfo;
   const videoUrl = bestVideoUrl(feedInfo);
@@ -85,12 +166,15 @@ function renderResult(payload) {
   currentVideo = {
     url: videoUrl,
     rawUrl: rawVideoUrl(videoUrl),
+    shareUrl,
+    coverUrl: validHttpUrl(feedInfo.coverUrl),
+    author: authorInfo?.nickname || '视频号作者',
     description: feedInfo.description || '',
     createTime: feedInfo.createtime || ''
   };
 
   videoNode.src = videoUrl;
-  const coverUrl = validHttpUrl(feedInfo.coverUrl);
+  const coverUrl = currentVideo.coverUrl;
   if (coverUrl) videoNode.poster = coverUrl; else videoNode.removeAttribute('poster');
 
   authorName.textContent = authorInfo?.nickname || '视频号作者';
@@ -132,6 +216,7 @@ async function downloadVideo(url) {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    saveCurrentDownload();
     showStatus('下载已经开始');
   } catch (error) {
     showStatus(`下载失败：${error.message}`, true);
@@ -165,7 +250,7 @@ form.addEventListener('submit', async (event) => {
     });
     const payload = await response.json();
     if (!response.ok || payload.errCode) throw new Error(payload.errMsg || '查询失败');
-    renderResult(payload);
+    renderResult(payload, shareUrl);
     showStatus('');
   } catch (error) {
     showStatus(`查询失败：${error.message}`, true);
@@ -176,3 +261,30 @@ form.addEventListener('submit', async (event) => {
 
 downloadButton.addEventListener('click', () => downloadVideo(currentVideo?.url));
 rawDownloadButton.addEventListener('click', () => downloadVideo(currentVideo?.rawUrl));
+
+historyList.addEventListener('click', (event) => {
+  const queryTarget = event.target.closest('[data-history-query]');
+  const deleteTarget = event.target.closest('[data-history-delete]');
+  const items = readHistory();
+
+  if (queryTarget) {
+    const item = items[Number(queryTarget.dataset.historyQuery)];
+    if (!item) return;
+    input.value = item.shareUrl;
+    form.requestSubmit();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (deleteTarget) {
+    items.splice(Number(deleteTarget.dataset.historyDelete), 1);
+    writeHistory(items);
+    renderHistory();
+  }
+});
+
+clearHistoryButton.addEventListener('click', () => {
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
+});
+
+renderHistory();

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260718-2">
+  <link rel="stylesheet" href="./portal.css?v=20260718-3">
 </head>
 <body>
   <div class="portal-shell tool-shell">
@@ -60,6 +60,14 @@
           </div>
         </section>
 
+        <section class="download-history" data-download-history hidden>
+          <header class="history-heading">
+            <div><span>历史下载记录</span><small>仅保存在当前浏览器，不会上传到网站</small></div>
+            <button type="button" data-clear-history>清空记录</button>
+          </header>
+          <div class="history-list" data-history-list></div>
+        </section>
+
         <section class="tool-steps" aria-label="使用步骤">
           <article><span>01</span><div><strong>复制链接</strong><small>在视频号分享菜单里点击“复制链接”</small></div></article>
           <article><span>02</span><div><strong>查询视频</strong><small>粘贴到输入框，等待系统解析内容</small></div></article>
@@ -68,6 +76,6 @@
       </div>
     </main>
   </div>
-  <script src="./video-downloader.js?v=20260718-1"></script>
+  <script src="./video-downloader.js?v=20260718-2"></script>
 </body>
 </html>
