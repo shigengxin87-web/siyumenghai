@@ -184,6 +184,8 @@ a { color: inherit; text-decoration: none; }
 .member-entry.is-active .member-entry-mark { color: #fff; background: var(--green); border-color: var(--green); }
 .sidebar-note { margin-top: auto; padding: 20px 3px 0; color: var(--muted); font-size: 11px; }
 .sidebar-note p { margin: 0; }
+.sidebar-note a { display: inline-block; margin-top: 7px; color: inherit; text-decoration: none; }
+.sidebar-note a:hover { color: var(--green); text-decoration: underline; }
 
 .workspace { position: relative; isolation: isolate; display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
 .workspace::after { content: ""; position: absolute; z-index: 0; inset: 0; pointer-events: none; opacity: .24; background-image: radial-gradient(rgba(5, 150, 105, .16) .7px, transparent .7px); background-size: 18px 18px; mask-image: linear-gradient(120deg, transparent 12%, #000 52%, transparent 92%); }
