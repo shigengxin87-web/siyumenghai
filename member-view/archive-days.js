@@ -20,9 +20,9 @@ const archiveDays = {
     ],
     themes: [
       { time: '18:18', title: '第一批种子成员入群', text: '社群从四位熟悉且互相信任的朋友开始，定位为成长、业务、工具、资源和 AI 的交流场。' },
-      { time: '21:41', title: '为什么决定现在做社群', text: '从多年犹豫转向需求驱动：只要做了，就会产生行动、内容和体系。' },
+      { time: '21:41', title: '为什么决定现在做社群', text: '从多年犹豫转向需求驱动：只要做了，就会产生行动、内容和体系。', url: 'https://my.feishu.cn/wiki/Og3HwWKFQiJTFKkatDCc6L8sngd?from=from_copylink', linkLabel: '阅读完整发起说明' },
       { time: '21:41', title: '明确永久社群的交付边界', text: '以帮助成员获得或节省 999 元为基础交付，达标之后才算超预期。' },
-      { time: '22:47', title: '公域直播间合作洞察', text: '发布对 IP 直播直售正价课的拆解，鼓励成员围绕真实案例继续提问。' },
+      { time: '22:47', title: '公域直播间合作洞察', text: '发布对 IP 直播直售正价课的拆解，鼓励成员围绕真实案例继续提问。', url: 'https://my.feishu.cn/wiki/BDjxwopqHisGeikBywycGnaFnZd?from=from_copylink', linkLabel: '查看洞察与方案' },
       { time: '22:51', title: 'IP 名称如何形成记忆点', text: '从“清华王”“高途陈”等案例讨论名字、评论互动与传播梗。' }
     ]
   },
@@ -41,7 +41,11 @@ const archiveDays = {
       { title: '给主号做风险隔离', text: '把高风险动作放到可替换的小号，主号只负责稳定内容与信任。' }
     ],
     resources: [
-      { kind: '课程', title: '三大平台私域导流策略', text: '覆盖抖音、视频号和小红书的动作、工具、风险与业务场景。' },
+      { kind: '课程', title: '三大平台私域导流策略', text: '覆盖抖音、视频号和小红书的动作、工具、风险与业务场景。', links: [
+        { label: '视频号五大场景', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink' },
+        { label: '抖音五大场景', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf' },
+        { label: '小红书五大场景', url: 'https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd' }
+      ] },
       { kind: '方法', title: '短时二维码展示', text: '在口播明确引导截图时展示二维码，降低持续暴露和投诉概率。' },
       { kind: '工具', title: '小号 + 操作视频', text: '兼顾直接表达、用户理解和主账号安全的基础导流组合。' }
     ],
@@ -110,8 +114,8 @@ const archiveDays = {
     summary: '成员质量决定连接的上限，内容交付决定留下来的理由。把实操方法做成多种阅读形式，能让不同习惯的人都更容易吸收和行动。',
     insights: [
       { roles: ['private'], tag: '关系网络', source: '石更新', time: '08:43', title: '成员介绍不是报履历，而是在标记未来可以互相调用的能力', text: '群响、头部 IP 操盘、AI 和教培资源陆续加入，社群的价值网络开始形成。' },
-      { roles: ['content', 'private'], tag: '低成本获客', source: '石更新', time: '21:46', title: '接地气的内容形式，常常比精致制作更接近真实转化', text: '把多种低成本获客玩法整理成可复用拆解，让成员能按自己的条件选择。' },
-      { roles: ['content', 'product'], tag: '内容交付', source: '石更新', time: '21:47', title: '同一份知识提供文档、文件和音频，会显著降低学习门槛', text: '不是每个人都习惯长文，多格式交付让内容更容易被打开、收藏和使用。' }
+      { roles: ['content', 'private'], tag: '低成本获客', source: '石更新', time: '21:46', title: '接地气的内容形式，常常比精致制作更接近真实转化', text: '把多种低成本获客玩法整理成可复用拆解，让成员能按自己的条件选择。', url: 'https://my.feishu.cn/wiki/JufJwM4yOiGpKukiWeDcmf2wnod?from=from_copylink', linkLabel: '查看完整拆解' },
+      { roles: ['content', 'product'], tag: '内容交付', source: '石更新', time: '21:47', title: '同一份知识提供文档、文件和音频，会显著降低学习门槛', text: '不是每个人都习惯长文，多格式交付让内容更容易被打开、收藏和使用。', url: 'https://my.feishu.cn/wiki/JufJwM4yOiGpKukiWeDcmf2wnod?from=from_copylink', linkLabel: '打开飞书文档' }
     ],
     actions: [
       { title: '给自己写一句资源标签', text: '明确你最擅长解决什么问题，以及群友什么时候应该想到你。' },
@@ -121,11 +125,11 @@ const archiveDays = {
     resources: [
       { kind: '人物', title: '【Allen】', text: '群响联合创始人、CEO，可关注社群运营、超级个体和产品设计。' },
       { kind: '人物', title: '【白玉媛】', text: '头部直播 IP 陈晶的短视频操盘手，可连接短视频内容与直播 IP 经验。' },
-      { kind: '内容', title: '低成本获客实操拆解', text: '提供文档、文件和播客音频三种版本，适合按习惯选择。' }
+      { kind: '内容', title: '低成本获客实操拆解', text: '提供文档、文件和播客音频三种版本，适合按习惯选择。', url: 'https://my.feishu.cn/wiki/JufJwM4yOiGpKukiWeDcmf2wnod?from=from_copylink', linkLabel: '查看完整拆解' }
     ],
     themes: [
       { time: '08:43', title: '四位新成员加入', text: 'Allen、白玉媛、李鑫和康老师带来社群、IP、AI 与教培资源。' },
-      { time: '21:46', title: '低成本获客玩法发布', text: '分享多种接地气的短视频获客方式，并提供多种内容载体。' },
+      { time: '21:46', title: '低成本获客玩法发布', text: '分享多种接地气的短视频获客方式，并提供多种内容载体。', url: 'https://my.feishu.cn/wiki/JufJwM4yOiGpKukiWeDcmf2wnod?from=from_copylink', linkLabel: '阅读完整内容' },
       { time: '21:57', title: '从统一输出转向提问和提需', text: '鼓励成员带着业务问题参与，让后续内容围绕真实需求生长。' }
     ]
   },
@@ -144,9 +148,9 @@ const archiveDays = {
       { title: '提出一个个性化问题', text: '把自己的具体业务条件带进群里，不只收藏通用答案。' }
     ],
     resources: [
-      { kind: '文档', title: '视频号导流私域五大场景', text: '按视频号业务场景拆解自然流、付费流和不同承接方式。' },
-      { kind: '文档', title: '抖音导流私域五大场景', text: '从平台规则、流量类型和业务链路理解抖音公转私。' },
-      { kind: '文档', title: '小红书导流私域五大场景', text: '覆盖笔记、私信、店铺和不同用户意图下的承接策略。' }
+      { kind: '文档', title: '视频号导流私域五大场景', text: '按视频号业务场景拆解自然流、付费流和不同承接方式。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '文档', title: '抖音导流私域五大场景', text: '从平台规则、流量类型和业务链路理解抖音公转私。', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf', linkLabel: '打开飞书文档' },
+      { kind: '文档', title: '小红书导流私域五大场景', text: '覆盖笔记、私信、店铺和不同用户意图下的承接策略。', url: 'https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd', linkLabel: '打开飞书文档' }
     ],
     themes: [
       { time: '19:13', title: '新成员与商业 IP 资源加入', text: '王 sir 和李守洲加入，带来千万级 IP 与共识型 IP 方法论资源。' },
@@ -162,7 +166,7 @@ const archiveDays = {
     insights: [
       { roles: ['private', 'product'], tag: '销售跟进', source: '一月语文 × 群友讨论', time: '08:54', title: '跟进不是单方面催促，而是让客户表达并测试真实意向', text: '专业判断、主动沟通、客户标签和周期回访共同构成成交节奏，沉默本身也是筛选信号。' },
       { roles: ['content', 'product'], tag: '增长瓶颈', source: '一月语文 × 石更新', time: '17:28', title: '数字人和卡通出镜都不是必选项，图文可能才是当前最优解', text: '高客单已被产品需求验证，现阶段瓶颈是流量数量，应先用高效率图文铺量。' },
-      { roles: ['content', 'private'], tag: '知识工作流', source: '李守洲 × 石更新', time: '17:56', title: '把回答快速转成图片和知识库，能让一次答疑重复产生价值', text: '语音转文字、AI 制图和 Obsidian 同步串成工作流，降低内容沉淀成本。' }
+      { roles: ['content', 'private'], tag: '知识工作流', source: '李守洲 × 石更新', time: '17:56', title: '把回答快速转成图片和知识库，能让一次答疑重复产生价值', text: '语音转文字、AI 制图和 Obsidian 同步串成工作流，降低内容沉淀成本。', url: 'https://my.feishu.cn/docx/GBB2d1fBaojrh6xN69OchxHenWt?from=from_copylink', linkLabel: '查看同步教程' }
     ],
     actions: [
       { title: '给客户做一次意向测试', text: '提出一个清晰下一步，不再无限单向输出，用反馈判断跟进优先级。' },
@@ -171,7 +175,7 @@ const archiveDays = {
     ],
     resources: [
       { kind: '公式', title: 'GMV 增长拆解', text: '流量 × 转化率 × 客单价 ×（1+续费率）×（1+转介绍率）。' },
-      { kind: '工具', title: 'Obsidian', text: '用于把微信、手机和日常答疑整理为长期可检索的本地知识资产。' },
+      { kind: '工具', title: 'Obsidian', text: '用于把微信、手机和日常答疑整理为长期可检索的本地知识资产。', url: 'https://my.feishu.cn/docx/GBB2d1fBaojrh6xN69OchxHenWt?from=from_copylink', linkLabel: '查看同步教程' },
       { kind: '方法', title: '先让群友回答', text: '群主适当延迟回复，为成员之间的经验交换留出空间。' }
     ],
     themes: [
@@ -179,7 +183,7 @@ const archiveDays = {
       { time: '13:04', title: '黄子妈加入与群友互助', text: '新成员加入后，群内用经验、礼物和红包强化互助氛围。' },
       { time: '13:46', title: '账号风险的硬解法', text: '英语韩老师决定启用“英语韩堡王”小号，讨论账号属于平台、能力才属于自己。' },
       { time: '16:08', title: '不能露脸时如何做高客单获客', text: '从数字人和卡通二选一跳出，回到 GMV 瓶颈，最终确定批量图文策略。' },
-      { time: '17:56', title: '微信内容同步到 Obsidian', text: '分享语音转文字、AI 制图和本地知识库的完整使用教程。' }
+      { time: '17:56', title: '微信内容同步到 Obsidian', text: '分享语音转文字、AI 制图和本地知识库的完整使用教程。', url: 'https://my.feishu.cn/docx/GBB2d1fBaojrh6xN69OchxHenWt?from=from_copylink', linkLabel: '查看完整教程' }
     ]
   },
   '2026-07-08': {
@@ -225,14 +229,14 @@ const archiveDays = {
     resources: [
       { kind: '赛道', title: '银发兴趣教育', text: '唱歌、英语、琴棋书画等品类可围绕健康、社交和自我实现重新设计。' },
       { kind: '方法', title: '前置沟通 + 导流', text: '在公域完成破冰、筛选和升温，再把合适用户承接到私域。' },
-      { kind: '教程', title: '公众号文章自动入库', text: '将订阅文章同步到飞书多维表格和 Obsidian，形成持续输入工作流。' }
+      { kind: '教程', title: '公众号文章自动入库', text: '将订阅文章同步到飞书多维表格和 Obsidian，形成持续输入工作流。', url: 'https://my.feishu.cn/docx/I1P6djDDZoK8zGxDbBecIZQGnad?from=from_copylink', linkLabel: '查看可复刻教程' }
     ],
     themes: [
       { time: '15:03', title: '中老年唱歌与英语赛道', text: '从一位 58 岁大姨唱歌延伸到银发健康、兴趣和教育机会。' },
       { time: '15:38', title: '首次投流带来十几位精准私域', text: '一月语文反馈投流结果，讨论复制计划、预算递增和评论区响应。' },
       { time: '15:52', title: '公域私信与私域承接', text: '强调先交流和筛选，再导流，避免无效用户与账号风险。' },
       { time: '18:47', title: '教育 IP 的生态位判断', text: '从团队优势和 IP 特征出发寻找差异化，不盲目模仿普惠型账号。' },
-      { time: '21:03', title: '公众号内容自动沉淀', text: '发布可复刻工作流，让公众号文章自动进入飞书和本地知识库。' }
+      { time: '21:03', title: '公众号内容自动沉淀', text: '发布可复刻工作流，让公众号文章自动进入飞书和本地知识库。', url: 'https://my.feishu.cn/docx/I1P6djDDZoK8zGxDbBecIZQGnad?from=from_copylink', linkLabel: '打开完整教程' }
     ]
   },
   '2026-07-10': {
@@ -266,8 +270,13 @@ const archiveDays = {
     summary: '一条内容是否值得继续投，不看播放量，而看每笔预算带来的线索和利润。平台审核有概率性，就用更多素材、账号和投放渠道分散风险。',
     insights: [
       { roles: ['content', 'product'], tag: '投流模型', source: '一月语文 × 石更新', time: '18:45', title: '追投标准不是“这条看起来爆”，而是哪条首笔计划综合利润最高', text: '单人交付能力有限时，集中预算追一条最赚钱的素材；需要量级时再扩展素材和计划。' },
-      { roles: ['content', 'private'], tag: '平台概率', source: '辰犀 × 群友讨论', time: '18:57', title: 'K12 审核没有万能词表，需要素材、账号和渠道共同分散风险', text: '换号、增加样本、参考同行表达，并在视频号、千川和本地推之间选择可用路径。' },
-      { roles: ['product', 'private'], tag: '转化漏斗', source: '石更新', time: '22:39', title: '低价公开课、高客单主课和年会员，可以组成没有强推感的完整漏斗', text: '用内容运营型销售逐步升温，既提高主课转化，也给未成交用户留下后续承接。' }
+      { roles: ['content', 'private'], tag: '平台概率', source: '辰犀 × 群友讨论', time: '18:57', title: 'K12 审核没有万能词表，需要素材、账号和渠道共同分散风险', text: '换号、增加样本、参考同行表达，并在视频号、千川和本地推之间选择可用路径。', links: [
+        { label: '零克查词', url: 'https://lingkechaci.com' },
+        { label: '句易网', url: 'http://www.ju1.cn/' },
+        { label: '句无忧', url: 'https://m.check51.com/indexWx' },
+        { label: '地鼠科技', url: 'https://weijinci.locs.vip/play/v64aGWZb' }
+      ] },
+      { roles: ['product', 'private'], tag: '转化漏斗', source: '石更新', time: '22:39', title: '低价公开课、高客单主课和年会员，可以组成没有强推感的完整漏斗', text: '用内容运营型销售逐步升温，既提高主课转化，也给未成交用户留下后续承接。', url: 'https://my.feishu.cn/docx/VKpwden52oGTVWx4baFc2KI1nq8', linkLabel: '阅读完整案例' }
     ],
     actions: [
       { title: '算一条内容的单位利润', text: '记录投放成本、私域人数、试听转化和高客单成交，决定是否继续追投。' },
@@ -275,9 +284,14 @@ const archiveDays = {
       { title: '画出五步产品漏斗', text: '标出公开内容、低价体验、主产品、未成交承接和长期复购。' }
     ],
     resources: [
-      { kind: '工具', title: '敏感词检测组合', text: '零克查词、句易网、句无忧和地鼠科技可作为发布前辅助检查。' },
+      { kind: '工具', title: '敏感词检测组合', text: '零克查词、句易网、句无忧和地鼠科技可作为发布前辅助检查。', links: [
+        { label: '零克查词', url: 'https://lingkechaci.com' },
+        { label: '句易网', url: 'http://www.ju1.cn/' },
+        { label: '句无忧', url: 'https://m.check51.com/indexWx' },
+        { label: '地鼠科技', url: 'https://weijinci.locs.vip/play/v64aGWZb' }
+      ] },
       { kind: '渠道', title: '视频号 / 千川 / 本地推', text: '同一 K12 内容可按平台审核与本地客群特征选择不同投放入口。' },
-      { kind: '案例', title: '内容运营型销售五步漏斗', text: '零元公开课 → 299 押金 → 5980 主课 → 365 会员承接。' }
+      { kind: '案例', title: '内容运营型销售五步漏斗', text: '零元公开课 → 299 押金 → 5980 主课 → 365 会员承接。', url: 'https://my.feishu.cn/docx/VKpwden52oGTVWx4baFc2KI1nq8', linkLabel: '阅读完整案例' }
     ],
     themes: [
       { time: '15:30', title: '薛辉短视频爆款框架现场学习', text: '围绕成本、对比、奇葩、人群等选题元素进行互动辨认。' },
@@ -294,8 +308,11 @@ const archiveDays = {
     summary: '导流话术、投流素材和账号都处在概率环境里。给用户合理联系理由、保留多个承接账号，并持续复用已验证内容，才能把偶然爆款变成经营能力。',
     insights: [
       { roles: ['private', 'content'], tag: '私信导流', source: '一月语文 × 石更新', time: '10:31', title: '让用户主动留下联系方式，比直接频繁发送微信号更自然', text: '以“完整文件无法在这里发送”为合理理由，既承接真实需求，也降低无效私信和平台风险。' },
-      { roles: ['content', 'private'], tag: '素材复用', source: '一月语文 × 石更新', time: '21:27', title: '效果好的内容可以隐藏、重发和多号分发，不必一次判死刑', text: '当审核变严或流量池变化时，保留核心表达，用新样本继续测试。' },
-      { roles: ['content', 'product'], tag: '爆款框架', source: '石更新', time: '21:54', title: '课程复盘不能只抄 30 条结论，还要补上自己的理解和使用方式', text: '图形摘要、详细总结和个人心得三层结构，才能把外部知识变成自己的方法。' }
+      { roles: ['content', 'private'], tag: '素材复用', source: '一月语文 × 石更新', time: '21:27', title: '效果好的内容可以隐藏、重发和多号分发，不必一次判死刑', text: '当审核变严或流量池变化时，保留核心表达，用新样本继续测试。', url: 'https://my.feishu.cn/wiki/UshEwrjVhif1tykOKkPcllmcnle?from=from_copylink', linkLabel: '查看案例对比' },
+      { roles: ['content', 'product'], tag: '爆款框架', source: '石更新', time: '21:54', title: '课程复盘不能只抄 30 条结论，还要补上自己的理解和使用方式', text: '图形摘要、详细总结和个人心得三层结构，才能把外部知识变成自己的方法。', links: [
+        { label: '完整复盘', url: 'https://my.feishu.cn/docx/LZdqdS7d8ox0wVxouLDc33sBnRb?from=from_copylink' },
+        { label: '30 条精华', url: 'https://my.feishu.cn/docx/XGRAdAcegoQR0Ax1pf1cL4GEn9R?from=from_copylink' }
+      ] }
     ],
     actions: [
       { title: '重写一条私信理由', text: '给用户一个真实、合理且与需求有关的联系方式交换理由。' },
@@ -304,8 +321,11 @@ const archiveDays = {
     ],
     resources: [
       { kind: '策略', title: '低价店铺承接', text: '通过平台内低价引流品建立更安全、用户更信任的下单与联系路径。' },
-      { kind: '方法', title: '多账号内容分发', text: '准备 1—2 个备用视频号，复用已验证素材并分散审核风险。' },
-      { kind: '课程', title: '薛辉短视频创作与爆款逻辑', text: '包含图形总结、详细内容、个人心得和 30 条精华版。' }
+      { kind: '方法', title: '多账号内容分发', text: '准备 1—2 个备用视频号，复用已验证素材并分散审核风险。', url: 'https://my.feishu.cn/wiki/UshEwrjVhif1tykOKkPcllmcnle?from=from_copylink', linkLabel: '查看案例对比' },
+      { kind: '课程', title: '薛辉短视频创作与爆款逻辑', text: '包含图形总结、详细内容、个人心得和 30 条精华版。', links: [
+        { label: '完整复盘', url: 'https://my.feishu.cn/docx/LZdqdS7d8ox0wVxouLDc33sBnRb?from=from_copylink' },
+        { label: '30 条精华', url: 'https://my.feishu.cn/docx/XGRAdAcegoQR0Ax1pf1cL4GEn9R?from=from_copylink' }
+      ] }
     ],
     themes: [
       { time: '10:18', title: '私信资料如何安全导流', text: '优化联系理由、用户主动留资和主页微信号的低效问题。' },
@@ -319,9 +339,15 @@ const archiveDays = {
     title: '平台收紧卖课入口，但内容、咨询和产品体系仍能继续增长',
     summary: '小黄车门槛上升不等于不能卖课。通过零元导量、蓝 V 咨询、团购承接和更强产品设计，仍然可以建立更自主的成交路径。',
     insights: [
-      { roles: ['content', 'private'], tag: '平台变化', source: '石更新', time: '19:41', title: '80% 的卖课账号可能失去小黄车，但不会失去获客和成交能力', text: '粉丝群私信、蓝 V 预约咨询和团购券等入口，会成为线上团队与线下机构的新承接方式。' },
+      { roles: ['content', 'private'], tag: '平台变化', source: '石更新', time: '19:41', title: '80% 的卖课账号可能失去小黄车，但不会失去获客和成交能力', text: '粉丝群私信、蓝 V 预约咨询和团购券等入口，会成为线上团队与线下机构的新承接方式。', links: [
+        { label: '公众号背景文章', url: 'https://mp.weixin.qq.com/s/DFB_N4IbKEfZEqzsVTo7aQ' },
+        { label: '抖音导流方案', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf' }
+      ] },
       { roles: ['private', 'product'], tag: '资源网络', source: '石更新', time: '20:29', title: '明确介绍成员擅长什么，社群才能从名单变成可调用网络', text: '小红书代运营、年轻 K12 创业和垂直培训私域等资源进入后，需要用具体标签降低连接成本。' },
-      { roles: ['product'], tag: '产品设计', source: 'Allen 分享复盘', time: '23:01', title: '没有产品，流量、内容和销售能力最终都难以沉淀', text: '超级个体要把产品设计、交付体系和持续复购放在增长动作之前。' }
+      { roles: ['product'], tag: '产品设计', source: 'Allen 分享复盘', time: '23:01', title: '没有产品，流量、内容和销售能力最终都难以沉淀', text: '超级个体要把产品设计、交付体系和持续复购放在增长动作之前。', links: [
+        { label: '30 条精华版', url: 'https://my.feishu.cn/docx/YDcYdN3UGoL8GpxbYb3c2KWRn19?from=from_copylink' },
+        { label: '完整复盘', url: 'https://my.feishu.cn/docx/LN78dUd3Go0APnxpnAwcfavJnab?from=from_copylink' }
+      ] }
     ],
     actions: [
       { title: '准备小黄车替代路径', text: '根据线上或线下业务，选择粉丝群、蓝 V 咨询或团购中的一个先测试。' },
@@ -331,13 +357,22 @@ const archiveDays = {
     resources: [
       { kind: '人物', title: '【Joey 乔伊】', text: '具备明星和头部 IP 运营经验，当前聚焦创始人 IP 操盘与商业化。' },
       { kind: '人物', title: '【姚继伟】', text: '教育与线索行业的小红书代运营服务商，可连接获客与代运营需求。' },
-      { kind: '课程', title: 'Allen 超级个体产品体系', text: '覆盖产品设计、交付结构和超级个体的长期经营。' }
+      { kind: '课程', title: 'Allen 超级个体产品体系', text: '覆盖产品设计、交付结构和超级个体的长期经营。', links: [
+        { label: '30 条精华版', url: 'https://my.feishu.cn/docx/YDcYdN3UGoL8GpxbYb3c2KWRn19?from=from_copylink' },
+        { label: '完整复盘', url: 'https://my.feishu.cn/docx/LN78dUd3Go0APnxpnAwcfavJnab?from=from_copylink' }
+      ] }
     ],
     themes: [
       { time: '00:11', title: 'Joey 加入与创始人 IP 资源', text: '介绍其头部明星与教育 IP 运营经历，鼓励成员主动分享账号和能力。' },
-      { time: '19:41', title: '抖音卖课规则进一步收紧', text: '判断小黄车将形成头部与普通从业者的二八分布，并给出替代承接入口。' },
+      { time: '19:41', title: '抖音卖课规则进一步收紧', text: '判断小黄车将形成头部与普通从业者的二八分布，并给出替代承接入口。', links: [
+        { label: '公众号背景文章', url: 'https://mp.weixin.qq.com/s/DFB_N4IbKEfZEqzsVTo7aQ' },
+        { label: '抖音导流方案', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf' }
+      ] },
       { time: '20:29', title: '三类新资源加入社群', text: '小红书代运营、00 后 K12 创业和垂直培训私域经验进入群内。' },
-      { time: '23:01', title: 'Allen 产品观复盘', text: '发布精华版和完整版，强调超级个体首先要建立产品与交付体系。' }
+      { time: '23:01', title: 'Allen 产品观复盘', text: '发布精华版和完整版，强调超级个体首先要建立产品与交付体系。', links: [
+        { label: '30 条精华版', url: 'https://my.feishu.cn/docx/YDcYdN3UGoL8GpxbYb3c2KWRn19?from=from_copylink' },
+        { label: '完整复盘', url: 'https://my.feishu.cn/docx/LN78dUd3Go0APnxpnAwcfavJnab?from=from_copylink' }
+      ] }
     ]
   }
 };

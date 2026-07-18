@@ -32,7 +32,7 @@ const days = {
     title: '平台限制成交动作，但限制不了内容建立信任',
     summary: '抖音卖课受限后，更值得验证的路径是：用高质量内容留下钩子，让公域负责遇见，让私域负责理解、成交和复购。',
     insights: [
-      { roles: ['content', 'private'], tag: '内容获客', source: '群友补充讨论', time: '19:48', title: '不挂车的直播，也可以是一条完整生意链路', text: '讲内容、放钩子、引导进入私域，再完成成交和复购。' },
+      { roles: ['content', 'private'], tag: '内容获客', source: '群友补充讨论', time: '19:48', title: '不挂车的直播，也可以是一条完整生意链路', text: '讲内容、放钩子、引导进入私域，再完成成交和复购。', url: 'https://my.feishu.cn/docx/D3iqdgNN7owJYxxqSEIcRwGdndb', linkLabel: '查看具体玩法' },
       { roles: ['product', 'private'], tag: '专业定位', source: '张聪', time: '13:26', title: '一个具体标签，胜过一长串能力介绍', text: '【张聪】团队四年专注头部 IP 线下课操盘，形成强烈的专业心智。' },
       { roles: ['private', 'product'], tag: '资源撮合', source: '姚继伟 × 石更新', time: '21:29', title: '好社群会把真实需求快速变成可信连接', text: '从漫剧粉需求到询价、核对供量再建群对接，社群降低了资源匹配成本。' }
     ],
@@ -44,12 +44,12 @@ const days = {
     resources: [
       { kind: '人物', title: '【张聪】', text: '头部 IP 线下课变现操盘，可链接线下课产品、成交与交付资源。' },
       { kind: '人物', title: '【文迪】', text: '【张聪】的合伙人，共同操盘多个案例，是同一专业网络的重要节点。' },
-      { kind: '方法', title: '内容型直播', text: '不挂车、讲内容、放钩子、私域成交、持续复购。' }
+      { kind: '方法', title: '内容型直播', text: '不挂车、讲内容、放钩子、私域成交、持续复购。', url: 'https://my.feishu.cn/docx/D3iqdgNN7owJYxxqSEIcRwGdndb', linkLabel: '查看具体玩法' }
     ],
     themes: [
-      { time: '00:16', title: '抖音卖课受限应对文档', text: '石更新发布完整梳理，为平台规则变化提供背景与应对方向。' },
+      { time: '00:16', title: '抖音卖课受限应对文档', text: '石更新发布完整梳理，为平台规则变化提供背景与应对方向。', url: 'https://my.feishu.cn/wiki/A9plwU4hkiw2eBkGCYnc2aJEnUg?from=from_copylink', linkLabel: '阅读完整文档' },
       { time: '13:26', title: '线下课操盘资源加入', text: '【张聪】加入群聊，介绍团队长期服务头部 IP 线下课变现。' },
-      { time: '19:48', title: '内容直播与私域成交路径', text: '补充不挂车、讲内容、放钩子、私域成交复购的具体玩法。' },
+      { time: '19:48', title: '内容直播与私域成交路径', text: '补充不挂车、讲内容、放钩子、私域成交复购的具体玩法。', url: 'https://my.feishu.cn/docx/D3iqdgNN7owJYxxqSEIcRwGdndb', linkLabel: '查看具体玩法' },
       { time: '21:29', title: '漫剧粉资源快速撮合', text: '【姚继伟】提出需求，石更新外部询价并推进建群对接。' }
     ]
   },
@@ -61,7 +61,10 @@ const days = {
       { roles: ['private', 'content'], tag: '信任资产', source: '一月语文 × 石更新', time: '12:54', title: '多年朋友圈不是旧内容，而是持续工作的信任证明', text: '新客户通过历史内容理解你的身份、专业和做事方式，空白账号很难立刻替代。' },
       { roles: ['private'], tag: '企微迁移', source: '一月语文 × 石更新', time: '12:54', title: '选择 B 号，是把关系链一起带进新的运营体系', text: '已有合作老师好友、发过多年朋友圈的账号，更适合承接后续家长关系。' },
       { roles: ['private', 'product'], tag: '经营韧性', source: '一月语文 × 石更新', time: '12:54', title: '个微与企微双备份，是给客户关系增加容错', text: '既保留个人信任，又利用企微管理群权限和客户标签。' }
-      ,{ roles: ['content', 'product'], tag: '知识沉淀', source: '石更新', time: '23:55', title: '知识库同步，才能让群聊从即时信息变成长期资产', text: '把过去 15 天的群内内容迁入飞书问答知识库和 ima 问答知识库，成员可以按使用习惯访问同一份沉淀。' }
+      ,{ roles: ['content', 'product'], tag: '知识沉淀', source: '石更新', time: '23:55', title: '知识库同步，才能让群聊从即时信息变成长期资产', text: '把过去 15 天的群内内容迁入飞书问答知识库和 ima 问答知识库，成员可以按使用习惯访问同一份沉淀。', links: [
+        { label: '飞书问答知识库', url: 'https://ask.feishu.cn/shared-space/7663061611179003182' },
+        { label: 'IMA 问答知识库', url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79' }
+      ] }
       ,{ roles: ['content', 'product'], tag: '产品迭代', source: '石更新', time: '23:57', title: '先把官网做出来，再继续升级成小程序', text: '先用一个可访问的网站承接内容和关系，再根据真实使用反馈迭代到微信小程序，保持小步验证。' }
     ],
     actions: [
@@ -74,12 +77,19 @@ const days = {
       { kind: '工具', title: '企业微信群', text: '用于管理群成员关系边界，减少家长之间互相添加。' },
       { kind: '方法', title: '个微 + 企微双备份', text: '保留个人信任关系，同时建立可管理、可协作的客户体系。' },
       { kind: '清单', title: '朋友圈资产盘点', text: '按专业内容、案例证明、客户反馈和个人表达整理历史内容。' }
-      ,{ kind: '知识库', title: '飞书问答知识库 / ima 问答知识库', text: '两套入口保持同一份群聊沉淀，按自己的使用习惯选择访问。' }
+      ,{ kind: '知识库', title: '飞书问答知识库 / ima 问答知识库', text: '两套入口保持同一份群聊沉淀，按自己的使用习惯选择访问。', links: [
+        { label: '领取飞书兑换码', url: 'https://my.feishu.cn/share/base/query/shrcnfBdf7Edx375UjSlk5b6pGc' },
+        { label: '进入飞书知识库', url: 'https://ask.feishu.cn/shared-space/7663061611179003182' },
+        { label: '进入 IMA 知识库', url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79' }
+      ] }
       ,{ kind: '产品', title: '成长朋友圈官网', text: '先上线网站承接群聊内容，后续再根据使用反馈升级微信小程序。' }
     ],
     themes: [
       { time: '12:54', title: 'B 号还是 C 号转企微', text: '【一月语文】希望用企微建家长群、防止家长互加，并给新家长做个微与企微双备份。石更新明确建议选择已有合作老师好友和多年朋友圈沉淀的 B 号。' }
-      ,{ time: '23:54', title: '群聊内容迁入双知识库', text: '石更新完成过去 15 天群内内容向飞书问答知识库和 ima 问答知识库的迁移，并向群友开放入口。' }
+      ,{ time: '23:54', title: '群聊内容迁入双知识库', text: '石更新完成过去 15 天群内内容向飞书问答知识库和 ima 问答知识库的迁移，并向群友开放入口。', links: [
+        { label: '进入飞书知识库', url: 'https://ask.feishu.cn/shared-space/7663061611179003182' },
+        { label: '进入 IMA 知识库', url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79' }
+      ] }
       ,{ time: '23:57', title: '官网先行，后续升级小程序', text: '石更新分享刚完成的官网，计划先上线验证，再继续升级为微信小程序。' }
     ]
   },
@@ -88,7 +98,7 @@ const days = {
     title: '低价品负责让人进来，高价品要提前让人看见',
     summary: '今天的讨论从 5.18 元引流品与 7980 元正价品同框排品，延伸到低转高的真实难点、内容质量与预约流量、社群共建，以及官网和知识库上线后的最低门槛运营。',
     insights: [
-      { roles: ['product', 'private'], tag: '产品前置', source: '石更新 × 黄昶', time: '14:20', title: '高价产品前置曝光，是在低价成交前先完成一次用户筛选', text: '用户一开始就知道后面还有 7980 元正价产品，进入直播间时的价格预期和购买动机会更清晰。' },
+      { roles: ['product', 'private'], tag: '产品前置', source: '石更新 × 黄昶', time: '14:20', title: '高价产品前置曝光，是在低价成交前先完成一次用户筛选', text: '用户一开始就知道后面还有 7980 元正价产品，进入直播间时的价格预期和购买动机会更清晰。', url: 'https://my.feishu.cn/wiki/NhRvwJis5iHVJikIcdpcbx5ln6f?from=from_copylink', linkLabel: '查看完整拆解' },
       { roles: ['product', 'content'], tag: '转化质量', source: '黄昶 × 石更新', time: '14:39', title: '低价单量稳定，不等于中高客单转化已经跑通', text: '新投放 IP 的 5000—10000 元产品转化率可能低于 3%；即使成熟团队曾做到约 4%—5%，背后也需要长期低转高经验和完整配置。' },
       { roles: ['content', 'private'], tag: '共同关注', source: '辰犀 × 石更新', time: '14:21', title: '关注对象高度重合，说明同赛道成员共享着相似的信息雷达', text: '业务和兴趣相近，再叠加视频号推荐机制，群友看到的头部案例会越来越重合，适合共同观察、交叉验证。' },
       { roles: ['content', 'product'], tag: '流量质量', source: '黄昶', time: '15:10', title: '短视频质量决定预约流量是否值得承接', text: '非刚需赛道想跑通付费直播，除了预算，还要有能跑量的短视频、人设和匹配的后端产品；否则单量越大，消耗和交付压力越大。' },
@@ -105,7 +115,7 @@ const days = {
       ,{ title: '安排一次成员分享', text: '从教培、短视频和私域操盘成员中选一位，围绕真实案例做内部分享。' }
     ],
     resources: [
-      { kind: '案例', title: '叨叨直播排品拆解', text: '5.18 元引流品与 7980 元正价品同场展示，是观察产品前置曝光和转化预期管理的实时案例。' },
+      { kind: '案例', title: '叨叨直播排品拆解', text: '5.18 元引流品与 7980 元正价品同场展示，是观察产品前置曝光和转化预期管理的实时案例。', url: 'https://my.feishu.cn/wiki/NhRvwJis5iHVJikIcdpcbx5ln6f?from=from_copylink', linkLabel: '查看完整拆解' },
       { kind: '人物', title: '【黄昶】', text: '补充了低价投放、中客单转化率和付费直播间单量的一线经验。' },
       { kind: '指标', title: '低价到正价转化率', text: '把低价订单量与 5000—10000 元产品的最终成交放在同一张表里评估。' }
       ,{ kind: '方法', title: '预约型短视频直播', text: '用高质量短视频和人设获取更精准预约，再承接直播、私域和后端产品。' }
@@ -114,7 +124,7 @@ const days = {
       ,{ kind: '工具', title: '国内工具工作流', text: '优先把 ima、飞书、WorkBuddy、Kimi 等适配国内场景的工具用起来，再按实际需求补充其他工具。' }
     ],
     themes: [
-      { time: '14:20', title: '叨叨直播排品逻辑变化', text: '石更新分享拆解：5.18 元引流产品与 7980 元正价产品开始同场展示，并邀请群友继续观察后续直播。' },
+      { time: '14:20', title: '叨叨直播排品逻辑变化', text: '石更新分享拆解：5.18 元引流产品与 7980 元正价产品开始同场展示，并邀请群友继续观察后续直播。', url: 'https://my.feishu.cn/wiki/NhRvwJis5iHVJikIcdpcbx5ln6f?from=from_copylink', linkLabel: '阅读飞书完整版' },
       { time: '14:21', title: '同赛道成员的共同关注', text: '【辰犀】发现与石更新有大量相同关注对象，讨论兴趣、业务相似与视频号推荐机制带来的信息重合。' },
       { time: '14:39', title: '低价客资与中客单转化难题', text: '【黄昶】指出许多新投放 IP 的中客单转化率不足 3%；石更新补充成熟团队约 4%—5% 的案例，并分享“花 40 万陪跑仍未做起来”的反例，提醒多数人缺少长期低转高经验和稳定配置。' }
       ,{ time: '15:10', title: '短视频质量与后端产品', text: '【黄昶】补充：短视频质量越高，预约量和流量精准度越好；非刚需赛道若人设、内容和后端设计不匹配，难以扛住投流消耗。' }
@@ -122,7 +132,7 @@ const days = {
       ,{ time: '15:29', title: '教培与直播操盘能力被看见', text: '群内陆续介绍语文、数学、英语和视频号直播操盘成员，石更新把这些真实能力视作未来可放大的潜力股。' }
       ,{ time: '15:42', title: '社群官网正式上线', text: '石更新回顾 7 月 1 日建群、7 月 17 日上线 AI 知识库、飞书知识库和官网，感谢 23 位成员的信任，并希望把 999 元社群做出 9999、99999 的价值。' }
       ,{ time: '15:53', title: '先开放访问，再逐步补权限', text: '官网暂不设置登录，ima 不设申请权限，飞书问答用兑换码体验；邀请朋友时强调先确认对方真正适合这个群。' }
-      ,{ time: '17:49', title: '内容同步到公众号', text: '叨叨排品逻辑的拆解同步到公众号，石更新期待未来付费内容能对群成员直接开放观看。' }
+      ,{ time: '17:49', title: '内容同步到公众号', text: '叨叨排品逻辑的拆解同步到公众号，石更新期待未来付费内容能对群成员直接开放观看。', url: 'https://my.feishu.cn/wiki/NhRvwJis5iHVJikIcdpcbx5ln6f?from=from_copylink', linkLabel: '阅读同主题飞书版' }
       ,{ time: '19:19', title: '知识库入口完成确认', text: '群友询问飞书知识库入口并自行找到，说明官网和知识库的开放式入口已经开始被实际使用。' }
       ,{ time: '19:55', title: '工具选择回到使用优先', text: '石更新分享对国内工具的判断：适配性越来越高，先用起来比直接追求“最好”更重要。' }
     ]
@@ -132,7 +142,7 @@ const days = {
     title: '低转高的关键，不是换一个直播工具，而是重建真实体验',
     summary: '从“腾讯会议把 1 万元产品卖爆”的案例，到私域低转高与伪直播的反思，今天的讨论把注意力重新拉回真实体验、内容表达、社群连接和产品审美：工具只是容器，信任与需求才决定转化。',
     insights: [
-      { roles: ['private', 'product'], tag: '低转高', source: '石更新', time: '15:30', title: '低转高做不起来，先检查转化场域有没有真实感', text: '腾讯会议可以成为高客单转化的道场，但工具本身不会自动带来成交；如果过程只是伪直播，缺少真实互动、信任和体验，低价用户很难自然走向高价产品。' },
+      { roles: ['private', 'product'], tag: '低转高', source: '石更新', time: '15:30', title: '低转高做不起来，先检查转化场域有没有真实感', text: '腾讯会议可以成为高客单转化的道场，但工具本身不会自动带来成交；如果过程只是伪直播，缺少真实互动、信任和体验，低价用户很难自然走向高价产品。', url: 'https://my.feishu.cn/wiki/Oq9cwKvxdiWItok2OEpcCBFXn4b?from=from_copylink', linkLabel: '阅读完整分析' },
       { roles: ['content', 'private'], tag: '知识沉淀', source: '石更新', time: '15:31', title: '一条洞察要进入知识库，才能从即时表达变成可复用资产', text: '围绕私域低转高形成完整内容后，同步到飞书和 ima 知识库，让群内讨论拥有可检索、可回看的长期入口。' },
       { roles: ['content', 'product'], tag: '表达形式', source: '石更新', time: '15:38', title: '同一份内容换一种视觉形式，也是在重新设计理解路径', text: '今天尝试用漫画一览图呈现内容。形式不是额外装饰，而是在验证读者能否更快看懂、记住并愿意继续阅读。' },
       { roles: ['private', 'product'], tag: '成员连接', source: '石更新 × Howie', time: '16:00', title: '欢迎新成员时把能力说清楚，社群关系才能更快形成连接', text: 'Howie 长期生活在香港，关注香港身份、孩子升学、家庭资产配置和 Web3；清晰介绍成员能力，让有相关需求的人更容易找到合适的连接。' },
@@ -146,13 +156,16 @@ const days = {
     ],
     resources: [
       { kind: '案例', title: '腾讯会议高客单转化案例', text: '用于观察线上会议如何承接高价产品的讲解、互动与信任建立。' },
-      { kind: '文章', title: '私域低转高做不起来，伪直播是原罪', text: '石更新围绕低转高核心问题形成的完整延伸分析，已同步至飞书知识库。' },
-      { kind: '知识库', title: '飞书问答知识库', text: '点击群置顶第二条可进入，把当天洞察从群聊沉淀为可持续查询的内容。' },
+      { kind: '文章', title: '私域低转高做不起来，伪直播是原罪', text: '石更新围绕低转高核心问题形成的完整延伸分析，已同步至飞书知识库。', url: 'https://my.feishu.cn/wiki/Oq9cwKvxdiWItok2OEpcCBFXn4b?from=from_copylink', linkLabel: '阅读完整文章' },
+      { kind: '知识库', title: '飞书问答知识库', text: '点击群置顶第二条可进入，把当天洞察从群聊沉淀为可持续查询的内容。', links: [
+        { label: '领取兑换码', url: 'https://my.feishu.cn/share/base/query/shrcnfBdf7Edx375UjSlk5b6pGc' },
+        { label: '进入知识库', url: 'https://ask.feishu.cn/shared-space/7663061611179003182' }
+      ] },
       { kind: '人物', title: 'Howie 陈科豪', text: '香港本地生活与教育相关经验，可连接香港身份、孩子升学、家庭资产配置和 Web3 等需求。' }
     ],
     themes: [
       { time: '15:27', title: '腾讯会议高客单转化案例', text: '石更新分享“腾讯会议，把 1 万块卖爆了”的案例及相关图片，开启对线上转化场域的观察。' },
-      { time: '15:30', title: '私域低转高与伪直播反思', text: '从案例继续延伸到低转高的核心：工具只是场地，伪直播和真实互动缺位，可能才是转化做不起来的关键原因；完整内容随后同步到飞书和 ima 知识库。' },
+      { time: '15:30', title: '私域低转高与伪直播反思', text: '从案例继续延伸到低转高的核心：工具只是场地，伪直播和真实互动缺位，可能才是转化做不起来的关键原因；完整内容随后同步到飞书和 ima 知识库。', url: 'https://my.feishu.cn/wiki/Oq9cwKvxdiWItok2OEpcCBFXn4b?from=from_copylink', linkLabel: '阅读完整分析' },
       { time: '15:38', title: '漫画一览图新风格', text: '石更新分享当天尝试的新视觉风格，用漫画一览图重新组织内容表达。' },
       { time: '16:00', title: 'Howie 加入成长朋友圈', text: '石更新欢迎 Howie，并介绍其在香港身份、孩子升学、家庭资产配置和 Web3 等方向的经验；Howie 也发现群里有不少老朋友。' },
       { time: '16:42', title: '美是需求', text: '当天最后的自查问题是：产品或作品是否真正满足了市场和大众的需求，包括对审美与体验的期待。' }
@@ -311,6 +324,16 @@ function escapeHtml(value) {
   })[character]);
 }
 
+function renderItemLinks(item) {
+  const links = Array.isArray(item.links) && item.links.length
+    ? item.links
+    : item.url
+      ? [{ label: item.linkLabel || '查看完整内容', url: item.url }]
+      : [];
+  if (!links.length) return '';
+  return `<div class="content-links" aria-label="延伸阅读">${links.map((link) => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}<span aria-hidden="true">↗</span></a>`).join('')}</div>`;
+}
+
 const today = new Date();
 const todayKey = dateKey(today);
 const initialDay = days[todayKey] ? todayKey : Object.keys(days).sort().at(-1);
@@ -450,7 +473,7 @@ function renderOverview() {
   const data = day();
   const visibleInsights = data.insights.filter((item) => state.lens === 'all' || item.roles.includes(state.lens));
   const insights = visibleInsights.length
-    ? visibleInsights.map((item, index) => `<article class="insight-row"><span>0${index + 1}</span><div><div class="insight-eyebrow"><p class="kicker">${item.tag}</p><button type="button" class="source-link" data-go-view="discussion">来自 ${item.source} · ${item.time}</button></div><h3>${item.title}</h3><p>${item.text}</p></div></article>`).join('')
+    ? visibleInsights.map((item, index) => `<article class="insight-row"><span>0${index + 1}</span><div><div class="insight-eyebrow"><p class="kicker">${item.tag}</p><button type="button" class="source-link" data-go-view="discussion">来自 ${item.source} · ${item.time}</button></div><h3>${item.title}</h3><p>${item.text}</p>${renderItemLinks(item)}</div></article>`).join('')
     : '<div class="empty-state">今天暂时没有这个方向的内容，换一个筛选看看。</div>';
 
   return `<div class="dashboard-grid">
@@ -511,12 +534,12 @@ function renderTopics() {
 
 function renderResources() {
   const data = day();
-  return `<header class="page-head"><div><p class="kicker">资源连接</p><h1>今天值得记住的人、工具与方法</h1></div><p>不用记住群里所有信息，只保留以后遇到问题时能再次调用的资源。</p></header><div class="resource-grid">${data.resources.map((item) => `<article class="card resource-card"><span class="resource-kind">${item.kind}</span><h2>${item.title}</h2><p>${item.text}</p></article>`).join('')}</div>`;
+  return `<header class="page-head"><div><p class="kicker">资源连接</p><h1>今天值得记住的人、工具与方法</h1></div><p>不用记住群里所有信息，只保留以后遇到问题时能再次调用的资源。</p></header><div class="resource-grid">${data.resources.map((item) => `<article class="card resource-card"><span class="resource-kind">${item.kind}</span><h2>${item.title}</h2><p>${item.text}</p>${renderItemLinks(item)}</article>`).join('')}</div>`;
 }
 
 function renderDiscussion() {
   const data = day();
-  return `<header class="page-head"><div><p class="kicker">原始讨论</p><h1>群里今天聊了什么</h1></div><p>保留时间和主题脉络，需要上下文时再回到原群查看完整对话。</p></header><div class="discussion-layout"><section class="card timeline-card">${data.themes.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><div><h2>${item.title}</h2><p>${item.text}</p></div></article>`).join('')}</section><aside class="card discussion-note"><p class="kicker">阅读边界</p><h2>这是学习索引，不是聊天替代品</h2><p>页面帮助你快速判断哪些讨论值得回看。涉及具体合作、价格和个人观点时，请以群内原始消息为准。</p></aside></div>`;
+  return `<header class="page-head"><div><p class="kicker">原始讨论</p><h1>群里今天聊了什么</h1></div><p>保留时间和主题脉络，需要上下文时再回到原群查看完整对话。</p></header><div class="discussion-layout"><section class="card timeline-card">${data.themes.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><div><h2>${item.title}</h2><p>${item.text}</p>${renderItemLinks(item)}</div></article>`).join('')}</section><aside class="card discussion-note"><p class="kicker">阅读边界</p><h2>这是学习索引，不是聊天替代品</h2><p>页面帮助你快速判断哪些讨论值得回看。涉及具体合作、价格和个人观点时，请以群内原始消息为准。</p></aside></div>`;
 }
 
 function visibleMembers() {
