@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一起成长朋友圈",
-  "count": 24,
-  "updatedAt": "2026-07-17T15:34:18+08:00",
+  "count": 25,
+  "updatedAt": "2026-07-18T16:10:31+08:00",
   "members": [
     {
       "name": "石更新(999社群)",
@@ -98,6 +98,10 @@
     {
       "name": "Soldier",
       "avatar": "./assets/members/member-24.jpg?v=20260717153418"
+    },
+    {
+      "name": "Howie",
+      "avatar": "./assets/members/member-25.jpg?v=20260718161031"
     }
   ]
 }
