@@ -206,8 +206,8 @@ const days = {
     title: '好的合伙人，是站到台前之后仍然背靠背的人',
     summary: '今天的内容从叨叨与夏博的合伙关系，延伸到长期经营所需的情感能量。真正的支持不仅是共同做事，也是在对方走到台前时真诚认可、公开托举；而一首能带来鼓舞与疗愈的歌，同样是创业者维持状态的重要资源。',
     insights: [
-      { roles: ['product', 'private'], tag: '合伙关系', source: '石更新', time: '17:26', title: '真正的合伙支持，是对方走到台前时仍然公开托举', text: '一句真诚的认可、一次公开的支持，看似很小，却能让共同创业的人确认自己不是孤军奋战。' },
-      { roles: ['content', 'private'], tag: '内容观察', source: '石更新', time: '17:26', title: '能打动人的内容，常常来自关系里一个被看见的小细节', text: '从朋友圈中的一句评论继续观察两个人的相处方式，就能写出比抽象道理更有温度、更具传播力的故事。' },
+      { roles: ['product', 'private'], tag: '合伙关系', source: '石更新', time: '17:26', title: '真正的合伙支持，是对方走到台前时仍然公开托举', text: '一句真诚的认可、一次公开的支持，看似很小，却能让共同创业的人确认自己不是孤军奋战。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484922&idx=1&sn=a11fa9eda6b51aa859adde4a84c3d6f6&chksm=c4636aeeee0619f60fc4c9f9cb0baf1dad2f3d026895c7dd80da0256194dbcf1d472749470af#rd', linkLabel: '阅读公众号原文' },
+      { roles: ['content', 'private'], tag: '内容观察', source: '石更新', time: '17:26', title: '能打动人的内容，常常来自关系里一个被看见的小细节', text: '从朋友圈中的一句评论继续观察两个人的相处方式，就能写出比抽象道理更有温度、更具传播力的故事。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484922&idx=1&sn=a11fa9eda6b51aa859adde4a84c3d6f6&chksm=c4636aeeee0619f60fc4c9f9cb0baf1dad2f3d026895c7dd80da0256194dbcf1d472749470af#rd', linkLabel: '阅读公众号原文' },
       { roles: ['private', 'product'], tag: '长期能量', source: '石更新', time: '19:35', title: '鼓舞与疗愈不是工作之外的事，而是长期经营的能量补给', text: '《陈勇敢当》在需要动力时提供激励，在疲惫时提供疗愈；经营事业也需要为自己的情绪和生命状态保留空间。' }
     ],
     actions: [
@@ -216,7 +216,7 @@ const days = {
       { title: '建立自己的能量歌单', text: '分别收录能鼓舞你和能疗愈你的内容，状态需要时直接调用。' }
     ],
     resources: [
-      { kind: '文章', title: '实名夸一夸叨叨的合伙人夏博老师', text: '从一条朋友圈评论出发，记录合伙人之间真诚认可与彼此托举的故事。' },
+      { kind: '文章', title: '实名夸一夸叨叨的合伙人夏博老师', text: '从一条朋友圈评论出发，记录合伙人之间真诚认可与彼此托举的故事。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484922&idx=1&sn=a11fa9eda6b51aa859adde4a84c3d6f6&chksm=c4636aeeee0619f60fc4c9f9cb0baf1dad2f3d026895c7dd80da0256194dbcf1d472749470af#rd', linkLabel: '阅读公众号原文' },
       { kind: '歌曲', title: '陈勇敢当', text: '受曾一鸣《陈母问勇》和英雄陈祥榕故事启发创作，兼具激励与疗愈价值。' },
       { kind: '方法', title: '从关系细节中寻找内容', text: '先观察一句话、一个动作和它背后的关系，再把真实感受写出来。' }
     ],
