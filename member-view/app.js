@@ -170,6 +170,60 @@ const days = {
       { time: '16:00', title: 'Howie 加入成长朋友圈', text: '石更新欢迎 Howie，并介绍其在香港身份、孩子升学、家庭资产配置和 Web3 等方向的经验；Howie 也发现群里有不少老朋友。' },
       { time: '16:42', title: '美是需求', text: '当天最后的自查问题是：产品或作品是否真正满足了市场和大众的需求，包括对审美与体验的期待。' }
     ]
+  },
+  '2026-07-19': {
+    dateLabel: '2026 年 7 月 19 日', weekday: '星期日', messages: 27, themesCount: 5, readTime: '5 分钟',
+    title: '把知识库变成新型资料，把内容生产变成 15 分钟工作流',
+    summary: '今天的交流从飞书与 ima 知识库的搭建出发，延伸到内容生产、成员连接和社群工具：知识库既能承接交付，也能成为新的获客资料；Typeless、飞书、Codex 与公众号组成稳定工作流；新成员溪子的能力标签和视频号工具，也让社群资源变得更容易被调用。',
+    insights: [
+      { roles: ['content', 'private'], tag: '知识交付', source: '石更新', time: '18:14', title: '知识库不只是存资料，而是一种新的交付与获客载体', text: '把个人或团队经验整理进飞书、ima 后，它既能服务学员、承接权益，也可以像过去的 PDF 资料一样成为可传播、可沉淀线索的入口。', url: 'https://my.feishu.cn/wiki/ZoCuwMZD8i8NspkKKKbci5LjnIh?from=from_copylink', linkLabel: '查看知识库搭建教程' },
+      { roles: ['content', 'product'], tag: '内容工作流', source: '石更新', time: '19:05', title: '稳定的生产链路，比每次重新找工具更能提升效率', text: '先用 Typeless 口述，再在飞书整理，交给 Codex 按“摸鱼绿”排版并推送草稿，最后在公众号后台检查发布，整套流程可以压缩到 15—20 分钟。' },
+      { roles: ['private', 'product'], tag: '成员连接', source: '石更新 × 溪子', time: '18:48', title: '把成员能力说清楚，社群资源网络才真正可调用', text: '溪子的心理咨询、艺术治疗、内容影响力和知识 IP 获客经验被清晰介绍后，有相关需求的群友能更快找到她并建立连接。' },
+      { roles: ['product', 'private'], tag: '工具价值', source: '石更新', time: '19:32', title: '把内部工具开放给群友，官网就从内容页变成实用工作台', text: '视频号下载工具被放进官网并邀请群友试用，网站不再只是浏览日报，也开始承担日常工作中的真实需求。' }
+    ],
+    actions: [
+      { title: '搭建第一个知识库', text: '在飞书或 ima 中选一个工具，把一类高频资料整理成可分享的入口。' },
+      { title: '写下自己的内容生产清单', text: '把口述、整理、排版、检查和发布拆开，并为每一步设定时间预算。' },
+      { title: '试用一次视频号下载工具', text: '用一条自己有权使用的视频链接完成解析，并反馈实际体验。' },
+      { title: '主动连接一位群友', text: '根据名录中的能力标签，找到一位与你当前问题相关的人展开交流。' }
+    ],
+    resources: [
+      { kind: '教程', title: '如何用 ima 或飞书创建知识库', text: '知识库搭建方法、使用场景，以及如何把它用于交付、权益和获客。', url: 'https://my.feishu.cn/wiki/ZoCuwMZD8i8NspkKKKbci5LjnIh?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '工作流', title: 'Typeless → 飞书 → Codex → 公众号', text: '一套约 15—20 分钟完成公众号内容生产与发布的实操路径。' },
+      { kind: '人物', title: '溪子', text: '临床心理咨询与艺术治疗背景，长期从事咨询与教学，并具备知识 IP 小红书获客经验。' },
+      { kind: '工具', title: '视频号下载工具', text: '官网内的实用工具入口，可用于处理本人拥有或已获授权的视频内容。', url: './video-downloader.html', linkLabel: '打开视频号工具' }
+    ],
+    themes: [
+      { time: '18:14', title: '知识库搭建教程发布', text: '石更新分享飞书与 ima 知识库的搭建方法，并解释其在知识管理、学员交付和获客资料中的价值。', url: 'https://my.feishu.cn/wiki/ZoCuwMZD8i8NspkKKKbci5LjnIh?from=from_copylink', linkLabel: '查看完整教程' },
+      { time: '18:25', title: '溪子加入成长朋友圈', text: '溪子入群并介绍自己的心理咨询、艺术治疗、研究生教学和内容获客经验。' },
+      { time: '19:05', title: '15—20 分钟内容工作流', text: '石更新拆解从 Typeless 口述到飞书整理、Codex 排版和公众号发布的完整流程。' },
+      { time: '19:32', title: '视频号下载工具开放试用', text: '官网左侧的视频号工具被正式介绍给群友，大家开始体验并反馈。' },
+      { time: '20:35', title: '升级后的第一次线下会晤', text: '石更新分享与伙伴线下见面的动态，强调志同道合的人之间会产生更多火花。' }
+    ]
+  },
+  '2026-07-20': {
+    dateLabel: '2026 年 7 月 20 日', weekday: '星期一', messages: 5, themesCount: 2, readTime: '3 分钟',
+    title: '好的合伙人，是站到台前之后仍然背靠背的人',
+    summary: '今天的内容从叨叨与夏博的合伙关系，延伸到长期经营所需的情感能量。真正的支持不仅是共同做事，也是在对方走到台前时真诚认可、公开托举；而一首能带来鼓舞与疗愈的歌，同样是创业者维持状态的重要资源。',
+    insights: [
+      { roles: ['product', 'private'], tag: '合伙关系', source: '石更新', time: '17:26', title: '真正的合伙支持，是对方走到台前时仍然公开托举', text: '一句真诚的认可、一次公开的支持，看似很小，却能让共同创业的人确认自己不是孤军奋战。' },
+      { roles: ['content', 'private'], tag: '内容观察', source: '石更新', time: '17:26', title: '能打动人的内容，常常来自关系里一个被看见的小细节', text: '从朋友圈中的一句评论继续观察两个人的相处方式，就能写出比抽象道理更有温度、更具传播力的故事。' },
+      { roles: ['private', 'product'], tag: '长期能量', source: '石更新', time: '19:35', title: '鼓舞与疗愈不是工作之外的事，而是长期经营的能量补给', text: '《陈勇敢当》在需要动力时提供激励，在疲惫时提供疗愈；经营事业也需要为自己的情绪和生命状态保留空间。' }
+    ],
+    actions: [
+      { title: '公开感谢一位伙伴', text: '具体说出他曾经如何支持你，让认可不只停留在心里。' },
+      { title: '记录一个关系细节', text: '从今天看到的一句话或一个动作出发，写成一段真实故事。' },
+      { title: '建立自己的能量歌单', text: '分别收录能鼓舞你和能疗愈你的内容，状态需要时直接调用。' }
+    ],
+    resources: [
+      { kind: '文章', title: '实名夸一夸叨叨的合伙人夏博老师', text: '从一条朋友圈评论出发，记录合伙人之间真诚认可与彼此托举的故事。' },
+      { kind: '歌曲', title: '陈勇敢当', text: '受曾一鸣《陈母问勇》和英雄陈祥榕故事启发创作，兼具激励与疗愈价值。' },
+      { kind: '方法', title: '从关系细节中寻找内容', text: '先观察一句话、一个动作和它背后的关系，再把真实感受写出来。' }
+    ],
+    themes: [
+      { time: '17:26', title: '合伙人之间的公开托举', text: '石更新从叨叨与夏博的互动谈到合伙关系：找到合适的伙伴不容易，要真诚认可并用力支持对方。' },
+      { time: '19:35', title: '歌曲也是创业者的能量资产', text: '石更新分享《陈勇敢当》的创作缘起，以及它在日常生活中带来的鼓舞与疗愈。' }
+    ]
   }
 };
 
@@ -226,7 +280,7 @@ let members = [
     "avatar": "data:image/jpeg;base64,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"
   },
   {
-    "name": "李守洲（7.31成都线下",
+    "name": "李守洲（8.28杭州线下",
     "order": 11,
     "avatar": "data:image/jpeg;base64,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"
   },
@@ -299,9 +353,14 @@ let members = [
     "name": "Howie",
     "order": 25,
     "avatar": "./assets/members/member-25.jpg?v=20260718161031"
+  },
+  {
+    "name": "溪子",
+    "order": 26,
+    "avatar": "./assets/members/member-26.jpg?v=20260720195135"
   }
 ];
-let membersUpdatedAt = "2026-07-18T16:10:31+08:00";
+let membersUpdatedAt = "2026-07-20T19:51:35+08:00";
 
 function pad(number) { return String(number).padStart(2, '0'); }
 function dateKey(date) { return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`; }

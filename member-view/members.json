@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一起成长朋友圈",
-  "count": 25,
-  "updatedAt": "2026-07-18T16:10:31+08:00",
+  "count": 26,
+  "updatedAt": "2026-07-20T19:51:35+08:00",
   "members": [
     {
       "name": "石更新(999社群)",
@@ -44,7 +44,7 @@
       "avatar": "./assets/members/member-10.jpg?v=20260717153418"
     },
     {
-      "name": "李守洲（7.31成都线下",
+      "name": "李守洲（8.28杭州线下",
       "avatar": "./assets/members/member-11.jpg?v=20260717153418"
     },
     {
@@ -102,6 +102,10 @@
     {
       "name": "Howie",
       "avatar": "./assets/members/member-25.jpg?v=20260718161031"
+    },
+    {
+      "name": "溪子",
+      "avatar": "./assets/members/member-26.jpg?v=20260720195135"
     }
   ]
 }
