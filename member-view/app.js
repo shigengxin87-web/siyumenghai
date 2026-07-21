@@ -224,6 +224,37 @@ const days = {
       { time: '17:26', title: '合伙人之间的公开托举', text: '石更新从叨叨与夏博的互动谈到合伙关系：找到合适的伙伴不容易，要真诚认可并用力支持对方。' },
       { time: '19:35', title: '歌曲也是创业者的能量资产', text: '石更新分享《陈勇敢当》的创作缘起，以及它在日常生活中带来的鼓舞与疗愈。' }
     ]
+  },
+  '2026-07-21': {
+    dateLabel: '2026 年 7 月 21 日', weekday: '星期二', messages: 75, themesCount: 5, readTime: '6 分钟',
+    title: '不会的事交给 Agent，嘴负责表达，工具负责执行',
+    summary: '今天从微信聊天记录自动整理的应用场景出发，讨论延伸到教培交付、知识付费、IP 选题、视频号导流风控和 AI 小白的工具路径。核心不是把所有技术学会，而是围绕真实需求，让语音输入负责表达、Agent 负责执行，再借助社群完成资源匹配。',
+    insights: [
+      { roles: ['content', 'product'], tag: '内容资产', source: '石更新', time: '19:39', title: '聊天记录一旦被结构化，就能从信息流变成交付资产', text: '教培可以生成学生成长档案，知识付费可以整理群重点，IP 可以提取选题与资源；同一份聊天数据能够继续变成总结、图片、网站和小程序。', url: 'https://my.feishu.cn/wiki/Ubw5wr5sRi0QuAkHJdpcTYXcn0o?from=from_copylink', linkLabel: '查看完整教程' },
+      { roles: ['private', 'product'], tag: '导流风控', source: '石更新 × 溪子', time: '20:01', title: '能不能直接留微信，不是规则题，而是一道收益风险题', text: '主页留微信并非绝对安全或绝对不能做，要同时看流量规模、转化链路和账号承受能力；当流量少、路径长时，风险可能不值得承担。' },
+      { roles: ['product', 'private'], tag: '安全承接', source: '石更新', time: '20:01', title: '先用更安全的承接入口，再考虑高风险捷径', text: '公众号、小号互相艾特和橱窗低价产品都能缩短或分散风险。直接留微信之前，先检查这些相对安全的方案是否已经配置。' },
+      { roles: ['content', 'product'], tag: 'AI 入门', source: '石更新 × 一月语文', time: '20:29', title: 'AI 小白不必先学完整技术栈，要先让 Agent 接住不会的问题', text: '从教培老师的真实需求出发，先用 WorkBuddy 或 Codex 完成话术整理、成长档案和公众号流程；先跑通结果，再逐步补技术。' },
+      { roles: ['content', 'private'], tag: '表达效率', source: '石更新 × 群友', time: '20:45', title: '一个靠嘴说，一个靠 Agent 做，是更低门槛的工作方式', text: '语音输入负责把想法快速说出来，Agent 负责整理和执行。工具不必迷信单一品牌，Typeless、千问和微信输入法都应按当前体验选择。' }
+    ],
+    actions: [
+      { title: '把一段聊天记录变成资产', text: '选择一段真实交流，按教程生成总结、行动清单或交付报告。' },
+      { title: '检查视频号承接链路', text: '依次检查公众号、小号互推、橱窗产品和主页联系方式，优先补安全入口。' },
+      { title: '跑通一个 Agent 任务', text: '用 WorkBuddy 或 Codex 完成一个当前不会的任务，不先追求系统学习。' },
+      { title: '固定语音加 Agent 流程', text: '选择一个顺手的语音输入工具，把口述、整理和执行串成固定步骤。' }
+    ],
+    resources: [
+      { kind: '教程', title: '一键读取微信聊天记录，变选题、总结、海报和网站', text: '面向运营提效、个人知识沉淀、教培档案和知识付费交付的完整应用示例。', url: 'https://my.feishu.cn/wiki/Ubw5wr5sRi0QuAkHJdpcTYXcn0o?from=from_copylink', linkLabel: '打开飞书教程' },
+      { kind: '工具', title: 'WorkBuddy 与 Codex', text: '先用 Agent 接住不会的问题；国内使用可优先从 WorkBuddy 入门，再逐步学习 Codex。' },
+      { kind: '工具', title: 'Typeless、千问与微信输入法', text: '用于语音输入、跨设备使用和自动总结，按实际体验与成本选择。' },
+      { kind: '连接', title: '抖音录播服务资源匹配', text: '群内围绕账号提供、12 小时以上录播等条件快速确认资源，并形成成员之间的业务连接。' }
+    ],
+    themes: [
+      { time: '19:39', title: '微信聊天记录自动变成内容资产', text: '石更新分享从群聊读取到选题、总结、海报、网站和小程序的进阶玩法，并补充教培、知识付费和 IP 场景。', url: 'https://my.feishu.cn/wiki/Ubw5wr5sRi0QuAkHJdpcTYXcn0o?from=from_copylink', linkLabel: '查看完整教程' },
+      { time: '19:45', title: '抖音录播服务需求出现', text: 'Allen 提出账号与长时录播需求，群内开始确认服务商条件，并在当天形成可继续连接的线索。' },
+      { time: '19:50', title: '视频号主页留微信的风险讨论', text: '围绕直接展示微信、二维码和长链路导流展开判断，重点回到流量规模、账号风险和安全替代方案。' },
+      { time: '20:23', title: 'AI 小白应该先学什么', text: '从教培老师的话术整理、学员成长档案和公众号发布需求出发，形成先用 WorkBuddy、再深入 Codex 的入门路径。' },
+      { time: '20:37', title: '语音输入工具现场选型', text: '群友比较 Typeless、千问和微信输入法的体验，最终回到“嘴负责表达、Agent 负责执行”的工作方式。' }
+    ]
   }
 };
 
