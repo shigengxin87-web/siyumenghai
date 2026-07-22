@@ -28,6 +28,13 @@ Page({
   },
 
   onShow() {
+    const pendingDate = wx.getStorageSync('growth-pending-date');
+    if (reports[pendingDate]) {
+      wx.removeStorageSync('growth-pending-date');
+      this.loadReport(pendingDate);
+      this.setData({ currentView: 'overview' });
+      wx.pageScrollTo({ scrollTop: 0, duration: 0 });
+    }
     this.loadActionState();
   },
 
@@ -94,10 +101,6 @@ Page({
     if (done) wx.setStorageSync(key, 'done');
     else wx.removeStorageSync(key);
     this.setData({ [`completedActions.${index}`]: done });
-  },
-
-  openMembers() {
-    wx.navigateTo({ url: '/pages/members/index' });
   },
 
   copyToday() {

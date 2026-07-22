@@ -1,0 +1,23 @@
+<view class="archive-page">
+  <view class="archive-hero">
+    <text class="kicker">LEARNING ARCHIVE · 学习沉淀</text>
+    <text class="title">每天的讨论，沉淀成一条成长路径</text>
+    <text class="desc">按时间回看群里的重要观点、行动建议与资源连接。</text>
+  </view>
+
+  <view class="summary-card">
+    <view><text class="number">{{days.length}}</text><text>已更新日报</text></view>
+    <view><text class="number">{{totals.messages}}</text><text>群聊消息</text></view>
+    <view><text class="number">{{totals.themes}}</text><text>讨论主题</text></view>
+    <view><text class="number">{{totals.actions}}</text><text>行动建议</text></view>
+  </view>
+
+  <view class="section-title"><text>全部日报</text><text>最新在前</text></view>
+  <view class="day-card" wx:for="{{days}}" wx:key="key" data-key="{{item.key}}" bindtap="openDay">
+    <view class="day-meta"><text>{{item.dateLabel}} · {{item.weekday}}</text><text>{{item.messages}} 条消息</text></view>
+    <text class="day-title">{{item.title}}</text>
+    <text class="day-summary">{{item.summary}}</text>
+    <view class="day-footer"><text>{{item.themes}} 个主题</text><text>查看当天 →</text></view>
+  </view>
+  <view class="safe-bottom"></view>
+</view>

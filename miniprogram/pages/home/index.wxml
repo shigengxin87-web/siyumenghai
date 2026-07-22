@@ -3,7 +3,6 @@
     <view class="brand-row">
       <view class="brand-mark">石</view>
       <view class="brand-copy"><text>成长朋友圈</text><text>群友学习版</text></view>
-      <button class="members-button" bindtap="openMembers">群友名录</button>
     </view>
     <text class="eyebrow"><text class="live-dot"></text> 单群专属学习站</text>
     <text class="hero-title">每天从群里，带走一点真东西</text>

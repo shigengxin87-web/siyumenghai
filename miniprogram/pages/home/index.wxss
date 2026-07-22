@@ -5,8 +5,7 @@
 .brand-copy { display: flex; flex-direction: column; flex: 1; }
 .brand-copy text:first-child { font-size: 31rpx; font-weight: 800; }
 .brand-copy text:last-child { font-size: 22rpx; color: #67847b; margin-top: 2rpx; }
-.members-button { margin: 0; padding: 0 24rpx; height: 64rpx; line-height: 64rpx; border-radius: 32rpx; color: #08795c; background: rgba(255,255,255,.86); border: 1rpx solid #bfe8da; font-size: 25rpx; }
-.members-button::after, .copy-button::after, .date-chip::after, .view-tab::after, .week-card button::after { border: 0; }
+.copy-button::after, .date-chip::after, .view-tab::after, .week-card button::after { border: 0; }
 .eyebrow { display: block; color: #047857; font-size: 23rpx; font-weight: 700; letter-spacing: 2rpx; margin-bottom: 16rpx; }
 .live-dot { display: inline-block; width: 12rpx; height: 12rpx; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 8rpx rgba(16,185,129,.1); }
 .hero-title { display: block; font-size: 54rpx; line-height: 1.2; font-weight: 900; letter-spacing: -2rpx; max-width: 650rpx; }

@@ -1,0 +1,18 @@
+.archive-page { min-height: 100vh; padding: 30rpx; box-sizing: border-box; }
+.archive-hero { padding: 30rpx 8rpx 34rpx; }
+.kicker { display: block; color: #0a8f6a; font-size: 22rpx; font-weight: 800; letter-spacing: 1rpx; }
+.title { display: block; max-width: 650rpx; margin: 16rpx 0; font-size: 46rpx; line-height: 1.28; font-weight: 900; }
+.desc { display: block; color: #60766f; line-height: 1.7; }
+.summary-card { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rpx; overflow: hidden; border: 1rpx solid #dcebe5; border-radius: 26rpx; background: #dcebe5; box-shadow: 0 12rpx 32rpx rgba(30,82,66,.05); }
+.summary-card view { padding: 28rpx 18rpx; background: #fff; }
+.summary-card text { display: block; color: #71877f; font-size: 21rpx; }
+.summary-card .number { margin-bottom: 6rpx; color: #075c46; font-size: 38rpx; font-weight: 900; }
+.section-title { display: flex; align-items: center; justify-content: space-between; padding: 42rpx 6rpx 20rpx; }
+.section-title text:first-child { font-size: 34rpx; font-weight: 900; }
+.section-title text:last-child { color: #82968f; font-size: 22rpx; }
+.day-card { margin-bottom: 18rpx; padding: 28rpx; border: 1rpx solid #e0ece7; border-radius: 26rpx; background: #fff; box-shadow: 0 10rpx 28rpx rgba(30,82,66,.05); }
+.day-meta, .day-footer { display: flex; align-items: center; justify-content: space-between; color: #789087; font-size: 21rpx; }
+.day-title { display: block; margin: 15rpx 0 10rpx; font-size: 30rpx; line-height: 1.48; font-weight: 800; }
+.day-summary { display: -webkit-box; overflow: hidden; color: #60766f; line-height: 1.65; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.day-footer { margin-top: 20rpx; padding-top: 18rpx; border-top: 1rpx solid #edf3f0; }
+.day-footer text:last-child { color: #07805f; font-weight: 700; }

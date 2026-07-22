@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/home/index",
+    "pages/archive/index",
     "pages/members/index"
   ],
   "window": {
@@ -9,6 +10,26 @@
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f6fbf8",
     "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#7b8e87",
+    "selectedColor": "#047857",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "今日"
+      },
+      {
+        "pagePath": "pages/archive/index",
+        "text": "日报归档"
+      },
+      {
+        "pagePath": "pages/members/index",
+        "text": "群友名录"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
