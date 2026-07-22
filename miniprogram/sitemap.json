@@ -1,0 +1,4 @@
+{
+  "desc": "成长朋友圈群友学习版",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

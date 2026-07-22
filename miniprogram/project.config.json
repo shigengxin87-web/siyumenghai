@@ -1,0 +1,26 @@
+{
+  "description": "【石更新】成长朋友圈群友学习版微信小程序",
+  "packOptions": {
+    "ignore": []
+  },
+  "setting": {
+    "bundle": false,
+    "userConfirmedBundleSwitch": false,
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": true,
+    "lazyloadPlaceholderEnable": false,
+    "useStaticServer": true,
+    "minifyWXML": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.17.0",
+  "appid": "wxf55c3816da770ae7",
+  "projectname": "growth-circle-miniprogram",
+  "condition": {}
+}

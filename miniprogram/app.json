@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/members/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "成长朋友圈",
+    "navigationBarBackgroundColor": "#ecfdf5",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6fbf8",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,92 @@
+<view class="page-shell">
+  <view class="hero">
+    <view class="brand-row">
+      <view class="brand-mark">石</view>
+      <view class="brand-copy"><text>成长朋友圈</text><text>群友学习版</text></view>
+      <button class="members-button" bindtap="openMembers">群友名录</button>
+    </view>
+    <text class="eyebrow"><text class="live-dot"></text> 单群专属学习站</text>
+    <text class="hero-title">每天从群里，带走一点真东西</text>
+    <text class="hero-desc">每天 3 分钟，找到值得记住的观点、可以执行的动作和能够连接的人。</text>
+  </view>
+
+  <view class="date-panel">
+    <picker mode="selector" range="{{dateOptions}}" range-key="label" value="{{selectedDateIndex}}" bindchange="onDateChange">
+      <view class="date-picker"><text>{{report.weekday}}</text><text class="strong">{{report.dateLabel}}</text><text>切换日期 ›</text></view>
+    </picker>
+    <scroll-view class="date-chips" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view class="date-chips-inner">
+        <button wx:for="{{dateOptions}}" wx:key="key" class="date-chip {{item.key === selectedKey ? 'is-active' : ''}}" data-key="{{item.key}}" bindtap="selectDate">{{item.label}}</button>
+      </view>
+    </scroll-view>
+  </view>
+
+  <scroll-view class="view-tabs" scroll-x="true" enhanced="true" show-scrollbar="false">
+    <view class="view-tabs-inner">
+      <button wx:for="{{views}}" wx:key="id" class="view-tab {{item.id === currentView ? 'is-active' : ''}}" data-view="{{item.id}}" bindtap="switchView">{{item.number}} {{item.label}}</button>
+    </view>
+  </scroll-view>
+
+  <view class="content" wx:if="{{currentView === 'overview'}}">
+    <view class="lead-card card">
+      <text class="kicker">{{report.weekday}} · 今日一句话</text>
+      <text class="lead-title">{{report.title}}</text>
+      <text class="lead-summary">{{report.summary}}</text>
+      <button class="copy-button" bindtap="copyToday">复制今日重点</button>
+    </view>
+    <view class="stats-card card">
+      <view><text class="strong">{{report.messages}}</text><text>群聊消息</text></view>
+      <view><text class="strong">{{report.themesCount}}</text><text>讨论主题</text></view>
+      <view><text class="strong">{{report.insights.length}}</text><text>关键启发</text></view>
+      <view><text class="strong">{{report.readTime}}</text><text>建议阅读</text></view>
+    </view>
+    <view class="section-head"><text class="kicker">对我有什么启发</text><text class="strong">今天最值得带走的内容</text></view>
+    <view class="insight card" wx:for="{{report.insights}}" wx:key="title">
+      <view class="insight-index">0{{index + 1}}</view>
+      <view class="insight-body">
+        <text class="tag">{{item.tag}}</text><text class="strong">{{item.title}}</text><text>{{item.text}}</text><text class="small">来自 {{item.source}}</text>
+        <view class="content-links" wx:if="{{item.links.length}}"><button wx:for="{{item.links}}" wx:for-item="link" wx:key="url" data-url="{{link.url}}" bindtap="copyLink">{{link.label}} · 复制链接</button></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="content" wx:elif="{{currentView === 'actions'}}">
+    <view class="section-head"><text class="kicker">把启发变成动作</text><text class="strong">今天可以做的小事</text></view>
+    <checkbox-group wx:for="{{report.actions}}" wx:key="title" data-index="{{index}}" bindchange="toggleAction">
+      <label class="action-card card {{completedActions[index] ? 'is-done' : ''}}">
+        <checkbox value="done" checked="{{completedActions[index]}}" color="#059669" />
+        <view><text class="action-number">0{{index + 1}}</text><text class="strong">{{item.title}}</text><text>{{item.text}}</text></view>
+      </label>
+    </checkbox-group>
+    <view class="tip">勾选状态会保存在这台设备上，下次打开仍然保留。</view>
+  </view>
+
+  <view class="content" wx:elif="{{currentView === 'weekly'}}">
+    <view class="section-head"><text class="kicker">LEARNING ARCHIVE · 学习回顾</text><text class="strong">每天的讨论，沉淀成一条成长路径</text></view>
+    <view class="weekly-summary card"><text class="strong">先看见真正的结果，再用内容与关系把价值留下来</text><text>理解需求 → 表达价值 → 建立信任 → 沉淀关系资产</text></view>
+    <view class="stats-card card">
+      <view><text class="strong">{{weekly.messages}}</text><text>群聊消息</text></view><view><text class="strong">{{weekly.themes}}</text><text>讨论主题</text></view><view><text class="strong">{{weekly.actions}}</text><text>行动建议</text></view>
+    </view>
+    <view class="week-card card" wx:for="{{weekly.days}}" wx:key="key">
+      <text>{{item.dateLabel}} · {{item.weekday}}</text><text class="strong">{{item.title}}</text><button data-key="{{item.key}}" bindtap="openDay">查看当天</button>
+    </view>
+  </view>
+
+  <view class="content" wx:elif="{{currentView === 'resources'}}">
+    <view class="section-head"><text class="kicker">资源连接</text><text class="strong">今天出现的人、工具与方法</text></view>
+    <view class="resource-card card" wx:for="{{report.resources}}" wx:key="title">
+      <text class="tag">{{item.kind}}</text><text class="strong">{{item.title}}</text><text>{{item.text}}</text>
+      <view class="content-links" wx:if="{{item.links.length}}"><button wx:for="{{item.links}}" wx:for-item="link" wx:key="url" data-url="{{link.url}}" bindtap="copyLink">{{link.label}} · 复制链接</button></view>
+    </view>
+  </view>
+
+  <view class="content" wx:elif="{{currentView === 'discussion'}}">
+    <view class="section-head"><text class="kicker">原始讨论</text><text class="strong">群里今天聊了什么</text></view>
+    <view class="timeline card">
+      <view class="timeline-item" wx:for="{{report.themes}}" wx:key="title"><text class="timeline-time">{{item.time}}</text><view><text class="strong">{{item.title}}</text><text>{{item.text}}</text><view class="content-links" wx:if="{{item.links.length}}"><button wx:for="{{item.links}}" wx:for-item="link" wx:key="url" data-url="{{link.url}}" bindtap="copyLink">{{link.label}} · 复制链接</button></view></view></view>
+    </view>
+    <view class="tip"><text class="strong">阅读边界：</text>这是学习索引，不是聊天替代品。涉及具体合作、价格和个人观点时，请以群内原始消息为准。</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

@@ -1,0 +1,14 @@
+.members-page { min-height: 100vh; padding: 30rpx; box-sizing: border-box; }
+.members-hero { padding: 32rpx 8rpx 28rpx; }
+.kicker { display: block; color: #0a8f6a; font-size: 22rpx; font-weight: 800; letter-spacing: 1rpx; }
+.title { display: block; font-size: 46rpx; font-weight: 900; line-height: 1.25; margin: 16rpx 0; }
+.desc { display: block; color: #60766f; line-height: 1.7; }
+.search-wrap { position: sticky; top: 0; z-index: 5; padding: 12rpx 0 20rpx; background: #f6fbf8; }
+.search-wrap input { height: 86rpx; border: 1rpx solid #d8e9e2; border-radius: 24rpx; background: #fff; padding: 0 26rpx; box-sizing: border-box; }
+.result-count { color: #73877f; font-size: 23rpx; margin: 4rpx 4rpx 20rpx; }
+.member-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18rpx; }
+.member-card { position: relative; min-height: 260rpx; padding: 24rpx 18rpx; box-sizing: border-box; border: 1rpx solid #e0ece7; border-radius: 26rpx; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10rpx 28rpx rgba(30,82,66,.05); }
+.member-card .number { position: absolute; left: 18rpx; top: 16rpx; color: #87aa9f; font-size: 20rpx; font-weight: 800; }
+.member-card image { width: 112rpx; height: 112rpx; border-radius: 50%; background: #eaf4f0; }
+.member-card .name { margin-top: 18rpx; font-size: 24rpx; line-height: 1.35; text-align: center; word-break: break-all; }
+.empty { padding: 80rpx 20rpx; text-align: center; color: #7b9088; }
