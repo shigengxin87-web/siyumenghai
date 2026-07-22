@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一起成长朋友圈",
-  "count": 26,
-  "updatedAt": "2026-07-20T19:51:35+08:00",
+  "count": 28,
+  "updatedAt": "2026-07-22T09:06:17+08:00",
   "members": [
     {
       "name": "石更新(999社群)",
@@ -106,6 +106,14 @@
     {
       "name": "溪子",
       "avatar": "./assets/members/member-26.jpg?v=20260720195135"
+    },
+    {
+      "name": "反正是我",
+      "avatar": "./assets/members/member-27.jpg?v=20260722090617"
+    },
+    {
+      "name": "阳光的快乐生活",
+      "avatar": "./assets/members/member-28.jpg?v=20260722090617"
     }
   ]
 }
