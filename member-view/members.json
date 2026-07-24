@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一起成长朋友圈",
-  "count": 28,
-  "updatedAt": "2026-07-22T09:06:17+08:00",
+  "count": 30,
+  "updatedAt": "2026-07-25T01:00:50+08:00",
   "members": [
     {
       "name": "石更新(999社群)",
@@ -114,6 +114,14 @@
     {
       "name": "阳光的快乐生活",
       "avatar": "./assets/members/member-28.jpg?v=20260722090617"
+    },
+    {
+      "name": "青枫",
+      "avatar": "./assets/members/member-29.jpg?v=20260725010050"
+    },
+    {
+      "name": "S🏀",
+      "avatar": "./assets/members/member-30.jpg?v=20260725010050"
     }
   ]
 }
