@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一起成长朋友圈",
-  "count": 31,
-  "updatedAt": "2026-07-25T09:49:10+08:00",
+  "count": 32,
+  "updatedAt": "2026-07-25T22:36:04+08:00",
   "members": [
     {
       "name": "石更新(999社群)",
@@ -64,7 +64,7 @@
       "avatar": "./assets/members/member-15.jpg?v=20260717153418"
     },
     {
-      "name": "Joey乔伊",
+      "name": "Joey乔伊（8.29-30 杭州线下课）",
       "avatar": "./assets/members/member-16.jpg?v=20260717153418"
     },
     {
@@ -126,6 +126,10 @@
     {
       "name": "Yao",
       "avatar": "./assets/members/member-31.jpg?v=20260725094910"
+    },
+    {
+      "name": "胡天真",
+      "avatar": "./assets/members/member-32.jpg?v=20260725223604"
     }
   ]
 }
