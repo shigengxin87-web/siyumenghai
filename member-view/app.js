@@ -491,30 +491,31 @@ const days = {
     ]
   },
   '2026-07-31': {
-    dateLabel: '2026 年 7 月 31 日', weekday: '星期五', messages: 21, themesCount: 3, readTime: '4 分钟',
-    title: '收藏不是知识库，真正的价值是让内容持续流转',
-    summary: '今天集中分享了两项可以直接行动的成果：一套由 Codex 串联 Obsidian、飞书和 IMA 的内容流转体系，以及抖音虚拟类目的定向邀约申请。前者解决内容如何沉淀、调用和再生产，后者体现社群如何把有时效的机会快速转化为培训、申请入口和具体行动。',
+    dateLabel: '2026 年 7 月 31 日', weekday: '星期五', messages: 48, themesCount: 4, readTime: '5 分钟',
+    title: '信息差会消失，稳定输出和持续行动才是真正的壁垒',
+    summary: '一位靠 Agent 和 Codex 实践获得结果的新成员加入后，群聊从“信息差还能不能吃”转向更长期的问题：如何把 AI 能力变成稳定的内容输出、个人定位和持续行动。工具与训练营能提供方法和陪伴，真正决定结果的仍是执行。',
     insights: [
-      { roles: ['content', 'product'], tag: '知识流转', source: '石更新', time: '13:36', title: '把资料收藏起来，不等于拥有了可调用的知识库', text: '内容真正产生价值，需要经历收集、整理、调用、创作和再沉淀。Codex 串联 Obsidian、飞书与 IMA，让三个知识库不再各自孤立，而是进入同一条内容生产线。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=_copylink', linkLabel: '查看完整文档' },
-      { roles: ['content', 'product'], tag: '系统设计', source: '石更新', time: '18:38', title: '工具越多，越需要先定义每个工具在流程中的职责', text: 'Obsidian 适合本地沉淀，飞书适合协作与交付，IMA 适合知识调用。用 Codex 负责跨库流转，才能减少重复搬运，让一份内容持续复用。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=_copylink', linkLabel: '阅读内容生产线' },
-      { roles: ['product', 'private'], tag: '机会筛选', source: '石更新 × 杨光老师', time: '17:12', title: '有时效的行业机会，第一步不是报名，而是先判断类目是否匹配', text: '抖音虚拟类目定向邀约开放到当晚十二点。群内先确认读书卡等具体类目，再提供培训和问卷，避免成员在不了解规则时盲目提交。' },
-      { roles: ['private', 'product'], tag: '行动路径', source: '石更新', time: '19:24', title: '把培训、入口和截止时间放在一起，机会才能转化为行动', text: '只有消息没有路径，成员很容易错过。先看培训、再填写问卷，并明确截止时间，让信息从“知道了”变成“现在就能做”。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看申请培训' }
+      { roles: ['product', 'content'], tag: '能力沉淀', source: '初阳AI', time: '19:29', title: '短期信息差能带来结果，但长期要把能力沉淀成自己的系统', text: '从 Codex 的早期机会获得回报只是起点；继续学习智能体开发、创作，并搭建自己的全媒体体系，才是在把一次机会变成可复用能力。' },
+      { roles: ['content', 'product'], tag: '个人定位', source: '初阳AI × 石更新', time: '19:42', title: '当同类服务变多，新的机会来自“帮助别人真正用好 AI”', text: '工具代做的信息差会快速收窄，围绕方法、案例和持续陪伴建立内容型 IP，更容易形成长期识别度。' },
+      { roles: ['content', 'private'], tag: '稳定输出', source: '石更新', time: '19:55', title: '靠感觉能写出好内容，但系统才能提高输出的稳定性', text: '过去买过课程和智能体却没有真正使用，说明拥有工具不等于形成工作流。下一步应让工具进入真实创作节奏，降低每次从零开始的成本。' },
+      { roles: ['private', 'product'], tag: '行动陪伴', source: 'Allen × 石更新', time: '19:49', title: '训练营的价值不是替你完成，而是帮助难以坚持的人持续行动', text: '对于想做内容、独自难以稳定推进的人，明确的训练节奏、反馈和带领，比继续收集课程更接近实际产出。' }
     ],
     actions: [
-      { title: '阅读内容流转体系', text: '对照自己的资料管理方式，找出收集、整理、调用和输出之间最容易断掉的一环。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=_copylink', linkLabel: '打开飞书文档' },
-      { title: '给三个知识库重新分工', text: '明确哪个负责长期沉淀、哪个负责协作交付、哪个负责检索调用，减少重复保存。' },
-      { title: '先看虚拟类目培训', text: '确认业务和类目要求是否匹配，再决定是否提交申请。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看培训' },
-      { title: '符合条件后提交问卷', text: '在通道截止前完成信息填写，并保留提交结果。', url: 'https://bytedance.larkoffice.com/share/base/form/shrcnEUs6R4ZKF00GTsUiAI6iyc', linkLabel: '填写申请问卷' }
+      { title: '确定一个 AI 内容定位', text: '用一句话说清楚你帮助谁、解决什么问题，以及为什么由你来讲。' },
+      { title: '搭一条最小输出工作流', text: '只保留选题、创作、复核和发布四步，连续运行七天。' },
+      { title: '激活一个已经买过的工具', text: '不要继续增加课程，先让一个已有智能体完成一次真实任务。' },
+      { title: '选择适合自己的陪伴方式', text: '如果卡点是难以坚持，就优先寻找有节奏、有反馈的行动环境。' }
     ],
     resources: [
-      { kind: '文档', title: '收藏不是知识库', text: '用 Codex 把 IMA、Obsidian、飞书串成一条内容生产线。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=_copylink', linkLabel: '查看完整文档' },
-      { kind: '培训', title: '虚拟类目定邀填写培训', text: '提交申请前先了解类目范围、填写要求和注意事项。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看培训' },
-      { kind: '入口', title: '虚拟类目申请问卷', text: '面向符合条件且需要申请定向邀约的成员。', url: 'https://bytedance.larkoffice.com/share/base/form/shrcnEUs6R4ZKF00GTsUiAI6iyc', linkLabel: '打开问卷' }
+      { kind: '人物', title: '初阳AI', text: '自由职业者，正在学习智能体开发与内容创作，并搭建自己的全媒体体系。' },
+      { kind: '方法', title: 'AI 内容型 IP', text: '把“会使用工具”升级为能持续讲清方法、案例和实践过程的个人定位。' },
+      { kind: '方法', title: '行动型训练', text: '通过固定节奏、作业反馈和同伴陪伴，把内容目标转化为连续产出。' }
     ],
     themes: [
-      { time: '13:36', title: '三库内容流转体系预告', text: '石更新预告由 Codex 串联 Obsidian、飞书和 IMA 的内容生产体系，引发群友期待。' },
-      { time: '17:12', title: '抖音虚拟类目定向邀约开放', text: '群内同步限时申请机会，并围绕读书卡等具体类目确认是否适配。', url: 'https://bytedance.larkoffice.com/share/base/form/shrcnEUs6R4ZKF00GTsUiAI6iyc', linkLabel: '打开申请问卷' },
-      { time: '18:38', title: '完整文档与申请培训发布', text: '知识库流转文档正式分享；随后补充虚拟类目培训与申请入口，形成从理解到行动的完整路径。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=_copylink', linkLabel: '查看知识库文档' }
+      { time: '19:29', title: 'Agent 实践者加入成长朋友圈', text: '初阳AI介绍自己通过 Agent 与 Codex 获得早期实践结果，目前正在学习智能体开发、内容创作并搭建全媒体体系。' },
+      { time: '19:40', title: '从工具信息差转向 AI 内容定位', text: '群聊讨论同类服务快速增多后，机会正从代做工具转向帮助更多人理解和用好 AI。' },
+      { time: '19:49', title: '内容训练与持续行动', text: '初阳AI询问内容训练项目，群友从真实体验、陪伴和执行节奏角度给出建议。' },
+      { time: '19:55', title: '让已有工具进入真实工作流', text: '石更新反思过去更多依赖感觉创作、购买的课程智能体没有真正使用，接下来希望借助工具建立稳定输出。' }
     ]
   }
 };
