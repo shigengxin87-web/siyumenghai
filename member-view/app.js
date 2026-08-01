@@ -403,7 +403,7 @@ const days = {
       { roles: ['private', 'product'], tag: '线下连接', source: '石更新', time: '09:49', title: '真正有质量的线下连接，往往发生在课程结束之后', text: '夜聊、吃饭和继续拜访，让一次参会从“听课”延伸为更深的关系网络；三位新成员也因此进入群内。' },
       { roles: ['content', 'product'], tag: '复盘节奏', source: '石更新', time: '09:51', title: '先经历，再沉淀，复盘不必与体验同时发生', text: '当身体和大脑仍处于高负荷状态时，强行输出容易只剩信息搬运。留出恢复时间，反而更有机会形成真实判断。' },
       { roles: ['product', 'private'], tag: '高客单体验', source: '石更新', time: '18:51', title: '想做高客单，体验高客单也要核算完整成本', text: '课程费只是显性投入，路程、住宿、体力与注意力同样是成本。体验值得，但不能忽略持续狂奔对个人状态的消耗。' },
-      { roles: ['content', 'private'], tag: '长期主义', source: '石更新', time: '18:51', title: '慢下来不是放弃成长，而是在保护长期产出能力', text: '飞行模式、自主宕机和看海，都是主动恢复。真正长期的学习与业务，需要把休息当成系统的一部分。' }
+      { roles: ['content', 'private'], tag: '长期主义', source: '石更新', time: '18:51', title: '慢下来不是放弃成长，而是在保护长期产出能力', text: '飞行模式、自主宕机和看海，都是主动恢复。真正长期的学习与业务，需要把休息当成系统的一部分。', url: 'https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=Mzk4ODU4MjUxNg==&mid=2247484959&idx=1&sn=c9a4718142a1ebda27eb6628ac25b432&sharer_shareinfo_first=ec35bda1b5e77df50ddb8d8e0e9617ee&sharer_shareinfo=ec35bda1b5e77df50ddb8d8e0e9617ee#wechat_redirect', linkLabel: '阅读公众号原文' }
     ],
     actions: [
       { title: '安排一次主动停机', text: '留出一段不学习、不社交、不处理业务的恢复时间。' },
@@ -418,7 +418,7 @@ const days = {
     themes: [
       { time: '09:49', title: '三位线下认识的新成员加入', text: '课程结束后的深夜交流带来新的可信连接，石更新邀请三位朋友加入并鼓励彼此寻找适配机会。' },
       { time: '09:51', title: '参访与课程复盘预告', text: '石更新准备拜访大头老师公司，并计划在状态合适时分享课程心得与故事。' },
-      { time: '18:47', title: '停下来，是为了更好地开始', text: '从半年内密集线下学习的投入与疲惫出发，重新理解休息、健康和长期成长的关系。' }
+      { time: '18:47', title: '停下来，是为了更好地开始', text: '从半年内密集线下学习的投入与疲惫出发，重新理解休息、健康和长期成长的关系。', url: 'https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=Mzk4ODU4MjUxNg==&mid=2247484959&idx=1&sn=c9a4718142a1ebda27eb6628ac25b432&sharer_shareinfo_first=ec35bda1b5e77df50ddb8d8e0e9617ee&sharer_shareinfo=ec35bda1b5e77df50ddb8d8e0e9617ee#wechat_redirect', linkLabel: '阅读原文' }
     ]
   },
   '2026-07-28': {
@@ -443,13 +443,14 @@ const days = {
     resources: [
       { kind: '复盘', title: '生财 AI 航海家线下大课复盘', text: '包含参会感悟、现场照片、黑客松冠军作品讲解和五张课程笔记图。', url: 'https://my.feishu.cn/docx/UvRfdzlsjo5WbvxgKgHc5vn5nDf?from=from_copylink', linkLabel: '查看完整内容' },
       { kind: '工具', title: 'WorkBuddy 付费 Skill', text: '把可重复使用的能力标准化为 Skill，并通过真实上架与购买验证产品价值。' },
-      { kind: '知识库', title: '社群官网与 ima 知识库', text: '官网承接每日重点，ima 承接群内体系内容，形成不同阅读深度的入口。' },
+      { kind: '入口', title: '社群日报入口', text: '按日期查阅群内每日重点与行动建议。', url: 'https://my.feishu.cn/wiki/Ubw5wr5sRi0QuAkHJdpcTYXcn0o?from=from_copylink', linkLabel: '打开日报入口' },
+      { kind: '知识库', title: 'ima 社群知识库', text: '集中查阅群内分享过的体系内容。', url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79', linkLabel: '进入 ima 知识库' },
       { kind: '人物', title: '沈默', text: '00 后创业者，长期接触互联网项目，当前从事教育与知识付费业务。' }
     ],
     themes: [
       { time: '16:31', title: '及时同步项目状态', text: '群内分享漫剧资源后，需求方明确项目已停止，避免继续投入无效连接成本。' },
       { time: '17:12', title: 'AI 航海家线下课完整复盘发布', text: '石更新将心得、照片、黑客松作品和课程笔记集中整理到飞书文档，并向全群分享。', url: 'https://my.feishu.cn/docx/UvRfdzlsjo5WbvxgKgHc5vn5nDf?from=from_copylink', linkLabel: '查看复盘' },
-      { time: '17:17', title: '官网与知识库入口再次发布', text: '随着成员增加，石更新重新说明官网日报与 ima 体系内容的不同用途，降低新成员的使用门槛。' },
+      { time: '17:17', title: '官网与知识库入口再次发布', text: '随着成员增加，石更新重新说明官网日报与 ima 体系内容的不同用途，降低新成员的使用门槛。', url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79', linkLabel: '进入 ima 知识库' },
       { time: '17:28', title: '黑客松作品与创始人连接', text: '群友识别“灵动”作品及其创始人，石更新补充现场观察并分享人物名片，推动有需求者直接连接。' },
       { time: '17:34', title: '优秀能力尝试付费 Skill 化', text: '石更新推动相关作品上架 WorkBuddy，群友表达明确购买意愿，形成从创意展示到付费验证的闭环。' },
       { time: '18:15', title: '实体门店流量与招商压力', text: '林芳芳分享今年门店流量下降对招商与交付的影响，群友建议进入针对性的训练与诊断。' },
@@ -491,10 +492,12 @@ const days = {
     ]
   },
   '2026-07-31': {
-    dateLabel: '2026 年 7 月 31 日', weekday: '星期五', messages: 48, themesCount: 4, readTime: '5 分钟',
+    dateLabel: '2026 年 7 月 31 日', weekday: '星期五', messages: 48, themesCount: 6, readTime: '6 分钟',
     title: '信息差会消失，稳定输出和持续行动才是真正的壁垒',
-    summary: '一位靠 Agent 和 Codex 实践获得结果的新成员加入后，群聊从“信息差还能不能吃”转向更长期的问题：如何把 AI 能力变成稳定的内容输出、个人定位和持续行动。工具与训练营能提供方法和陪伴，真正决定结果的仍是执行。',
+    summary: '今天先公开了用 Codex 串联 Obsidian、飞书与 ima 的内容流转系统，也同步了虚拟类目培训资料；随后群聊从“信息差还能不能吃”转向更长期的问题：如何把 AI 能力变成稳定输出、个人定位和持续行动。工具能提供方法，真正决定结果的仍是执行。',
     insights: [
+      { roles: ['content', 'product'], tag: '内容系统', source: '石更新', time: '18:38', title: '知识库真正产生价值，要靠一条能持续流转的内容生产线', text: '把 Obsidian、飞书和 ima 串联起来，重点不是收藏更多资料，而是让素材能够进入创作、复核、发布和沉淀的真实流程。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=from_copylink', linkLabel: '查看完整文档' },
+      { roles: ['product', 'private'], tag: '平台机会', source: '石更新', time: '19:24', title: '平台开放窗口出现时，先看清规则，再判断是否适合自己', text: '虚拟类目定向邀约有明确截止时间，先看培训资料、理解申请条件，再决定是否进入，避免只因为窗口短就仓促行动。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看培训记录' },
       { roles: ['product', 'content'], tag: '能力沉淀', source: '初阳AI', time: '19:29', title: '短期信息差能带来结果，但长期要把能力沉淀成自己的系统', text: '从 Codex 的早期机会获得回报只是起点；继续学习智能体开发、创作，并搭建自己的全媒体体系，才是在把一次机会变成可复用能力。' },
       { roles: ['content', 'product'], tag: '个人定位', source: '初阳AI × 石更新', time: '19:42', title: '当同类服务变多，新的机会来自“帮助别人真正用好 AI”', text: '工具代做的信息差会快速收窄，围绕方法、案例和持续陪伴建立内容型 IP，更容易形成长期识别度。' },
       { roles: ['content', 'private'], tag: '稳定输出', source: '石更新', time: '19:55', title: '靠感觉能写出好内容，但系统才能提高输出的稳定性', text: '过去买过课程和智能体却没有真正使用，说明拥有工具不等于形成工作流。下一步应让工具进入真实创作节奏，降低每次从零开始的成本。' },
@@ -502,16 +505,21 @@ const days = {
     ],
     actions: [
       { title: '确定一个 AI 内容定位', text: '用一句话说清楚你帮助谁、解决什么问题，以及为什么由你来讲。' },
-      { title: '搭一条最小输出工作流', text: '只保留选题、创作、复核和发布四步，连续运行七天。' },
+      { title: '搭一条最小输出工作流', text: '只保留选题、创作、复核和发布四步，连续运行七天。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=from_copylink', linkLabel: '参考完整流程' },
       { title: '激活一个已经买过的工具', text: '不要继续增加课程，先让一个已有智能体完成一次真实任务。' },
       { title: '选择适合自己的陪伴方式', text: '如果卡点是难以坚持，就优先寻找有节奏、有反馈的行动环境。' }
     ],
     resources: [
+      { kind: '文档', title: 'Codex 内容流转系统', text: '把 Obsidian、飞书与 ima 串联成可持续运行的内容生产线。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=from_copylink', linkLabel: '查看完整文档' },
+      { kind: '知识库', title: '内容流转系统 · 飞书知识库版', text: '以飞书知识库形式查看同一套方法与资料结构。', url: 'https://my.feishu.cn/wiki/space/7668344380595375065?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home', linkLabel: '进入知识库' },
+      { kind: '培训', title: '虚拟类目定向邀约培训记录', text: '历史培训记录可用于了解当时的平台规则；申请窗口已经结束。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看历史培训' },
       { kind: '人物', title: '初阳AI', text: '自由职业者，正在学习智能体开发与内容创作，并搭建自己的全媒体体系。' },
       { kind: '方法', title: 'AI 内容型 IP', text: '把“会使用工具”升级为能持续讲清方法、案例和实践过程的个人定位。' },
       { kind: '方法', title: '行动型训练', text: '通过固定节奏、作业反馈和同伴陪伴，把内容目标转化为连续产出。' }
     ],
     themes: [
+      { time: '18:38', title: '内容流转系统正式分享', text: '石更新公开用 Codex 串联 Obsidian、飞书和 ima 的完整方法，并提醒群友先选择一个小闭环开始使用。', url: 'https://my.feishu.cn/wiki/Nhg9wQZFcima0mkmmavcxaAlnRg?from=from_copylink', linkLabel: '查看完整文档' },
+      { time: '19:24', title: '虚拟类目培训资料同步', text: '群内同步定向邀约的培训记录和申请信息；当前申请窗口已结束，培训内容仅作历史参考。', url: 'https://wcnwfi322va1.feishu.cn/minutes/obcn5v3m29d9xy7jci99koy3?from=from_copylink', linkLabel: '查看培训记录' },
       { time: '19:29', title: 'Agent 实践者加入成长朋友圈', text: '初阳AI介绍自己通过 Agent 与 Codex 获得早期实践结果，目前正在学习智能体开发、内容创作并搭建全媒体体系。' },
       { time: '19:40', title: '从工具信息差转向 AI 内容定位', text: '群聊讨论同类服务快速增多后，机会正从代做工具转向帮助更多人理解和用好 AI。' },
       { time: '19:49', title: '内容训练与持续行动', text: '初阳AI询问内容训练项目，群友从真实体验、陪伴和执行节奏角度给出建议。' },
@@ -526,23 +534,23 @@ const days = {
       { roles: ['private', 'product'], tag: '线下连接', source: '石更新', time: '18:08', title: '一次顺利分享的价值，在于传播正向经验并帮助到具体的人', text: '线下表达不只是展示自己，也是重新连接需求、验证方法和积累信任的过程。衡量分享效果，可以更多关注是否给参与者带来可执行的启发。' },
       { roles: ['private', 'product'], tag: '持续经营', source: '石更新', time: '18:10', title: '小范围圈子要产生长期价值，关键是提高真实见面和持续服务的频率', text: '杭州线下交流给出的行动方向很明确：多走出去、多见人，让一次活动逐步沉淀为稳定关系和后续合作。' },
       { roles: ['private', 'product'], tag: '商家服务', source: '初阳AI × 石更新', time: '18:11', title: '内容平台之外，围绕商家做活动和运营也是私域服务的重要部分', text: '群聊从平台用途谈到商家运营，提示服务设计不能只停留在上课或交付内容，还要考虑活动、触达、转化与后续维护。' },
-      { roles: ['content', 'private'], tag: '低成本获客', source: '石更新', time: '23:00', title: '短视频与直播要回到接地气、可执行的获客动作', text: '当天最后分享了低成本获客实操资料。对小团队而言，比追求复杂配置更重要的是选定一种玩法，尽快完成测试并根据真实反馈迭代。' }
+      { roles: ['content', 'private'], tag: '低成本获客', source: '石更新', time: '23:00', title: '短视频与直播要回到接地气、可执行的获客动作', text: '当天最后分享了低成本获客实操资料。对小团队而言，比追求复杂配置更重要的是选定一种玩法，尽快完成测试并根据真实反馈迭代。', url: 'https://my.feishu.cn/docx/ZshQdGmTYoPUQYxS7cwc2ZjxnCd?from=from_copylink', linkLabel: '查看实操拆解' }
     ],
     actions: [
       { title: '复盘一次线下分享', text: '记录现场最常出现的三个问题，并把它们转成后续内容或服务动作。' },
       { title: '安排一次小范围见面', text: '优先邀请需求明确、能形成互补的伙伴，控制规模并留下可跟进事项。' },
       { title: '补全商家运营链路', text: '把活动前触达、现场承接、活动后跟进和复购维护写成一页流程。' },
-      { title: '测试一种低成本获客玩法', text: '从短视频或直播中选择一个最小方案，用一周观察咨询与转化反馈。' }
+      { title: '测试一种低成本获客玩法', text: '从短视频或直播中选择一个最小方案，用一周观察咨询与转化反馈。', url: 'https://my.feishu.cn/docx/ZshQdGmTYoPUQYxS7cwc2ZjxnCd?from=from_copylink', linkLabel: '打开实操文档' }
     ],
     resources: [
       { kind: '场景', title: '杭州线下小范围圈', text: '通过更高频的真实见面，加深连接、验证需求并寻找合作机会。' },
       { kind: '方法', title: '商家私域运营', text: '围绕活动、内容、触达和持续服务，帮助商家把用户关系沉淀下来。' },
-      { kind: '资料', title: '短视频与直播低成本获客', text: '当天分享的实操拆解，适合用来选择一个低门槛方案进行小步测试。' }
+      { kind: '资料', title: '短视频与直播低成本获客', text: '当天分享的实操拆解，适合用来选择一个低门槛方案进行小步测试。', url: 'https://my.feishu.cn/docx/ZshQdGmTYoPUQYxS7cwc2ZjxnCd?from=from_copylink', linkLabel: '查看完整资料' }
     ],
     themes: [
       { time: '15:38', title: '群友送上生日祝福', text: '多位群友接力表达生日祝福，群内互动轻松而温暖。' },
       { time: '18:08', title: '线下分享与小范围圈子复盘', text: '石更新反馈当天分享顺利，并提出以后增加线下走动，通过小范围交流持续连接和帮助更多人。' },
-      { time: '18:11', title: '从商家私域运营延伸到低成本获客', text: '群聊讨论平台如何通过活动服务商家，晚间进一步分享短视频与直播低成本获客的实操资料。' }
+      { time: '18:11', title: '从商家私域运营延伸到低成本获客', text: '群聊讨论平台如何通过活动服务商家，晚间进一步分享短视频与直播低成本获客的实操资料。', url: 'https://my.feishu.cn/docx/ZshQdGmTYoPUQYxS7cwc2ZjxnCd?from=from_copylink', linkLabel: '查看实操资料' }
     ]
   }
 };
