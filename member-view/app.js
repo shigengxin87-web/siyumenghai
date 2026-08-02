@@ -552,6 +552,58 @@ const days = {
       { time: '18:08', title: '线下分享与小范围圈子复盘', text: '石更新反馈当天分享顺利，并提出以后增加线下走动，通过小范围交流持续连接和帮助更多人。' },
       { time: '18:11', title: '从商家私域运营延伸到低成本获客', text: '群聊讨论平台如何通过活动服务商家，晚间进一步分享短视频与直播低成本获客的实操资料。', url: 'https://my.feishu.cn/docx/ZshQdGmTYoPUQYxS7cwc2ZjxnCd?from=from_copylink', linkLabel: '查看实操资料' }
     ]
+  },
+  '2026-08-02': {
+    dateLabel: '2026 年 8 月 2 日', weekday: '星期日', messages: 74, themesCount: 5, readTime: '6 分钟',
+    title: '真正能被 AI 放大的，是你亲自经历过、持续沉淀下来的东西',
+    summary: '今天从高客单销售学习手册、AI 视频工具选型，聊到微信记录辅助写作与知识库流转。工具可以帮助整理、生成和对话，但内容的可信度仍来自真实经历；把资料放进可检索、可复用的系统，学习和创作才会形成长期复利。',
+    insights: [
+      { roles: ['product', 'private'], tag: '专业沉淀', source: 'Joey乔伊 × 群友', time: '02:26', title: '课程结束后立即整理学习手册，专业能力才会变成可传播的资产', text: '两天销售课程被整理成分日手册并持续优化排版，群友可以快速学习，也让讲师的核心能力从一次授课变成长期可复用的内容。' },
+      { roles: ['content', 'product'], tag: '工具选型', source: '群友共同讨论', time: '15:22', title: '选择 AI 视频工具，要从具体工作流和接口需求出发', text: '同样是口述生成视频，个人手动使用与产品化接入的要求不同。先验证花生 AI、超级编导、闪剪等工具能否完成目标，再核对 API 与交付成本。', links: [
+        { label: '查看花生 AI 演示一', url: 'https://www.bilibili.com/video/BV1JjNY6uE8A/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' },
+        { label: '查看花生 AI 演示二', url: 'https://www.bilibili.com/video/BV1Xr5k6LEac/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' }
+      ] },
+      { roles: ['content', 'private'], tag: '真实写作', source: '石更新', time: '19:27', title: 'AI 写作最有力量的素材，是你自己留下的记录、情绪和经历', text: '当 AI 能在授权范围内理解长期积累的真实表达，它更适合帮助整理和重组，而不是凭空制造人生。作品像不像你，取决于输入里有没有真实的你。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485015&idx=1&sn=e82bc563db7c28ab7626f6782ef1dcf7&chksm=c472ff587b288bc8f6a992006231e0d00952f92082ee790d44fb644d7d5db541bdcb50b2e92e&mpshare=1&scene=1&srcid=0802YLi7X7cdGRd0rppGPKSQ&sharer_shareinfo=fca5e84e801e389fa4c83f5e5ee7f774&sharer_shareinfo_first=fca5e84e801e389fa4c83f5e5ee7f774#rd', linkLabel: '阅读完整文章' },
+      { roles: ['content', 'product'], tag: '知识流转', source: '石更新 × 生财初阳AI', time: '21:28', title: '资料进入知识库后，才从“收到了”变成可以理解和调用', text: 'PDF、网页和聊天沉淀进 ima 或飞书后，可以继续检索、对话和复习；再接入 Codex 与三库流转，内容才能进入真实的学习和生产过程。', links: [
+        { label: '知识库搭建与场景', url: 'https://my.feishu.cn/wiki/BpB2wHatviRWQ2kMO84cbLptnic' },
+        { label: 'IMA 与 Codex 打通教程', url: 'https://my.feishu.cn/wiki/PW7ZwJWBSiF1mtkGIgTc9tJsnPd' },
+        { label: '进入三库流转系统', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
+      ] }
+    ],
+    actions: [
+      { title: '沉淀一份课程手册', text: '把最近一次学习拆成核心观点、案例和下一步动作，整理成可复用的文档。' },
+      { title: '做一次 AI 视频工具小测', text: '用同一段口述分别测试生成质量、编辑成本和 API 能力，再决定采用哪条路径。', links: [
+        { label: '参考演示一', url: 'https://www.bilibili.com/video/BV1JjNY6uE8A/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' },
+        { label: '参考演示二', url: 'https://www.bilibili.com/video/BV1Xr5k6LEac/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' }
+      ] },
+      { title: '建立一份真实素材清单', text: '从自己的聊天、笔记和经历中选出十条可公开素材，只让 AI 帮助整理，不让它替你编造。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485015&idx=1&sn=e82bc563db7c28ab7626f6782ef1dcf7&chksm=c472ff587b288bc8f6a992006231e0d00952f92082ee790d44fb644d7d5db541bdcb50b2e92e&mpshare=1&scene=1&srcid=0802YLi7X7cdGRd0rppGPKSQ&sharer_shareinfo=fca5e84e801e389fa4c83f5e5ee7f774&sharer_shareinfo_first=fca5e84e801e389fa4c83f5e5ee7f774#rd', linkLabel: '查看写作边界' },
+      { title: '让一份资料进入知识流转', text: '选择一份 PDF 或网页，完成导入、提问、整理和再次调用的最小闭环。', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home', linkLabel: '参考三库流转系统' }
+    ],
+    resources: [
+      { kind: '资料', title: '销售原点 Day 1—Day 2 学习手册', text: 'Joey乔伊整理的两天课程学习资料，适合需要一对一高客单销售方法的群友在群内获取。' },
+      { kind: '工具', title: '花生 AI 视频生成', text: '用于观察口述、文案与视觉生成的实际效果；产品化前仍需单独核对 API 和授权条件。', links: [
+        { label: '查看演示一', url: 'https://www.bilibili.com/video/BV1JjNY6uE8A/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' },
+        { label: '查看演示二', url: 'https://www.bilibili.com/video/BV1Xr5k6LEac/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' }
+      ] },
+      { kind: '教程', title: '如何用 ima 或飞书创建知识库', text: '从搭建方法到使用场景，帮助资料进入可检索、可对话的学习环境。', url: 'https://my.feishu.cn/wiki/BpB2wHatviRWQ2kMO84cbLptnic', linkLabel: '打开教程' },
+      { kind: '教程', title: 'IMA 知识库与 Codex 打通', text: '把知识库内容继续接入 AI 工作流，支持整理、创作和复用。', url: 'https://my.feishu.cn/wiki/PW7ZwJWBSiF1mtkGIgTc9tJsnPd', linkLabel: '查看打通教程' },
+      { kind: '系统', title: '微信聊天记录及网页内容接入三库流转', text: '把分散在微信与网页里的素材，接入可持续流转的内容系统。', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home', linkLabel: '进入课程空间' },
+      { kind: '文章', title: 'AI 写作最重要的边界', text: 'AI 可以整理真实经历，但不能替代真实经历；适合作为个人写作工作流的边界提醒。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485015&idx=1&sn=e82bc563db7c28ab7626f6782ef1dcf7&chksm=c472ff587b288bc8f6a992006231e0d00952f92082ee790d44fb644d7d5db541bdcb50b2e92e&mpshare=1&scene=1&srcid=0802YLi7X7cdGRd0rppGPKSQ&sharer_shareinfo=fca5e84e801e389fa4c83f5e5ee7f774&sharer_shareinfo_first=fca5e84e801e389fa4c83f5e5ee7f774#rd', linkLabel: '阅读公众号原文' }
+    ],
+    themes: [
+      { time: '02:26', title: '高客单销售课程手册持续更新', text: 'Joey乔伊将当天课程整理成学习手册，并在晚间补齐两天内容与护眼排版；群友随后开始学习和反馈。' },
+      { time: '15:22', title: 'AI 混剪与视频生成工具选型', text: '群友提出把自拍口述自动改写并生成新视频的产品需求，讨论从花生 AI 延伸到超级编导和闪剪，并明确区分手动使用与 API 接入。', links: [
+        { label: '花生 AI 演示一', url: 'https://www.bilibili.com/video/BV1JjNY6uE8A/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' },
+        { label: '花生 AI 演示二', url: 'https://www.bilibili.com/video/BV1Xr5k6LEac/?share_source=copy_web&vd_source=7c473f0b0cac12ebfa4bee7d08762252' }
+      ] },
+      { time: '19:27', title: '微信真实记录进入 AI 写作', text: '石更新用自己的微信表达、情绪和经历辅助生成朋友圈文案，并强调作品之所以自然，是因为核心材料仍然来自本人。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485015&idx=1&sn=e82bc563db7c28ab7626f6782ef1dcf7&chksm=c472ff587b288bc8f6a992006231e0d00952f92082ee790d44fb644d7d5db541bdcb50b2e92e&mpshare=1&scene=1&srcid=0802YLi7X7cdGRd0rppGPKSQ&sharer_shareinfo=fca5e84e801e389fa4c83f5e5ee7f774&sharer_shareinfo_first=fca5e84e801e389fa4c83f5e5ee7f774#rd', linkLabel: '阅读完整文章' },
+      { time: '21:28', title: '销售课件进入 ima 知识库', text: '群内将学习手册加入 ima，方便查看与 AI 对话，并讨论 ima 在微信内容抓取、PDF 和网页学习中的实际优势。', url: 'https://my.feishu.cn/wiki/BpB2wHatviRWQ2kMO84cbLptnic', linkLabel: '查看知识库教程' },
+      { time: '21:35', title: '知识库与三库流转教程集中分享', text: '围绕群友的实际需求，连续分享知识库搭建、IMA 与 Codex 打通、微信及网页内容进入三库流转的教程，并邀请使用中随时反馈问题。', links: [
+        { label: '知识库搭建与场景', url: 'https://my.feishu.cn/wiki/BpB2wHatviRWQ2kMO84cbLptnic' },
+        { label: 'IMA 与 Codex 打通', url: 'https://my.feishu.cn/wiki/PW7ZwJWBSiF1mtkGIgTc9tJsnPd' },
+        { label: '三库流转系统', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
+      ] }
+    ]
   }
 };
 
