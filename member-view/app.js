@@ -604,6 +604,40 @@ const days = {
         { label: '三库流转系统', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
       ] }
     ]
+  },
+  '2026-08-03': {
+    dateLabel: '2026 年 8 月 3 日', weekday: '星期一', messages: 38, themesCount: 3, readTime: '4 分钟',
+    title: '让 AI 真正进入移动工作流，也让创业选择回到生活与可持续经营',
+    summary: '当天的交流从 Workbuddy 与手机远程协同展开，讨论如何让电脑在后台执行、手机负责发起和接收回执；随后延伸到地方创业的幸福感与区域壁垒。晚间一次视频号真人认证故障则提醒大家：遇到平台异常，先从重启、重新认证等最小排查动作开始，再决定是否寻求付费帮助。',
+    insights: [
+      { roles: ['product', 'private'], tag: '移动协同', source: '石更新', time: '14:29', title: 'AI 工具的价值，不只在电脑端能力，更在能否通过手机发起任务并收到回执', text: 'Workbuddy 被用于替代部分 Codex 环节，再配合远程控制工具，让固定电脑承担执行、手机承担移动协同。判断工具是否值得采用，可以优先观察任务发起、执行反馈和异常接管是否顺畅。', links: [
+        { label: '打开 Workbuddy 邀请页', url: 'https://www.workbuddy.cn/events/invite?inviteCode=mrszg3n6h48' },
+        { label: '查看配套图文课程', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
+      ] },
+      { roles: ['product', 'private'], tag: '地方创业', source: '石更新', time: '16:30', title: '地方创业的优势，可能来自生活幸福感、区域壁垒与全国化业务的组合', text: '讨论提出“公司在老家、业务在全国”的路径：用本地关系和成本结构建立壁垒，同时借助线上能力服务更广市场。它不是普适答案，但提供了重新评估城市、生活和业务布局的框架。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd', linkLabel: '阅读完整文章' },
+      { roles: ['content', 'product'], tag: '故障排查', source: '群友共同讨论', time: '19:59', title: '平台认证异常先做最小排查，再为外部信息或服务付费', text: '视频号真人认证失败、入口消失后，最终通过重启手机并重新认证解决。这个小案例提醒：先记录现象，尝试重启、重新登录和重新认证，再联系客服或购买外部协助，能减少不必要的成本。' }
+    ],
+    actions: [
+      { title: '测试一次手机到电脑的 AI 闭环', text: '用手机发起一个低风险任务，确认电脑端执行、过程回执和异常接管是否完整。', links: [
+        { label: '体验 Workbuddy', url: 'https://www.workbuddy.cn/events/invite?inviteCode=mrszg3n6h48' },
+        { label: '参考图文课程', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
+      ] },
+      { title: '重画一次创业布局', text: '分别写下所在地带来的生活优势、本地资源壁垒，以及可以面向全国交付的业务环节。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd', linkLabel: '查看思路原文' },
+      { title: '建立平台故障最小排查清单', text: '把重启设备、重登账号、检查认证入口、保存错误提示和联系官方客服列为固定顺序。' }
+    ],
+    resources: [
+      { kind: '工具', title: 'Workbuddy 移动 AI 协同', text: '当天用于讨论“手机发起、电脑执行、消息回执”的协同方式；正式用于重要任务前应先验证权限与异常接管。', url: 'https://www.workbuddy.cn/events/invite?inviteCode=mrszg3n6h48', linkLabel: '打开邀请页' },
+      { kind: '课程', title: '微信、网页与三库流转图文课程', text: '群内说明课程中多处 Codex 环节可以尝试用 Workbuddy 替代，适合作为搭建移动协同流程的参照。', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home', linkLabel: '进入课程空间' },
+      { kind: '文章', title: '地方创业与幸福感', text: '从幸福感、地方壁垒和全国化业务三个角度，重新审视创业所在地与业务半径。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd', linkLabel: '阅读公众号原文' }
+    ],
+    themes: [
+      { time: '14:29', title: '手机与 AI 协同的移动工作流', text: '石更新分享 Workbuddy，并结合配套课程和远程控制工具，设想让电脑固定执行、手机移动发起任务和接收回执。', links: [
+        { label: 'Workbuddy 邀请页', url: 'https://www.workbuddy.cn/events/invite?inviteCode=mrszg3n6h48' },
+        { label: '配套图文课程', url: 'https://my.feishu.cn/wiki/space/7668857880593829100?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home' }
+      ] },
+      { time: '16:30', title: '地方创业的幸福感与业务布局', text: '讨论从地方生活幸福感延伸到区域资源壁垒，以及“公司在老家、业务在全国”的组合路径。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd', linkLabel: '阅读完整文章' },
+      { time: '19:59', title: '视频号真人认证故障排查', text: '群友遇到认证失败和入口关闭，经过讨论与尝试，最终通过重启手机后重新认证解决，并将处理方法回传群内。' }
+    ]
   }
 };
 
