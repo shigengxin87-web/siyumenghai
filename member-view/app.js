@@ -638,6 +638,34 @@ const days = {
       { time: '16:30', title: '地方创业的幸福感与业务布局', text: '讨论从地方生活幸福感延伸到区域资源壁垒，以及“公司在老家、业务在全国”的组合路径。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd', linkLabel: '阅读完整文章' },
       { time: '19:59', title: '视频号真人认证故障排查', text: '群友遇到认证失败和入口关闭，经过讨论与尝试，最终通过重启手机后重新认证解决，并将处理方法回传群内。' }
     ]
+  },
+  '2026-08-04': {
+    dateLabel: '2026 年 8 月 4 日', weekday: '星期二', messages: 39, themesCount: 3, readTime: '5 分钟',
+    title: '先把直播问题问具体，再用真实反馈决定是否放大流量',
+    summary: '当天围绕教培直播导私域展开了一次完整拆解：先明确业务、平台、流量与转化目标，再从自然流反馈中找出有效内容，最后判断是否小额投放。下午分享的 Workbuddy 专家顾问案例，则展示了把具体问题交给 AI 形成诊断方案的另一种用法。',
+    insights: [
+      { roles: ['content', 'product'], tag: '问题定义', source: '石更新 × 辰犀', time: '10:20', title: '直播问题越具体，越容易找到真正可执行的答案', text: '“教培直播怎么做”同时包含线上或线下、自然流或付费流、招生或师训、内容学习或市场对标等不同问题。先把业务性质、目标和当前卡点说清楚，建议才不会停留在泛泛而谈。', url: 'https://my.feishu.cn/docx/TRaXdSr34ozgqRx1lKicp64gnnh', linkLabel: '查看直播方法论' },
+      { roles: ['content', 'private'], tag: '自然流验证', source: '英语韩老师', time: '11:05', title: '自然流先跑出咨询与转化，能帮助判断内容和人群是否匹配', text: '群友分享自己的阶段数据：从约 600 粉做到 1.7 万粉，转向英语学习规划后，一场两小时直播获得 2—5 条咨询，并称转化率超过 80%。这是个人实践反馈，适合用来观察路径，不宜直接当作普遍结果。' },
+      { roles: ['product', 'content'], tag: '小步验证', source: '张雨晴疗愈', time: '11:44', title: '没转化时先拆内容、动作和需求，再决定是否用付费流放大', text: '把互动和转化较好的部分摘出来，继续确认观众的具体需求；调整后先看自然流能否跑通。若已有高度相似的有效对标，也可以用小预算验证，而不是一开始就把不确定性放大。' },
+      { roles: ['private', 'product'], tag: '平台经营', source: '英语韩老师 × 群友', time: '13:26', title: '平台选择不能只看现有粉丝，还要同时评估规则风险与转化来源', text: '群友反馈主要粉丝和师训、线下招生转化集中在抖音，但 K12 内容也更容易触发举报与审核。主阵地选择需要把受众基础、转化表现、合规边界和账号韧性放在一起评估。' },
+      { roles: ['content', 'product'], tag: 'AI 顾问', source: '石更新', time: '15:08', title: 'AI 顾问的价值，取决于能否把一个具体问题变成可检查的方案', text: '群内展示了用 Workbuddy 专家顾问分析小红书账号流量受限问题的过程。与其只问“是不是限流”，更有效的做法是提供账号现状、跨平台数据和直播表现，再检查诊断路径是否符合真实情况。', url: 'https://my.feishu.cn/docx/Gz1ZdjySCogovFxuQLlcsGcGnIg?from=from_copylink', linkLabel: '查看诊断方案' }
+    ],
+    actions: [
+      { title: '把直播需求写成四句话', text: '说清业务对象、主平台、流量方式和最终转化目标，再开始找方法或对标。', url: 'https://my.feishu.cn/docx/TRaXdSr34ozgqRx1lKicp64gnnh', linkLabel: '参考拆解框架' },
+      { title: '摘出三段有效内容', text: '复盘最近直播，把互动、停留或咨询表现较好的片段单独记录，并标注对应需求。' },
+      { title: '设置付费流前置门槛', text: '先定义自然流或对标验证达到什么信号后，才允许开始小额投放。' },
+      { title: '用具体案例测试一次 AI 顾问', text: '提供真实背景、数据和约束，拿到方案后逐条核对依据与可执行性。', url: 'https://my.feishu.cn/docx/Gz1ZdjySCogovFxuQLlcsGcGnIg?from=from_copylink', linkLabel: '查看示例报告' }
+    ],
+    resources: [
+      { kind: '方法', title: '直播学习方法论', text: '从学习对象、平台选择、业务模式到“前端改或后端补”，提供一套教培直播问题的拆解框架。', url: 'https://my.feishu.cn/docx/TRaXdSr34ozgqRx1lKicp64gnnh', linkLabel: '打开飞书文档' },
+      { kind: '案例', title: '小红书账号限流诊断与恢复方案', text: '由具体账号问题生成的诊断示例，包含原因排查和恢复路径；实际执行仍需以账号后台与平台规则为准。', url: 'https://my.feishu.cn/docx/Gz1ZdjySCogovFxuQLlcsGcGnIg?from=from_copylink', linkLabel: '查看完整案例' },
+      { kind: '工具', title: 'Workbuddy 专家顾问', text: '可按视频号、小红书、抖音、公众号等方向选择专家或顾问团队，适合把具体业务问题整理成初步诊断与行动清单。' }
+    ],
+    themes: [
+      { time: '10:07', title: '教培直播需求从泛问走向具体拆解', text: '群友提出直播导私域需求，讨论逐步明确线上与线下业务、自然与付费流量、招生与师训，以及平台和对标选择。', url: 'https://my.feishu.cn/docx/TRaXdSr34ozgqRx1lKicp64gnnh', linkLabel: '查看直播方法论' },
+      { time: '11:05', title: '自然流案例与付费放大条件', text: '群友分享英语直播的涨粉、咨询与转化反馈，随后讨论如何拆出有效内容、核对受众需求，并在自然流验证后再考虑小额投放。' },
+      { time: '15:08', title: 'Workbuddy 专家顾问诊断演示', text: '石更新分享用专家顾问处理小红书账号流量受限问题的案例，并说明从工具内搜索不同平台专家的入口。', url: 'https://my.feishu.cn/docx/Gz1ZdjySCogovFxuQLlcsGcGnIg?from=from_copylink', linkLabel: '查看诊断报告' }
+    ]
   }
 };
 
