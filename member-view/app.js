@@ -692,6 +692,32 @@ const days = {
       { time: '18:17', title: '重新开放领取并为遗漏者补发', text: '考虑到新进群和上次未领取的成员，组织者再次开放福利，并说明未抽中的成员也会单独补发。' },
       { time: '18:22', title: '配送限制与线下场景延伸', text: '群友反馈部分地址无法配送，大家尝试更换商品入口，并进一步讨论礼物在校区等线下场景中的使用方式。' }
     ]
+  },
+  '2026-08-06': {
+    dateLabel: '2026 年 8 月 6 日', weekday: '星期四', messages: 6, themesCount: 3, readTime: '3 分钟',
+    title: '看直播只是起点，把合作导流与承接机制拆开才有用',
+    summary: '当天先推荐了一场蒋晖直播，随后把观察整理成飞书文档：既梳理大 IP 之间如何合作导流、怎样结算，也补充低价产品承接加微的实操思路。最后还记录了执行计划与实际进度之间的偏差，提醒工作流需要给整理和休息留出余量。',
+    insights: [
+      { roles: ['content', 'private'], tag: '案例拆解', source: '石更新', time: '20:49', title: '看一场直播，真正可复用的是把观察变成自己的判断', text: '当天不是只转发直播，而是先说明值得关注的对象，再约定会基于直播模式补充见解，最后形成完整文档。这样的过程让即时观看变成了后续可回看的内容资产。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '阅读完整拆解' },
+      { roles: ['private', 'product'], tag: '合作导流', source: '石更新', time: '23:34', title: '大 IP 合作不能只看流量，还要提前说清合作方式与结算', text: '文档围绕大 IP 之间的合作导流补充了玩法与结算视角。对实际合作而言，流量入口、线索归属、承接责任和结算规则需要在执行前明确。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '查看合作导流拆解' },
+      { roles: ['private', 'product'], tag: '低转高承接', source: '石更新', time: '23:38', title: '低转高不仅要看成交，还要减少用户在加微环节的流失', text: '当天资料下半部分聚焦低价产品用户的加微承接，并以“加微率做到 95%+”作为文档中的实操口径。该数字来自资料分享，适合用来检查流程，不应直接视为所有业务都能达到的结果。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '查看加微实操' },
+      { roles: ['product', 'content'], tag: '时间复盘', source: '石更新', time: '23:35', title: '计划没有按时完成时，先记录偏差，再调整下一次预估', text: '当天记录了前一晚按计划休息但半夜醒来，以及当天未能在 23:00 前完成文档的情况。把预测失败写下来，有助于下一次为整理、校对和休息预留更真实的时间。' }
+    ],
+    actions: [
+      { title: '拆一场合作直播', text: '分别记录流量从哪里来、由谁承接、线索怎样归属，以及合作双方如何结算。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '参考当天拆解' },
+      { title: '画出低价用户加微路径', text: '从下单到添加微信逐步标出入口、提醒、客服跟进和容易流失的位置。' },
+      { title: '给内容整理预留缓冲', text: '在观看、提炼、写作和校对之外增加缓冲时间，完成后再复盘预估偏差。' }
+    ],
+    resources: [
+      { kind: '案例', title: '刘思毅直播给蒋晖带线索拆解', text: '围绕大 IP 合作导流、合作方式、结算与低价产品加微承接形成的当天资料。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '清单', title: '合作导流四项核对', text: '合作前依次核对流量入口、线索归属、承接责任和结算方式。' },
+      { kind: '流程', title: '低价产品加微承接', text: '把下单后的添加入口、触达提醒、客服动作和流失节点放在同一条路径中检查。' }
+    ],
+    themes: [
+      { time: '20:49', title: '推荐观看蒋晖直播', text: '石更新说明这场直播值得关注，并预告会基于直播模式补充自己的见解。' },
+      { time: '23:34', title: '合作导流与低转高实操文档', text: '当天把直播观察整理成飞书文档，上半部分讨论大 IP 合作玩法和结算，下半部分补充低价产品用户的加微承接。', url: 'https://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink', linkLabel: '阅读完整文档' },
+      { time: '23:35', title: '休息计划与完成时间复盘', text: '记录前一晚休息后的实际状态，以及当天未能按 23:00 计划完成文档的时间预测偏差。' }
+    ]
   }
 };
 
