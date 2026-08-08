@@ -30,7 +30,7 @@ jobs:
 
       - name: Sync website files
         run: |
-          rsync -az --checksum \
+          rsync -rz --checksum \
             --exclude 'tools/' \
             --exclude 'assets/paraformer-zh-small/*.wasm' \
             --exclude 'assets/paraformer-zh-small/*.data' \
