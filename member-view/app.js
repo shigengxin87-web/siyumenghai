@@ -1331,4 +1331,4 @@ setupAmbientParticles();
 refreshMembers();
 window.setInterval(refreshMembers, 60_000);
 
-// pages-deploy-retry: 2026-08-07
+// pages-deploy-retry: 2026-08-08
