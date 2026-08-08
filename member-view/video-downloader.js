@@ -34,8 +34,9 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v2';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
 const TRANSCRIPT_CACHE_LIMIT = 12;
+const LOCAL_TRANSCRIPT_HELPER = 'http://127.0.0.1:2025/transcribe';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
@@ -179,7 +180,7 @@ function resetTranscript() {
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('优先保留原话、重复和语气词；标题、作者和话题会作为专名校正依据。');
+  showTranscriptStatus('点击后由这台 Mac 的本机助手识别，不下载网页组件、不产生接口费用。');
 }
 
 function showCommentStatus(message, state = '') {
@@ -730,42 +731,20 @@ async function transcribeCurrentVideo() {
     return;
   }
 
-  transcriptButton.disabled = true;
-  transcriptButton.textContent = '正在生成…';
-  try {
-    const audio = await videoAudio(video.url);
-    const worker = await ensureTranscriptWorker();
-    showTranscriptStatus('正在逐字识别，请保持页面打开…', 'working');
-    const result = await new Promise((resolve, reject) => {
-      const handleMessage = (event) => {
-        if (event.data?.status === 'complete') {
-          worker.removeEventListener('message', handleMessage);
-          resolve(event.data.result);
-        } else if (event.data?.status === 'error') {
-          worker.removeEventListener('message', handleMessage);
-          reject(new Error(event.data.message || '逐字稿识别失败'));
-        }
-      };
-      worker.addEventListener('message', handleMessage);
-      worker.postMessage({ type: 'run', data: { audio, language: 'zh' } }, [audio.buffer]);
-    });
-
-    const transcript = buildTranscriptResult(result, video);
-    if (!transcript.corrected) throw new Error('没有识别到清晰的人声');
-    if (currentVideo?.shareUrl !== video.shareUrl) return;
-    currentTranscript = transcript;
-    showTranscriptView('corrected');
-    saveTranscript(video.shareUrl, transcript);
-    transcriptButton.textContent = '复制逐字稿';
-    const copied = await copyText(transcript.corrected);
-    const correctionNote = transcript.correctionCount ? `，并按标题/话题校正 ${transcript.correctionCount} 处专名` : '';
-    showTranscriptStatus(copied ? `逐字稿已生成并复制${correctionNote}。` : `逐字稿已生成${correctionNote}，请再次点击“复制逐字稿”。`, copied ? '' : 'error');
-  } catch (error) {
-    transcriptButton.textContent = '重新生成逐字稿';
-    showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
-  } finally {
-    transcriptButton.disabled = false;
+  const helperUrl = new URL(LOCAL_TRANSCRIPT_HELPER);
+  helperUrl.hash = encodeURIComponent(JSON.stringify({
+    videoUrl: video.url,
+    shareUrl: video.shareUrl,
+    author: video.author,
+    description: video.description
+  }));
+  const popup = window.open(helperUrl.href, 'siyumenghai-transcript-helper', 'width=840,height=760');
+  if (!popup) {
+    showTranscriptStatus('浏览器拦截了本机助手窗口，请允许弹窗后重试。', 'error');
+    return;
   }
+  transcriptButton.textContent = '再次打开本机助手';
+  showTranscriptStatus('已交给本机助手识别；完成后会自动复制逐字稿。', 'working');
 }
 
 async function downloadVideo(url) {
