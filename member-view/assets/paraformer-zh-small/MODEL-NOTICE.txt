@@ -1,0 +1,11 @@
+Chinese speech recognition assets
+
+Runtime: sherpa-onnx WebAssembly (Apache License 2.0)
+Source: https://github.com/k2-fsa/sherpa-onnx
+
+Model: sherpa-onnx-paraformer-zh-small-2024-03-09
+Bundle source: https://www.modelscope.cn/studios/k2-fsa/web-assembly-vad-asr-sherpa-onnx-zh-en-paraformer-small
+Model releases: https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models
+
+The WebAssembly bundle also contains Silero VAD.
+The original license notices remain applicable to the bundled runtime and models.

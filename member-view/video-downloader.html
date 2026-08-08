@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260718-4">
+  <link rel="stylesheet" href="./portal.css?v=20260808-6">
+  <script src="./coi-serviceworker.js?v=20260808-3"></script>
 </head>
 <body>
   <div class="portal-shell tool-shell">
@@ -86,7 +87,7 @@
           <header class="result-heading"><span>查询结果</span><small>确认内容后即可下载</small></header>
           <div class="result-layout">
             <div class="video-preview">
-              <video data-video controls preload="metadata" playsinline></video>
+              <video data-video controls preload="metadata" playsinline crossorigin="anonymous"></video>
             </div>
             <div class="video-details">
               <div class="author-row">
@@ -102,11 +103,23 @@
               <p class="download-tip">如果手机浏览器没有直接保存，请长按视频或在浏览器菜单中选择下载。</p>
               <div class="transcript-card" data-transcript-card>
                 <div class="transcript-heading">
-                  <div><strong>视频逐字稿</strong><small>在当前浏览器本地识别，视频不会上传到新的服务器</small></div>
+                  <div><strong>中文视频逐字稿</strong><small>中文专用识别＋热词同音校正；视频和文字不上传</small></div>
                   <button type="button" data-transcript-action>生成并复制逐字稿</button>
                 </div>
-                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">尽量保留原话、重复和语气词；人名、方言或多人重叠说话仍建议核对。</p>
+                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">优先保留原话、重复和语气词；标题、作者和话题会作为专名校正依据。</p>
+                <div class="transcript-switch" data-transcript-switch hidden>
+                  <button type="button" class="is-active" data-transcript-view="corrected">校正逐字稿</button>
+                  <button type="button" data-transcript-view="raw">原始识别稿</button>
+                </div>
                 <textarea data-transcript-text aria-label="视频逐字稿" readonly hidden></textarea>
+              </div>
+              <div class="transcript-card" data-comment-card>
+                <div class="transcript-heading">
+                  <div><strong>视频评论区</strong><small>纯脚本提取，不消耗模型 Token；最多提取 200 条主评论</small></div>
+                  <button type="button" data-comment-action>提取并复制评论</button>
+                </div>
+                <p class="transcript-status" data-comment-status role="status" aria-live="polite">免费模式需要先启动<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">本地评论助手</a>，并在微信电脑版打开任意视频号页面。</p>
+                <textarea data-comment-text aria-label="视频评论区内容" readonly hidden></textarea>
               </div>
             </div>
           </div>
@@ -129,7 +142,9 @@
     </main>
   </div>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
-  <script src="./video-downloader.js?v=20260808-2"></script>
+  <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
+  <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
+  <script src="./video-downloader.js?v=20260808-5"></script>
   <script src="./video-batch.js?v=20260718-1"></script>
 </body>
 </html>

@@ -193,6 +193,12 @@ button { color: inherit; font: inherit; }
 .transcript-status { margin: 11px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .transcript-status.is-working { color: var(--green); }
 .transcript-status.is-error { color: #b42318; }
+.transcript-status a { margin: 0 3px; color: var(--green); font-weight: 800; text-decoration: none; }
+.transcript-status a:hover { text-decoration: underline; }
+.transcript-switch { display: flex; gap: 7px; margin-top: 10px; }
+.transcript-switch[hidden] { display: none; }
+.transcript-switch button { padding: 6px 10px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; font-size: 11px; font-weight: 750; }
+.transcript-switch button.is-active { color: var(--green); background: #ecfdf5; border-color: rgba(5, 150, 105, .28); }
 .transcript-card textarea { display: block; width: 100%; min-height: 150px; margin-top: 12px; resize: vertical; padding: 12px 13px; color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: 11px; outline: none; font: inherit; font-size: 13px; line-height: 1.75; }
 .transcript-card textarea[hidden] { display: none; }
 .download-history { overflow: hidden; margin-top: 18px; }

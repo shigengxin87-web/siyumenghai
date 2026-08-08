@@ -22,16 +22,28 @@ const rawDownloadButton = document.querySelector('[data-download-raw]');
 const transcriptButton = document.querySelector('[data-transcript-action]');
 const transcriptStatus = document.querySelector('[data-transcript-status]');
 const transcriptText = document.querySelector('[data-transcript-text]');
+const transcriptSwitch = document.querySelector('[data-transcript-switch]');
+const transcriptViewButtons = [...document.querySelectorAll('[data-transcript-view]')];
+const commentButton = document.querySelector('[data-comment-action]');
+const commentStatus = document.querySelector('[data-comment-status]');
+const commentText = document.querySelector('[data-comment-text]');
 const historySection = document.querySelector('[data-download-history]');
 const historyList = document.querySelector('[data-history-list]');
 const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v1';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v2';
 const TRANSCRIPT_CACHE_LIMIT = 12;
+const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
+const COMMENT_LIMIT = 200;
+const BUILTIN_HOT_TERMS = [
+  '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
+  '肖思远', '王焯冉', '陈红军', '边防', '祖国'
+];
 
 let currentVideo = null;
+let currentTranscript = null;
 let transcriptWorker = null;
 let transcriptWorkerReady = false;
 let transcriptPromise = null;
@@ -64,14 +76,19 @@ function readTranscriptCache() {
 
 function cachedTranscript(shareUrl) {
   const item = readTranscriptCache()[shareUrl];
-  return typeof item?.text === 'string' ? item.text : '';
+  if (typeof item?.corrected !== 'string' || !item.corrected.trim()) return null;
+  return {
+    corrected: item.corrected,
+    raw: typeof item.raw === 'string' ? item.raw : item.corrected,
+    correctionCount: Number(item.correctionCount || 0)
+  };
 }
 
-function saveTranscript(shareUrl, text) {
-  if (!shareUrl || !text) return;
+function saveTranscript(shareUrl, result) {
+  if (!shareUrl || !result?.corrected) return;
   try {
     const cache = readTranscriptCache();
-    cache[shareUrl] = { text, savedAt: Date.now() };
+    cache[shareUrl] = { ...result, savedAt: Date.now() };
     const entries = Object.entries(cache)
       .sort((left, right) => (right[1]?.savedAt || 0) - (left[1]?.savedAt || 0))
       .slice(0, TRANSCRIPT_CACHE_LIMIT);
@@ -152,11 +169,28 @@ function showTranscriptStatus(message, state = '') {
 }
 
 function resetTranscript() {
+  currentTranscript = null;
   transcriptText.value = '';
   transcriptText.hidden = true;
+  transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('尽量保留原话、重复和语气词；人名、方言或多人重叠说话仍建议核对。');
+  showTranscriptStatus('优先保留原话、重复和语气词；标题、作者和话题会作为专名校正依据。');
+}
+
+function showCommentStatus(message, state = '') {
+  commentStatus.textContent = message;
+  commentStatus.classList.toggle('is-working', state === 'working');
+  commentStatus.classList.toggle('is-error', state === 'error');
+}
+
+function resetComments() {
+  commentText.value = '';
+  commentText.hidden = true;
+  commentButton.disabled = false;
+  commentButton.textContent = '提取并复制评论';
+  commentStatus.innerHTML = '免费模式需要先启动<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">本地评论助手</a>，并在微信电脑版打开任意视频号页面。';
+  commentStatus.classList.remove('is-working', 'is-error');
 }
 
 function validHttpUrl(value) {
@@ -187,6 +221,109 @@ function rawVideoUrl(value) {
   } catch {
     return value;
   }
+}
+
+function simplifiedChinese(value) {
+  const text = String(value || '');
+  try {
+    return window.OpenCC?.Converter({ from: 'tw', to: 'cn' })(text) || text;
+  } catch {
+    return text;
+  }
+}
+
+function pinyinKey(value) {
+  try {
+    return window.pinyinPro?.pinyin(value, {
+      toneType: 'none',
+      type: 'array',
+      nonZh: 'removed'
+    }).join('') || '';
+  } catch {
+    return '';
+  }
+}
+
+function transcriptHotTerms(video) {
+  const values = new Set(BUILTIN_HOT_TERMS);
+  const description = simplifiedChinese(video?.description || '');
+  const author = simplifiedChinese(video?.author || '');
+
+  if (/^[\p{Script=Han}·]{2,8}$/u.test(author)) values.add(author);
+  for (const match of description.matchAll(/#([\p{Script=Han}A-Za-z0-9·]{2,16})/gu)) {
+    values.add(match[1]);
+  }
+  for (const match of description.matchAll(/[“"《]([\p{Script=Han}·]{2,16})[”"》]/gu)) {
+    values.add(match[1]);
+  }
+  const leadingName = description.match(/^([\p{Script=Han}·]{2,8})(?=\d|[，。,.#\s])/u)?.[1];
+  if (leadingName) values.add(leadingName);
+
+  return [...values]
+    .map((term) => simplifiedChinese(term).trim())
+    .filter((term) => /^[\p{Script=Han}·]{2,16}$/u.test(term))
+    .sort((left, right) => right.length - left.length);
+}
+
+function correctHomophones(value, terms) {
+  let correctionCount = 0;
+  const prepared = terms.map((term) => ({ term, key: pinyinKey(term) })).filter((item) => item.key);
+  const corrected = value.replace(/[\p{Script=Han}·]{2,}/gu, (run) => {
+    let output = run;
+    for (const { term, key } of prepared) {
+      if (term.length > output.length || output.includes(term)) continue;
+      for (let index = 0; index <= output.length - term.length; index += 1) {
+        const candidate = output.slice(index, index + term.length);
+        if (candidate !== term && pinyinKey(candidate) === key) {
+          output = `${output.slice(0, index)}${term}${output.slice(index + term.length)}`;
+          correctionCount += 1;
+        }
+      }
+    }
+    return output;
+  });
+  return { text: corrected, correctionCount };
+}
+
+function cleanSegment(value, terms) {
+  const simplified = simplifiedChinese(value)
+    .replace(/([\p{Script=Han}])\s+(?=[\p{Script=Han}])/gu, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!simplified) return { text: '', correctionCount: 0 };
+  const corrected = correctHomophones(simplified, terms);
+  const text = /[。！？!?…]$/u.test(corrected.text) ? corrected.text : `${corrected.text}。`;
+  return { text, correctionCount: corrected.correctionCount };
+}
+
+function buildTranscriptResult(result, video) {
+  const rawSegments = Array.isArray(result?.segments) && result.segments.length
+    ? result.segments.map((item) => String(item?.text || '').trim()).filter(Boolean)
+    : String(result?.text || '').split('\n').map((item) => item.trim()).filter(Boolean);
+  const terms = transcriptHotTerms(video);
+  let correctionCount = 0;
+  const correctedSegments = rawSegments.map((segment) => {
+    const item = cleanSegment(segment, terms);
+    correctionCount += item.correctionCount;
+    return item.text;
+  }).filter(Boolean);
+  return {
+    raw: rawSegments.join('\n'),
+    corrected: correctedSegments.join('\n'),
+    correctionCount
+  };
+}
+
+function showTranscriptView(view = 'corrected') {
+  if (!currentTranscript) return;
+  transcriptText.value = currentTranscript[view] || currentTranscript.corrected;
+  transcriptText.hidden = false;
+  transcriptSwitch.hidden = false;
+  transcriptViewButtons.forEach((button) => {
+    const active = button.dataset.transcriptView === view;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
 }
 
 function filename(description, createTime) {
@@ -224,12 +361,13 @@ function renderResult(payload, shareUrl) {
   };
 
   resetTranscript();
+  resetComments();
   const previousTranscript = cachedTranscript(shareUrl);
   if (previousTranscript) {
-    transcriptText.value = previousTranscript;
-    transcriptText.hidden = false;
+    currentTranscript = previousTranscript;
+    showTranscriptView('corrected');
     transcriptButton.textContent = '复制逐字稿';
-    showTranscriptStatus('已读取这条视频在当前浏览器保存的逐字稿。');
+    showTranscriptStatus(`已读取本机缓存的校正逐字稿${previousTranscript.correctionCount ? `，其中 ${previousTranscript.correctionCount} 处按专名热词校正` : ''}。`);
   }
 
   videoNode.src = videoUrl;
@@ -261,9 +399,11 @@ function renderResult(payload, shareUrl) {
 function transcriptProgress(message) {
   if (message.status === 'progress' && Number.isFinite(message.progress)) {
     const percent = Math.max(0, Math.min(100, Math.round(message.progress)));
-    showTranscriptStatus(`首次使用正在下载识别模型，当前文件 ${percent}%（下载一次后会缓存）`, 'working');
+    showTranscriptStatus(`首次使用正在下载中文识别组件，当前文件 ${percent}%（下载一次后会缓存）`, 'working');
   } else if (message.status === 'loading') {
     showTranscriptStatus(message.data || '正在载入语音识别模型…', 'working');
+  } else if (message.status === 'recognizing') {
+    showTranscriptStatus(`正在识别第 ${message.current || 1}/${message.total || 1} 段人声…`, 'working');
   }
 }
 
@@ -272,7 +412,7 @@ async function ensureTranscriptWorker() {
   if (transcriptPromise) return transcriptPromise;
 
   transcriptPromise = new Promise((resolve, reject) => {
-    const worker = new Worker('./video-transcript-worker.js?v=20260808-2', { type: 'module' });
+    const worker = new Worker('./video-transcript-worker.js?v=20260808-5');
     transcriptWorker = worker;
 
     const handleMessage = (event) => {
@@ -326,7 +466,7 @@ async function videoAudio(url) {
   }
 }
 
-async function copyText(value) {
+async function copyText(value, fallbackNode = transcriptText) {
   try {
     const copied = await Promise.race([
       navigator.clipboard.writeText(value).then(() => true, () => false),
@@ -336,9 +476,9 @@ async function copyText(value) {
   } catch {
     // Fall back to selecting the visible transcript below.
   }
-  transcriptText.hidden = false;
-  transcriptText.focus();
-  transcriptText.select();
+  fallbackNode.hidden = false;
+  fallbackNode.focus();
+  fallbackNode.select();
   try {
     return document.execCommand('copy');
   } catch {
@@ -346,12 +486,154 @@ async function copyText(value) {
   }
 }
 
+async function localCommentRequest(path, params) {
+  const url = new URL(path, LOCAL_COMMENT_API);
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== '' && value !== undefined && value !== null) url.searchParams.set(key, value);
+  });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 16000);
+  try {
+    const response = await fetch(url, { headers: { Accept: 'application/json' }, signal: controller.signal });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || (payload.code !== undefined && Number(payload.code) !== 0)) {
+      throw new Error(payload.msg || payload.message || `本地助手返回 ${response.status}`);
+    }
+    return payload.data ?? payload;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
+function localCommentError(error) {
+  const message = String(error?.message || '未知错误');
+  if (error?.name === 'AbortError') return '本地助手响应超时，请确认微信电脑版已经打开视频号页面';
+  if (/Failed to fetch|NetworkError|Load failed|fetch resource/i.test(message)) {
+    return '未检测到本地评论助手，请先下载安装并启动';
+  }
+  if (/socket|初始化客户端|not connected|timeout/i.test(message)) {
+    return '本地助手已启动，但尚未连接微信视频号；请在微信电脑版打开任意视频号页面';
+  }
+  return message;
+}
+
+function commentTime(value) {
+  const timestamp = Number(value);
+  if (!timestamp) return '';
+  const date = new Date(timestamp * 1000);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+  }).format(date);
+}
+
+function inlineReplies(comment) {
+  const replies = comment?.levelTwoComment;
+  return Array.isArray(replies) ? replies.filter((item) => item && typeof item === 'object') : [];
+}
+
+function formatComments(comments) {
+  const replyCount = comments.reduce((total, item) => total + inlineReplies(item).length, 0);
+  const lines = [`视频评论区（主评论 ${comments.length} 条${replyCount ? `，回复 ${replyCount} 条` : ''}）`, ''];
+  comments.forEach((comment, index) => {
+    const nickname = comment.nickname || comment.authorContact?.nickname || '匿名用户';
+    const meta = [
+      nickname,
+      commentTime(comment.createtime),
+      Number(comment.likeCount) ? `赞 ${comment.likeCount}` : '',
+      comment.ipRegionInfo?.regionText || ''
+    ].filter(Boolean).join(' · ');
+    const content = String(comment.content || '').trim() || '[非文字评论]';
+    lines.push(`${index + 1}. ${meta}`, content);
+    inlineReplies(comment).forEach((reply) => {
+      const replyName = reply.nickname || reply.authorContact?.nickname || '匿名用户';
+      const replyContent = String(reply.content || reply.replyContent || '').trim() || '[非文字回复]';
+      lines.push(`   ↳ ${replyName}：${replyContent}`);
+    });
+    lines.push('');
+  });
+  return lines.join('\n').trim();
+}
+
+async function resolveLocalVideo(shareUrl) {
+  const profile = await localCommentRequest('/api/channels/feed/profile', { url: shareUrl });
+  if (profile?.errCode) throw new Error(profile.errMsg || '本地助手无法解析该视频');
+  const object = profile?.data?.object || {};
+  const objectId = String(object.id || profile?.payload?.objectid || profile?.payload?.objectId || '');
+  const nonceId = String(object.objectNonceId || profile?.payload?.objectNonceId || '');
+  if (!objectId || !nonceId) throw new Error('没有取得评论所需的作品编号，请在微信电脑版打开这条视频后重试');
+  return { objectId, nonceId };
+}
+
+async function fetchLocalComments(objectId, nonceId) {
+  const comments = [];
+  const ids = new Set();
+  const markers = new Set();
+  let nextMarker = '';
+  for (let pageIndex = 0; pageIndex < 30 && comments.length < COMMENT_LIMIT; pageIndex += 1) {
+    const response = await localCommentRequest('/api/channels/feed/comment/list', {
+      oid: objectId,
+      nid: nonceId,
+      next_marker: nextMarker
+    });
+    if (response?.errCode) throw new Error(response.errMsg || '评论读取失败');
+    const page = response?.data || {};
+    const items = Array.isArray(page.commentInfo) ? page.commentInfo : [];
+    items.forEach((item) => {
+      const id = String(item?.commentId || `${item?.username || ''}:${item?.createtime || ''}:${item?.content || ''}`);
+      if (!ids.has(id) && comments.length < COMMENT_LIMIT) {
+        ids.add(id);
+        comments.push(item);
+      }
+    });
+    showCommentStatus(`正在提取评论，已获得 ${comments.length} 条…`, 'working');
+    const marker = String(page.lastBuffer || '');
+    if (!items.length || !marker || Number(page.downContinueFlag) === 0 || markers.has(marker)) break;
+    markers.add(marker);
+    nextMarker = marker;
+  }
+  return comments;
+}
+
+async function extractCurrentComments() {
+  if (!currentVideo?.shareUrl) return;
+  const existingText = commentText.value.trim();
+  if (existingText) {
+    const copied = await copyText(existingText, commentText);
+    showCommentStatus(copied ? '评论区内容已复制到剪贴板。' : '请长按或全选下方评论后复制。', copied ? '' : 'error');
+    return;
+  }
+
+  const video = { ...currentVideo };
+  commentButton.disabled = true;
+  commentButton.textContent = '正在提取…';
+  try {
+    showCommentStatus('正在连接本地评论助手…', 'working');
+    const { objectId, nonceId } = await resolveLocalVideo(video.shareUrl);
+    showCommentStatus('已识别视频，正在分页读取评论…', 'working');
+    const comments = await fetchLocalComments(objectId, nonceId);
+    if (!comments.length) throw new Error('这条视频没有返回可见评论');
+    if (currentVideo?.shareUrl !== video.shareUrl) return;
+    const text = formatComments(comments);
+    commentText.value = text;
+    commentText.hidden = false;
+    commentButton.textContent = '复制评论';
+    const copied = await copyText(text, commentText);
+    const limited = comments.length >= COMMENT_LIMIT ? `（已达到 ${COMMENT_LIMIT} 条上限）` : '';
+    showCommentStatus(copied ? `已提取 ${comments.length} 条主评论${limited}并复制到剪贴板。` : `已提取 ${comments.length} 条主评论，请再次点击“复制评论”。`, copied ? '' : 'error');
+  } catch (error) {
+    commentButton.textContent = '重新提取评论';
+    showCommentStatus(`评论提取失败：${localCommentError(error)}`, 'error');
+  } finally {
+    commentButton.disabled = false;
+  }
+}
+
 async function transcribeCurrentVideo() {
   if (!currentVideo?.url) return;
   const video = { ...currentVideo };
-  const existingText = transcriptText.value.trim();
-  if (existingText) {
-    const copied = await copyText(existingText);
+  if (currentTranscript?.corrected) {
+    const copied = await copyText(currentTranscript.corrected);
     showTranscriptStatus(copied ? '逐字稿已复制到剪贴板。' : '请长按或全选下方逐字稿后复制。', copied ? '' : 'error');
     return;
   }
@@ -376,15 +658,16 @@ async function transcribeCurrentVideo() {
       worker.postMessage({ type: 'run', data: { audio, language: 'zh' } }, [audio.buffer]);
     });
 
-    const text = String(result?.text || '').trim();
-    if (!text) throw new Error('没有识别到清晰的人声');
+    const transcript = buildTranscriptResult(result, video);
+    if (!transcript.corrected) throw new Error('没有识别到清晰的人声');
     if (currentVideo?.shareUrl !== video.shareUrl) return;
-    transcriptText.value = text;
-    transcriptText.hidden = false;
-    saveTranscript(video.shareUrl, text);
+    currentTranscript = transcript;
+    showTranscriptView('corrected');
+    saveTranscript(video.shareUrl, transcript);
     transcriptButton.textContent = '复制逐字稿';
-    const copied = await copyText(text);
-    showTranscriptStatus(copied ? '逐字稿已生成并复制到剪贴板。' : '逐字稿已生成，请再次点击“复制逐字稿”。', copied ? '' : 'error');
+    const copied = await copyText(transcript.corrected);
+    const correctionNote = transcript.correctionCount ? `，并按标题/话题校正 ${transcript.correctionCount} 处专名` : '';
+    showTranscriptStatus(copied ? `逐字稿已生成并复制${correctionNote}。` : `逐字稿已生成${correctionNote}，请再次点击“复制逐字稿”。`, copied ? '' : 'error');
   } catch (error) {
     transcriptButton.textContent = '重新生成逐字稿';
     showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
@@ -456,6 +739,11 @@ form.addEventListener('submit', async (event) => {
 downloadButton.addEventListener('click', () => downloadVideo(currentVideo?.url));
 rawDownloadButton.addEventListener('click', () => downloadVideo(currentVideo?.rawUrl));
 transcriptButton.addEventListener('click', transcribeCurrentVideo);
+transcriptSwitch.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-transcript-view]');
+  if (target) showTranscriptView(target.dataset.transcriptView);
+});
+commentButton.addEventListener('click', extractCurrentComments);
 
 historyList.addEventListener('click', (event) => {
   const queryTarget = event.target.closest('[data-history-query]');
