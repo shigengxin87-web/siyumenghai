@@ -191,7 +191,7 @@ const days = {
       { kind: '教程', title: '如何用 ima 或飞书创建知识库', text: '知识库搭建方法、使用场景，以及如何把它用于交付、权益和获客。', url: 'https://my.feishu.cn/wiki/ZoCuwMZD8i8NspkKKKbci5LjnIh?from=from_copylink', linkLabel: '打开飞书文档' },
       { kind: '工作流', title: 'Typeless → 飞书 → Codex → 公众号', text: '一套约 15—20 分钟完成公众号内容生产与发布的实操路径。' },
       { kind: '人物', title: '溪子', text: '临床心理咨询与艺术治疗背景，长期从事咨询与教学，并具备知识 IP 小红书获客经验。' },
-      { kind: '工具', title: '视频号下载工具', text: '官网内的实用工具入口，可用于处理本人拥有或已获授权的视频内容。', url: './video-downloader.html?v=20260726-1', linkLabel: '打开视频号工具' }
+      { kind: '工具', title: '视频号下载工具', text: '官网内的实用工具入口，可用于处理本人拥有或已获授权的视频内容。', url: './video-downloader.html?v=20260808-16', linkLabel: '打开视频号工具' }
     ],
     themes: [
       { time: '18:14', title: '知识库搭建教程发布', text: '石更新分享飞书与 ima 知识库的搭建方法，并解释其在知识管理、学员交付和获客资料中的价值。', url: 'https://my.feishu.cn/wiki/ZoCuwMZD8i8NspkKKKbci5LjnIh?from=from_copylink', linkLabel: '查看完整教程' },
