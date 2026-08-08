@@ -39,8 +39,9 @@ const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 
 if (location.protocol === 'http:' && /^(?:www\.)?siyumenghai\.cn$/i.test(location.hostname)) {
-  const secureUrl = new URL(location.href);
-  secureUrl.protocol = 'https:';
+  const secureUrl = new URL(`https://shigengxin87-web.github.io/siyumenghai${location.pathname}`);
+  secureUrl.search = location.search;
+  secureUrl.hash = location.hash;
   location.replace(secureUrl.href);
 }
 const BUILTIN_HOT_TERMS = [
