@@ -605,6 +605,11 @@ function exportCommentsExcel() {
   if (!currentCommentRows.length) return showCommentStatus('请先提取评论，再导出 Excel。', 'error');
   if (!window.XLSX?.utils) return showCommentStatus('Excel 导出组件尚未加载，请刷新页面后重试。', 'error');
   const worksheet = XLSX.utils.json_to_sheet(currentCommentRows, { cellDates: true });
+  const sheetRange = XLSX.utils.decode_range(worksheet['!ref']);
+  for (let row = 1; row <= sheetRange.e.r; row += 1) {
+    const cell = worksheet[XLSX.utils.encode_cell({ r: row, c: 5 })];
+    if (cell) cell.z = 'yyyy-mm-dd hh:mm';
+  }
   worksheet['!cols'] = [
     { wch: 12 }, { wch: 10 }, { wch: 20 }, { wch: 56 },
     { wch: 10 }, { wch: 20 }, { wch: 14 }, { wch: 20 }
