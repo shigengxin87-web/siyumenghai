@@ -87,6 +87,18 @@ def valid_video_url(value):
     return parsed.scheme == "https" and (host.endswith(".qq.com") or host.endswith(".qpic.cn") or host.endswith(".gtimg.com"))
 
 
+def valid_image_url(value):
+    try:
+        parsed = urlparse(value)
+    except ValueError:
+        return False
+    host = (parsed.hostname or "").lower()
+    return parsed.scheme == "https" and (
+        host.endswith(".qq.com") or host.endswith(".qpic.cn")
+        or host.endswith(".gtimg.com") or host.endswith(".qlogo.cn")
+    )
+
+
 def cover_paths(url):
     key = hashlib.sha256(url.encode("utf-8")).hexdigest()
     return COVERS_DIR / f"{key}.bin", COVERS_DIR / f"{key}.json"
@@ -321,7 +333,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         if parsed_path.path == "/covers":
             url = parse_qs(parsed_path.query).get("url", [""])[0].strip()
-            if not valid_video_url(url):
+            if not valid_image_url(url):
                 self.send_json(400, {"error": "封面地址无效"})
                 return
             try:

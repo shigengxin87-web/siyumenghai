@@ -45,8 +45,24 @@ const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
 const COMMENT_BRIDGE_ORIGIN = 'http://127.0.0.1:2024';
 const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
-  '肖思远', '王焯冉', '陈红军', '边防', '祖国'
+  '肖思远', '王焯冉', '陈红军', '边防', '祖国',
+  '公域', '私域', '高变现', '获客难', '咨询陪跑',
+  '群响', '群响私董会', '刘思毅', '千万级名师', 'MCN'
 ];
+const DOMAIN_CORRECTIONS = new Map([
+  ['公寓直播', '公域直播'],
+  ['私域和公寓', '私域和公域'],
+  ['高变线', '高变现'],
+  ['咨询背包', '咨询陪跑'],
+  ['破贺难', '获客难'],
+  ['变相差', '变现差'],
+  ['千万几名师', '千万级名师'],
+  ['群想', '群响'],
+  ['刘思议', '刘思毅'],
+  ['群响思想思想会', '群响私董会'],
+  ['群响思想会', '群响私董会'],
+  ['IP和M森', 'IP和MCN']
+]);
 
 let currentVideo = null;
 let currentTranscript = null;
@@ -345,8 +361,16 @@ function cleanSegment(value, terms) {
     .trim();
   if (!simplified) return { text: '', correctionCount: 0 };
   const corrected = correctHomophones(simplified, terms);
-  const text = /[。！？!?…]$/u.test(corrected.text) ? corrected.text : `${corrected.text}。`;
-  return { text, correctionCount: corrected.correctionCount };
+  let text = corrected.text;
+  let correctionCount = corrected.correctionCount;
+  for (const [wrong, right] of DOMAIN_CORRECTIONS) {
+    const matches = text.split(wrong).length - 1;
+    if (!matches) continue;
+    text = text.replaceAll(wrong, right);
+    correctionCount += matches;
+  }
+  text = /[。！？!?…]$/u.test(text) ? text : `${text}。`;
+  return { text, correctionCount };
 }
 
 function buildTranscriptResult(result, video) {
@@ -422,8 +446,12 @@ function renderResult(payload, shareUrl) {
 
   resetTranscript();
   resetComments();
-  const previousTranscript = cachedTranscript(shareUrl);
+  let previousTranscript = cachedTranscript(shareUrl);
   if (previousTranscript) {
+    if (previousTranscript.raw === previousTranscript.corrected && previousTranscript.correctionCount === 0) {
+      previousTranscript = buildTranscriptResult({ text: previousTranscript.raw }, currentVideo);
+      saveTranscript(shareUrl, previousTranscript);
+    }
     currentTranscript = previousTranscript;
     showTranscriptView('corrected');
     transcriptButton.textContent = '复制逐字稿';
@@ -437,9 +465,13 @@ function renderResult(payload, shareUrl) {
   authorName.textContent = authorInfo?.nickname || '视频号作者';
   const avatarUrl = validHttpUrl(authorInfo?.headImgUrl);
   if (avatarUrl) {
-    authorAvatar.src = avatarUrl;
+    authorAvatar.src = coverProxyUrl(avatarUrl);
     authorAvatar.alt = `${authorName.textContent}的头像`;
     authorAvatar.hidden = false;
+    authorAvatar.onerror = () => {
+      authorAvatar.hidden = true;
+      authorAvatar.removeAttribute('src');
+    };
   } else {
     authorAvatar.hidden = true;
     authorAvatar.removeAttribute('src');
@@ -827,7 +859,7 @@ async function followTranscriptJob(initialPayload, video, token) {
     if (payload.status === 'completed') {
       const text = String(payload.text || '').trim();
       if (!text) throw new Error('服务器没有返回逐字稿');
-      const result = { corrected: text, raw: text, correctionCount: 0 };
+      const result = buildTranscriptResult({ text }, video);
       saveTranscript(video.shareUrl, result);
       if (currentVideo?.shareUrl !== video.shareUrl) return;
       currentTranscript = result;
@@ -839,7 +871,8 @@ async function followTranscriptJob(initialPayload, video, token) {
       const timeText = seconds > 0
         ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
         : '';
-      showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}。` : `逐字稿已生成${cacheText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
+      const correctionText = result.correctionCount ? `，脚本校正 ${result.correctionCount} 处` : '，未发现可自动校正项';
+      showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}${correctionText}。` : `逐字稿已生成${cacheText}${correctionText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
       return;
     }
     if (payload.status === 'error') throw new Error(payload.error || '服务器识别失败');
