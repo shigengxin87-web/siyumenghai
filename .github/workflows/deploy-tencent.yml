@@ -32,6 +32,8 @@ jobs:
         run: |
           rsync -az --checksum \
             --exclude 'tools/' \
+            --exclude 'assets/paraformer-zh-small/*.wasm' \
+            --exclude 'assets/paraformer-zh-small/*.data' \
             member-view/ \
             site-deploy@49.234.179.204:/var/www/html/member-view/
 
