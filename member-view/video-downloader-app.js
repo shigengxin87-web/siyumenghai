@@ -151,6 +151,7 @@ function renderHistory() {
     cover.className = 'history-cover';
     cover.alt = '';
     cover.loading = 'lazy';
+    cover.referrerPolicy = 'no-referrer';
     cover.addEventListener('error', () => refreshHistoryCover(item, cover), { once: true });
     if (validHttpUrl(item.coverUrl)) cover.src = item.coverUrl;
 
@@ -458,6 +459,7 @@ function renderResult(payload, shareUrl) {
   authorName.textContent = authorInfo?.nickname || '视频号作者';
   const avatarUrl = validHttpUrl(authorInfo?.headImgUrl);
   if (avatarUrl) {
+    authorAvatar.referrerPolicy = 'no-referrer';
     authorAvatar.src = avatarUrl;
     authorAvatar.alt = `${authorName.textContent}的头像`;
     authorAvatar.hidden = false;
