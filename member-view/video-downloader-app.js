@@ -37,7 +37,7 @@ const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
 const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
 const TRANSCRIPT_CACHE_LIMIT = 12;
-const LOCAL_TRANSCRIPT_HELPER = 'http://127.0.0.1:2025/transcribe';
+const TRANSCRIPT_API = '/api/transcripts/jobs';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
@@ -52,6 +52,8 @@ let currentTranscript = null;
 let transcriptWorker = null;
 let transcriptWorkerReady = false;
 let transcriptPromise = null;
+let transcriptPollToken = 0;
+let transcriptJobId = '';
 let currentCommentRows = [];
 
 function readHistory() {
@@ -183,13 +185,15 @@ function showTranscriptStatus(message, state = '', asHtml = false) {
 }
 
 function resetTranscript() {
+  transcriptPollToken += 1;
+  transcriptJobId = '';
   currentTranscript = null;
   transcriptText.value = '';
   transcriptText.hidden = true;
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
+  showTranscriptStatus('服务器限制：每人每天 5 条，全站每天 30 条。建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
 }
 
 function showCommentStatus(message, state = '') {
@@ -745,7 +749,7 @@ window.addEventListener('message', (event) => {
 });
 
 async function transcribeCurrentVideo() {
-  if (!currentVideo?.url) return;
+  if (!currentVideo?.shareUrl) return;
   const video = { ...currentVideo };
   if (currentTranscript?.corrected) {
     const copied = await copyText(currentTranscript.corrected);
@@ -753,20 +757,71 @@ async function transcribeCurrentVideo() {
     return;
   }
 
-  const helperUrl = new URL(LOCAL_TRANSCRIPT_HELPER);
-  helperUrl.hash = encodeURIComponent(JSON.stringify({
-    videoUrl: video.url,
-    shareUrl: video.shareUrl,
-    author: video.author,
-    description: video.description
-  }));
-  const popup = window.open(helperUrl.href, 'siyumenghai-transcript-helper', 'width=840,height=760');
-  if (!popup) {
-    showTranscriptStatus('浏览器拦截了本机助手窗口，请允许弹窗后重试。', 'error');
-    return;
+  transcriptButton.disabled = true;
+  showTranscriptStatus('正在提交服务器识别任务…', 'working');
+  try {
+    const response = await fetch(TRANSCRIPT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        share_url: video.shareUrl,
+        video_url: video.url,
+        description: video.description,
+        author: video.author
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+    transcriptJobId = payload.id;
+    transcriptButton.textContent = '查看识别进度';
+    const token = ++transcriptPollToken;
+    await followTranscriptJob(payload, video, token);
+  } catch (error) {
+    transcriptButton.textContent = '重新生成逐字稿';
+    showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
+  } finally {
+    transcriptButton.disabled = false;
   }
-  transcriptButton.textContent = '再次打开本机助手';
-  showTranscriptStatus('已交给本机助手识别；完成后会自动复制逐字稿。', 'working');
+}
+
+function transcriptWait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function followTranscriptJob(initialPayload, video, token) {
+  let payload = initialPayload;
+  while (token === transcriptPollToken) {
+    if (payload.status === 'completed') {
+      const text = String(payload.text || '').trim();
+      if (!text) throw new Error('服务器没有返回逐字稿');
+      const result = { corrected: text, raw: text, correctionCount: 0 };
+      saveTranscript(video.shareUrl, result);
+      if (currentVideo?.shareUrl !== video.shareUrl) return;
+      currentTranscript = result;
+      showTranscriptView('corrected');
+      transcriptButton.textContent = '复制逐字稿';
+      const copied = await copyText(text, transcriptText);
+      const cacheText = payload.cached ? '（已读取缓存）' : '';
+      const seconds = Number(payload.elapsed || 0);
+      const timeText = seconds > 0
+        ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
+        : '';
+      showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}。` : `逐字稿已生成${cacheText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
+      return;
+    }
+    if (payload.status === 'error') throw new Error(payload.error || '服务器识别失败');
+    if (payload.status === 'queued') {
+      const ahead = Number(payload.ahead || 0);
+      showTranscriptStatus(ahead > 0 ? `已进入队列，前面还有 ${ahead} 条，完成后会自动复制。` : '已进入队列，即将开始识别…', 'working');
+    } else {
+      showTranscriptStatus(payload.stage || '服务器正在识别人声，请保持页面打开…', 'working');
+    }
+    await transcriptWait(5000);
+    if (token !== transcriptPollToken) return;
+    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(transcriptJobId)}`, { cache: 'no-store' });
+    payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+  }
 }
 
 async function downloadVideo(url) {

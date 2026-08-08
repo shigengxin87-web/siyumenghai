@@ -1,0 +1,26 @@
+[Unit]
+Description=Siyumenghai queued video transcription service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/siyumenghai-transcriber
+Environment=PYTHONUNBUFFERED=1
+Environment=TRANSCRIPT_HOST=127.0.0.1
+Environment=TRANSCRIPT_PORT=2026
+Environment=TRANSCRIPT_DATA_DIR=/var/lib/siyumenghai-transcriber
+Environment=TRANSCRIPT_WORKER=/opt/siyumenghai-transcriber/worker.py
+ExecStart=/usr/bin/python3 /opt/siyumenghai-transcriber/server.py
+Restart=on-failure
+RestartSec=3
+Nice=10
+CPUQuota=300%
+MemoryHigh=2200M
+MemoryMax=2800M
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target
