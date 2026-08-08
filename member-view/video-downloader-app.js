@@ -19,6 +19,7 @@ const descriptionNode = document.querySelector('[data-video-description]');
 const statsNode = document.querySelector('[data-video-stats]');
 const downloadButton = document.querySelector('[data-download-video]');
 const rawDownloadButton = document.querySelector('[data-download-raw]');
+const coverDownloadButton = document.querySelector('[data-download-cover]');
 const transcriptButton = document.querySelector('[data-transcript-action]');
 const transcriptStatus = document.querySelector('[data-transcript-status]');
 const transcriptText = document.querySelector('[data-transcript-text]');
@@ -350,6 +351,13 @@ function filename(description, createTime) {
     return `视频号_${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}.mp4`;
   }
   return '视频号视频.mp4';
+}
+
+function coverFilename(description, contentType = '') {
+  const cleaned = String(description || '').replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 70) || '视频号视频';
+  const type = String(contentType).toLowerCase();
+  const extension = type.includes('png') ? 'png' : type.includes('webp') ? 'webp' : type.includes('gif') ? 'gif' : 'jpg';
+  return `${cleaned}_封面.${extension}`;
 }
 
 function addStat(label, value) {
@@ -787,6 +795,40 @@ async function downloadVideo(url) {
   }
 }
 
+async function downloadCover() {
+  const url = currentVideo?.coverUrl;
+  if (!url) {
+    showStatus('该视频没有可下载的封面', true);
+    return;
+  }
+
+  coverDownloadButton.disabled = true;
+  showStatus('正在准备封面图片…');
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = coverFilename(currentVideo.description, blob.type);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+    showStatus('封面下载已经开始');
+  } catch (error) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
+    showStatus('封面已打开；如果没有直接保存，请长按图片保存');
+  } finally {
+    coverDownloadButton.disabled = false;
+  }
+}
+
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const shareUrl = validHttpUrl(input.value.trim());
@@ -823,6 +865,7 @@ form.addEventListener('submit', async (event) => {
 
 downloadButton.addEventListener('click', () => downloadVideo(currentVideo?.url));
 rawDownloadButton.addEventListener('click', () => downloadVideo(currentVideo?.rawUrl));
+coverDownloadButton.addEventListener('click', downloadCover);
 transcriptButton.addEventListener('click', transcribeCurrentVideo);
 transcriptSwitch.addEventListener('click', (event) => {
   const target = event.target.closest('[data-transcript-view]');
