@@ -37,8 +37,8 @@ const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v2';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
-const COMMENT_BRIDGE_URL = 'https://shigengxin87-web.github.io/siyumenghai-comment-bridge/';
-const COMMENT_BRIDGE_ORIGIN = 'https://shigengxin87-web.github.io';
+const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
+const COMMENT_BRIDGE_ORIGIN = 'http://127.0.0.1:2024';
 const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
   '肖思远', '王焯冉', '陈红军', '边防', '祖国'
