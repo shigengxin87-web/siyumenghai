@@ -68,6 +68,7 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
   const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
   const supportsRange = /bytes/i.test(head.headers.get('Accept-Ranges') || '');
   let bytes;
+  let usedRanges = false;
   if (!supportsRange || partCount < 2) {
     bytes = await responseBytes(
       await fetch(url, { cache: 'no-store' }),
@@ -75,20 +76,40 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
       (loaded) => reportAssetProgress(kind, loaded)
     );
   } else {
+    usedRanges = true;
     const loadedParts = new Array(partCount).fill(0);
     const partSize = Math.ceil(expectedSize / partCount);
     const parts = await Promise.all(loadedParts.map(async (_, index) => {
       const start = index * partSize;
       const end = Math.min(expectedSize - 1, start + partSize - 1);
+      const expectedPartSize = end - start + 1;
+      const partUrl = `${url}&part=${index}`;
+      const cachedPart = await cache.match(partUrl);
+      if (cachedPart) {
+        const part = new Uint8Array(await cachedPart.arrayBuffer());
+        if (part.length === expectedPartSize) {
+          loadedParts[index] = part.length;
+          reportAssetProgress(kind, loadedParts.reduce((sum, value) => sum + value, 0));
+          return part;
+        }
+        await cache.delete(partUrl);
+      }
       const response = await fetch(url, {
         headers: { Range: `bytes=${start}-${end}` },
         cache: 'no-store'
       });
       if (response.status !== 206) throw new Error('当前网络不支持并行下载');
-      return responseBytes(response, end - start + 1, (loaded) => {
+      const part = await responseBytes(response, expectedPartSize, (loaded) => {
         loadedParts[index] = loaded;
         reportAssetProgress(kind, loadedParts.reduce((sum, value) => sum + value, 0));
       });
+      if (part.length !== expectedPartSize) throw new Error('识别组件分段下载不完整');
+      try {
+        await cache.put(partUrl, new Response(part));
+      } catch {
+        // Recognition can continue even if private mode prevents persistent cache writes.
+      }
+      return part;
     }));
     bytes = new Uint8Array(expectedSize);
     let offset = 0;
@@ -99,7 +120,7 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
   }
 
   if (bytes.length !== expectedSize) throw new Error('识别组件下载不完整，请重试');
-  cache.put(url, new Response(bytes)).catch(() => {});
+  if (!usedRanges) cache.put(url, new Response(bytes)).catch(() => {});
   return bytes;
 }
 
