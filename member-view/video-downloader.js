@@ -37,6 +37,12 @@ const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v2';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
+
+if (location.protocol === 'http:' && /^(?:www\.)?siyumenghai\.cn$/i.test(location.hostname)) {
+  const secureUrl = new URL(location.href);
+  secureUrl.protocol = 'https:';
+  location.replace(secureUrl.href);
+}
 const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
   '肖思远', '王焯冉', '陈红军', '边防', '祖国'
@@ -494,7 +500,13 @@ async function localCommentRequest(path, params) {
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), 16000);
   try {
-    const response = await fetch(url, { headers: { Accept: 'application/json' }, signal: controller.signal });
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+      cache: 'no-store',
+      credentials: 'omit',
+      targetAddressSpace: 'local'
+    });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || (payload.code !== undefined && Number(payload.code) !== 0)) {
       throw new Error(payload.msg || payload.message || `本地助手返回 ${response.status}`);
@@ -508,8 +520,11 @@ async function localCommentRequest(path, params) {
 function localCommentError(error) {
   const message = String(error?.message || '未知错误');
   if (error?.name === 'AbortError') return '本地助手响应超时，请确认微信电脑版已经打开视频号页面';
+  if (error?.name === 'NotAllowedError' || /permission|not allowed|access denied/i.test(message)) {
+    return '浏览器未允许访问本地网络；请在地址栏左侧的网站设置中允许“本地网络访问”，刷新后重试';
+  }
   if (/Failed to fetch|NetworkError|Load failed|fetch resource/i.test(message)) {
-    return '未检测到本地评论助手，请先下载安装并启动';
+    return '无法连接本地评论助手；请保持助手运行，并在浏览器提示时允许“本地网络访问”';
   }
   if (/socket|初始化客户端|not connected|timeout/i.test(message)) {
     return '本地助手已启动，但尚未连接微信视频号；请在微信电脑版打开任意视频号页面';
