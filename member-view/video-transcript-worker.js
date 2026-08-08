@@ -54,15 +54,17 @@ async function responseBytes(response, expectedSize, onProgress) {
 
 async function loadAsset(filename, expectedSize, partCount, kind) {
   const url = new URL(`${filename}?v=${ASSET_VERSION}`, ASSET_BASE).href;
-  const cache = await caches.open('siyumenghai-chinese-asr-v1');
-  const cached = await cache.match(url);
+  const cache = typeof caches === 'undefined'
+    ? null
+    : await caches.open('siyumenghai-chinese-asr-v1').catch(() => null);
+  const cached = cache ? await cache.match(url) : null;
   if (cached) {
     const bytes = new Uint8Array(await cached.arrayBuffer());
     if (bytes.length === expectedSize) {
       reportAssetProgress(kind, expectedSize);
       return bytes;
     }
-    await cache.delete(url);
+    await cache?.delete(url);
   }
 
   const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
@@ -84,7 +86,7 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
       const end = Math.min(expectedSize - 1, start + partSize - 1);
       const expectedPartSize = end - start + 1;
       const partUrl = `${url}&part=${index}`;
-      const cachedPart = await cache.match(partUrl);
+      const cachedPart = cache ? await cache.match(partUrl) : null;
       if (cachedPart) {
         const part = new Uint8Array(await cachedPart.arrayBuffer());
         if (part.length === expectedPartSize) {
@@ -92,7 +94,7 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
           reportAssetProgress(kind, loadedParts.reduce((sum, value) => sum + value, 0));
           return part;
         }
-        await cache.delete(partUrl);
+        await cache?.delete(partUrl);
       }
       const response = await fetch(url, {
         headers: { Range: `bytes=${start}-${end}` },
@@ -104,10 +106,12 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
         reportAssetProgress(kind, loadedParts.reduce((sum, value) => sum + value, 0));
       });
       if (part.length !== expectedPartSize) throw new Error('识别组件分段下载不完整');
-      try {
-        await cache.put(partUrl, new Response(part));
-      } catch {
-        // Recognition can continue even if private mode prevents persistent cache writes.
+      if (cache) {
+        try {
+          await cache.put(partUrl, new Response(part));
+        } catch {
+          // Recognition can continue even if private mode prevents persistent cache writes.
+        }
       }
       return part;
     }));
@@ -120,7 +124,7 @@ async function loadAsset(filename, expectedSize, partCount, kind) {
   }
 
   if (bytes.length !== expectedSize) throw new Error('识别组件下载不完整，请重试');
-  if (!usedRanges) cache.put(url, new Response(bytes)).catch(() => {});
+  if (cache && !usedRanges) cache.put(url, new Response(bytes)).catch(() => {});
   return bytes;
 }
 
