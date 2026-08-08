@@ -418,7 +418,7 @@ async function ensureTranscriptWorker() {
   if (transcriptPromise) return transcriptPromise;
 
   transcriptPromise = new Promise((resolve, reject) => {
-    const worker = new Worker('./video-transcript-worker.js?v=20260808-5');
+    const worker = new Worker('./video-transcript-worker.js?v=20260808-6');
     transcriptWorker = worker;
 
     const handleMessage = (event) => {

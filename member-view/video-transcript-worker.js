@@ -5,11 +5,103 @@
  */
 
 const ASSET_BASE = new URL('./assets/paraformer-zh-small/', self.location.href).href;
+const ASSET_VERSION = '20260808-parallel-1';
+const DATA_SIZE = 82547881;
+const WASM_SIZE = 19267173;
+const TOTAL_SIZE = DATA_SIZE + WASM_SIZE;
 const isPthread = self.name?.startsWith('em-pthread');
 
 let recognizer = null;
 let vad = null;
 let ready = false;
+const assetLoaded = { data: 0, wasm: 0 };
+
+function reportAssetProgress(kind, loaded) {
+  assetLoaded[kind] = loaded;
+  self.postMessage({
+    status: 'progress',
+    progress: (assetLoaded.data + assetLoaded.wasm) / TOTAL_SIZE * 100,
+    loaded: assetLoaded.data + assetLoaded.wasm,
+    total: TOTAL_SIZE
+  });
+}
+
+async function responseBytes(response, expectedSize, onProgress) {
+  if (!response.ok) throw new Error(`识别组件下载失败（${response.status}）`);
+  if (!response.body) {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    onProgress(bytes.length);
+    return bytes;
+  }
+  const chunks = [];
+  const reader = response.body.getReader();
+  let loaded = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    loaded += value.length;
+    onProgress(Math.min(loaded, expectedSize));
+  }
+  const bytes = new Uint8Array(loaded);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return bytes;
+}
+
+async function loadAsset(filename, expectedSize, partCount, kind) {
+  const url = new URL(`${filename}?v=${ASSET_VERSION}`, ASSET_BASE).href;
+  const cache = await caches.open('siyumenghai-chinese-asr-v1');
+  const cached = await cache.match(url);
+  if (cached) {
+    const bytes = new Uint8Array(await cached.arrayBuffer());
+    if (bytes.length === expectedSize) {
+      reportAssetProgress(kind, expectedSize);
+      return bytes;
+    }
+    await cache.delete(url);
+  }
+
+  const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+  const supportsRange = /bytes/i.test(head.headers.get('Accept-Ranges') || '');
+  let bytes;
+  if (!supportsRange || partCount < 2) {
+    bytes = await responseBytes(
+      await fetch(url, { cache: 'no-store' }),
+      expectedSize,
+      (loaded) => reportAssetProgress(kind, loaded)
+    );
+  } else {
+    const loadedParts = new Array(partCount).fill(0);
+    const partSize = Math.ceil(expectedSize / partCount);
+    const parts = await Promise.all(loadedParts.map(async (_, index) => {
+      const start = index * partSize;
+      const end = Math.min(expectedSize - 1, start + partSize - 1);
+      const response = await fetch(url, {
+        headers: { Range: `bytes=${start}-${end}` },
+        cache: 'no-store'
+      });
+      if (response.status !== 206) throw new Error('当前网络不支持并行下载');
+      return responseBytes(response, end - start + 1, (loaded) => {
+        loadedParts[index] = loaded;
+        reportAssetProgress(kind, loadedParts.reduce((sum, value) => sum + value, 0));
+      });
+    }));
+    bytes = new Uint8Array(expectedSize);
+    let offset = 0;
+    for (const part of parts) {
+      bytes.set(part, offset);
+      offset += part.length;
+    }
+  }
+
+  if (bytes.length !== expectedSize) throw new Error('识别组件下载不完整，请重试');
+  cache.put(url, new Response(bytes)).catch(() => {});
+  return bytes;
+}
 
 self.Module = {
   locateFile(path) {
@@ -17,17 +109,7 @@ self.Module = {
   },
   setStatus(status) {
     if (isPthread || !status) return;
-    const match = status.match(/Downloading data\.\.\. \((\d+)\/(\d+)\)/);
-    if (match) {
-      const loaded = Number(match[1]);
-      const total = Number(match[2]);
-      self.postMessage({
-        status: 'progress',
-        progress: total ? loaded / total * 100 : 0,
-        loaded,
-        total
-      });
-    } else {
+    if (!status.startsWith('Downloading data')) {
       self.postMessage({ status: 'loading', data: status });
     }
   },
@@ -71,11 +153,29 @@ self.Module = {
   }
 };
 
-importScripts(
-  './assets/paraformer-zh-small/sherpa-onnx-asr.js',
-  './assets/paraformer-zh-small/sherpa-onnx-vad.js',
-  './assets/paraformer-zh-small/sherpa-onnx-wasm-main-vad-asr.js'
-);
+async function bootstrap() {
+  if (isPthread) {
+    importScripts('./assets/paraformer-zh-small/sherpa-onnx-wasm-main-vad-asr.js');
+    return;
+  }
+  try {
+    const [data, wasm] = await Promise.all([
+      loadAsset('sherpa-onnx-wasm-main-vad-asr.data', DATA_SIZE, 8, 'data'),
+      loadAsset('sherpa-onnx-wasm-main-vad-asr.wasm', WASM_SIZE, 4, 'wasm')
+    ]);
+    Module.getPreloadedPackage = () => data.buffer;
+    Module.wasmBinary = wasm;
+    importScripts(
+      './assets/paraformer-zh-small/sherpa-onnx-asr.js',
+      './assets/paraformer-zh-small/sherpa-onnx-vad.js',
+      './assets/paraformer-zh-small/sherpa-onnx-wasm-main-vad-asr.js'
+    );
+  } catch (error) {
+    self.postMessage({ status: 'error', message: readableError(error) });
+  }
+}
+
+bootstrap();
 
 function readableError(error) {
   return error instanceof Error ? error.message : String(error || '识别组件运行失败');
