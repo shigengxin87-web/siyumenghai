@@ -152,8 +152,7 @@ function renderHistory() {
     cover.alt = '';
     cover.loading = 'lazy';
     cover.referrerPolicy = 'no-referrer';
-    cover.addEventListener('error', () => refreshHistoryCover(item, cover), { once: true });
-    if (validHttpUrl(item.coverUrl)) cover.src = item.coverUrl;
+    loadHistoryCover(item, cover);
 
     const content = document.createElement('div');
     content.className = 'history-content';
@@ -240,6 +239,40 @@ function validHttpUrl(value) {
   }
 }
 
+function imagePlaceholder(image, label = '封面') {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320"><rect width="240" height="320" rx="20" fill="#ecfdf5"/><text x="120" y="160" text-anchor="middle" dominant-baseline="middle" fill="#059669" font-family="system-ui,sans-serif" font-size="25" font-weight="700">${label}</text></svg>`;
+  image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+async function imageUrlAsObjectUrl(url) {
+  const response = await fetch(url, {
+    cache: 'no-store',
+    credentials: 'omit',
+    referrerPolicy: 'no-referrer'
+  });
+  if (!response.ok) throw new Error(`image ${response.status}`);
+  const blob = await response.blob();
+  if (!blob.type.startsWith('image/') || !blob.size) throw new Error('invalid image');
+  return URL.createObjectURL(blob);
+}
+
+async function displayHistoryCover(url, image) {
+  const objectUrl = await imageUrlAsObjectUrl(url);
+  image.addEventListener('load', () => URL.revokeObjectURL(objectUrl), { once: true });
+  image.src = objectUrl;
+}
+
+async function loadHistoryCover(item, image) {
+  imagePlaceholder(image, '封面加载中');
+  try {
+    const existingUrl = validHttpUrl(item?.coverUrl);
+    if (!existingUrl) throw new Error('cover missing');
+    await displayHistoryCover(existingUrl, image);
+  } catch {
+    await refreshHistoryCover(item, image);
+  }
+}
+
 async function refreshHistoryCover(item, image) {
   if (!item?.shareUrl || image.dataset.refreshing) return;
   image.dataset.refreshing = '1';
@@ -259,9 +292,11 @@ async function refreshHistoryCover(item, image) {
       target.coverUrl = freshCoverUrl;
       writeHistory(items);
     }
-    image.src = freshCoverUrl;
+    await displayHistoryCover(freshCoverUrl, image);
   } catch {
-    image.removeAttribute('src');
+    imagePlaceholder(image, '点重新查询');
+  } finally {
+    delete image.dataset.refreshing;
   }
 }
 
