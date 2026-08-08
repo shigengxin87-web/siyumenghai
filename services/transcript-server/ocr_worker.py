@@ -208,9 +208,13 @@ def discover_region(video_path, frames, engine, duration, Image):
     }
 
 
-def frame_subtitle(engine, image, target_center):
+def frame_subtitle(engine, image, target_center, single_line=False):
     lines = detected_lines(engine, image, minimum_confidence=0.72)
-    candidates = [item for item in lines if abs(item["center"] - target_center) <= 0.22]
+    # A short-form video can show one spoken caption plus a dense example list
+    # only a few pixels below it.  During per-band verification stay tightly on
+    # the discovered line instead of letting a longer nearby UI/example line win.
+    center_radius = 0.045 if single_line else 0.22
+    candidates = [item for item in lines if abs(item["center"] - target_center) <= center_radius]
     if not candidates:
         return None
     # Keep the dominant large, horizontally centred text band. This prevents
@@ -219,6 +223,8 @@ def frame_subtitle(engine, image, target_center):
         candidates,
         key=lambda item: item["height"] * 8 + item["width"] * 1.5 - abs(item["center_x"] - 0.5),
     )
+    if single_line:
+        return {"text": anchor["text"], "confidence": anchor["confidence"]}
     selected = [
         item for item in candidates
         if abs(item["center"] - anchor["center"]) <= 0.16
@@ -244,6 +250,7 @@ def choose_variant(group, frame_rate):
         "confidence": round(best["confidence"], 4),
         "samples": best["hits"],
         "frame_index": best["frame_index"],
+        "target_center": best.get("target_center"),
     }
 
 
@@ -263,6 +270,7 @@ def consolidate(observations, frame_rate):
         variant = current["variants"].setdefault(item["text"], {
             "text": item["text"], "hits": 0, "confidence_total": 0.0,
             "confidence": 0.0, "frame_index": item["frame_index"], "max_confidence": 0.0,
+            "target_center": item.get("target_center"),
         })
         variant["hits"] += 1
         variant["confidence_total"] += item["confidence"]
@@ -275,7 +283,7 @@ def consolidate(observations, frame_rate):
     return [item for item in groups if item["samples"] >= 2 or item["confidence"] >= 0.82]
 
 
-def verify_segments(segments, frame_paths, ModelType, Image, target_center):
+def verify_segments(segments, frame_paths, ModelType, Image, target_center=None, single_line=False):
     if not segments:
         return segments, False
     small_engine = build_engine(ModelType, ModelType.SMALL)
@@ -283,7 +291,11 @@ def verify_segments(segments, frame_paths, ModelType, Image, target_center):
     for segment in segments:
         index = min(max(0, int(segment.pop("frame_index", 0))), len(frame_paths) - 1)
         image = Image.open(frame_paths[index]).convert("RGB")
-        checked = frame_subtitle(small_engine, image, target_center)
+        segment_center = segment.pop("target_center", None)
+        checked = frame_subtitle(
+            small_engine, image, segment_center if segment_center is not None else target_center,
+            single_line=single_line,
+        )
         if not checked:
             continue
         original = segment["text"]
@@ -294,6 +306,57 @@ def verify_segments(segments, frame_paths, ModelType, Image, target_center):
             segment["confidence"] = round(checked["confidence"], 4)
             used = True
     return segments, used
+
+
+def scan_short_multiband(video_path, frames, engine, duration, frame_rate, Image):
+    run([
+        "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-i", str(video_path),
+        "-vf", f"fps={frame_rate},scale='min(720,iw)':-2",
+        "-q:v", "3", "-y", str(frames / "scan-%06d.jpg"),
+    ], 300)
+    frame_paths = sorted(frames.glob("scan-*.jpg"))
+    detected = []
+    key_frames = {}
+    for index, frame_path in enumerate(frame_paths):
+        image = Image.open(frame_path).convert("RGB")
+        lines = [item for item in detected_lines(engine, image, minimum_confidence=0.72) if item["height"] >= 0.025]
+        detected.append(lines)
+        for key in {comparable(item["text"]) for item in lines}:
+            key_frames[key] = key_frames.get(key, 0) + 1
+
+    static_limit = max(4, int(len(frame_paths) * 0.65))
+    tracks = {}
+    for index, lines in enumerate(detected):
+        bands = {}
+        for item in lines:
+            key = comparable(item["text"])
+            if key_frames.get(key, 0) >= static_limit:
+                continue
+            band = int(item["center"] / 0.065)
+            current = bands.get(band)
+            score = item["height"] * 12 + item["width"] - abs(item["center_x"] - 0.5) * 0.7
+            if current is None or score > current[0]:
+                bands[band] = (score, item)
+        for band, (_, item) in bands.items():
+            tracks.setdefault(band, []).append({
+                "time": index / frame_rate,
+                "frame_index": index,
+                "target_center": item["center"],
+                "text": item["text"],
+                "confidence": item["confidence"],
+            })
+
+    segments = []
+    for observations in tracks.values():
+        segments.extend(consolidate(observations, frame_rate))
+    segments.sort(key=lambda item: (item["start"], item["target_center"] or 0))
+    region = {
+        "mode": "full_frame_multi_band",
+        "bands": len(tracks),
+        "frames": len(frame_paths),
+        "fallback": False,
+    }
+    return frame_paths, segments, region
 
 
 def main():
@@ -315,32 +378,36 @@ def main():
     frames = output_path.parent / "ocr-frames"
     frames.mkdir(parents=True, exist_ok=True)
     tiny_engine = build_engine(ModelType, ModelType.TINY)
-    region = discover_region(video_path, frames, tiny_engine, duration, Image)
-
-    run([
-        "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-i", str(video_path),
-        "-vf", (
-            f"fps={frame_rate},crop=iw:ih*{region['height']}:0:ih*{region['y']},"
-            "scale='min(720,iw)':-2"
-        ),
-        "-q:v", "3", "-y", str(frames / "scan-%06d.jpg"),
-    ], 900)
-
-    target_center = (region["center"] - region["y"]) / region["height"]
-    observations = []
-    frame_paths = sorted(frames.glob("scan-*.jpg"))
-    for index, frame_path in enumerate(frame_paths):
-        image = Image.open(frame_path).convert("RGB")
-        value = frame_subtitle(tiny_engine, image, target_center)
-        if value:
-            observations.append({
-                "time": index / frame_rate,
-                "frame_index": index,
-                **value,
-            })
-
-    segments = consolidate(observations, frame_rate)
-    segments, used_small = verify_segments(segments, frame_paths, ModelType, Image, target_center)
+    if duration <= 30:
+        frame_paths, segments, region = scan_short_multiband(
+            video_path, frames, tiny_engine, duration, frame_rate, Image,
+        )
+        segments, used_small = verify_segments(segments, frame_paths, ModelType, Image, single_line=True)
+    else:
+        region = discover_region(video_path, frames, tiny_engine, duration, Image)
+        run([
+            "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-i", str(video_path),
+            "-vf", (
+                f"fps={frame_rate},crop=iw:ih*{region['height']}:0:ih*{region['y']},"
+                "scale='min(720,iw)':-2"
+            ),
+            "-q:v", "3", "-y", str(frames / "scan-%06d.jpg"),
+        ], 900)
+        target_center = (region["center"] - region["y"]) / region["height"]
+        observations = []
+        frame_paths = sorted(frames.glob("scan-*.jpg"))
+        for index, frame_path in enumerate(frame_paths):
+            image = Image.open(frame_path).convert("RGB")
+            value = frame_subtitle(tiny_engine, image, target_center)
+            if value:
+                observations.append({
+                    "time": index / frame_rate,
+                    "frame_index": index,
+                    "target_center": target_center,
+                    **value,
+                })
+        segments = consolidate(observations, frame_rate)
+        segments, used_small = verify_segments(segments, frame_paths, ModelType, Image, target_center)
     for item in segments:
         item.pop("frame_index", None)
     mean_confidence = sum(item["confidence"] for item in segments) / len(segments) if segments else 0

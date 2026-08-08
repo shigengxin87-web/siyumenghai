@@ -35,7 +35,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v5';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v6';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
@@ -44,12 +44,14 @@ const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
 const COMMENT_BRIDGE_ORIGIN = 'http://127.0.0.1:2024';
+const LOCAL_HELPER_STATUS_API = 'http://127.0.0.1:2024/status';
+const LOCAL_HELPER_LAUNCH_API = 'http://127.0.0.1:2024/launch';
 const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
   '肖思远', '王焯冉', '陈红军', '边防', '祖国',
   '公域', '私域', '高变现', '获客难', '咨询陪跑',
   '群响', '群响私董会', '刘思毅', '千万级名师', 'MCN',
-  '混元模型', '不紧不慢'
+  '混元模型', '不紧不慢', '共情钩子', '视频号'
 ];
 const DOMAIN_CORRECTIONS = new Map([
   ['公寓直播', '公域直播'],
@@ -250,6 +252,60 @@ function showCommentStatus(message, state = '') {
   commentStatus.classList.toggle('is-error', state === 'error');
 }
 
+function localHelperPrompt() {
+  return '本地助手：<a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer" data-local-helper-entry data-helper-action="checking" style="display:inline-block;padding:3px 9px;background:#eaf8f1;border-radius:7px;color:#067653;font-weight:750">正在自动检测…</a>';
+}
+
+function setLocalHelperEntry(label, action) {
+  const entry = commentStatus.querySelector('[data-local-helper-entry]');
+  if (!entry) return;
+  entry.textContent = label;
+  entry.dataset.helperAction = action;
+  if (action === 'download') {
+    entry.href = './local-comment-helper.html';
+    entry.target = '_blank';
+  } else {
+    entry.href = '#';
+    entry.removeAttribute('target');
+  }
+}
+
+async function localHelperRequest(url, options = {}) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 1800);
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+      targetAddressSpace: 'local',
+      ...options,
+      signal: controller.signal
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || payload.ok === false) throw new Error(payload.message || `本地助手返回 ${response.status}`);
+    return payload;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+async function detectLocalHelper() {
+  setLocalHelperEntry('正在自动检测…', 'checking');
+  try {
+    const payload = await localHelperRequest(LOCAL_HELPER_STATUS_API);
+    if (!payload.installed) return setLocalHelperEntry('未安装，点击下载', 'download');
+    setLocalHelperEntry(payload.running ? '本地助手已打开' : '已安装，点击打开', payload.running ? 'running' : 'launch');
+  } catch {
+    setLocalHelperEntry('未检测到，点击下载', 'download');
+  }
+}
+
+function renderLocalHelperPrompt() {
+  commentStatus.innerHTML = localHelperPrompt();
+  commentStatus.classList.remove('is-working', 'is-error');
+  detectLocalHelper();
+}
+
 function resetComments() {
   currentCommentRows = [];
   commentText.value = '';
@@ -257,8 +313,7 @@ function resetComments() {
   commentButton.disabled = false;
   commentButton.textContent = '提取并复制评论';
   commentExcelButton.hidden = false;
-  commentStatus.innerHTML = '点击下载<span aria-hidden="true" style="display:inline-block;margin:0 2px 0 6px;color:#059669;font-size:18px;font-weight:900">→</span><a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:2px 7px;background:#eaf8f1;border-radius:7px">「本地助手」</a>，发送并上传给你的Agent，自主安装并指导你使用。';
-  commentStatus.classList.remove('is-working', 'is-error');
+  renderLocalHelperPrompt();
 }
 
 function validHttpUrl(value) {
@@ -1153,6 +1208,24 @@ transcriptSwitch.addEventListener('click', (event) => {
 });
 commentButton.addEventListener('click', extractCurrentComments);
 commentExcelButton.addEventListener('click', exportCommentsExcel);
+commentStatus.addEventListener('click', async (event) => {
+  const entry = event.target.closest('[data-local-helper-entry]');
+  if (!entry || entry.dataset.helperAction === 'download') return;
+  event.preventDefault();
+  if (entry.dataset.helperAction === 'running') {
+    showCommentStatus('本地助手已经打开，可以直接提取评论。');
+    return;
+  }
+  if (entry.dataset.helperAction !== 'launch') return;
+  setLocalHelperEntry('正在打开…', 'checking');
+  try {
+    const payload = await localHelperRequest(LOCAL_HELPER_LAUNCH_API, { method: 'POST' });
+    showCommentStatus(payload.running ? '本地助手已经运行，可以直接提取评论。' : '已打开本地助手终端，请按提示输入 Mac 密码并保持窗口运行。', payload.running ? '' : 'working');
+  } catch {
+    window.open('./local-comment-helper.html', '_blank', 'noopener');
+    showCommentStatus('没有检测到可启动的本地助手，已打开下载说明。', 'error');
+  }
+});
 
 historyList.addEventListener('click', (event) => {
   const queryTarget = event.target.closest('[data-history-query]');
@@ -1180,3 +1253,4 @@ clearHistoryButton.addEventListener('click', () => {
 });
 
 renderHistory();
+renderLocalHelperPrompt();
