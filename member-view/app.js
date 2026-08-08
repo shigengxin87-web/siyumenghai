@@ -752,6 +752,42 @@ const days = {
       { time: '18:27', title: 'Skill、模型与知识库使用', text: '讨论 Agent 自带模型、Token 消耗和备用模型，并用教培身份演示 ima 知识库内容的调用方式。' },
       { time: '21:48', title: '一条真诚表达的视频引发共鸣', text: '从视频的配乐、节奏、本人出镜和销售经历出发，群友交流了真实表达为何能够让人产生代入感。' }
     ]
+  },
+  '2026-08-08': {
+    dateLabel: '2026 年 8 月 8 日', weekday: '星期六', messages: 26, themesCount: 4, readTime: '4 分钟',
+    title: '真实经历负责打动人，内容工作台负责把价值留下来',
+    summary: '当天从一条拒绝官宣感、直接使用真实经历的视频聊起，又用两首歌承接情绪与记忆；晚间则讨论如何把微信聊天总结从信息堆积变成可选择、可消化、可入库的清单，并继续探索 AI 短视频与音乐内容的实践方向。',
+    insights: [
+      { roles: ['content', 'private'], tag: '真实表达', source: '大眼睛马向文 × 石更新', time: '00:07', title: '有共鸣的画面，往往来自创作者真正经历过的生活', text: '拍摄时主动放弃官宣感，把曾经送快递、在北京街头淋雨等个人经验放进现场，让具体动作成为故事的一部分，而不是只靠口号解释自己。' },
+      { roles: ['content', 'private'], tag: '情绪线索', source: '石更新', time: '11:20', title: '音乐可以把一段经历继续延伸成共同记忆', text: '围绕北京、曾经与真实经历分享两首歌，让群内交流从评价视频进入个人故事与情绪共鸣。', links: [
+        { label: '听《北京北京》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=004fYl0E3GXqG9' },
+        { label: '听《曾经的你》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=000mVXQD1PJ7gR' }
+      ] },
+      { roles: ['content', 'product'], tag: '内容工作台', source: '石更新 × 初阳AI', time: '20:55', title: '聊天总结的目标不是越多越好，而是帮助人做选择和行动', text: 'AI 可以先整理清单，但使用者仍要判断哪些内容值得执行、消化或入库。没有明确目的的复杂工作台很容易荒废，有真实使用场景后再持续迭代更稳。', url: 'https://my.feishu.cn/wiki/SB4bwXQNCiJO10kpNr7cIIr5npf?from=from_copylink', linkLabel: '查看详细建议' },
+      { roles: ['content', 'product'], tag: '实践项目', source: '群内讨论', time: '20:57', title: '把 AI 短视频自动化当成实践项目，先跑通再决定是否放大', text: '群友围绕 AI 短视频带货、批量视频和 AI 音乐 MV 展开交流，并明确将其中一个方向作为接下来的实践项目继续验证。' }
+    ],
+    actions: [
+      { title: '把一段真实经历写成三个镜头', text: '分别写出当时的环境、一个具体动作和真实感受，检查是否能够独立支撑表达。' },
+      { title: '给聊天总结增加处理状态', text: '把条目分为要执行、要入库、暂时保留和可以删除，避免总结不断累积却无人使用。', url: 'https://my.feishu.cn/wiki/SB4bwXQNCiJO10kpNr7cIIr5npf?from=from_copylink', linkLabel: '参考详细建议' },
+      { title: '只选一个自动化方向做小样', text: '在 AI 短视频带货或音乐 MV 中先选一个，完成一条可验证样片后再考虑批量化。' }
+    ],
+    resources: [
+      { kind: '文档', title: '微信聊天总结与内容工作台建议', text: '针对总结杂乱、信息过多和后续入库选择给出的详细梳理，可用于设计清单式辅助流程。', url: 'https://my.feishu.cn/wiki/SB4bwXQNCiJO10kpNr7cIIr5npf?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '音乐', title: '《北京北京》与《曾经的你》', text: '当天用于承接北京经历、过去的自己与情绪共鸣的两首歌。', links: [
+        { label: '听《北京北京》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=004fYl0E3GXqG9' },
+        { label: '听《曾经的你》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=000mVXQD1PJ7gR' }
+      ] },
+      { kind: '方法', title: '清单式内容工作台', text: '先由 AI 整理，再由人决定执行、入库、保留或删除，让信息沉淀服务于明确目的。' }
+    ],
+    themes: [
+      { time: '00:07', title: '真实经历进入视频现场', text: '从拒绝官宣感谈到临时加入快递小哥、雨天和北京街头等真实经历，让视频内容更贴近本人故事。' },
+      { time: '11:20', title: '两首歌延伸真实表达的情绪', text: '群内分享《北京北京》和《曾经的你》，并鼓励大家用适合自己的方式记录和表达个人故事。', links: [
+        { label: '听《北京北京》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=004fYl0E3GXqG9' },
+        { label: '听《曾经的你》', url: 'http://c.y.qq.com/v8/playsong.html?songmid=000mVXQD1PJ7gR' }
+      ] },
+      { time: '19:28', title: '微信聊天总结怎样避免越做越乱', text: '围绕总结结构、内容取舍和笔记入库展开讨论，并形成针对当前问题的详细建议。', url: 'https://my.feishu.cn/wiki/SB4bwXQNCiJO10kpNr7cIIr5npf?from=from_copylink', linkLabel: '查看详细建议' },
+      { time: '20:57', title: 'AI 短视频与音乐内容实践', text: '从短视频带货自动化聊到 AI 音乐 MV，群友决定先作为实践项目继续跑一跑。' }
+    ]
   }
 };
 
