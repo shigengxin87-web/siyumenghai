@@ -35,7 +35,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v5';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
@@ -64,13 +64,17 @@ const DOMAIN_CORRECTIONS = new Map([
   ['群响思想思想会', '群响私董会'],
   ['群响思想会', '群响私董会'],
   ['IP和M森', 'IP和MCN'],
+  ['混元3模型', '混元模型'],
   ['会员三模型', '混元模型'],
   ['会员模型', '混元模型'],
   ['会元模型', '混元模型'],
   ['混原模型', '混元模型'],
   ['不勤不慢', '不紧不慢'],
   ['不勤慢', '不紧不慢'],
-  ['大错特', '大错特错']
+  ['Workbuddy', 'WorkBuddy'],
+  ['KimiK3', 'Kimi K3'],
+  ['而且它模型质量很差的', '而且它的模型质量很差'],
+  ['AI时代', 'AI 时代']
 ]);
 
 let currentVideo = null;
@@ -115,7 +119,9 @@ function cachedTranscript(shareUrl) {
   return {
     corrected: item.corrected,
     raw: typeof item.raw === 'string' ? item.raw : item.corrected,
-    correctionCount: Number(item.correctionCount || 0)
+    correctionCount: Number(item.correctionCount || 0),
+    source: String(item.source || 'asr'),
+    audioRaw: typeof item.audioRaw === 'string' ? item.audioRaw : ''
   };
 }
 
@@ -220,9 +226,12 @@ function resetTranscript() {
   transcriptText.value = '';
   transcriptText.hidden = true;
   transcriptSwitch.hidden = true;
+  transcriptViewButtons.forEach((button) => {
+    button.textContent = button.dataset.transcriptView === 'corrected' ? '校正逐字稿' : '原始识别稿';
+  });
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('服务器开放试运行，不限制每日条数。建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
+  showTranscriptStatus('服务器本地读取画面字幕，并与 faster-whisper 人声时间轴融合；不调用付费语音或大模型 API。');
 }
 
 function showCommentStatus(message, state = '') {
@@ -462,6 +471,11 @@ function cleanSegment(value, terms) {
   const corrected = correctHomophones(simplified, terms);
   let text = corrected.text;
   let correctionCount = corrected.correctionCount;
+  const incompletePhraseMatches = text.match(/大错特(?!错)/gu) || [];
+  if (incompletePhraseMatches.length) {
+    text = text.replace(/大错特(?!错)/gu, '大错特错');
+    correctionCount += incompletePhraseMatches.length;
+  }
   for (const [wrong, right] of DOMAIN_CORRECTIONS) {
     const matches = text.split(wrong).length - 1;
     if (!matches) continue;
@@ -473,12 +487,21 @@ function cleanSegment(value, terms) {
 }
 
 function buildTranscriptResult(result, video) {
-  const rawSegments = Array.isArray(result?.segments) && result.segments.length
+  const source = String(result?.source || 'asr');
+  const correctedSource = Array.isArray(result?.segments) && result.segments.length
     ? result.segments.map((item) => String(item?.text || '').trim()).filter(Boolean)
     : String(result?.text || '').split('\n').map((item) => item.trim()).filter(Boolean);
+  const originalText = source === 'ocr_asr_fusion' && String(result?.ocr_text || '').trim()
+    ? String(result.ocr_text)
+    : String(result?.text || '');
+  const rawSegments = originalText.split('\n').map((item) => item.trim()).filter(Boolean);
   const terms = transcriptHotTerms(video);
   let correctionCount = 0;
-  const correctedSegments = rawSegments.map((segment) => {
+  for (const [wrong] of DOMAIN_CORRECTIONS) {
+    correctionCount += originalText.split(wrong).length - 1;
+  }
+  correctionCount += (originalText.match(/大错特(?!错)/gu) || []).length;
+  const correctedSegments = correctedSource.map((segment) => {
     const item = cleanSegment(segment, terms);
     correctionCount += item.correctionCount;
     return item.text;
@@ -486,12 +509,20 @@ function buildTranscriptResult(result, video) {
   return {
     raw: rawSegments.join('\n'),
     corrected: correctedSegments.join('\n'),
-    correctionCount
+    correctionCount,
+    source,
+    audioRaw: String(result?.audio_text || '')
   };
 }
 
 function showTranscriptView(view = 'corrected') {
   if (!currentTranscript) return;
+  const fused = currentTranscript.source === 'ocr_asr_fusion';
+  transcriptViewButtons.forEach((button) => {
+    button.textContent = button.dataset.transcriptView === 'corrected'
+      ? (fused ? '融合校正稿' : '校正逐字稿')
+      : (fused ? '画面字幕 OCR 稿' : '原始识别稿');
+  });
   transcriptText.value = currentTranscript[view] || currentTranscript.corrected;
   transcriptText.hidden = false;
   transcriptSwitch.hidden = false;
@@ -554,7 +585,10 @@ function renderResult(payload, shareUrl) {
     currentTranscript = previousTranscript;
     showTranscriptView('corrected');
     transcriptButton.textContent = '复制逐字稿';
-    showTranscriptStatus(`已读取本机缓存的校正逐字稿${previousTranscript.correctionCount ? `，其中 ${previousTranscript.correctionCount} 处按专名热词校正` : ''}。`);
+    const sourceText = previousTranscript.source === 'ocr_asr_fusion'
+      ? '画面字幕与本地语音时间轴融合稿'
+      : '校正逐字稿';
+    showTranscriptStatus(`已读取本机缓存的${sourceText}${previousTranscript.correctionCount ? `，其中校正 ${previousTranscript.correctionCount} 处` : ''}。`);
   }
 
   // The stripped "raw" URL can resolve to HEVC even when the parser returned
@@ -962,21 +996,23 @@ async function followTranscriptJob(initialPayload, video, token) {
     if (payload.status === 'completed') {
       const text = String(payload.text || '').trim();
       if (!text) throw new Error('服务器没有返回逐字稿');
-      const result = buildTranscriptResult({ text }, video);
+      const result = buildTranscriptResult(payload, video);
       saveTranscript(video.shareUrl, result);
       if (currentVideo?.shareUrl !== video.shareUrl) return;
       currentTranscript = result;
       showTranscriptView('corrected');
       transcriptButton.textContent = '复制逐字稿';
-      const copied = await copyText(text, transcriptText);
+      const copied = await copyText(result.corrected, transcriptText);
       const cacheText = payload.cached ? '（已读取缓存）' : '';
       const seconds = Number(payload.elapsed || 0);
       const timeText = seconds > 0
         ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
         : '';
-      const correctionText = result.correctionCount
-        ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
-        : '，暂未命中词库校正项，仍建议对照口播复核';
+      const correctionText = result.source === 'ocr_asr_fusion'
+        ? `，已读取画面字幕并与本地语音识别按时间轴融合${result.correctionCount ? `，校正 ${result.correctionCount} 处` : ''}`
+        : (result.correctionCount
+          ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
+          : '，暂未命中词库校正项，仍建议对照口播复核');
       showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}${correctionText}。` : `逐字稿已生成${cacheText}${correctionText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
       return;
     }

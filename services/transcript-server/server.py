@@ -23,6 +23,7 @@ MAX_QUEUE = 20
 MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
 JOB_SECONDS = 86400
+PIPELINE_VERSION = "ocr-asr-timeline-v2"
 
 JOBS_DIR = DATA_DIR / "jobs"
 CACHE_DIR = DATA_DIR / "cache"
@@ -147,6 +148,9 @@ def load_cache(share_url):
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
+    if value.get("pipeline_version") != PIPELINE_VERSION:
+        path.unlink(missing_ok=True)
+        return None
     if now() - int(value.get("completed_at", 0)) > CACHE_SECONDS:
         path.unlink(missing_ok=True)
         return None
@@ -175,9 +179,15 @@ def public_job(job):
         elif status == "completed":
             result.update({
                 "text": job.get("text", ""),
+                "segments": job.get("segments", []),
+                "audio_text": job.get("audio_text", ""),
+                "ocr_text": job.get("ocr_text", ""),
+                "source": job.get("source", "asr"),
                 "duration": job.get("duration"),
                 "elapsed": job.get("elapsed"),
                 "model": job.get("model"),
+                "pipeline_version": job.get("pipeline_version"),
+                "ocr_elapsed": job.get("ocr_elapsed", 0),
                 "cached": bool(job.get("cached")),
             })
         elif status == "error":
@@ -237,7 +247,7 @@ def worker_loop():
             if job_id in pending:
                 pending.remove(job_id)
             current_job_id = job_id
-            job.update(status="running", stage="正在解析并下载音频", started_at=now(), updated_at=now())
+            job.update(status="running", stage="正在读取画面字幕并识别人声", started_at=now(), updated_at=now())
             persist(job)
 
         job_dir = TMP_DIR / job_id
@@ -266,9 +276,15 @@ def worker_loop():
             completed = {
                 "share_url": job["share_url"],
                 "text": value["text"],
+                "segments": value.get("segments", []),
+                "audio_text": value.get("audio_text", ""),
+                "ocr_text": value.get("ocr_text", ""),
+                "source": value.get("source", "asr"),
                 "duration": value.get("duration"),
                 "elapsed": elapsed,
                 "model": value.get("model", "large-v3-turbo"),
+                "pipeline_version": value.get("pipeline_version", PIPELINE_VERSION),
+                "ocr_elapsed": value.get("ocr_elapsed", 0),
                 "completed_at": now(),
             }
             atomic_json(cache_path(job["share_url"]), completed)
