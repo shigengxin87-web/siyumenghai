@@ -151,6 +151,7 @@ function renderHistory() {
     cover.className = 'history-cover';
     cover.alt = '';
     cover.loading = 'lazy';
+    cover.addEventListener('error', () => refreshHistoryCover(item, cover), { once: true });
     if (validHttpUrl(item.coverUrl)) cover.src = item.coverUrl;
 
     const content = document.createElement('div');
@@ -235,6 +236,31 @@ function validHttpUrl(value) {
     return ['http:', 'https:'].includes(url.protocol) ? url.toString() : '';
   } catch {
     return '';
+  }
+}
+
+async function refreshHistoryCover(item, image) {
+  if (!item?.shareUrl || image.dataset.refreshing) return;
+  image.dataset.refreshing = '1';
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: item.shareUrl })
+    });
+    if (!response.ok) throw new Error('refresh failed');
+    const payload = await response.json();
+    const freshCoverUrl = validHttpUrl(payload?.data?.feedInfo?.coverUrl);
+    if (!freshCoverUrl) throw new Error('cover missing');
+    const items = readHistory();
+    const target = items.find((entry) => entry.shareUrl === item.shareUrl);
+    if (target) {
+      target.coverUrl = freshCoverUrl;
+      writeHistory(items);
+    }
+    image.src = freshCoverUrl;
+  } catch {
+    image.removeAttribute('src');
   }
 }
 
