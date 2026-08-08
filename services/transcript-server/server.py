@@ -16,8 +16,8 @@ PORT = int(os.environ.get("TRANSCRIPT_PORT", "2026"))
 DATA_DIR = Path(os.environ.get("TRANSCRIPT_DATA_DIR", "/var/lib/siyumenghai-transcriber"))
 WORKER = os.environ.get("TRANSCRIPT_WORKER", "/opt/siyumenghai-transcriber/worker.py")
 MAX_USER_ACTIVE = 2
-MAX_USER_DAILY = 5
-MAX_GLOBAL_DAILY = 30
+MAX_USER_DAILY = 0
+MAX_GLOBAL_DAILY = 0
 MAX_QUEUE = 20
 MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
@@ -327,10 +327,10 @@ class Handler(BaseHTTPRequestHandler):
             if active_count(owner) >= MAX_USER_ACTIVE:
                 self.send_json(429, {"error": "每人最多同时排队 2 条，请等待已有任务完成", "code": "user_limit"})
                 return
-            if daily_count(owner) >= MAX_USER_DAILY:
+            if MAX_USER_DAILY and daily_count(owner) >= MAX_USER_DAILY:
                 self.send_json(429, {"error": "每人每天最多识别 5 条，请明天再试", "code": "user_daily_limit"})
                 return
-            if daily_count() >= MAX_GLOBAL_DAILY:
+            if MAX_GLOBAL_DAILY and daily_count() >= MAX_GLOBAL_DAILY:
                 self.send_json(503, {"error": "今日全站识别额度已用完，请明天再试", "code": "global_daily_limit"})
                 return
             if len(pending) >= MAX_QUEUE:

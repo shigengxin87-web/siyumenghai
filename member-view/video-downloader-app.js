@@ -71,6 +71,7 @@ let transcriptPromise = null;
 let transcriptPollToken = 0;
 let transcriptJobId = '';
 let currentCommentRows = [];
+let videoLoadTimer = 0;
 
 function readHistory() {
   try {
@@ -180,6 +181,7 @@ function saveCurrentQuery() {
   const item = {
     shareUrl: currentVideo.shareUrl,
     coverUrl: currentVideo.coverUrl,
+    videoUrl: currentVideo.url,
     author: currentVideo.author,
     description: currentVideo.description,
     queriedAt: new Date().toISOString()
@@ -210,7 +212,7 @@ function resetTranscript() {
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('服务器限制：每人每天 5 条，全站每天 30 条。建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
+  showTranscriptStatus('服务器开放试运行，不限制每日条数。建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
 }
 
 function showCommentStatus(message, state = '') {
@@ -239,31 +241,47 @@ function validHttpUrl(value) {
   }
 }
 
-function imagePlaceholder(image, label = '封面') {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="320" viewBox="0 0 240 320"><rect width="240" height="320" rx="20" fill="#ecfdf5"/><text x="120" y="160" text-anchor="middle" dominant-baseline="middle" fill="#059669" font-family="system-ui,sans-serif" font-size="25" font-weight="700">${label}</text></svg>`;
-  image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
-async function imageUrlAsObjectUrl(url) {
-  const response = await fetch(url, {
-    cache: 'no-store',
-    credentials: 'omit',
-    referrerPolicy: 'no-referrer'
+function displayHistoryCover(url, image, timeout = 10000) {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error('cover timeout')), timeout);
+    image.style.visibility = 'hidden';
+    image.onload = () => {
+      window.clearTimeout(timer);
+      image.style.visibility = '';
+      resolve();
+    };
+    image.onerror = () => {
+      window.clearTimeout(timer);
+      reject(new Error('cover failed'));
+    };
+    image.referrerPolicy = 'no-referrer';
+    image.src = url;
   });
-  if (!response.ok) throw new Error(`image ${response.status}`);
-  const blob = await response.blob();
-  if (!blob.type.startsWith('image/') || !blob.size) throw new Error('invalid image');
-  return URL.createObjectURL(blob);
 }
 
-async function displayHistoryCover(url, image) {
-  const objectUrl = await imageUrlAsObjectUrl(url);
-  image.addEventListener('load', () => URL.revokeObjectURL(objectUrl), { once: true });
-  image.src = objectUrl;
+function showHistoryFallback(image, videoUrl) {
+  const playableUrl = validHttpUrl(videoUrl);
+  if (playableUrl) {
+    const preview = document.createElement('video');
+    preview.className = 'history-cover';
+    preview.muted = true;
+    preview.playsInline = true;
+    preview.preload = 'metadata';
+    preview.src = playableUrl;
+    preview.addEventListener('loadedmetadata', () => {
+      try { preview.currentTime = Math.min(0.1, preview.duration || 0.1); } catch {}
+    }, { once: true });
+    image.replaceWith(preview);
+    preview.load();
+    return;
+  }
+  const fallback = document.createElement('div');
+  fallback.className = 'history-cover history-cover-fallback';
+  fallback.textContent = '重新查询';
+  image.replaceWith(fallback);
 }
 
 async function loadHistoryCover(item, image) {
-  imagePlaceholder(image, '封面加载中');
   try {
     const existingUrl = validHttpUrl(item?.coverUrl);
     if (!existingUrl) throw new Error('cover missing');
@@ -285,16 +303,20 @@ async function refreshHistoryCover(item, image) {
     if (!response.ok) throw new Error('refresh failed');
     const payload = await response.json();
     const freshCoverUrl = validHttpUrl(payload?.data?.feedInfo?.coverUrl);
+    const freshVideoUrl = bestVideoUrl(payload?.data?.feedInfo) || validHttpUrl(item?.videoUrl);
     if (!freshCoverUrl) throw new Error('cover missing');
+    item.coverUrl = freshCoverUrl;
+    item.videoUrl = freshVideoUrl;
     const items = readHistory();
     const target = items.find((entry) => entry.shareUrl === item.shareUrl);
     if (target) {
       target.coverUrl = freshCoverUrl;
+      target.videoUrl = freshVideoUrl;
       writeHistory(items);
     }
     await displayHistoryCover(freshCoverUrl, image);
   } catch {
-    imagePlaceholder(image, '点重新查询');
+    showHistoryFallback(image, item?.videoUrl);
   } finally {
     delete image.dataset.refreshing;
   }
@@ -319,6 +341,34 @@ function rawVideoUrl(value) {
   } catch {
     return value;
   }
+}
+
+function loadPlayableVideo(primaryUrl, fallbackUrl) {
+  window.clearTimeout(videoLoadTimer);
+  const primary = validHttpUrl(primaryUrl);
+  const fallback = validHttpUrl(fallbackUrl);
+  let usingFallback = false;
+
+  const load = (url) => {
+    videoNode.src = url;
+    videoNode.load();
+    videoLoadTimer = window.setTimeout(() => {
+      if (videoNode.readyState === 0 && !usingFallback && fallback && fallback !== primary) {
+        usingFallback = true;
+        load(fallback);
+      }
+    }, 8000);
+  };
+
+  videoNode.onloadedmetadata = () => window.clearTimeout(videoLoadTimer);
+  videoNode.onerror = () => {
+    window.clearTimeout(videoLoadTimer);
+    if (!usingFallback && fallback && fallback !== primary) {
+      usingFallback = true;
+      load(fallback);
+    }
+  };
+  load(primary);
 }
 
 function simplifiedChinese(value) {
@@ -487,7 +537,7 @@ function renderResult(payload, shareUrl) {
     showTranscriptStatus(`已读取本机缓存的校正逐字稿${previousTranscript.correctionCount ? `，其中 ${previousTranscript.correctionCount} 处按专名热词校正` : ''}。`);
   }
 
-  videoNode.src = videoUrl;
+  loadPlayableVideo(videoUrl, currentVideo.rawUrl);
   const coverUrl = currentVideo.coverUrl;
   if (coverUrl) videoNode.poster = coverUrl; else videoNode.removeAttribute('poster');
 
@@ -987,6 +1037,9 @@ form.addEventListener('submit', async (event) => {
 
   queryButton.disabled = true;
   resultNode.hidden = true;
+  window.clearTimeout(videoLoadTimer);
+  videoNode.onerror = null;
+  videoNode.onloadedmetadata = null;
   videoNode.removeAttribute('src');
   videoNode.load();
   currentVideo = null;
