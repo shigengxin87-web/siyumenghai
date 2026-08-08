@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="视频号本地助手下载、安装与使用说明。">
+  <meta name="description" content="把视频号本地助手安装地址和提示词交给 Agent。">
   <title>本地助手安装与使用</title>
   <style>
     :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
@@ -12,25 +12,46 @@
     main { width: min(720px, calc(100% - 32px)); margin: 48px auto; padding: 30px; background: #fff; border: 1px solid #d8eee3; border-radius: 22px; box-shadow: 0 18px 45px rgba(9, 99, 70, .08); }
     h1 { margin: 0 0 12px; font-size: 28px; }
     .lead { margin: 0 0 24px; color: #667085; line-height: 1.8; }
-    ol { margin: 0; padding-left: 24px; line-height: 1.9; }
-    li + li { margin-top: 8px; }
-    a.button { display: inline-block; margin: 24px 0 0; padding: 13px 20px; color: #fff; background: #079669; border-radius: 12px; font-weight: 700; text-decoration: none; }
-    code { padding: 2px 6px; color: #067653; background: #eaf8f1; border-radius: 6px; }
-    .tip { margin: 24px 0 0; padding: 14px 16px; color: #475467; background: #f8fbf9; border-radius: 12px; line-height: 1.7; }
+    .block { margin-top: 18px; padding: 18px; color: #475467; background: #f8fbf9; border: 1px solid #e4f1ea; border-radius: 14px; }
+    .block strong { display: block; margin-bottom: 10px; color: #172033; }
+    code { display: block; overflow-wrap: anywhere; padding: 12px; color: #067653; background: #eaf8f1; border-radius: 9px; line-height: 1.6; }
+    textarea { width: 100%; min-height: 150px; padding: 14px; color: #344054; background: #fff; border: 1px solid #cfe6da; border-radius: 10px; resize: vertical; font: inherit; line-height: 1.7; }
+    button { margin-top: 14px; padding: 13px 20px; color: #fff; background: #079669; border: 0; border-radius: 12px; font: inherit; font-weight: 750; cursor: pointer; }
+    button:active { transform: translateY(1px); }
+    .status { margin: 10px 0 0; min-height: 22px; color: #079669; font-size: 14px; }
   </style>
 </head>
 <body>
   <main>
     <h1>本地助手安装与使用</h1>
-    <p class="lead">从 GitHub 下载本地助手后，可以自己安装，也可以把安装包上传给你的 Agent，让它自主安装并指导你使用。</p>
-    <ol>
-      <li>点击下方按钮进入 GitHub，在 <code>Assets</code> 中下载与你电脑系统匹配的安装包。</li>
-      <li>把下载好的安装包发送并上传给你的 Agent，告诉它：“请安装并启动这个本地助手，然后指导我使用。”</li>
-      <li>启动本地助手，并保持它在后台运行。</li>
-      <li>在微信电脑版打开任意视频号页面，再回到视频下载工具点击“提取并复制评论”。</li>
-    </ol>
-    <a class="button" href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">前往 GitHub 下载安装包</a>
-    <p class="tip">安装地址：<br><code>https://github.com/ltaoo/wx_channels_download/releases/latest</code></p>
+    <p class="lead">复制下面的提示词发送给你的 Agent，它会根据安装地址自主下载、安装，并指导你使用。</p>
+    <section class="block">
+      <strong>安装地址</strong>
+      <code>https://github.com/ltaoo/wx_channels_download/releases/latest</code>
+    </section>
+    <section class="block">
+      <strong>发给 Agent 的提示词</strong>
+      <textarea id="agent-prompt" readonly>请使用下面的安装地址，下载与我电脑系统匹配的“视频号本地助手”，完成安装并启动服务，然后指导我在微信电脑版打开视频号页面，并回到视频下载工具提取和复制评论。
+
+安装地址：https://github.com/ltaoo/wx_channels_download/releases/latest</textarea>
+      <button type="button" id="copy-prompt">复制提示词</button>
+      <p class="status" id="copy-status" role="status" aria-live="polite"></p>
+    </section>
   </main>
+  <script>
+    const button = document.querySelector('#copy-prompt');
+    const prompt = document.querySelector('#agent-prompt');
+    const status = document.querySelector('#copy-status');
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(prompt.value);
+      } catch {
+        prompt.select();
+        document.execCommand('copy');
+      }
+      button.textContent = '已复制';
+      status.textContent = '提示词已复制，直接粘贴发送给你的 Agent 即可。';
+    });
+  </script>
 </body>
 </html>

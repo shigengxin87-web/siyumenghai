@@ -176,8 +176,8 @@ function showStatus(message, isError = false) {
   statusNode.hidden = !message;
 }
 
-function showTranscriptStatus(message, state = '') {
-  transcriptStatus.textContent = message;
+function showTranscriptStatus(message, state = '', asHtml = false) {
+  if (asHtml) transcriptStatus.innerHTML = message; else transcriptStatus.textContent = message;
   transcriptStatus.classList.toggle('is-working', state === 'working');
   transcriptStatus.classList.toggle('is-error', state === 'error');
 }
@@ -189,7 +189,7 @@ function resetTranscript() {
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('建议优先把视频直接转发给你的微信好友“元宝”，并附提示词“提取逐字稿”。（速度更快）');
+  showTranscriptStatus('建议优先把视频直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快</strong>）', '', true);
 }
 
 function showCommentStatus(message, state = '') {
