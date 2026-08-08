@@ -189,7 +189,7 @@ function resetTranscript() {
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('点击后由这台 Mac 的本机助手识别，不下载网页组件、不产生接口费用。');
+  showTranscriptStatus('建议优先把视频分享给微信好友，附提示词：提取逐字稿。更快！');
 }
 
 function showCommentStatus(message, state = '') {
