@@ -2,7 +2,7 @@ import { env, pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transfo
 
 env.allowRemoteModels = false;
 env.allowLocalModels = true;
-env.localModelPath = new URL('./assets/models/', self.location.href).href;
+env.localModelPath = 'https://raw.githubusercontent.com/shigengxin87-web/siyumenghai/main/member-view/assets/models/';
 
 const MODEL_CONFIG = {
   model: 'whisper-base',

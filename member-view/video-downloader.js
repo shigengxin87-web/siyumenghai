@@ -272,7 +272,7 @@ async function ensureTranscriptWorker() {
   if (transcriptPromise) return transcriptPromise;
 
   transcriptPromise = new Promise((resolve, reject) => {
-    const worker = new Worker('./video-transcript-worker.js?v=20260808-1', { type: 'module' });
+    const worker = new Worker('./video-transcript-worker.js?v=20260808-2', { type: 'module' });
     transcriptWorker = worker;
 
     const handleMessage = (event) => {
