@@ -205,7 +205,7 @@ function resetComments() {
   commentButton.disabled = false;
   commentButton.textContent = '提取并复制评论';
   commentExcelButton.hidden = true;
-  commentStatus.innerHTML = '点击下载<a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer">「本地助手」</a>，发送并上传给你的Agent，自主安装并指导你使用。';
+  commentStatus.innerHTML = '点击下载<span aria-hidden="true" style="display:inline-block;margin:0 2px 0 6px;color:#059669;font-size:18px;font-weight:900">→</span><a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:2px 7px;background:#eaf8f1;border-radius:7px">「本地助手」</a>，发送并上传给你的Agent，自主安装并指导你使用。';
   commentStatus.classList.remove('is-working', 'is-error');
 }
 
