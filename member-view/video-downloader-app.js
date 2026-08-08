@@ -189,7 +189,7 @@ function resetTranscript() {
   transcriptSwitch.hidden = true;
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('建议优先把视频分享给微信好友，附提示词：提取逐字稿。更快！');
+  showTranscriptStatus('建议优先把视频直接转发给你的微信好友“元宝”，并附提示词“提取逐字稿”。（速度更快）');
 }
 
 function showCommentStatus(message, state = '') {
