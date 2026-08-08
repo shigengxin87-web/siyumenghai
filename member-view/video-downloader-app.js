@@ -38,7 +38,6 @@ const HISTORY_LIMIT = 20;
 const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
-const COVER_PROXY_API = '/api/transcripts/covers?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
@@ -152,9 +151,7 @@ function renderHistory() {
     cover.className = 'history-cover';
     cover.alt = '';
     cover.loading = 'lazy';
-    const historyCoverUrl = coverProxyUrl(item.coverUrl);
-    cover.addEventListener('error', () => refreshHistoryCover(item, cover), { once: true });
-    if (historyCoverUrl) cover.src = historyCoverUrl;
+    if (validHttpUrl(item.coverUrl)) cover.src = item.coverUrl;
 
     const content = document.createElement('div');
     content.className = 'history-content';
@@ -238,36 +235,6 @@ function validHttpUrl(value) {
     return ['http:', 'https:'].includes(url.protocol) ? url.toString() : '';
   } catch {
     return '';
-  }
-}
-
-function coverProxyUrl(value) {
-  const url = validHttpUrl(value);
-  return url ? `${COVER_PROXY_API}${encodeURIComponent(url)}` : '';
-}
-
-async function refreshHistoryCover(item, image) {
-  if (!item?.shareUrl || image.dataset.refreshing) return;
-  image.dataset.refreshing = '1';
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: item.shareUrl })
-    });
-    if (!response.ok) throw new Error('refresh failed');
-    const payload = await response.json();
-    const freshCoverUrl = validHttpUrl(payload?.data?.feedInfo?.coverUrl);
-    if (!freshCoverUrl) throw new Error('cover missing');
-    const items = readHistory();
-    const target = items.find((entry) => entry.shareUrl === item.shareUrl);
-    if (target) {
-      target.coverUrl = freshCoverUrl;
-      writeHistory(items);
-    }
-    image.src = coverProxyUrl(freshCoverUrl);
-  } catch {
-    image.removeAttribute('src');
   }
 }
 
@@ -460,18 +427,14 @@ function renderResult(payload, shareUrl) {
 
   videoNode.src = videoUrl;
   const coverUrl = currentVideo.coverUrl;
-  if (coverUrl) videoNode.poster = coverProxyUrl(coverUrl); else videoNode.removeAttribute('poster');
+  if (coverUrl) videoNode.poster = coverUrl; else videoNode.removeAttribute('poster');
 
   authorName.textContent = authorInfo?.nickname || '视频号作者';
   const avatarUrl = validHttpUrl(authorInfo?.headImgUrl);
   if (avatarUrl) {
-    authorAvatar.src = coverProxyUrl(avatarUrl);
+    authorAvatar.src = avatarUrl;
     authorAvatar.alt = `${authorName.textContent}的头像`;
     authorAvatar.hidden = false;
-    authorAvatar.onerror = () => {
-      authorAvatar.hidden = true;
-      authorAvatar.removeAttribute('src');
-    };
   } else {
     authorAvatar.hidden = true;
     authorAvatar.removeAttribute('src');
@@ -926,7 +889,7 @@ async function downloadCover() {
   coverDownloadButton.disabled = true;
   showStatus('正在准备封面图片…');
   try {
-    const response = await fetch(coverProxyUrl(url));
+    const response = await fetch(url);
     if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
@@ -940,7 +903,7 @@ async function downloadCover() {
     showStatus('封面下载已经开始');
   } catch (error) {
     const link = document.createElement('a');
-    link.href = coverProxyUrl(url);
+    link.href = url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.click();

@@ -9,8 +9,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
-from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 
 HOST = os.environ.get("TRANSCRIPT_HOST", "127.0.0.1")
 PORT = int(os.environ.get("TRANSCRIPT_PORT", "2026"))
@@ -27,8 +26,7 @@ JOB_SECONDS = 86400
 JOBS_DIR = DATA_DIR / "jobs"
 CACHE_DIR = DATA_DIR / "cache"
 TMP_DIR = DATA_DIR / "tmp"
-COVERS_DIR = DATA_DIR / "covers"
-for directory in (JOBS_DIR, CACHE_DIR, TMP_DIR, COVERS_DIR):
+for directory in (JOBS_DIR, CACHE_DIR, TMP_DIR):
     directory.mkdir(parents=True, exist_ok=True)
 
 jobs = {}
@@ -85,52 +83,6 @@ def valid_video_url(value):
         return False
     host = (parsed.hostname or "").lower()
     return parsed.scheme == "https" and (host.endswith(".qq.com") or host.endswith(".qpic.cn") or host.endswith(".gtimg.com"))
-
-
-def valid_image_url(value):
-    try:
-        parsed = urlparse(value)
-    except ValueError:
-        return False
-    host = (parsed.hostname or "").lower()
-    return parsed.scheme == "https" and (
-        host.endswith(".qq.com") or host.endswith(".qpic.cn")
-        or host.endswith(".gtimg.com") or host.endswith(".qlogo.cn")
-    )
-
-
-def cover_paths(url):
-    key = hashlib.sha256(url.encode("utf-8")).hexdigest()
-    return COVERS_DIR / f"{key}.bin", COVERS_DIR / f"{key}.json"
-
-
-def load_cover(url):
-    image_path, meta_path = cover_paths(url)
-    try:
-        meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        if now() - int(meta.get("saved_at", 0)) <= CACHE_SECONDS and image_path.stat().st_size > 0:
-            return image_path.read_bytes(), meta.get("content_type", "image/jpeg")
-    except (OSError, ValueError):
-        pass
-
-    request = Request(url, headers={
-        "User-Agent": "Mozilla/5.0",
-        "Referer": "https://channels.weixin.qq.com/",
-        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
-    })
-    with urlopen(request, timeout=20) as response:
-        content_type = str(response.headers.get_content_type() or "")
-        length = int(response.headers.get("Content-Length", "0") or 0)
-        if not content_type.startswith("image/") or length > 5 * 1024 * 1024:
-            raise RuntimeError("封面文件无效")
-        data = response.read(5 * 1024 * 1024 + 1)
-    if not data or len(data) > 5 * 1024 * 1024:
-        raise RuntimeError("封面文件过大")
-    temp = image_path.with_suffix(".tmp")
-    temp.write_bytes(data)
-    temp.replace(image_path)
-    atomic_json(meta_path, {"saved_at": now(), "content_type": content_type})
-    return data, content_type
 
 
 def persist(job):
@@ -207,16 +159,6 @@ def cleanup():
                 path.unlink(missing_ok=True)
         except (OSError, ValueError):
             path.unlink(missing_ok=True)
-    for path in COVERS_DIR.glob("*.json"):
-        image_path = COVERS_DIR / f"{path.stem}.bin"
-        try:
-            value = json.loads(path.read_text(encoding="utf-8"))
-            if int(value.get("saved_at", 0)) < cutoff_cache:
-                path.unlink(missing_ok=True)
-                image_path.unlink(missing_ok=True)
-        except (OSError, ValueError):
-            path.unlink(missing_ok=True)
-            image_path.unlink(missing_ok=True)
 
 
 def load_jobs():
@@ -330,23 +272,6 @@ class Handler(BaseHTTPRequestHandler):
                     "user_daily_limit": MAX_USER_DAILY, "user_active_limit": MAX_USER_ACTIVE,
                     "max_video_seconds": MAX_VIDEO_SECONDS,
                 })
-            return
-        if parsed_path.path == "/covers":
-            url = parse_qs(parsed_path.query).get("url", [""])[0].strip()
-            if not valid_image_url(url):
-                self.send_json(400, {"error": "封面地址无效"})
-                return
-            try:
-                data, content_type = load_cover(url)
-            except Exception:
-                self.send_json(502, {"error": "封面读取失败"})
-                return
-            self.send_response(200)
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(data)))
-            self.send_header("Cache-Control", "public, max-age=604800, immutable")
-            self.end_headers()
-            self.wfile.write(data)
             return
         if parsed_path.path.startswith("/jobs/"):
             job_id = parsed_path.path.split("/", 2)[2]
