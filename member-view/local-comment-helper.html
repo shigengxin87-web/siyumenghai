@@ -15,7 +15,7 @@
     .block { margin-top: 18px; padding: 18px; color: #475467; background: #f8fbf9; border: 1px solid #e4f1ea; border-radius: 14px; }
     .block strong { display: block; margin-bottom: 10px; color: #172033; }
     code { display: block; overflow-wrap: anywhere; padding: 12px; color: #067653; background: #eaf8f1; border-radius: 9px; line-height: 1.6; }
-    textarea { width: 100%; min-height: 150px; padding: 14px; color: #344054; background: #fff; border: 1px solid #cfe6da; border-radius: 10px; resize: vertical; font: inherit; line-height: 1.7; }
+    textarea { width: 100%; min-height: 220px; padding: 14px; color: #344054; background: #fff; border: 1px solid #cfe6da; border-radius: 10px; resize: vertical; font: inherit; line-height: 1.7; }
     button { margin-top: 14px; padding: 13px 20px; color: #fff; background: #079669; border: 0; border-radius: 12px; font: inherit; font-weight: 750; cursor: pointer; }
     button:active { transform: translateY(1px); }
     .status { margin: 10px 0 0; min-height: 22px; color: #079669; font-size: 14px; }
@@ -24,14 +24,14 @@
 <body>
   <main>
     <h1>本地助手安装与使用</h1>
-    <p class="lead">复制下面的提示词发送给你的 Agent，它会根据安装地址自主下载、安装，并指导你使用。</p>
+    <p class="lead">复制下面的提示词发送给你的 Agent，它会识别电脑系统和芯片类型，下载对应安装包，并指导你安全安装和使用。</p>
     <section class="block">
       <strong>安装地址</strong>
       <code>https://github.com/ltaoo/wx_channels_download/releases/latest</code>
     </section>
     <section class="block">
       <strong>发给 Agent 的提示词</strong>
-      <textarea id="agent-prompt" readonly>请使用下面的安装地址，下载与我电脑系统匹配的“视频号本地助手”，完成安装并启动服务，然后指导我在微信电脑版打开视频号页面，并回到视频下载工具提取和复制评论。
+      <textarea id="agent-prompt" readonly>请从下面的官方 Release 地址安装“视频号本地助手”：先识别我的操作系统和 CPU 架构，下载相匹配的最新版安装包及 checksums 校验文件，核对 SHA-256 后解压。请先阅读项目 README；如果需要管理员权限、安装根证书或修改系统代理，请先向我说明并征得确认。完成后启动助手，确认界面或终端出现“API服务启动成功”和“代理服务启动成功”，再指导我在微信电脑版打开目标视频号页面，并回到视频下载工具提取和复制评论。
 
 安装地址：https://github.com/ltaoo/wx_channels_download/releases/latest</textarea>
       <button type="button" id="copy-prompt">复制提示词</button>
