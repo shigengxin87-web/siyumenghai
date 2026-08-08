@@ -23,7 +23,7 @@ MAX_QUEUE = 20
 MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
 JOB_SECONDS = 86400
-PIPELINE_VERSION = "ocr-asr-timeline-v2"
+PIPELINE_VERSION = "ocr-asr-timeline-v3.1"
 
 JOBS_DIR = DATA_DIR / "jobs"
 CACHE_DIR = DATA_DIR / "cache"
@@ -188,6 +188,10 @@ def public_job(job):
                 "model": job.get("model"),
                 "pipeline_version": job.get("pipeline_version"),
                 "ocr_elapsed": job.get("ocr_elapsed", 0),
+                "ocr_source": job.get("ocr_source", "unavailable"),
+                "ocr_region": job.get("ocr_region"),
+                "ocr_confidence": job.get("ocr_confidence", 0),
+                "fusion_similarity": job.get("fusion_similarity", 0),
                 "cached": bool(job.get("cached")),
             })
         elif status == "error":
@@ -285,6 +289,10 @@ def worker_loop():
                 "model": value.get("model", "large-v3-turbo"),
                 "pipeline_version": value.get("pipeline_version", PIPELINE_VERSION),
                 "ocr_elapsed": value.get("ocr_elapsed", 0),
+                "ocr_source": value.get("ocr_source", "unavailable"),
+                "ocr_region": value.get("ocr_region"),
+                "ocr_confidence": value.get("ocr_confidence", 0),
+                "fusion_similarity": value.get("fusion_similarity", 0),
                 "completed_at": now(),
             }
             atomic_json(cache_path(job["share_url"]), completed)

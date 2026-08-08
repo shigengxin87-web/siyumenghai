@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import difflib
 import json
 import os
 import re
@@ -11,7 +12,7 @@ from urllib.parse import urlparse
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "ocr-asr-timeline-v2"
+PIPELINE_VERSION = "ocr-asr-timeline-v3.1"
 
 FUSION_CORRECTIONS = (
     ("Workbuddy", "WorkBuddy"),
@@ -31,6 +32,16 @@ FUSION_CORRECTIONS = (
     ("这个免费这个混元模型", "这个免费的混元模型"),
     ("而且它模型质量很差的", "而且它的模型质量很差"),
     ("AI时代", "AI 时代"),
+    ("超盘", "操盘"),
+    ("高变X", "高变现"),
+    ("变X", "变现"),
+    ("客难成本", "获客成本"),
+    ("确确是", "确实是"),
+    ("价值百W", "价值百万"),
+    ("小书博主", "小红书博主"),
+    ("小书广告", "小红书广告"),
+    ("不自闭环", "不做闭环"),
+    ("必4无疑", "必死无疑"),
 )
 
 
@@ -144,17 +155,32 @@ def fuse_transcript(ocr_value, asr_segments, asr_words):
     ocr_chars = len(re.sub(r"\s", "", ocr_value.get("text", "")))
     asr_text = normalize_text("".join(item["text"] for item in asr_segments))
     asr_chars = len(re.sub(r"\s", "", asr_text))
-    use_ocr = len(ocr_segments) >= 2 and ocr_chars >= max(8, int(asr_chars * 0.38))
+    ocr_key = re.sub(r"[^0-9A-Za-z\u3400-\u9fff]", "", normalize_text(ocr_value.get("text", ""))).lower()
+    asr_key = re.sub(r"[^0-9A-Za-z\u3400-\u9fff]", "", asr_text).lower()
+    similarity = difflib.SequenceMatcher(None, ocr_key, asr_key).ratio() if asr_key else 1.0
+    region = ocr_value.get("region")
+    source = ocr_value.get("source")
+    ocr_quality_ok = source == "embedded_subtitle" or (
+        isinstance(region, dict)
+        and not region.get("fallback")
+        and float(ocr_value.get("mean_confidence", 0)) >= 0.74
+    )
+    use_ocr = (
+        len(ocr_segments) >= 2
+        and ocr_chars >= max(8, int(asr_chars * 0.38))
+        and ocr_quality_ok
+        and similarity >= 0.35
+    )
     if not use_ocr:
         segments = [{
             "start": item["start"], "end": item["end"],
             "text": normalize_text(item["text"]), "source": "asr",
         } for item in asr_segments if normalize_text(item["text"])]
-        return segments, "asr"
+        return segments, "asr", round(similarity, 4)
 
     events = [{**item, "source": "ocr"} for item in ocr_segments]
     events.extend(asr_gap_segments(asr_words, ocr_segments))
-    return sentence_segments(events, asr_words), "ocr_asr_fusion"
+    return sentence_segments(events, asr_words), "ocr_asr_fusion", round(similarity, 4)
 
 
 def simplify(text):
@@ -183,7 +209,8 @@ def main():
 
     run([
         "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-rw_timeout", "30000000",
-        "-i", video_url, "-map", "0:v:0", "-map", "0:a?", "-c", "copy", "-y", str(source),
+        "-i", video_url, "-map", "0:v:0", "-map", "0:a?", "-map", "0:s?",
+        "-c", "copy", "-y", str(source),
     ], 300)
     ocr_value = {"text": "", "segments": [], "model": "unavailable", "elapsed": 0}
     try:
@@ -197,30 +224,36 @@ def main():
     except Exception:
         pass
 
-    run([
-        "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-i", str(source),
-        "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", "-y", str(audio),
-    ], 300)
+    has_audio = True
+    try:
+        run([
+            "/usr/bin/ffmpeg", "-nostdin", "-v", "error", "-i", str(source),
+            "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", "-y", str(audio),
+        ], 300)
+    except subprocess.SubprocessError:
+        has_audio = False
 
-    from faster_whisper import WhisperModel
-    model = WhisperModel(
-        MODEL_DIR,
-        device="cpu",
-        compute_type="int8",
-        cpu_threads=4,
-        num_workers=1,
-    )
-    prompt = "普通话口播逐字稿，使用简体中文。常见词：微信、视频号、小红书、私域、IP、AI、Agent、元宝。"
-    if author:
-        prompt += f"作者：{author}。"
-    if description:
-        prompt += f"视频说明：{description[:300]}。"
-    whisper_segments, _ = model.transcribe(
-        str(audio), language="zh", task="transcribe",
-        temperature=0, beam_size=5, condition_on_previous_text=True,
-        initial_prompt=prompt, vad_filter=False, word_timestamps=True,
-    )
-    whisper_segments = list(whisper_segments)
+    whisper_segments = []
+    if has_audio:
+        from faster_whisper import WhisperModel
+        model = WhisperModel(
+            MODEL_DIR,
+            device="cpu",
+            compute_type="int8",
+            cpu_threads=4,
+            num_workers=1,
+        )
+        prompt = "普通话口播逐字稿，使用简体中文。常见词：微信、视频号、小红书、私域、IP、AI、Agent、元宝。"
+        if author:
+            prompt += f"作者：{author}。"
+        if description:
+            prompt += f"视频说明：{description[:300]}。"
+        transcript, _ = model.transcribe(
+            str(audio), language="zh", task="transcribe",
+            temperature=0, beam_size=5, condition_on_previous_text=True,
+            initial_prompt=prompt, vad_filter=False, word_timestamps=True,
+        )
+        whisper_segments = list(transcript)
     asr_segments = [{
         "start": round(float(segment.start), 2),
         "end": round(float(segment.end), 2),
@@ -232,9 +265,9 @@ def main():
         "word": simplify(word.word),
     } for segment in whisper_segments for word in (segment.words or [])]
     audio_text = normalize_text("".join(item["text"] for item in asr_segments))
-    if not audio_text:
+    if not audio_text and not str(ocr_value.get("text", "")).strip():
         raise RuntimeError("没有识别到清晰人声")
-    fused_segments, source_type = fuse_transcript(ocr_value, asr_segments, asr_words)
+    fused_segments, source_type, fusion_similarity = fuse_transcript(ocr_value, asr_segments, asr_words)
     text = "\n".join(item["text"] for item in fused_segments).strip() or audio_text
     Path(output_path).write_text(json.dumps({
         "text": text,
@@ -247,6 +280,10 @@ def main():
         "model": f"{ocr_value.get('model', 'OCR-unavailable')} + large-v3-turbo-int8",
         "pipeline_version": PIPELINE_VERSION,
         "ocr_elapsed": ocr_value.get("elapsed", 0),
+        "ocr_source": ocr_value.get("source", "unavailable"),
+        "ocr_region": ocr_value.get("region"),
+        "ocr_confidence": ocr_value.get("mean_confidence", 0),
+        "fusion_similarity": fusion_similarity,
     }, ensure_ascii=False), encoding="utf-8")
 
 
