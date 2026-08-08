@@ -1,0 +1,43 @@
+name: Deploy member view to Tencent Cloud
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "member-view/**"
+      - ".github/workflows/deploy-tencent.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-member-view-tencent
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.TENCENT_DEPLOY_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 49.234.179.204 >> ~/.ssh/known_hosts
+
+      - name: Sync website files
+        run: |
+          rsync -az --checksum \
+            --exclude 'tools/' \
+            member-view/ \
+            site-deploy@49.234.179.204:/var/www/html/member-view/
+
+      - name: Verify deployment
+        run: |
+          ssh site-deploy@49.234.179.204 \
+            'test -f /var/www/html/member-view/index.html && test -f /var/www/html/member-view/members.json'
+          curl --fail --silent --show-error \
+            "https://siyumenghai.cn/member-view/?deploy=${GITHUB_SHA}" >/dev/null
