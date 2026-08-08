@@ -114,7 +114,15 @@ function historyTime(value) {
 function renderHistory() {
   const items = readHistory();
   historyList.replaceChildren();
-  historySection.hidden = items.length === 0;
+  historySection.hidden = false;
+
+  if (items.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'history-empty';
+    empty.textContent = '暂无查询记录，查询成功后会自动保存在这里。';
+    historyList.appendChild(empty);
+    return;
+  }
 
   items.forEach((item, index) => {
     const article = document.createElement('article');
@@ -136,7 +144,7 @@ function renderHistory() {
     title.textContent = item.description || '视频号视频';
     const time = document.createElement('time');
     time.className = 'history-time';
-    time.textContent = `下载于 ${historyTime(item.downloadedAt)}`;
+    time.textContent = `查询于 ${historyTime(item.queriedAt || item.downloadedAt)}`;
     const actions = document.createElement('div');
     actions.className = 'history-actions';
     actions.innerHTML = `<button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
@@ -147,14 +155,14 @@ function renderHistory() {
   });
 }
 
-function saveCurrentDownload() {
+function saveCurrentQuery() {
   if (!currentVideo?.shareUrl) return;
   const item = {
     shareUrl: currentVideo.shareUrl,
     coverUrl: currentVideo.coverUrl,
     author: currentVideo.author,
     description: currentVideo.description,
-    downloadedAt: new Date().toISOString()
+    queriedAt: new Date().toISOString()
   };
   const items = readHistory().filter((entry) => entry.shareUrl !== item.shareUrl);
   writeHistory([item, ...items]);
@@ -770,7 +778,6 @@ async function downloadVideo(url) {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
-    saveCurrentDownload();
     showStatus('下载已经开始');
   } catch (error) {
     showStatus(`下载失败：${error.message}`, true);
@@ -805,6 +812,7 @@ form.addEventListener('submit', async (event) => {
     const payload = await response.json();
     if (!response.ok || payload.errCode) throw new Error(payload.errMsg || '查询失败');
     renderResult(payload, shareUrl);
+    saveCurrentQuery();
     showStatus('');
   } catch (error) {
     showStatus(`查询失败：${error.message}`, true);
