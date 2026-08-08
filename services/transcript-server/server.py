@@ -117,6 +117,26 @@ def load_image(value):
     return data, content_type
 
 
+def open_video(value, range_header=""):
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://channels.weixin.qq.com/",
+        "Accept": "video/mp4,video/*;q=0.9,*/*;q=0.1",
+        "Accept-Encoding": "identity",
+    }
+    if range_header.startswith("bytes="):
+        headers["Range"] = range_header
+    response = urlopen(Request(value, headers=headers), timeout=30)
+    if not valid_video_url(response.geturl()):
+        response.close()
+        raise RuntimeError("视频跳转地址无效")
+    content_type = str(response.headers.get_content_type() or "")
+    if not content_type.startswith("video/") and content_type != "application/octet-stream":
+        response.close()
+        raise RuntimeError("视频文件无效")
+    return response
+
+
 def persist(job):
     atomic_json(job_path(job["id"]), job)
 
@@ -322,6 +342,39 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(data)
             print(f"image_proxy bytes={len(data)}", flush=True)
+            return
+        if parsed_path.path == "/media":
+            url = parse_qs(parsed_path.query).get("url", [""])[0].strip()
+            if not valid_video_url(url):
+                self.send_json(400, {"error": "视频地址无效"})
+                return
+            try:
+                upstream = open_video(url, self.headers.get("Range", ""))
+            except Exception:
+                self.send_json(502, {"error": "视频读取失败"})
+                return
+            try:
+                status = int(getattr(upstream, "status", 200) or 200)
+                self.send_response(status if status in {200, 206} else 200)
+                self.send_header("Content-Type", upstream.headers.get("Content-Type", "video/mp4"))
+                for header in ("Content-Length", "Content-Range", "Accept-Ranges", "Last-Modified", "ETag"):
+                    value = upstream.headers.get(header)
+                    if value:
+                        self.send_header(header, value)
+                self.send_header("Cache-Control", "private, max-age=300")
+                self.end_headers()
+                transferred = 0
+                while True:
+                    chunk = upstream.read(256 * 1024)
+                    if not chunk:
+                        break
+                    self.wfile.write(chunk)
+                    transferred += len(chunk)
+                print(f"video_proxy status={status} bytes={transferred}", flush=True)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
+            finally:
+                upstream.close()
             return
         if parsed_path.path.startswith("/jobs/"):
             job_id = parsed_path.path.split("/", 2)[2]

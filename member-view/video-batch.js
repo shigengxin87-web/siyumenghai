@@ -188,7 +188,7 @@ async function fetchBatchItem(item) {
       item.description = feedInfo.description || '该视频没有文字说明';
       item.coverUrl = validHttpUrl(feedInfo.coverUrl);
       item.videoUrl = videoUrl;
-      item.rawUrl = rawVideoUrl(videoUrl);
+      item.rawUrl = validHttpUrl(feedInfo?.h265VideoInfo?.videoUrl) || videoUrl;
       item.createTime = feedInfo.createtime || '';
       item.error = '';
       return;
@@ -312,7 +312,7 @@ function recordBatchDownload(item) {
 async function downloadBatchItem(item) {
   if (!item?.videoUrl) return;
   try {
-    const response = await fetch(item.videoUrl);
+    const response = await fetch(mediaProxyUrl(item.videoUrl));
     if (!response.ok) throw new Error(`下载服务器返回 ${response.status}`);
     const blobUrl = URL.createObjectURL(await response.blob());
     const link = document.createElement('a');

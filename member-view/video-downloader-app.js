@@ -39,6 +39,7 @@ const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
+const MEDIA_PROXY_API = '/api/transcripts/media?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
@@ -47,7 +48,8 @@ const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
   '肖思远', '王焯冉', '陈红军', '边防', '祖国',
   '公域', '私域', '高变现', '获客难', '咨询陪跑',
-  '群响', '群响私董会', '刘思毅', '千万级名师', 'MCN'
+  '群响', '群响私董会', '刘思毅', '千万级名师', 'MCN',
+  '混元模型', '不紧不慢'
 ];
 const DOMAIN_CORRECTIONS = new Map([
   ['公寓直播', '公域直播'],
@@ -61,7 +63,14 @@ const DOMAIN_CORRECTIONS = new Map([
   ['刘思议', '刘思毅'],
   ['群响思想思想会', '群响私董会'],
   ['群响思想会', '群响私董会'],
-  ['IP和M森', 'IP和MCN']
+  ['IP和M森', 'IP和MCN'],
+  ['会员三模型', '混元模型'],
+  ['会员模型', '混元模型'],
+  ['会元模型', '混元模型'],
+  ['混原模型', '混元模型'],
+  ['不勤不慢', '不紧不慢'],
+  ['不勤慢', '不紧不慢'],
+  ['大错特', '大错特错']
 ]);
 
 let currentVideo = null;
@@ -228,7 +237,7 @@ function resetComments() {
   commentText.hidden = true;
   commentButton.disabled = false;
   commentButton.textContent = '提取并复制评论';
-  commentExcelButton.hidden = true;
+  commentExcelButton.hidden = false;
   commentStatus.innerHTML = '点击下载<span aria-hidden="true" style="display:inline-block;margin:0 2px 0 6px;color:#059669;font-size:18px;font-weight:900">→</span><a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:2px 7px;background:#eaf8f1;border-radius:7px">「本地助手」</a>，发送并上传给你的Agent，自主安装并指导你使用。';
   commentStatus.classList.remove('is-working', 'is-error');
 }
@@ -245,6 +254,11 @@ function validHttpUrl(value) {
 function imageProxyUrl(value) {
   const url = validHttpUrl(value);
   return url ? `${IMAGE_PROXY_API}${encodeURIComponent(url)}` : '';
+}
+
+function mediaProxyUrl(value) {
+  const url = validHttpUrl(value);
+  return url ? new URL(`${MEDIA_PROXY_API}${encodeURIComponent(url)}`, window.location.origin).toString() : '';
 }
 
 function displayHistoryCover(url, image, timeout = 10000) {
@@ -521,7 +535,7 @@ function renderResult(payload, shareUrl) {
 
   currentVideo = {
     url: videoUrl,
-    rawUrl: rawVideoUrl(videoUrl),
+    rawUrl: validHttpUrl(feedInfo?.h265VideoInfo?.videoUrl) || videoUrl,
     shareUrl,
     coverUrl: validHttpUrl(feedInfo.coverUrl),
     author: authorInfo?.nickname || '视频号作者',
@@ -543,7 +557,11 @@ function renderResult(payload, shareUrl) {
     showTranscriptStatus(`已读取本机缓存的校正逐字稿${previousTranscript.correctionCount ? `，其中 ${previousTranscript.correctionCount} 处按专名热词校正` : ''}。`);
   }
 
-  loadPlayableVideo(currentVideo.rawUrl, videoUrl);
+  // The stripped "raw" URL can resolve to HEVC even when the parser returned
+  // H.264. Chromium then shows a disabled 0:00 player. Stream the explicit H.264
+  // source through the same-origin relay for reliable metadata and Range seeks;
+  // keep rawUrl for downloading only and fall back to the direct H.264 URL.
+  loadPlayableVideo(mediaProxyUrl(videoUrl), videoUrl);
   const coverUrl = currentVideo.coverUrl;
   if (coverUrl) videoNode.poster = imageProxyUrl(coverUrl); else videoNode.removeAttribute('poster');
 
@@ -894,7 +912,7 @@ window.addEventListener('message', (event) => {
   commentText.value = text;
   commentText.hidden = false;
   commentButton.textContent = '复制评论';
-  commentExcelButton.hidden = currentCommentRows.length === 0;
+  commentExcelButton.hidden = false;
   showCommentStatus(String(event.data.message || '评论已提取并复制。'));
 });
 
@@ -956,7 +974,9 @@ async function followTranscriptJob(initialPayload, video, token) {
       const timeText = seconds > 0
         ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
         : '';
-      const correctionText = result.correctionCount ? `，脚本校正 ${result.correctionCount} 处` : '，未发现可自动校正项';
+      const correctionText = result.correctionCount
+        ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
+        : '，暂未命中词库校正项，仍建议对照口播复核';
       showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}${correctionText}。` : `逐字稿已生成${cacheText}${correctionText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
       return;
     }
@@ -981,7 +1001,7 @@ async function downloadVideo(url) {
   rawDownloadButton.disabled = true;
   showStatus('正在准备视频文件，请稍候…');
   try {
-    const response = await fetch(imageProxyUrl(url));
+    const response = await fetch(mediaProxyUrl(url));
     if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
@@ -1016,7 +1036,7 @@ async function downloadCover() {
   coverDownloadButton.disabled = true;
   showStatus('正在准备封面图片…');
   try {
-    const response = await fetch(url);
+    const response = await fetch(imageProxyUrl(url));
     if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
