@@ -104,7 +104,7 @@ function renderBatchResults() {
     let cover;
     if (item.coverUrl) {
       cover = document.createElement('img');
-      cover.src = item.coverUrl;
+      cover.src = imageProxyUrl(item.coverUrl);
       cover.alt = '';
       cover.loading = 'lazy';
     } else {
@@ -299,6 +299,7 @@ function recordBatchDownload(item) {
   const historyItem = {
     shareUrl: item.url,
     coverUrl: item.coverUrl,
+    videoUrl: item.videoUrl,
     author: item.author,
     description: item.description,
     downloadedAt: new Date().toISOString()
@@ -310,16 +311,24 @@ function recordBatchDownload(item) {
 
 async function downloadBatchItem(item) {
   if (!item?.videoUrl) return;
-  const response = await fetch(item.videoUrl);
-  if (!response.ok) throw new Error(`下载服务器返回 ${response.status}`);
-  const blobUrl = URL.createObjectURL(await response.blob());
-  const link = document.createElement('a');
-  link.href = blobUrl;
-  link.download = filename(item.description, item.createTime);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+  try {
+    const response = await fetch(item.videoUrl);
+    if (!response.ok) throw new Error(`下载服务器返回 ${response.status}`);
+    const blobUrl = URL.createObjectURL(await response.blob());
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = filename(item.description, item.createTime);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+  } catch {
+    const link = document.createElement('a');
+    link.href = item.videoUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
+  }
   recordBatchDownload(item);
 }
 

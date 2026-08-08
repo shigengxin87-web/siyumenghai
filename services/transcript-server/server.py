@@ -9,7 +9,8 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
+from urllib.request import Request, urlopen
 
 HOST = os.environ.get("TRANSCRIPT_HOST", "127.0.0.1")
 PORT = int(os.environ.get("TRANSCRIPT_PORT", "2026"))
@@ -83,6 +84,37 @@ def valid_video_url(value):
         return False
     host = (parsed.hostname or "").lower()
     return parsed.scheme == "https" and (host.endswith(".qq.com") or host.endswith(".qpic.cn") or host.endswith(".gtimg.com"))
+
+
+def valid_image_url(value):
+    try:
+        parsed = urlparse(value)
+    except ValueError:
+        return False
+    host = (parsed.hostname or "").lower()
+    return parsed.scheme == "https" and (
+        host.endswith(".qq.com") or host.endswith(".qpic.cn")
+        or host.endswith(".gtimg.com") or host.endswith(".qlogo.cn")
+    )
+
+
+def load_image(value):
+    request = Request(value, headers={
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://channels.weixin.qq.com/",
+        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+    })
+    with urlopen(request, timeout=20) as response:
+        if not valid_image_url(response.geturl()):
+            raise RuntimeError("图片跳转地址无效")
+        content_type = str(response.headers.get_content_type() or "")
+        length = int(response.headers.get("Content-Length", "0") or 0)
+        if not content_type.startswith("image/") or length > 5 * 1024 * 1024:
+            raise RuntimeError("图片文件无效")
+        data = response.read(5 * 1024 * 1024 + 1)
+    if not data or len(data) > 5 * 1024 * 1024:
+        raise RuntimeError("图片文件过大")
+    return data, content_type
 
 
 def persist(job):
@@ -272,6 +304,24 @@ class Handler(BaseHTTPRequestHandler):
                     "user_daily_limit": MAX_USER_DAILY, "user_active_limit": MAX_USER_ACTIVE,
                     "max_video_seconds": MAX_VIDEO_SECONDS,
                 })
+            return
+        if parsed_path.path == "/images":
+            url = parse_qs(parsed_path.query).get("url", [""])[0].strip()
+            if not valid_image_url(url):
+                self.send_json(400, {"error": "图片地址无效"})
+                return
+            try:
+                data, content_type = load_image(url)
+            except Exception:
+                self.send_json(502, {"error": "图片读取失败"})
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "public, max-age=3600")
+            self.end_headers()
+            self.wfile.write(data)
+            print(f"image_proxy bytes={len(data)}", flush=True)
             return
         if parsed_path.path.startswith("/jobs/"):
             job_id = parsed_path.path.split("/", 2)[2]

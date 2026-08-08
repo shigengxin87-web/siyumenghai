@@ -38,6 +38,7 @@ const HISTORY_LIMIT = 20;
 const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v3';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
+const IMAGE_PROXY_API = '/api/transcripts/images?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
@@ -241,6 +242,11 @@ function validHttpUrl(value) {
   }
 }
 
+function imageProxyUrl(value) {
+  const url = validHttpUrl(value);
+  return url ? `${IMAGE_PROXY_API}${encodeURIComponent(url)}` : '';
+}
+
 function displayHistoryCover(url, image, timeout = 10000) {
   return new Promise((resolve, reject) => {
     const timer = window.setTimeout(() => reject(new Error('cover timeout')), timeout);
@@ -255,7 +261,7 @@ function displayHistoryCover(url, image, timeout = 10000) {
       reject(new Error('cover failed'));
     };
     image.referrerPolicy = 'no-referrer';
-    image.src = url;
+    image.src = imageProxyUrl(url);
   });
 }
 
@@ -537,17 +543,20 @@ function renderResult(payload, shareUrl) {
     showTranscriptStatus(`已读取本机缓存的校正逐字稿${previousTranscript.correctionCount ? `，其中 ${previousTranscript.correctionCount} 处按专名热词校正` : ''}。`);
   }
 
-  loadPlayableVideo(videoUrl, currentVideo.rawUrl);
+  loadPlayableVideo(currentVideo.rawUrl, videoUrl);
   const coverUrl = currentVideo.coverUrl;
-  if (coverUrl) videoNode.poster = coverUrl; else videoNode.removeAttribute('poster');
+  if (coverUrl) videoNode.poster = imageProxyUrl(coverUrl); else videoNode.removeAttribute('poster');
 
   authorName.textContent = authorInfo?.nickname || '视频号作者';
   const avatarUrl = validHttpUrl(authorInfo?.headImgUrl);
   if (avatarUrl) {
-    authorAvatar.referrerPolicy = 'no-referrer';
-    authorAvatar.src = avatarUrl;
+    authorAvatar.src = imageProxyUrl(avatarUrl);
     authorAvatar.alt = `${authorName.textContent}的头像`;
     authorAvatar.hidden = false;
+    authorAvatar.onerror = () => {
+      authorAvatar.hidden = true;
+      authorAvatar.removeAttribute('src');
+    };
   } else {
     authorAvatar.hidden = true;
     authorAvatar.removeAttribute('src');
@@ -972,7 +981,7 @@ async function downloadVideo(url) {
   rawDownloadButton.disabled = true;
   showStatus('正在准备视频文件，请稍候…');
   try {
-    const response = await fetch(url);
+    const response = await fetch(imageProxyUrl(url));
     if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
@@ -985,7 +994,12 @@ async function downloadVideo(url) {
     window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
     showStatus('下载已经开始');
   } catch (error) {
-    showStatus(`下载失败：${error.message}`, true);
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
+    showStatus('浏览器已打开视频文件；如果没有自动保存，请长按视频或使用浏览器下载菜单。');
   } finally {
     downloadButton.disabled = false;
     rawDownloadButton.disabled = false;
@@ -1016,7 +1030,7 @@ async function downloadCover() {
     showStatus('封面下载已经开始');
   } catch (error) {
     const link = document.createElement('a');
-    link.href = url;
+    link.href = imageProxyUrl(url);
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.click();
