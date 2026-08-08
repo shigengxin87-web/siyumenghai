@@ -676,7 +676,8 @@ async function extractCurrentComments() {
   }
 
   const video = { ...currentVideo };
-  if (!window.isSecureContext) {
+  const isLocalPage = ['127.0.0.1', 'localhost'].includes(location.hostname);
+  if (!isLocalPage) {
     const bridgeUrl = new URL(COMMENT_BRIDGE_URL);
     bridgeUrl.searchParams.set('url', video.shareUrl);
     const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge', 'width=760,height=760');
