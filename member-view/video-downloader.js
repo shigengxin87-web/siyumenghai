@@ -37,13 +37,8 @@ const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v2';
 const TRANSCRIPT_CACHE_LIMIT = 12;
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
 const COMMENT_LIMIT = 200;
-
-if (location.protocol === 'http:' && /^(?:www\.)?siyumenghai\.cn$/i.test(location.hostname)) {
-  const secureUrl = new URL(`https://shigengxin87-web.github.io/siyumenghai${location.pathname}`);
-  secureUrl.search = location.search;
-  secureUrl.hash = location.hash;
-  location.replace(secureUrl.href);
-}
+const COMMENT_BRIDGE_URL = 'https://shigengxin87-web.github.io/siyumenghai-comment-bridge/';
+const COMMENT_BRIDGE_ORIGIN = 'https://shigengxin87-web.github.io';
 const BUILTIN_HOT_TERMS = [
   '陈祥榕', '戍边战士', '喀喇昆仑', '清澈的爱只为中国',
   '肖思远', '王焯冉', '陈红军', '边防', '祖国'
@@ -621,6 +616,16 @@ async function extractCurrentComments() {
   }
 
   const video = { ...currentVideo };
+  if (!window.isSecureContext) {
+    const bridgeUrl = new URL(COMMENT_BRIDGE_URL);
+    bridgeUrl.searchParams.set('url', video.shareUrl);
+    const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge', 'width=760,height=760');
+    showCommentStatus(
+      popup ? '已打开安全评论窗口；浏览器询问本地网络权限时请选择“允许”。' : '浏览器拦截了评论窗口，请允许此网站打开弹窗后重试。',
+      popup ? 'working' : 'error'
+    );
+    return;
+  }
   commentButton.disabled = true;
   commentButton.textContent = '正在提取…';
   try {
@@ -644,6 +649,16 @@ async function extractCurrentComments() {
     commentButton.disabled = false;
   }
 }
+
+window.addEventListener('message', (event) => {
+  if (event.origin !== COMMENT_BRIDGE_ORIGIN || event.data?.type !== 'siyumenghai-comments') return;
+  const text = String(event.data.text || '').trim();
+  if (!text) return;
+  commentText.value = text;
+  commentText.hidden = false;
+  commentButton.textContent = '复制评论';
+  showCommentStatus(String(event.data.message || '评论已提取并复制。'));
+});
 
 async function transcribeCurrentVideo() {
   if (!currentVideo?.url) return;
