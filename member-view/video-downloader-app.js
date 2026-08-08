@@ -205,7 +205,7 @@ function resetComments() {
   commentButton.disabled = false;
   commentButton.textContent = '提取并复制评论';
   commentExcelButton.hidden = true;
-  commentStatus.innerHTML = '免费模式需要先启动<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">本地评论助手</a>，并在微信电脑版打开任意视频号页面。';
+  commentStatus.innerHTML = '点击下载<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">「本地助手」</a>，发送并上传给你的Agent，自主安装并指导你使用。';
   commentStatus.classList.remove('is-working', 'is-error');
 }
 
