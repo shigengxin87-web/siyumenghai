@@ -183,6 +183,18 @@ button { color: inherit; font: inherit; }
 .download-button { min-height: 48px; }
 .download-button.is-secondary { color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); box-shadow: none; }
 .download-tip { margin: 13px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.transcript-card { margin-top: 20px; padding: 16px; background: #f9fcfa; border: 1px solid rgba(5, 150, 105, .14); border-radius: 15px; }
+.transcript-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.transcript-heading strong, .transcript-heading small { display: block; }
+.transcript-heading strong { color: var(--ink); font-size: 15px; }
+.transcript-heading small { margin-top: 3px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.transcript-heading button { flex: 0 0 auto; min-height: 40px; padding: 8px 13px; color: #fff; background: var(--green); border: 0; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 850; }
+.transcript-heading button:disabled { opacity: .55; cursor: wait; }
+.transcript-status { margin: 11px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.transcript-status.is-working { color: var(--green); }
+.transcript-status.is-error { color: #b42318; }
+.transcript-card textarea { display: block; width: 100%; min-height: 150px; margin-top: 12px; resize: vertical; padding: 12px 13px; color: var(--text); background: #fff; border: 1px solid var(--line); border-radius: 11px; outline: none; font: inherit; font-size: 13px; line-height: 1.75; }
+.transcript-card textarea[hidden] { display: none; }
 .download-history { overflow: hidden; margin-top: 18px; }
 .history-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 22px; border-bottom: 1px solid var(--line); }
 .history-heading span, .history-heading small { display: block; }
@@ -240,6 +252,8 @@ button { color: inherit; font: inherit; }
   .video-description { margin-top: 17px; font-size: 15px; }
   .download-actions { display: grid; grid-template-columns: 1fr; margin-top: 21px; }
   .download-button { width: 100%; }
+  .transcript-heading { align-items: stretch; flex-direction: column; }
+  .transcript-heading button { width: 100%; }
   .history-heading { align-items: flex-start; padding: 14px 16px; }
   .history-list { grid-template-columns: 1fr; padding: 12px; }
   .history-item { grid-template-columns: 76px minmax(0, 1fr); gap: 11px; }

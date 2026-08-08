@@ -100,6 +100,14 @@
                 <button type="button" class="download-button is-secondary" data-download-raw>下载原始视频</button>
               </div>
               <p class="download-tip">如果手机浏览器没有直接保存，请长按视频或在浏览器菜单中选择下载。</p>
+              <div class="transcript-card" data-transcript-card>
+                <div class="transcript-heading">
+                  <div><strong>视频逐字稿</strong><small>在当前浏览器本地识别，视频不会上传到新的服务器</small></div>
+                  <button type="button" data-transcript-action>生成并复制逐字稿</button>
+                </div>
+                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">尽量保留原话、重复和语气词；人名、方言或多人重叠说话仍建议核对。</p>
+                <textarea data-transcript-text aria-label="视频逐字稿" readonly hidden></textarea>
+              </div>
             </div>
           </div>
         </section>
@@ -121,7 +129,7 @@
     </main>
   </div>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
-  <script src="./video-downloader.js?v=20260718-2"></script>
+  <script src="./video-downloader.js?v=20260808-1"></script>
   <script src="./video-batch.js?v=20260718-1"></script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+Whisper base ONNX model notice
+
+Source model: https://huggingface.co/openai/whisper-base
+Browser-ready ONNX conversion: https://huggingface.co/onnx-community/whisper-base
+Source code: https://github.com/openai/whisper
+
+The source model card identifies the model license as Apache-2.0.
+The OpenAI Whisper source code is provided under the MIT License.

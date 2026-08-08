@@ -19,14 +19,22 @@ const descriptionNode = document.querySelector('[data-video-description]');
 const statsNode = document.querySelector('[data-video-stats]');
 const downloadButton = document.querySelector('[data-download-video]');
 const rawDownloadButton = document.querySelector('[data-download-raw]');
+const transcriptButton = document.querySelector('[data-transcript-action]');
+const transcriptStatus = document.querySelector('[data-transcript-status]');
+const transcriptText = document.querySelector('[data-transcript-text]');
 const historySection = document.querySelector('[data-download-history]');
 const historyList = document.querySelector('[data-history-list]');
 const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v1';
+const TRANSCRIPT_CACHE_LIMIT = 12;
 
 let currentVideo = null;
+let transcriptWorker = null;
+let transcriptWorkerReady = false;
+let transcriptPromise = null;
 
 function readHistory() {
   try {
@@ -42,6 +50,34 @@ function writeHistory(items) {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, HISTORY_LIMIT)));
   } catch {
     // Downloading still works when local storage is unavailable.
+  }
+}
+
+function readTranscriptCache() {
+  try {
+    const value = JSON.parse(localStorage.getItem(TRANSCRIPT_CACHE_KEY) || '{}');
+    return value && typeof value === 'object' ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function cachedTranscript(shareUrl) {
+  const item = readTranscriptCache()[shareUrl];
+  return typeof item?.text === 'string' ? item.text : '';
+}
+
+function saveTranscript(shareUrl, text) {
+  if (!shareUrl || !text) return;
+  try {
+    const cache = readTranscriptCache();
+    cache[shareUrl] = { text, savedAt: Date.now() };
+    const entries = Object.entries(cache)
+      .sort((left, right) => (right[1]?.savedAt || 0) - (left[1]?.savedAt || 0))
+      .slice(0, TRANSCRIPT_CACHE_LIMIT);
+    localStorage.setItem(TRANSCRIPT_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
+  } catch {
+    // Transcription still works when local storage is unavailable.
   }
 }
 
@@ -109,6 +145,20 @@ function showStatus(message, isError = false) {
   statusNode.hidden = !message;
 }
 
+function showTranscriptStatus(message, state = '') {
+  transcriptStatus.textContent = message;
+  transcriptStatus.classList.toggle('is-working', state === 'working');
+  transcriptStatus.classList.toggle('is-error', state === 'error');
+}
+
+function resetTranscript() {
+  transcriptText.value = '';
+  transcriptText.hidden = true;
+  transcriptButton.disabled = false;
+  transcriptButton.textContent = '生成并复制逐字稿';
+  showTranscriptStatus('尽量保留原话、重复和语气词；人名、方言或多人重叠说话仍建议核对。');
+}
+
 function validHttpUrl(value) {
   try {
     const url = new URL(value);
@@ -173,6 +223,15 @@ function renderResult(payload, shareUrl) {
     createTime: feedInfo.createtime || ''
   };
 
+  resetTranscript();
+  const previousTranscript = cachedTranscript(shareUrl);
+  if (previousTranscript) {
+    transcriptText.value = previousTranscript;
+    transcriptText.hidden = false;
+    transcriptButton.textContent = '复制逐字稿';
+    showTranscriptStatus('已读取这条视频在当前浏览器保存的逐字稿。');
+  }
+
   videoNode.src = videoUrl;
   const coverUrl = currentVideo.coverUrl;
   if (coverUrl) videoNode.poster = coverUrl; else videoNode.removeAttribute('poster');
@@ -197,6 +256,141 @@ function renderResult(payload, shareUrl) {
 
   resultNode.hidden = false;
   resultNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function transcriptProgress(message) {
+  if (message.status === 'progress' && Number.isFinite(message.progress)) {
+    const percent = Math.max(0, Math.min(100, Math.round(message.progress)));
+    showTranscriptStatus(`首次使用正在下载识别模型，当前文件 ${percent}%（下载一次后会缓存）`, 'working');
+  } else if (message.status === 'loading') {
+    showTranscriptStatus(message.data || '正在载入语音识别模型…', 'working');
+  }
+}
+
+async function ensureTranscriptWorker() {
+  if (transcriptWorkerReady && transcriptWorker) return transcriptWorker;
+  if (transcriptPromise) return transcriptPromise;
+
+  transcriptPromise = new Promise((resolve, reject) => {
+    const worker = new Worker('./video-transcript-worker.js?v=20260808-1', { type: 'module' });
+    transcriptWorker = worker;
+
+    const handleMessage = (event) => {
+      transcriptProgress(event.data || {});
+      if (event.data?.status === 'ready') {
+        transcriptWorkerReady = true;
+        worker.removeEventListener('message', handleMessage);
+        resolve(worker);
+      } else if (event.data?.status === 'error') {
+        worker.removeEventListener('message', handleMessage);
+        worker.terminate();
+        if (transcriptWorker === worker) transcriptWorker = null;
+        transcriptPromise = null;
+        reject(new Error(event.data.message || '语音识别模型加载失败'));
+      }
+    };
+
+    worker.addEventListener('message', handleMessage);
+    worker.addEventListener('error', (event) => {
+      worker.terminate();
+      if (transcriptWorker === worker) transcriptWorker = null;
+      transcriptPromise = null;
+      reject(new Error(event.message || '语音识别组件加载失败'));
+    }, { once: true });
+    worker.postMessage({ type: 'load' });
+  });
+
+  return transcriptPromise;
+}
+
+async function videoAudio(url) {
+  showTranscriptStatus('正在读取视频中的声音…', 'working');
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`视频读取失败（${response.status}）`);
+  const buffer = await response.arrayBuffer();
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) throw new Error('当前浏览器不支持音频读取，请使用最新版 Chrome 或 Safari');
+  const audioContext = new AudioContextClass({ sampleRate: 16000 });
+  try {
+    const decoded = await audioContext.decodeAudioData(buffer.slice(0));
+    const channelCount = decoded.numberOfChannels;
+    const audio = new Float32Array(decoded.length);
+    const scale = channelCount > 1 ? Math.sqrt(channelCount) / channelCount : 1;
+    for (let channel = 0; channel < channelCount; channel += 1) {
+      const values = decoded.getChannelData(channel);
+      for (let index = 0; index < values.length; index += 1) audio[index] += values[index] * scale;
+    }
+    return audio;
+  } finally {
+    await audioContext.close();
+  }
+}
+
+async function copyText(value) {
+  try {
+    const copied = await Promise.race([
+      navigator.clipboard.writeText(value).then(() => true, () => false),
+      new Promise((resolve) => window.setTimeout(() => resolve(false), 1500))
+    ]);
+    if (copied) return true;
+  } catch {
+    // Fall back to selecting the visible transcript below.
+  }
+  transcriptText.hidden = false;
+  transcriptText.focus();
+  transcriptText.select();
+  try {
+    return document.execCommand('copy');
+  } catch {
+    return false;
+  }
+}
+
+async function transcribeCurrentVideo() {
+  if (!currentVideo?.url) return;
+  const video = { ...currentVideo };
+  const existingText = transcriptText.value.trim();
+  if (existingText) {
+    const copied = await copyText(existingText);
+    showTranscriptStatus(copied ? '逐字稿已复制到剪贴板。' : '请长按或全选下方逐字稿后复制。', copied ? '' : 'error');
+    return;
+  }
+
+  transcriptButton.disabled = true;
+  transcriptButton.textContent = '正在生成…';
+  try {
+    const audio = await videoAudio(video.url);
+    const worker = await ensureTranscriptWorker();
+    showTranscriptStatus('正在逐字识别，请保持页面打开…', 'working');
+    const result = await new Promise((resolve, reject) => {
+      const handleMessage = (event) => {
+        if (event.data?.status === 'complete') {
+          worker.removeEventListener('message', handleMessage);
+          resolve(event.data.result);
+        } else if (event.data?.status === 'error') {
+          worker.removeEventListener('message', handleMessage);
+          reject(new Error(event.data.message || '逐字稿识别失败'));
+        }
+      };
+      worker.addEventListener('message', handleMessage);
+      worker.postMessage({ type: 'run', data: { audio, language: 'zh' } }, [audio.buffer]);
+    });
+
+    const text = String(result?.text || '').trim();
+    if (!text) throw new Error('没有识别到清晰的人声');
+    if (currentVideo?.shareUrl !== video.shareUrl) return;
+    transcriptText.value = text;
+    transcriptText.hidden = false;
+    saveTranscript(video.shareUrl, text);
+    transcriptButton.textContent = '复制逐字稿';
+    const copied = await copyText(text);
+    showTranscriptStatus(copied ? '逐字稿已生成并复制到剪贴板。' : '逐字稿已生成，请再次点击“复制逐字稿”。', copied ? '' : 'error');
+  } catch (error) {
+    transcriptButton.textContent = '重新生成逐字稿';
+    showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
+  } finally {
+    transcriptButton.disabled = false;
+  }
 }
 
 async function downloadVideo(url) {
@@ -261,6 +455,7 @@ form.addEventListener('submit', async (event) => {
 
 downloadButton.addEventListener('click', () => downloadVideo(currentVideo?.url));
 rawDownloadButton.addEventListener('click', () => downloadVideo(currentVideo?.rawUrl));
+transcriptButton.addEventListener('click', transcribeCurrentVideo);
 
 historyList.addEventListener('click', (event) => {
   const queryTarget = event.target.closest('[data-history-query]');
