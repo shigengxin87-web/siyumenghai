@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260808-6">
+  <link rel="stylesheet" href="./portal.css?v=20260808-7">
   <script src="./coi-serviceworker.js?v=20260808-3"></script>
 </head>
 <body>
@@ -116,7 +116,10 @@
               <div class="transcript-card" data-comment-card>
                 <div class="transcript-heading">
                   <div><strong>视频评论区</strong><small>纯脚本提取，不消耗模型 Token；最多提取 200 条主评论</small></div>
-                  <button type="button" data-comment-action>提取并复制评论</button>
+                  <div class="comment-actions">
+                    <button type="button" data-comment-action>提取并复制评论</button>
+                    <button type="button" class="is-secondary" data-comment-excel hidden>导出 Excel</button>
+                  </div>
                 </div>
                 <p class="transcript-status" data-comment-status role="status" aria-live="polite">免费模式需要先启动<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">本地评论助手</a>，并在微信电脑版打开任意视频号页面。</p>
                 <textarea data-comment-text aria-label="视频评论区内容" readonly hidden></textarea>
@@ -144,7 +147,7 @@
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
-  <script src="./video-downloader.js?v=20260808-12"></script>
+  <script src="./video-downloader.js?v=20260808-13"></script>
   <script src="./video-batch.js?v=20260718-1"></script>
 </body>
 </html>

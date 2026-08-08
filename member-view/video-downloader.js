@@ -25,6 +25,7 @@ const transcriptText = document.querySelector('[data-transcript-text]');
 const transcriptSwitch = document.querySelector('[data-transcript-switch]');
 const transcriptViewButtons = [...document.querySelectorAll('[data-transcript-view]')];
 const commentButton = document.querySelector('[data-comment-action]');
+const commentExcelButton = document.querySelector('[data-comment-excel]');
 const commentStatus = document.querySelector('[data-comment-status]');
 const commentText = document.querySelector('[data-comment-text]');
 const historySection = document.querySelector('[data-download-history]');
@@ -49,6 +50,7 @@ let currentTranscript = null;
 let transcriptWorker = null;
 let transcriptWorkerReady = false;
 let transcriptPromise = null;
+let currentCommentRows = [];
 
 function readHistory() {
   try {
@@ -187,10 +189,12 @@ function showCommentStatus(message, state = '') {
 }
 
 function resetComments() {
+  currentCommentRows = [];
   commentText.value = '';
   commentText.hidden = true;
   commentButton.disabled = false;
   commentButton.textContent = '提取并复制评论';
+  commentExcelButton.hidden = true;
   commentStatus.innerHTML = '免费模式需要先启动<a href="https://github.com/ltaoo/wx_channels_download/releases/latest" target="_blank" rel="noopener noreferrer">本地评论助手</a>，并在微信电脑版打开任意视频号页面。';
   commentStatus.classList.remove('is-working', 'is-error');
 }
@@ -566,6 +570,56 @@ function formatComments(comments) {
   return lines.join('\n').trim();
 }
 
+function commentRows(comments) {
+  const rows = [];
+  comments.forEach((comment, index) => {
+    const mainName = comment.nickname || comment.authorContact?.nickname || '匿名用户';
+    rows.push({
+      主评论序号: index + 1,
+      类型: '主评论',
+      昵称: mainName,
+      评论内容: String(comment.content || '').trim() || '[非文字评论]',
+      点赞数: Number(comment.likeCount) || 0,
+      发布时间: Number(comment.createtime) ? new Date(Number(comment.createtime) * 1000) : '',
+      IP属地: comment.ipRegionInfo?.regionText || '',
+      回复对象: ''
+    });
+    inlineReplies(comment).forEach((reply) => {
+      rows.push({
+        主评论序号: index + 1,
+        类型: '回复',
+        昵称: reply.nickname || reply.authorContact?.nickname || '匿名用户',
+        评论内容: String(reply.content || reply.replyContent || '').trim() || '[非文字回复]',
+        点赞数: Number(reply.likeCount) || 0,
+        发布时间: Number(reply.createtime) ? new Date(Number(reply.createtime) * 1000) : '',
+        IP属地: reply.ipRegionInfo?.regionText || '',
+        回复对象: reply.replyNickname || mainName
+      });
+    });
+  });
+  return rows;
+}
+
+function exportCommentsExcel() {
+  if (!currentCommentRows.length) return showCommentStatus('请先提取评论，再导出 Excel。', 'error');
+  if (!window.XLSX?.utils) return showCommentStatus('Excel 导出组件尚未加载，请刷新页面后重试。', 'error');
+  const worksheet = XLSX.utils.json_to_sheet(currentCommentRows, { cellDates: true });
+  worksheet['!cols'] = [
+    { wch: 12 }, { wch: 10 }, { wch: 20 }, { wch: 56 },
+    { wch: 10 }, { wch: 20 }, { wch: 14 }, { wch: 20 }
+  ];
+  worksheet['!autofilter'] = { ref: worksheet['!ref'] };
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, '视频评论');
+  const label = `${currentVideo?.author || '视频号'}-${currentVideo?.description || '评论'}`
+    .replace(/[\\/:*?"<>|]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 60) || '视频评论';
+  XLSX.writeFile(workbook, `${label}-评论.xlsx`, { compression: true });
+  showCommentStatus(`已导出 ${currentCommentRows.length} 行评论到 Excel。`);
+}
+
 async function resolveLocalVideo(shareUrl) {
   const profile = await localCommentRequest('/api/channels/feed/profile', { url: shareUrl });
   if (profile?.errCode) throw new Error(profile.errMsg || '本地助手无法解析该视频');
@@ -636,9 +690,11 @@ async function extractCurrentComments() {
     if (!comments.length) throw new Error('这条视频没有返回可见评论');
     if (currentVideo?.shareUrl !== video.shareUrl) return;
     const text = formatComments(comments);
+    currentCommentRows = commentRows(comments);
     commentText.value = text;
     commentText.hidden = false;
     commentButton.textContent = '复制评论';
+    commentExcelButton.hidden = false;
     const copied = await copyText(text, commentText);
     const limited = comments.length >= COMMENT_LIMIT ? `（已达到 ${COMMENT_LIMIT} 条上限）` : '';
     showCommentStatus(copied ? `已提取 ${comments.length} 条主评论${limited}并复制到剪贴板。` : `已提取 ${comments.length} 条主评论，请再次点击“复制评论”。`, copied ? '' : 'error');
@@ -654,9 +710,14 @@ window.addEventListener('message', (event) => {
   if (event.origin !== COMMENT_BRIDGE_ORIGIN || event.data?.type !== 'siyumenghai-comments') return;
   const text = String(event.data.text || '').trim();
   if (!text) return;
+  currentCommentRows = Array.isArray(event.data.rows) ? event.data.rows.map((row) => ({
+    ...row,
+    发布时间: row.发布时间 ? new Date(row.发布时间) : ''
+  })) : [];
   commentText.value = text;
   commentText.hidden = false;
   commentButton.textContent = '复制评论';
+  commentExcelButton.hidden = currentCommentRows.length === 0;
   showCommentStatus(String(event.data.message || '评论已提取并复制。'));
 });
 
@@ -775,6 +836,7 @@ transcriptSwitch.addEventListener('click', (event) => {
   if (target) showTranscriptView(target.dataset.transcriptView);
 });
 commentButton.addEventListener('click', extractCurrentComments);
+commentExcelButton.addEventListener('click', exportCommentsExcel);
 
 historyList.addEventListener('click', (event) => {
   const queryTarget = event.target.closest('[data-history-query]');

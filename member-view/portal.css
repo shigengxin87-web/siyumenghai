@@ -190,6 +190,8 @@ button { color: inherit; font: inherit; }
 .transcript-heading small { margin-top: 3px; color: var(--muted); font-size: 10px; line-height: 1.5; }
 .transcript-heading button { flex: 0 0 auto; min-height: 40px; padding: 8px 13px; color: #fff; background: var(--green); border: 0; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 850; }
 .transcript-heading button:disabled { opacity: .55; cursor: wait; }
+.comment-actions { display: flex; flex: 0 0 auto; gap: 8px; }
+.transcript-heading .comment-actions button.is-secondary { color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); }
 .transcript-status { margin: 11px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .transcript-status.is-working { color: var(--green); }
 .transcript-status.is-error { color: #b42318; }
@@ -260,6 +262,7 @@ button { color: inherit; font: inherit; }
   .download-button { width: 100%; }
   .transcript-heading { align-items: stretch; flex-direction: column; }
   .transcript-heading button { width: 100%; }
+  .comment-actions { display: grid; grid-template-columns: 1fr 1fr; }
   .history-heading { align-items: flex-start; padding: 14px 16px; }
   .history-list { grid-template-columns: 1fr; padding: 12px; }
   .history-item { grid-template-columns: 76px minmax(0, 1fr); gap: 11px; }
