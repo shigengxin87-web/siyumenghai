@@ -1,0 +1,9 @@
+[Unit]
+Description=Siyumenghai bounded disk maintenance
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/siyumenghai-disk-maintenance
+Nice=10
+IOSchedulingClass=idle

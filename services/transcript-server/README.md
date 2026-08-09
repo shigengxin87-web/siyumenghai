@@ -8,6 +8,10 @@
 
 生产部署目录为 `/opt/siyumenghai-transcriber`，模型目录为 `/var/lib/siyumenghai-transcriber/models/large-v3-turbo`，systemd 服务名为 `siyumenghai-transcriber.service`，仅监听 `127.0.0.1:2026`，由 Nginx 的 `/api/transcripts/` 反向代理。
 
+## 固定容量保护
+
+`maintenance/` 中的 systemd timer 每 15 分钟删除过期任务、七天缓存和临时文件，并把 journal、Nginx 与 Chromium 缓存限制在固定范围。根分区可用空间低于 10 GiB 时会清理独立的 Chromium 缓存；低于 6 GiB 时，服务拒绝新的转写任务，但网站查询、下载、评论和正在运行的任务不受影响。
+
 更新代码后执行：
 
 ```bash

@@ -4,6 +4,7 @@ import json
 import os
 import queue
 import secrets
+import shutil
 import subprocess
 import threading
 import time
@@ -24,6 +25,7 @@ MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
 JOB_SECONDS = 86400
 PIPELINE_VERSION = "ocr-asr-timeline-v4"
+MIN_FREE_BYTES = 6 * 1024 * 1024 * 1024
 
 JOBS_DIR = DATA_DIR / "jobs"
 CACHE_DIR = DATA_DIR / "cache"
@@ -45,6 +47,10 @@ def now():
 
 def today_key():
     return time.strftime("%Y-%m-%d", time.localtime())
+
+
+def free_disk_bytes():
+    return shutil.disk_usage(DATA_DIR).free
 
 
 def atomic_json(path, value):
@@ -347,6 +353,7 @@ class Handler(BaseHTTPRequestHandler):
                     "today": daily_count(), "daily_limit": MAX_GLOBAL_DAILY,
                     "user_daily_limit": MAX_USER_DAILY, "user_active_limit": MAX_USER_ACTIVE,
                     "max_video_seconds": MAX_VIDEO_SECONDS,
+                    "free_disk_bytes": free_disk_bytes(), "min_free_bytes": MIN_FREE_BYTES,
                 })
             return
         if parsed_path.path == "/images":
@@ -432,6 +439,12 @@ class Handler(BaseHTTPRequestHandler):
             return
         if not valid_video_url(video_url):
             self.send_json(400, {"error": "视频文件地址无效或来源不受支持"})
+            return
+        if free_disk_bytes() < MIN_FREE_BYTES:
+            self.send_json(503, {
+                "error": "服务器正在自动释放存储空间，请稍后重试",
+                "code": "disk_space_guard",
+            })
             return
 
         owner = self.owner()
