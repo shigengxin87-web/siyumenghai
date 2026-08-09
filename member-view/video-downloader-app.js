@@ -377,7 +377,7 @@ function resetTranscript() {
     transcriptButton.textContent = isActiveTranscriptTask(task) ? '查看后台进度' : '重新生成逐字稿';
     showTranscriptTaskStatus(task);
   } else {
-    showTranscriptStatus('服务器本地读取画面字幕，并与 faster-whisper 人声时间轴融合；不调用付费语音或大模型 API。');
+    showTranscriptStatus('建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快、更准</strong>）', '', true);
   }
 }
 
