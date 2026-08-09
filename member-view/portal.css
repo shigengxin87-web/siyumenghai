@@ -218,7 +218,7 @@ button { color: inherit; font: inherit; }
 .history-author { color: var(--green); font-size: 11px; font-weight: 800; }
 .history-title { display: -webkit-box; overflow: hidden; margin: 5px 0 0; color: var(--ink); font-size: 14px; font-weight: 750; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .history-time { display: block; margin-top: 7px; color: var(--muted); font-size: 10px; }
-.history-actions { display: flex; gap: 7px; margin-top: 9px; }
+.history-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
 .history-actions button { padding: 6px 9px; color: var(--green); background: var(--green-soft); border: 1px solid var(--green-line); border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 750; }
 .history-actions button[data-history-delete] { color: var(--muted); background: #fff; border-color: var(--line); }
 .tool-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }

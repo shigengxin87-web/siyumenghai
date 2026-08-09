@@ -196,7 +196,7 @@ function renderHistory() {
     time.textContent = `查询于 ${historyTime(item.queriedAt || item.downloadedAt)}`;
     const actions = document.createElement('div');
     actions.className = 'history-actions';
-    actions.innerHTML = `<button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
+    actions.innerHTML = `<button type="button" data-history-copy="${index}">复制原视频链接</button><button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
 
     content.append(author, title, time, actions);
     article.append(cover, content);
@@ -770,13 +770,26 @@ async function copyText(value, fallbackNode = transcriptText) {
   } catch {
     // Fall back to selecting the visible transcript below.
   }
-  fallbackNode.hidden = false;
+  let temporaryNode = null;
+  if (!fallbackNode) {
+    temporaryNode = document.createElement('textarea');
+    temporaryNode.value = value;
+    temporaryNode.setAttribute('readonly', '');
+    temporaryNode.style.position = 'fixed';
+    temporaryNode.style.opacity = '0';
+    document.body.appendChild(temporaryNode);
+    fallbackNode = temporaryNode;
+  } else {
+    fallbackNode.hidden = false;
+  }
   fallbackNode.focus();
   fallbackNode.select();
   try {
     return document.execCommand('copy');
   } catch {
     return false;
+  } finally {
+    temporaryNode?.remove();
   }
 }
 
@@ -1227,10 +1240,21 @@ commentStatus.addEventListener('click', async (event) => {
   }
 });
 
-historyList.addEventListener('click', (event) => {
+historyList.addEventListener('click', async (event) => {
+  const copyTarget = event.target.closest('[data-history-copy]');
   const queryTarget = event.target.closest('[data-history-query]');
   const deleteTarget = event.target.closest('[data-history-delete]');
   const items = readHistory();
+
+  if (copyTarget) {
+    const item = items[Number(copyTarget.dataset.historyCopy)];
+    if (!item?.shareUrl) return;
+    const copied = await copyText(item.shareUrl, null);
+    copyTarget.textContent = copied ? '原视频链接已复制' : '复制失败，请重试';
+    window.setTimeout(() => {
+      if (copyTarget.isConnected) copyTarget.textContent = '复制原视频链接';
+    }, 1600);
+  }
 
   if (queryTarget) {
     const item = items[Number(queryTarget.dataset.historyQuery)];
