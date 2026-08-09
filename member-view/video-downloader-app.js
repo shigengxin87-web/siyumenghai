@@ -164,10 +164,14 @@ function readCommentCache() {
 
 function cachedComments(shareUrl) {
   const item = readCommentCache()[shareUrl];
-  if (typeof item?.text !== 'string' || !item.text.trim()) return null;
+  const historyItem = readHistory().find((entry) => entry.shareUrl === shareUrl);
+  const text = typeof item?.text === 'string' && item.text.trim()
+    ? item.text
+    : typeof historyItem?.commentsText === 'string' ? historyItem.commentsText : '';
+  if (!text.trim()) return null;
   return {
-    text: item.text,
-    rows: Array.isArray(item.rows) ? item.rows.map((row) => ({
+    text,
+    rows: Array.isArray(item?.rows) ? item.rows.map((row) => ({
       ...row,
       发布时间: row.发布时间 ? new Date(row.发布时间) : ''
     })) : []
@@ -183,6 +187,13 @@ function saveComments(shareUrl, text, rows) {
       .sort((left, right) => (right[1]?.savedAt || 0) - (left[1]?.savedAt || 0))
       .slice(0, COMMENT_CACHE_LIMIT);
     localStorage.setItem(COMMENT_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
+
+    const history = readHistory();
+    const historyItem = history.find((entry) => entry.shareUrl === shareUrl);
+    if (historyItem) {
+      historyItem.commentsText = text;
+      writeHistory(history);
+    }
   } catch {
     // Comment extraction still works when local storage is unavailable.
   }
