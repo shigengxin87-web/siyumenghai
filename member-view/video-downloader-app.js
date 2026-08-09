@@ -37,6 +37,8 @@ const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
 const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v6';
 const TRANSCRIPT_CACHE_LIMIT = 12;
+const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
+const COMMENT_CACHE_LIMIT = 12;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
 const MEDIA_PROXY_API = '/api/transcripts/media?url=';
@@ -151,6 +153,41 @@ function saveTranscript(shareUrl, result) {
   }
 }
 
+function readCommentCache() {
+  try {
+    const value = JSON.parse(localStorage.getItem(COMMENT_CACHE_KEY) || '{}');
+    return value && typeof value === 'object' ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function cachedComments(shareUrl) {
+  const item = readCommentCache()[shareUrl];
+  if (typeof item?.text !== 'string' || !item.text.trim()) return null;
+  return {
+    text: item.text,
+    rows: Array.isArray(item.rows) ? item.rows.map((row) => ({
+      ...row,
+      发布时间: row.发布时间 ? new Date(row.发布时间) : ''
+    })) : []
+  };
+}
+
+function saveComments(shareUrl, text, rows) {
+  if (!shareUrl || !String(text || '').trim()) return;
+  try {
+    const cache = readCommentCache();
+    cache[shareUrl] = { text, rows: Array.isArray(rows) ? rows : [], savedAt: Date.now() };
+    const entries = Object.entries(cache)
+      .sort((left, right) => (right[1]?.savedAt || 0) - (left[1]?.savedAt || 0))
+      .slice(0, COMMENT_CACHE_LIMIT);
+    localStorage.setItem(COMMENT_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)));
+  } catch {
+    // Comment extraction still works when local storage is unavailable.
+  }
+}
+
 function historyTime(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
@@ -196,7 +233,7 @@ function renderHistory() {
     time.textContent = `查询于 ${historyTime(item.queriedAt || item.downloadedAt)}`;
     const actions = document.createElement('div');
     actions.className = 'history-actions';
-    actions.innerHTML = `<button type="button" data-history-copy="${index}">复制原视频链接</button><button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
+    actions.innerHTML = `<button type="button" data-history-copy="${index}">复制原视频链接</button><button type="button" data-history-transcript="${index}">复制逐字稿</button><button type="button" data-history-comments="${index}">复制评论</button><button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
 
     content.append(author, title, time, actions);
     article.append(cover, content);
@@ -307,13 +344,15 @@ function renderLocalHelperPrompt() {
 }
 
 function resetComments() {
-  currentCommentRows = [];
-  commentText.value = '';
-  commentText.hidden = true;
+  const cached = cachedComments(currentVideo?.shareUrl);
+  currentCommentRows = cached?.rows || [];
+  commentText.value = cached?.text || '';
+  commentText.hidden = !cached;
   commentButton.disabled = false;
-  commentButton.textContent = '提取并复制评论';
+  commentButton.textContent = cached ? '复制评论' : '提取并复制评论';
   commentExcelButton.hidden = false;
-  renderLocalHelperPrompt();
+  if (cached) showCommentStatus('已读取本机缓存的评论，可直接复制或导出 Excel。');
+  else renderLocalHelperPrompt();
 }
 
 function validHttpUrl(value) {
@@ -1000,6 +1039,7 @@ async function extractCurrentComments() {
     currentCommentRows = commentRows(comments);
     commentText.value = text;
     commentText.hidden = false;
+    saveComments(video.shareUrl, text, currentCommentRows);
     commentButton.textContent = '复制评论';
     commentExcelButton.hidden = false;
     const copied = await copyText(text, commentText);
@@ -1025,6 +1065,7 @@ window.addEventListener('message', (event) => {
   commentText.hidden = false;
   commentButton.textContent = '复制评论';
   commentExcelButton.hidden = false;
+  saveComments(currentVideo?.shareUrl, text, currentCommentRows);
   showCommentStatus(String(event.data.message || '评论已提取并复制。'));
 });
 
@@ -1242,18 +1283,41 @@ commentStatus.addEventListener('click', async (event) => {
 
 historyList.addEventListener('click', async (event) => {
   const copyTarget = event.target.closest('[data-history-copy]');
+  const transcriptTarget = event.target.closest('[data-history-transcript]');
+  const commentsTarget = event.target.closest('[data-history-comments]');
   const queryTarget = event.target.closest('[data-history-query]');
   const deleteTarget = event.target.closest('[data-history-delete]');
   const items = readHistory();
+
+  const showResult = (button, message) => {
+    const original = button.textContent;
+    button.textContent = message;
+    window.setTimeout(() => {
+      if (button.isConnected) button.textContent = original;
+    }, 1600);
+  };
 
   if (copyTarget) {
     const item = items[Number(copyTarget.dataset.historyCopy)];
     if (!item?.shareUrl) return;
     const copied = await copyText(item.shareUrl, null);
-    copyTarget.textContent = copied ? '原视频链接已复制' : '复制失败，请重试';
-    window.setTimeout(() => {
-      if (copyTarget.isConnected) copyTarget.textContent = '复制原视频链接';
-    }, 1600);
+    showResult(copyTarget, copied ? '原视频链接已复制' : '复制失败，请重试');
+  }
+
+  if (transcriptTarget) {
+    const item = items[Number(transcriptTarget.dataset.historyTranscript)];
+    const transcript = item?.shareUrl ? cachedTranscript(item.shareUrl) : null;
+    if (!transcript?.corrected) return showResult(transcriptTarget, '暂无逐字稿');
+    const copied = await copyText(transcript.corrected, null);
+    showResult(transcriptTarget, copied ? '逐字稿已复制' : '复制失败，请重试');
+  }
+
+  if (commentsTarget) {
+    const item = items[Number(commentsTarget.dataset.historyComments)];
+    const comments = item?.shareUrl ? cachedComments(item.shareUrl) : null;
+    if (!comments?.text) return showResult(commentsTarget, '暂无评论记录');
+    const copied = await copyText(comments.text, null);
+    showResult(commentsTarget, copied ? '评论已复制' : '复制失败，请重试');
   }
 
   if (queryTarget) {
