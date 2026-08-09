@@ -164,11 +164,16 @@ function readCommentCache() {
 
 function cachedComments(shareUrl) {
   const item = readCommentCache()[shareUrl];
-  const historyItem = readHistory().find((entry) => entry.shareUrl === shareUrl);
+  const history = readHistory();
+  const historyItem = history.find((entry) => entry.shareUrl === shareUrl);
   const text = typeof item?.text === 'string' && item.text.trim()
     ? item.text
     : typeof historyItem?.commentsText === 'string' ? historyItem.commentsText : '';
   if (!text.trim()) return null;
+  if (historyItem && item?.text && historyItem.commentsText !== item.text) {
+    historyItem.commentsText = item.text;
+    writeHistory(history);
+  }
   return {
     text,
     rows: Array.isArray(item?.rows) ? item.rows.map((row) => ({
