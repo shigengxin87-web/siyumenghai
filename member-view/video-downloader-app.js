@@ -37,6 +37,8 @@ const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
 const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v6';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
+const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v1';
+const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_API = '/api/transcripts/jobs';
@@ -96,8 +98,8 @@ let currentTranscript = null;
 let transcriptWorker = null;
 let transcriptWorkerReady = false;
 let transcriptPromise = null;
-let transcriptPollToken = 0;
-let transcriptJobId = '';
+let transcriptMonitorTimer = 0;
+let transcriptMonitorRunning = false;
 let currentCommentRows = [];
 let videoLoadTimer = 0;
 
@@ -130,12 +132,16 @@ function readTranscriptCache() {
 function cachedTranscript(shareUrl) {
   const item = readTranscriptCache()[shareUrl];
   if (typeof item?.corrected !== 'string' || !item.corrected.trim()) return null;
+  const correctedLength = item.corrected.replace(/\s/g, '').length;
+  const audioLength = typeof item.audioRaw === 'string' ? item.audioRaw.replace(/\s/g, '').length : 0;
+  if (item.source === 'ocr_asr_fusion' && audioLength && correctedLength < audioLength * 0.82) return null;
   return {
     corrected: item.corrected,
     raw: typeof item.raw === 'string' ? item.raw : item.corrected,
     correctionCount: Number(item.correctionCount || 0),
     source: String(item.source || 'asr'),
-    audioRaw: typeof item.audioRaw === 'string' ? item.audioRaw : ''
+    audioRaw: typeof item.audioRaw === 'string' ? item.audioRaw : '',
+    pipelineVersion: String(item.pipelineVersion || '')
   };
 }
 
@@ -151,6 +157,65 @@ function saveTranscript(shareUrl, result) {
   } catch {
     // Transcription still works when local storage is unavailable.
   }
+}
+
+function readTranscriptTasks() {
+  try {
+    const value = JSON.parse(localStorage.getItem(TRANSCRIPT_TASK_KEY) || '{}');
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function transcriptTask(shareUrl) {
+  if (!shareUrl) return null;
+  const task = readTranscriptTasks()[shareUrl];
+  return task?.jobId ? task : null;
+}
+
+function writeTranscriptTasks(tasks) {
+  try {
+    const entries = Object.entries(tasks)
+      .filter(([shareUrl, task]) => shareUrl && task?.jobId)
+      .sort((left, right) => Number(right[1]?.updatedAt || 0) - Number(left[1]?.updatedAt || 0))
+      .slice(0, TRANSCRIPT_TASK_LIMIT);
+    localStorage.setItem(TRANSCRIPT_TASK_KEY, JSON.stringify(Object.fromEntries(entries)));
+  } catch {
+    // The server task keeps running even when local storage is unavailable.
+  }
+}
+
+function saveTranscriptTask(task) {
+  if (!task?.shareUrl || !task?.jobId) return;
+  const tasks = readTranscriptTasks();
+  tasks[task.shareUrl] = {
+    ...tasks[task.shareUrl],
+    ...task,
+    updatedAt: Date.now()
+  };
+  writeTranscriptTasks(tasks);
+}
+
+function removeTranscriptTask(shareUrl) {
+  const tasks = readTranscriptTasks();
+  if (!tasks[shareUrl]) return;
+  delete tasks[shareUrl];
+  writeTranscriptTasks(tasks);
+}
+
+function isActiveTranscriptTask(task) {
+  return Boolean(task?.jobId && !['completed', 'error'].includes(task.status));
+}
+
+function transcriptTaskLabel(task) {
+  if (!task) return '';
+  if (task.status === 'error') return '逐字稿识别失败';
+  if (task.status === 'queued') {
+    const ahead = Number(task.ahead || 0);
+    return ahead > 0 ? `逐字稿排队中（前面 ${ahead} 条）` : '逐字稿排队中';
+  }
+  return '逐字稿后台识别中';
 }
 
 function readCommentCache() {
@@ -247,11 +312,24 @@ function renderHistory() {
     const time = document.createElement('time');
     time.className = 'history-time';
     time.textContent = `查询于 ${historyTime(item.queriedAt || item.downloadedAt)}`;
+    const transcript = cachedTranscript(item.shareUrl);
+    const task = transcriptTask(item.shareUrl);
+    const taskStatus = document.createElement('span');
+    taskStatus.className = 'history-task-status';
+    if (transcript) {
+      taskStatus.textContent = '逐字稿已完成';
+      taskStatus.classList.add('is-complete');
+    } else if (task) {
+      taskStatus.textContent = transcriptTaskLabel(task);
+      taskStatus.classList.add(task.status === 'error' ? 'is-error' : 'is-working');
+    } else {
+      taskStatus.hidden = true;
+    }
     const actions = document.createElement('div');
     actions.className = 'history-actions';
     actions.innerHTML = `<button type="button" data-history-copy="${index}">复制原视频链接</button><button type="button" data-history-transcript="${index}">复制逐字稿</button><button type="button" data-history-comments="${index}">复制评论</button><button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
 
-    content.append(author, title, time, actions);
+    content.append(author, title, time, taskStatus, actions);
     article.append(cover, content);
     historyList.appendChild(article);
   });
@@ -285,8 +363,6 @@ function showTranscriptStatus(message, state = '', asHtml = false) {
 }
 
 function resetTranscript() {
-  transcriptPollToken += 1;
-  transcriptJobId = '';
   currentTranscript = null;
   transcriptText.value = '';
   transcriptText.hidden = true;
@@ -296,7 +372,13 @@ function resetTranscript() {
   });
   transcriptButton.disabled = false;
   transcriptButton.textContent = '生成并复制逐字稿';
-  showTranscriptStatus('服务器本地读取画面字幕，并与 faster-whisper 人声时间轴融合；不调用付费语音或大模型 API。');
+  const task = transcriptTask(currentVideo?.shareUrl);
+  if (task) {
+    transcriptButton.textContent = isActiveTranscriptTask(task) ? '查看后台进度' : '重新生成逐字稿';
+    showTranscriptTaskStatus(task);
+  } else {
+    showTranscriptStatus('服务器本地读取画面字幕，并与 faster-whisper 人声时间轴融合；不调用付费语音或大模型 API。');
+  }
 }
 
 function showCommentStatus(message, state = '') {
@@ -631,7 +713,8 @@ function buildTranscriptResult(result, video) {
     corrected: correctedSegments.join('\n'),
     correctionCount,
     source,
-    audioRaw: String(result?.audio_text || '')
+    audioRaw: String(result?.audio_text || ''),
+    pipelineVersion: String(result?.pipeline_version || '')
   };
 }
 
@@ -1094,6 +1177,15 @@ async function transcribeCurrentVideo() {
     return;
   }
 
+  const existingTask = transcriptTask(video.shareUrl);
+  if (isActiveTranscriptTask(existingTask)) {
+    transcriptButton.textContent = '查看后台进度';
+    showTranscriptTaskStatus(existingTask);
+    await pollTranscriptTask(existingTask);
+    ensureTranscriptMonitor();
+    return;
+  }
+
   transcriptButton.disabled = true;
   showTranscriptStatus('正在提交服务器识别任务…', 'working');
   try {
@@ -1109,61 +1201,158 @@ async function transcribeCurrentVideo() {
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
-    transcriptJobId = payload.id;
-    transcriptButton.textContent = '查看识别进度';
-    const token = ++transcriptPollToken;
-    await followTranscriptJob(payload, video, token);
+    const task = {
+      shareUrl: video.shareUrl,
+      jobId: payload.id,
+      status: payload.status || 'queued',
+      stage: payload.stage || '',
+      ahead: Number(payload.ahead || 0),
+      createdAt: Date.now(),
+      video: {
+        shareUrl: video.shareUrl,
+        description: video.description,
+        author: video.author
+      }
+    };
+    saveTranscriptTask(task);
+    renderHistory();
+    await applyTranscriptPayload(payload, task);
+    ensureTranscriptMonitor();
   } catch (error) {
-    transcriptButton.textContent = '重新生成逐字稿';
-    showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
+    if (currentVideo?.shareUrl === video.shareUrl) {
+      transcriptButton.textContent = '重新生成逐字稿';
+      showTranscriptStatus(`逐字稿生成失败：${error.message}`, 'error');
+    }
   } finally {
-    transcriptButton.disabled = false;
+    if (currentVideo?.shareUrl === video.shareUrl) transcriptButton.disabled = false;
   }
 }
 
-function transcriptWait(ms) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
+function showTranscriptTaskStatus(task) {
+  if (!task) return;
+  if (task.status === 'error') {
+    showTranscriptStatus(`逐字稿识别失败：${task.error || '请重新生成'}`, 'error');
+    return;
+  }
+  if (task.status === 'queued') {
+    const ahead = Number(task.ahead || 0);
+    showTranscriptStatus(ahead > 0
+      ? `任务已在后台排队，前面还有 ${ahead} 条；现在可以继续查询其他视频。`
+      : '任务已在后台排队；现在可以继续查询其他视频。', 'working');
+    return;
+  }
+  showTranscriptStatus(`${task.stage || '服务器正在后台识别人声'}；现在可以继续查询其他视频。`, 'working');
 }
 
-async function followTranscriptJob(initialPayload, video, token) {
-  let payload = initialPayload;
-  while (token === transcriptPollToken) {
-    if (payload.status === 'completed') {
-      const text = String(payload.text || '').trim();
-      if (!text) throw new Error('服务器没有返回逐字稿');
-      const result = buildTranscriptResult(payload, video);
-      saveTranscript(video.shareUrl, result);
-      if (currentVideo?.shareUrl !== video.shareUrl) return;
+function transcriptCompletionMessage(payload, result) {
+  const cacheText = payload.cached ? '（已读取缓存）' : '';
+  const seconds = Number(payload.elapsed || 0);
+  const timeText = seconds > 0
+    ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
+    : '';
+  const correctionText = result.source === 'ocr_asr_fusion'
+    ? `，已读取画面字幕并与本地语音识别按时间轴融合${result.correctionCount ? `，校正 ${result.correctionCount} 处` : ''}`
+    : (result.correctionCount
+      ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
+      : '，暂未命中词库校正项，仍建议对照口播复核');
+  return `逐字稿已在后台生成${cacheText}${timeText}${correctionText}，请点击“复制逐字稿”。`;
+}
+
+async function applyTranscriptPayload(payload, originalTask) {
+  const task = {
+    ...originalTask,
+    status: payload.status || originalTask.status || 'running',
+    stage: payload.stage || originalTask.stage || '',
+    ahead: Number(payload.ahead || 0),
+    error: payload.error || '',
+    pollFailures: 0
+  };
+
+  if (task.status === 'completed') {
+    const text = String(payload.text || '').trim();
+    if (!text) throw new Error('服务器没有返回逐字稿');
+    const video = task.video || { shareUrl: task.shareUrl };
+    const result = buildTranscriptResult(payload, video);
+    saveTranscript(task.shareUrl, result);
+    removeTranscriptTask(task.shareUrl);
+    renderHistory();
+    if (currentVideo?.shareUrl === task.shareUrl) {
       currentTranscript = result;
       showTranscriptView('corrected');
+      transcriptButton.disabled = false;
       transcriptButton.textContent = '复制逐字稿';
-      const copied = await copyText(result.corrected, transcriptText);
-      const cacheText = payload.cached ? '（已读取缓存）' : '';
-      const seconds = Number(payload.elapsed || 0);
-      const timeText = seconds > 0
-        ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
-        : '';
-      const correctionText = result.source === 'ocr_asr_fusion'
-        ? `，已读取画面字幕并与本地语音识别按时间轴融合${result.correctionCount ? `，校正 ${result.correctionCount} 处` : ''}`
-        : (result.correctionCount
-          ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
-          : '，暂未命中词库校正项，仍建议对照口播复核');
-      showTranscriptStatus(copied ? `逐字稿已生成并复制${cacheText}${timeText}${correctionText}。` : `逐字稿已生成${cacheText}${correctionText}，请点击“复制逐字稿”。`, copied ? '' : 'error');
-      return;
+      showTranscriptStatus(transcriptCompletionMessage(payload, result));
     }
-    if (payload.status === 'error') throw new Error(payload.error || '服务器识别失败');
-    if (payload.status === 'queued') {
-      const ahead = Number(payload.ahead || 0);
-      showTranscriptStatus(ahead > 0 ? `已进入队列，前面还有 ${ahead} 条，完成后会自动复制。` : '已进入队列，即将开始识别…', 'working');
-    } else {
-      showTranscriptStatus(payload.stage || '服务器正在识别人声，请保持页面打开…', 'working');
-    }
-    await transcriptWait(5000);
-    if (token !== transcriptPollToken) return;
-    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(transcriptJobId)}`, { cache: 'no-store' });
-    payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+    return;
   }
+
+  if (task.status === 'error') {
+    saveTranscriptTask(task);
+    renderHistory();
+    if (currentVideo?.shareUrl === task.shareUrl) {
+      transcriptButton.disabled = false;
+      transcriptButton.textContent = '重新生成逐字稿';
+      showTranscriptTaskStatus(task);
+    }
+    return;
+  }
+
+  saveTranscriptTask(task);
+  renderHistory();
+  if (currentVideo?.shareUrl === task.shareUrl) {
+    transcriptButton.disabled = false;
+    transcriptButton.textContent = '查看后台进度';
+    showTranscriptTaskStatus(task);
+  }
+}
+
+async function pollTranscriptTask(task) {
+  if (!task?.jobId) return;
+  try {
+    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, { cache: 'no-store' });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+    await applyTranscriptPayload(payload, task);
+  } catch (error) {
+    const failures = Number(task.pollFailures || 0) + 1;
+    const failedTask = {
+      ...task,
+      status: failures >= 3 ? 'error' : (task.status || 'running'),
+      pollFailures: failures,
+      error: error.message || '无法读取任务状态'
+    };
+    saveTranscriptTask(failedTask);
+    renderHistory();
+    if (currentVideo?.shareUrl === task.shareUrl) {
+      if (failures >= 3) {
+        transcriptButton.textContent = '重新生成逐字稿';
+        showTranscriptTaskStatus(failedTask);
+      } else {
+        transcriptButton.textContent = '查看后台进度';
+        showTranscriptStatus('暂时无法读取进度，服务器任务仍在后台运行，系统会自动重试。', 'working');
+      }
+    }
+  }
+}
+
+async function monitorTranscriptTasks() {
+  if (transcriptMonitorRunning) return;
+  transcriptMonitorRunning = true;
+  window.clearTimeout(transcriptMonitorTimer);
+  try {
+    const tasks = Object.values(readTranscriptTasks()).filter(isActiveTranscriptTask);
+    await Promise.all(tasks.map((task) => pollTranscriptTask(task)));
+  } finally {
+    transcriptMonitorRunning = false;
+    ensureTranscriptMonitor();
+  }
+}
+
+function ensureTranscriptMonitor(delay = 5000) {
+  window.clearTimeout(transcriptMonitorTimer);
+  const hasActiveTasks = Object.values(readTranscriptTasks()).some(isActiveTranscriptTask);
+  if (!hasActiveTasks) return;
+  transcriptMonitorTimer = window.setTimeout(monitorTranscriptTasks, delay);
 }
 
 async function downloadVideo(url) {
@@ -1323,7 +1512,12 @@ historyList.addEventListener('click', async (event) => {
   if (transcriptTarget) {
     const item = items[Number(transcriptTarget.dataset.historyTranscript)];
     const transcript = item?.shareUrl ? cachedTranscript(item.shareUrl) : null;
-    if (!transcript?.corrected) return showResult(transcriptTarget, '暂无逐字稿');
+    if (!transcript?.corrected) {
+      const task = item?.shareUrl ? transcriptTask(item.shareUrl) : null;
+      return showResult(transcriptTarget, task
+        ? (task.status === 'error' ? '识别失败，请重新生成' : '后台识别中')
+        : '暂无逐字稿');
+    }
     const copied = await copyText(transcript.corrected, null);
     showResult(transcriptTarget, copied ? '逐字稿已复制' : '复制失败，请重试');
   }
@@ -1358,3 +1552,4 @@ clearHistoryButton.addEventListener('click', () => {
 
 renderHistory();
 renderLocalHelperPrompt();
+ensureTranscriptMonitor(800);

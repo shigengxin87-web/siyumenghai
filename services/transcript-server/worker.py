@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "ocr-asr-timeline-v4"
+PIPELINE_VERSION = "ocr-asr-completeness-v5"
 
 FUSION_CORRECTIONS = (
     ("Workbuddy", "WorkBuddy"),
@@ -66,6 +66,7 @@ def media_duration(video_url):
 
 def normalize_text(value):
     text = simplify(str(value or ""))
+    text = re.sub(r"[�＼]+", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     text = re.sub(r"(?<=[\u3400-\u9fff]) (?=[\u3400-\u9fff])", "", text)
     for wrong, right in FUSION_CORRECTIONS:
@@ -313,7 +314,22 @@ def fuse_transcript(ocr_value, asr_segments, asr_words):
 
     events = [{**item, "source": "ocr"} for item in ocr_segments]
     events.extend(asr_gap_segments(asr_words, ocr_segments))
-    return sentence_segments(events, asr_words), "ocr_asr_fusion", round(similarity, 4), ocr_segments
+    fused_segments = sentence_segments(events, asr_words)
+    fused_chars = len(alignment_key("".join(item.get("text", "") for item in fused_segments)))
+
+    # OCR timestamps only prove that a subtitle was visible; they do not prove
+    # that the OCR text captured every spoken word in that time range.  The old
+    # fusion treated all ASR words inside an OCR interval as already covered and
+    # could silently drop most of a video.  Never publish a fused transcript
+    # that is materially shorter than the complete ASR backbone.
+    if asr_chars and fused_chars < int(asr_chars * 0.88):
+        segments = [{
+            "start": item["start"], "end": item["end"],
+            "text": normalize_text(item["text"]), "source": "asr",
+        } for item in asr_segments if normalize_text(item["text"])]
+        return segments, "asr_completeness_fallback", round(similarity, 4), ocr_segments
+
+    return fused_segments, "ocr_asr_fusion", round(similarity, 4), ocr_segments
 
 
 def simplify(text):
@@ -383,7 +399,8 @@ def main():
             prompt += f"视频说明：{description[:300]}。"
         transcript, _ = model.transcribe(
             str(audio), language="zh", task="transcribe",
-            temperature=0, beam_size=5, condition_on_previous_text=True,
+            temperature=0, beam_size=5, condition_on_previous_text=False,
+            repetition_penalty=1.1, no_repeat_ngram_size=3,
             initial_prompt=prompt, vad_filter=False, word_timestamps=True,
         )
         whisper_segments = list(transcript)
