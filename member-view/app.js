@@ -788,6 +788,31 @@ const days = {
       { time: '19:28', title: '微信聊天总结怎样避免越做越乱', text: '围绕总结结构、内容取舍和笔记入库展开讨论，并形成针对当前问题的详细建议。', url: 'https://my.feishu.cn/wiki/SB4bwXQNCiJO10kpNr7cIIr5npf?from=from_copylink', linkLabel: '查看详细建议' },
       { time: '20:57', title: 'AI 短视频与音乐内容实践', text: '从短视频带货自动化聊到 AI 音乐 MV，群友决定先作为实践项目继续跑一跑。' }
     ]
+  },
+  '2026-08-09': {
+    dateLabel: '2026 年 8 月 9 日', weekday: '星期日', messages: 24, themesCount: 3, readTime: '4 分钟',
+    title: '别迷信外部操盘手，先把自己的内容工作台一点点磨出来',
+    summary: '当天下午从一篇流量踩坑复盘谈起，提醒经营者不要把增长完全寄托在外部操盘手身上；随后分享了用 AI 整理微信收藏、沉淀到 Obsidian 的实现方式。晚间继续拆解内容工作台的形成过程：先明确自己真正想解决的问题，再让 AI 做出毛坯版本，并在真实使用中持续迭代。',
+    insights: [
+      { roles: ['product', 'private'], tag: '经营判断', source: '石更新', time: '16:32', title: '花钱买操盘经验之后，真正留下来的应是自己的判断力', text: '当天分享的复盘来自一位长期学习、投入大量成本的经营者。它提醒大家：外部操盘手可以补能力，但不能替代经营者理解业务、用户和流量的基本功。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485071&idx=1&sn=22f3a4240606ca8276d4e205512bbbe1&chksm=c400b42418a9d25b665f0e8d63610b8f7acf389f7d0e85b79ab2ad9ceb9d0d37b3afaf09bceb&mpshare=1&scene=1&srcid=08095VCQMraNOzeFLx0rvlIa&sharer_shareinfo=0a4006678156d327cb1d95b3fc85d817&sharer_shareinfo_first=0a4006678156d327cb1d95b3fc85d817#rd', linkLabel: '阅读完整复盘' },
+      { roles: ['content', 'product'], tag: '知识沉淀', source: '石更新 × 群友', time: '16:54', title: '收藏只有进入可检索系统，才会从囤积变成可调用的资产', text: '当天演示了用本地微信解析技能读取收藏，再交给 AI 整理并存档到 Obsidian。群友也提出后续让新收藏直接入库，把一次整理变成持续工作流。', url: 'https://github.com/mcncarl/yichen-skills/tree/main/yichen-wechat-local-vault', linkLabel: '查看实现技能' },
+      { roles: ['content', 'product'], tag: '产品迭代', source: '石更新 × Howie', time: '22:14', title: '内容工作台不是一次生成的成品，而是想法与真实使用反复磨合的结果', text: '先构思微信、Obsidian、飞书和其他资料怎样共同服务选题与文案，再让 AI 搭出 1.0 毛坯版本。之后通过持续对话、使用和修正补足细节，成熟需要时间，而不是一条提示词。', url: 'https://my.feishu.cn/wiki/NO4Fwr0biicjp3kxWu1cswNUnqd?from=from_copylink', linkLabel: '查看搭建步骤与提示词' }
+    ],
+    actions: [
+      { title: '复盘一次外部合作投入', text: '写下对方真正补足了什么、哪些判断仍必须由自己掌握，并检查是否形成了可复用的方法。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485071&idx=1&sn=22f3a4240606ca8276d4e205512bbbe1&chksm=c400b42418a9d25b665f0e8d63610b8f7acf389f7d0e85b79ab2ad9ceb9d0d37b3afaf09bceb&mpshare=1&scene=1&srcid=08095VCQMraNOzeFLx0rvlIa&sharer_shareinfo=0a4006678156d327cb1d95b3fc85d817&sharer_shareinfo_first=0a4006678156d327cb1d95b3fc85d817#rd', linkLabel: '参考当天案例' },
+      { title: '给微信收藏建立一个出口', text: '先选少量收藏，测试整理、分类、写入 Obsidian 和后续检索是否顺畅。', url: 'https://github.com/mcncarl/yichen-skills/tree/main/yichen-wechat-local-vault', linkLabel: '查看技能说明' },
+      { title: '先写内容工作台需求，再做 1.0', text: '明确内容来源、选题方式和最终产出，只做一个能用的小版本，并预留至少一周持续迭代。', url: 'https://my.feishu.cn/wiki/NO4Fwr0biicjp3kxWu1cswNUnqd?from=from_copylink', linkLabel: '使用需求采访提示词' }
+    ],
+    resources: [
+      { kind: '文章', title: '花 200 万做流量踩坑后，他不再迷信操盘手', text: '一份围绕操盘手、学习投入和经营判断的经历复盘，用于检查外部合作是否真正沉淀了自己的能力。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485071&idx=1&sn=22f3a4240606ca8276d4e205512bbbe1&chksm=c400b42418a9d25b665f0e8d63610b8f7acf389f7d0e85b79ab2ad9ceb9d0d37b3afaf09bceb&mpshare=1&scene=1&srcid=08095VCQMraNOzeFLx0rvlIa&sharer_shareinfo=0a4006678156d327cb1d95b3fc85d817&sharer_shareinfo_first=0a4006678156d327cb1d95b3fc85d817#rd', linkLabel: '阅读公众号文章' },
+      { kind: '技能', title: 'yichen-wechat-local-vault', text: '本地解析微信数据的开源技能；当天用于说明如何把微信收藏交给 AI 整理并沉淀到 Obsidian。', url: 'https://github.com/mcncarl/yichen-skills/tree/main/yichen-wechat-local-vault', linkLabel: '打开 GitHub' },
+      { kind: '文档', title: '如何和 AI 一起搭建属于自己的内容工作台', text: '包含搭建步骤、实践建议和需求采访提示词，帮助使用者从自身目标出发构思工作台。', url: 'https://my.feishu.cn/wiki/NO4Fwr0biicjp3kxWu1cswNUnqd?from=from_copylink', linkLabel: '打开飞书文档' }
+    ],
+    themes: [
+      { time: '16:32', title: '操盘手与流量投入复盘', text: '分享一位经营者在大量学习和流量投入后的反思，讨论重点回到操盘手能做什么，以及经营者必须自己掌握什么。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485071&idx=1&sn=22f3a4240606ca8276d4e205512bbbe1&chksm=c400b42418a9d25b665f0e8d63610b8f7acf389f7d0e85b79ab2ad9ceb9d0d37b3afaf09bceb&mpshare=1&scene=1&srcid=08095VCQMraNOzeFLx0rvlIa&sharer_shareinfo=0a4006678156d327cb1d95b3fc85d817&sharer_shareinfo_first=0a4006678156d327cb1d95b3fc85d817#rd', linkLabel: '阅读完整复盘' },
+      { time: '16:54', title: '微信收藏整理到 Obsidian', text: '展示 AI 整理微信收藏并存档到 Obsidian 的结果，随后分享本地解析技能和操作方式，群友继续讨论自动入库。', url: 'https://github.com/mcncarl/yichen-skills/tree/main/yichen-wechat-local-vault', linkLabel: '查看实现技能' },
+      { time: '21:59', title: '内容工作台从毛坯版本持续迭代', text: '围绕内容工作台如何形成展开交流：先有自己的构思，再让 AI 搭建 1.0，并在使用中不断对话、修正和补细节；晚间形成配套步骤和提示词文档。', url: 'https://my.feishu.cn/wiki/NO4Fwr0biicjp3kxWu1cswNUnqd?from=from_copylink', linkLabel: '查看搭建文档' }
+    ]
   }
 };
 
