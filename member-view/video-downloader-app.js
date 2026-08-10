@@ -45,7 +45,8 @@ const TRANSCRIPT_API = '/api/transcripts/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
 const MEDIA_PROXY_API = '/api/transcripts/media?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
-const COMMENT_LIMIT = 200;
+const COMMENT_LIMIT = 1000;
+const COMMENT_PAGE_LIMIT = 200;
 const COMMENT_BRIDGE_URL = 'http://127.0.0.1:2024/extract';
 const COMMENT_BRIDGE_ORIGIN = 'http://127.0.0.1:2024';
 const LOCAL_HELPER_STATUS_API = 'http://127.0.0.1:2024/status';
@@ -1079,7 +1080,7 @@ async function fetchLocalComments(objectId, nonceId) {
   const ids = new Set();
   const markers = new Set();
   let nextMarker = '';
-  for (let pageIndex = 0; pageIndex < 30 && comments.length < COMMENT_LIMIT; pageIndex += 1) {
+  for (let pageIndex = 0; pageIndex < COMMENT_PAGE_LIMIT && comments.length < COMMENT_LIMIT; pageIndex += 1) {
     const response = await localCommentRequest('/api/channels/feed/comment/list', {
       oid: objectId,
       nid: nonceId,
