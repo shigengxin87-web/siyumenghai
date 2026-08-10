@@ -815,28 +815,38 @@ const days = {
     ]
   },
   '2026-08-10': {
-    dateLabel: '2026 年 8 月 10 日', weekday: '星期一', messages: 61, themesCount: 3, readTime: '5 分钟',
-    title: '把渠道经验拆成可执行动作，视频号导流才不靠碰运气',
-    summary: '今天先从 AI 自动完成工作的实践聊起，也正式欢迎百合加入社群。晚间围绕舞蹈培训业务的视频号导流展开了一轮完整诊断：先补齐客单价、转化链路和现有效果，再逐项比较公众号、评论区、私信、小店与矩阵小号的做法，最终形成分阶段执行方案，并补充抖音、小红书的私域导流资料。',
+    dateLabel: '2026 年 8 月 10 日', weekday: '星期一', messages: 84, themesCount: 5, readTime: '6 分钟',
+    title: '把渠道经验和内容工具都做成可执行的系统',
+    summary: '今天先从 AI 自动完成工作的实践聊起，也正式欢迎百合加入社群。晚间围绕舞蹈培训业务的视频号导流做了一轮完整诊断，形成公众号、评论区、私信、小店与矩阵小号的分阶段方案；随后又把一条反复观看的视频延伸为评论词云，并分享了视频号下载、逐字稿、评论提取和封面下载等社群工具。',
     insights: [
       { roles: ['product', 'content'], tag: 'AI 工作流', source: 'Howie 陈科豪 × 石更新', time: '10:34', title: '真正有用的自动化，是人在休息时任务仍能继续推进', text: '群友展示 Codex 在自己起床前完成任务的结果。重点不只是速度，而是把清晰任务、资料和验收条件交给 AI 后，让工作从即时对话变成可持续执行的流程。' },
       { roles: ['private', 'product'], tag: '导流诊断', source: '百合 × 石更新', time: '18:53', title: '给渠道建议前，先把客单价、转化链路和现有效果问清楚', text: '百合的业务面向舞蹈从业者，客单价 6980 元，短视频获客后进入私域一对一咨询并电话成交。基于这条链路，讨论才从泛泛的“怎么导流”落到评论区响应、私信承接和后续成交。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看视频号导流资料' },
-      { roles: ['private', 'product'], tag: '渠道组合', source: '石更新 × 群友', time: '19:07', title: '导流没有单一万能入口，要同时准备效率、合规和备用路径', text: '评论区与私信适合快速验证，但存在展示和违规概率；公众号、小店和矩阵小号更适合作为长期承接设施。先继续使用当前有效链路，同时提前把小店、公众号和备用账号搭好。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看五大导流场景' }
+      { roles: ['private', 'product'], tag: '渠道组合', source: '石更新 × 群友', time: '19:07', title: '导流没有单一万能入口，要同时准备效率、合规和备用路径', text: '评论区与私信适合快速验证，但存在展示和违规概率；公众号、小店和矩阵小号更适合作为长期承接设施。先继续使用当前有效链路，同时提前把小店、公众号和备用账号搭好。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看五大导流场景' },
+      { roles: ['content', 'product'], tag: '内容分析', source: '石更新 × 群友', time: '21:42', title: '评论区不只是互动数字，也能被整理成内容洞察', text: '把一条反复观看的视频评论区提取出来，再用 Codex 生成词云和总结，让零散评论显出共同情绪与表达线索。工具的价值不在“抓取更多”，而在帮助创作者看见用户真正被什么打动。', url: 'https://siyumenghai.cn/comment-cloud/?v=145e48116133', linkLabel: '查看评论词云' },
+      { roles: ['content', 'product'], tag: '工具产品化', source: '石更新 × 辰犀', time: '23:04', title: '把重复内容动作封装成入口，才能让群友直接使用', text: '社群官网的视频号入口已提供视频下载、逐字稿、评论提取与封面下载，并补充音频和批量下载方向。把个人脚本变成可访问、带安装提示的入口，知识才会从演示变成可复用能力。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '进入社群工具入口' }
     ],
     actions: [
       { title: '写清自己的导流转化链路', text: '列出内容入口、用户动作、加微方式、咨询环节、成交方式和客单价，再判断当前最容易折损的环节。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '参考视频号导流方案' },
       { title: '给评论区导流增加备用承接', text: '保留目前有效的方法，同时注册公众号、准备视频号小号，并评估开通微信小店，避免单一入口失效后完全停摆。' },
-      { title: '按平台检查私域导流方式', text: '不要直接复制视频号打法到其他平台；分别查看抖音和小红书资料，选择符合自身内容形式和用户习惯的路径。', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf', linkLabel: '查看抖音导流资料' }
+      { title: '按平台检查私域导流方式', text: '不要直接复制视频号打法到其他平台；分别查看抖音和小红书资料，选择符合自身内容形式和用户习惯的路径。', links: [
+        { label: '查看抖音导流资料', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf' },
+        { label: '查看小红书导流资料', url: 'https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd' }
+      ] },
+      { title: '用一条内容测试评论提取', text: '选一条评论量足够的视频，下载评论并做词云或主题归类，检查用户反复提到的词与创作者原本判断是否一致。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '打开视频号工具入口' }
     ],
     resources: [
       { kind: '文档', title: '视频号导流私域的五大场景', text: '整理公众号、评论区、私信、小店与账号矩阵等常见承接方式，适合结合业务链路逐项选择。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '打开飞书文档' },
       { kind: '文档', title: '抖音导流私域的五大场景', text: '用于对照抖音平台的导流路径和承接方式，避免直接照搬视频号方案。', url: 'https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf', linkLabel: '打开飞书文档' },
-      { kind: '文档', title: '小红书导流私域的五大场景', text: '汇总小红书常见的私域导流场景，可结合账号内容和用户意图选择。', url: 'https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd', linkLabel: '打开飞书文档' }
+      { kind: '文档', title: '小红书导流私域的五大场景', text: '汇总小红书常见的私域导流场景，可结合账号内容和用户意图选择。', url: 'https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd', linkLabel: '打开飞书文档' },
+      { kind: '案例', title: '视频评论词云', text: '基于一条反复观看的视频评论整理出的词云案例，用来观察评论区的共同情绪和关键词。', url: 'https://siyumenghai.cn/comment-cloud/?v=145e48116133', linkLabel: '查看词云' },
+      { kind: '工具', title: '社群官网视频号工具入口', text: '提供视频下载、逐字稿、评论提取与封面下载等能力，适合把对标素材处理变成固定流程。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '进入工具入口' }
     ],
     themes: [
       { time: '10:34', title: 'AI 在休息时间继续完成任务', text: '群友展示 Codex 自动推进任务的结果，讨论焦点落在如何把一次 AI 对话变成能够持续工作的流程。' },
       { time: '14:03', title: '欢迎百合加入社群', text: '介绍百合的舞蹈教学与 AI 实践背景，随后围绕社群连接、课程反馈与用户证言展开交流。' },
-      { time: '18:53', title: '视频号导流私域的完整诊断', text: '从业务现状和转化链路出发，逐项讨论公众号、评论区、私信、小店和矩阵小号，并补充视频号、抖音、小红书三份导流资料。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看视频号导流资料' }
+      { time: '18:53', title: '视频号导流私域的完整诊断', text: '从业务现状和转化链路出发，逐项讨论公众号、评论区、私信、小店和矩阵小号，并补充视频号、抖音、小红书三份导流资料。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看视频号导流资料' },
+      { time: '21:42', title: '从视频评论生成词云与内容洞察', text: '围绕一条反复观看的视频，分享评论提取、词云生成和 AI 总结结果，讨论如何从评论区理解用户共鸣。', url: 'https://siyumenghai.cn/comment-cloud/?v=145e48116133', linkLabel: '查看评论词云' },
+      { time: '23:04', title: '视频号评论提取工具在官网开放', text: '介绍社群官网中的视频下载、逐字稿、评论提取与封面下载入口，并说明后续音频和批量下载能力。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '进入工具入口' }
     ]
   }
 };
