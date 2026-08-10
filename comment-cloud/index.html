@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>因为相信｜1000条评论动态词云</title>
+    <meta name="description" content="从1000条真实评论里，看见关于梦想、相信与同行的共同回响。" />
+    <meta property="og:title" content="因为相信｜1000条评论动态词云" />
+    <meta property="og:description" content="从1000条真实评论里，看见关于梦想、相信与同行的共同回响。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://siyumenghai.cn/comment-cloud/" />
+    <meta property="og:image" content="https://siyumenghai.cn/comment-cloud/og.jpg" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <link rel="canonical" href="https://siyumenghai.cn/comment-cloud/" />
+    <link rel="icon" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .loading-screen{min-height:100vh;display:grid;place-items:center;background:#f1eadf;color:#17171a;font-family:"Songti SC",serif;font-size:24px}.loading-screen span{animation:pulse 1.7s infinite}.site-shell[hidden]{display:none}.cloud-word{font-family:"Songti SC","STSong",serif}.comments-more[hidden],.filter-note[hidden],.empty-state[hidden]{display:none}.error-screen{padding:48px;text-align:center}
+    </style>
+  </head>
+  <body>
+    <div class="loading-screen" id="loading"><span>正在聚合 1000 条评论 ···</span></div>
+    <main class="site-shell" id="site" hidden>
+      <div class="grain" aria-hidden="true"></div>
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="回到顶部"><span class="brand-mark">信</span><span>评论共振场</span></a>
+        <nav aria-label="页面导航"><a href="#cloud">词云</a><a href="#echoes">回响</a><button class="sound-toggle" id="pauseButton" type="button" aria-label="暂停音乐与页面流动"><span class="pulse-dot"></span><b>暂停流动</b></button></nav>
+      </header>
+
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow"><span id="heroCount">1000</span> 条真实评论 · 一场关于相信的回响</p>
+          <h1>把「相信」<br /><em>写进时间里</em></h1>
+          <p class="hero-lead">年少时什么都没有，只有梦想。多年之后，评论区里的每一个词，都在替那份相信作证。</p>
+          <a class="primary-cta" href="https://weixin.qq.com/sph/AKDTWohN98" target="_blank" rel="noopener noreferrer">观看原视频 <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-art" aria-label="数据概览">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="core-word">相信</div>
+          <div class="stat-card stat-a"><strong id="statComments">1000</strong><span>主评论</span></div>
+          <div class="stat-card stat-b"><strong id="statLikes">—</strong><span>总点赞</span></div>
+          <div class="stat-card stat-c"><strong id="statRegions">—</strong><span>IP 属地</span></div>
+          <p class="side-note">DREAMS<br />COME TRUE</p>
+        </div>
+      </section>
+
+      <section class="ticker" aria-label="高频词滚动展示"><div class="ticker-track" id="tickerTrack">
+        <span><i>✦</i>梦想</span><span><i>✦</i>相信</span><span><i>✦</i>实现</span><span><i>✦</i>灵魂伴侣</span><span><i>✦</i>互相鼓励</span><span><i>✦</i>自信</span><span><i>✦</i>目标</span><span><i>✦</i>感恩</span><span><i>✦</i>成长</span><span><i>✦</i>梦想</span><span><i>✦</i>相信</span><span><i>✦</i>实现</span><span><i>✦</i>灵魂伴侣</span><span><i>✦</i>互相鼓励</span><span><i>✦</i>自信</span><span><i>✦</i>目标</span><span><i>✦</i>感恩</span><span><i>✦</i>成长</span>
+      </div></section>
+
+      <section class="cloud-section" id="cloud">
+        <div class="section-heading"><div><p class="kicker">DATA PORTRAIT / 01</p><h2>评论里，大家<br />最常说什么？</h2></div><p class="section-note">字越大，出现越多。点击任意词，查看它对应的真实评论。</p></div>
+        <div class="cloud-card">
+          <div class="cloud-toolbar"><div class="mode-switch" aria-label="词云权重选择"><button class="active" data-mode="count" type="button">出现频次</button><button data-mode="likes" type="button">点赞热度</button></div><div class="cloud-legend"><span><i class="legend-large"></i>高频</span><span><i class="legend-small"></i>长尾</span></div></div>
+          <div class="cloud-stage" id="cloudStage"><div class="cloud-glow glow-a"></div><div class="cloud-glow glow-b"></div></div>
+          <div class="cloud-foot"><span id="wordTotal">正在生成关键词</span><span id="sourceCount">基于 1000 条主评论自动分词</span></div>
+        </div>
+      </section>
+
+      <section class="spotlight-section">
+        <div class="spotlight-label"><span>此刻回响</span><div class="signal"><i></i><i></i><i></i><i></i></div></div>
+        <blockquote id="spotlightQuote">“正在读取评论……”</blockquote>
+        <div class="spotlight-meta"><span id="spotlightName"></span><span id="spotlightRegion"></span><span id="spotlightLikes"></span></div>
+      </section>
+
+      <section class="echoes-section" id="echoes">
+        <div class="section-heading compact"><div><p class="kicker">REAL VOICES / 02</p><h2>真实评论回响</h2></div><div class="search-wrap"><span aria-hidden="true">⌕</span><input id="searchInput" placeholder="搜索评论或昵称" aria-label="搜索评论或昵称" /></div></div>
+        <div class="filter-note" id="filterNote" hidden><span id="filterText"></span><button id="clearFilter" type="button">清除筛选 ×</button></div>
+        <div class="comment-grid" id="commentGrid"></div>
+        <p class="empty-state" id="emptyState" hidden>没有找到匹配的评论，换个关键词试试。</p>
+        <div class="comments-more" id="commentsMore"><p>已展示 <strong id="shownCount">0</strong> / <span id="matchedCount">0</span> 条评论</p><button id="loadMore" type="button">再看 12 条 <span aria-hidden="true">↓</span></button></div>
+      </section>
+
+      <section class="closing"><p>“秘诀就一条”</p><h2>因为相信，所以看见。</h2><div class="closing-stats"><span><b id="topLike">—</b>最高单条点赞</span><span><b id="replyCount">—</b>附带回复</span><span><b id="keywordCount">—</b>有效词项</span></div></section>
+      <footer class="site-footer"><span>评论共振场 · 2026</span><p id="sourceSummary">基于表格中的 1000 条主评论生成；32 条回复未纳入词频统计。</p><a href="#top">回到顶部 ↑</a></footer>
+    </main>
+    <audio id="themeAudio" autoplay loop preload="auto" playsinline>
+      <source src="audio/zhumeng-chizixin.mp3" type="audio/mpeg" />
+    </audio>
+    <script src="app.js" defer></script>
+  </body>
+</html>
