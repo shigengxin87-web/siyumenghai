@@ -470,6 +470,18 @@ function imageProxyUrl(value) {
   return url ? `${IMAGE_PROXY_API}${encodeURIComponent(url)}` : '';
 }
 
+function highResolutionCoverUrl(value) {
+  const url = validHttpUrl(value);
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.delete('picformat');
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 function mediaProxyUrl(value) {
   const url = validHttpUrl(value);
   return url ? new URL(`${MEDIA_PROXY_API}${encodeURIComponent(url)}`, window.location.origin).toString() : '';
@@ -1400,8 +1412,9 @@ async function downloadCover() {
 
   coverDownloadButton.disabled = true;
   showStatus('正在准备封面图片…');
+  const downloadUrl = highResolutionCoverUrl(url);
   try {
-    const response = await fetch(imageProxyUrl(url));
+    const response = await fetch(imageProxyUrl(downloadUrl));
     if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
@@ -1415,7 +1428,7 @@ async function downloadCover() {
     showStatus('封面下载已经开始');
   } catch (error) {
     const link = document.createElement('a');
-    link.href = imageProxyUrl(url);
+    link.href = imageProxyUrl(downloadUrl);
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.click();
