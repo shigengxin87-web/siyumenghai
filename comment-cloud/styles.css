@@ -186,10 +186,7 @@ a { color: inherit; text-decoration: none; }
 .closing::after { right: -40px; bottom: -50px; transform: rotate(8deg); }
 .closing > * { position: relative; z-index: 1; }
 .closing p { letter-spacing: .25em; font-weight: 700; }
-.closing h2 { font: 800 clamp(48px, 7vw, 92px)/1.1 "Songti SC", serif; margin: 28px 0 56px; letter-spacing: -.04em; }
-.closing-stats { display: flex; justify-content: center; gap: 70px; }
-.closing-stats span { font-size: 12px; letter-spacing: .08em; }
-.closing-stats b { display: block; font: 700 34px/1.3 Georgia, serif; }
+.closing h2 { font: 800 clamp(48px, 7vw, 92px)/1.1 "Songti SC", serif; margin: 28px 0 0; letter-spacing: -.04em; }
 
 .site-footer { min-height: 108px; padding: 0 max(24px, calc((100vw - 1240px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 30px; background: var(--ink); color: rgba(255,255,255,.65); font-size: 12px; }
 .site-footer p { text-align: center; }
@@ -255,8 +252,8 @@ a { color: inherit; text-decoration: none; }
   .comment-expand { min-height: 34px; margin-bottom: 12px; }
   .filter-note { align-items: start; }
   .closing { margin-top: 50px; padding: 90px 20px; }
-  .closing-stats { gap: 24px; }
-  .closing-stats b { font-size: 28px; }
+  .closing h2 span { display: block; white-space: nowrap; }
+  .closing h2 span + span { margin-top: .22em; }
   .site-footer { padding: 28px 20px; display: grid; text-align: center; justify-items: center; }
 }
 

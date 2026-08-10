@@ -149,15 +149,11 @@ async function init() {
     keywordBase = buildKeywords();
     const totalLikes = mainComments.reduce((sum, item) => sum + (Number(item["点赞数"]) || 0), 0);
     const regionCount = new Set(mainComments.map((item) => item["IP属地"]).filter(Boolean)).size;
-    const topLike = Math.max(...mainComments.map((item) => Number(item["点赞数"]) || 0));
     document.title = `因为相信｜${mainComments.length}条评论动态词云`;
     $("#heroCount").textContent = mainComments.length;
     $("#statComments").textContent = mainComments.length;
     $("#statLikes").textContent = totalLikes.toLocaleString("zh-CN");
     $("#statRegions").textContent = regionCount;
-    $("#topLike").textContent = topLike;
-    $("#replyCount").textContent = replies.length;
-    $("#keywordCount").textContent = keywordBase.length;
     $("#sourceCount").textContent = `基于 ${mainComments.length} 条主评论自动分词`;
     $("#sourceSummary").textContent = `基于表格中的 ${mainComments.length} 条主评论生成；${replies.length} 条回复未纳入词频统计。`;
     const featured = [...mainComments].sort((a, b) => Number(b["点赞数"]) - Number(a["点赞数"])).slice(0, 12);
