@@ -169,14 +169,42 @@ async function init() {
 }
 
 document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", () => { mode = button.dataset.mode; document.querySelectorAll("[data-mode]").forEach((item) => item.classList.toggle("active", item === button)); renderCloud(); }));
-$("#pauseButton").addEventListener("click", () => { isPaused = !isPaused; $("#pauseButton b").textContent = isPaused ? "继续流动" : "暂停流动"; $("#pauseButton .pulse-dot").classList.toggle("paused", isPaused); $("#cloudStage").classList.toggle("paused", isPaused); $("#tickerTrack").classList.toggle("paused", isPaused); });
 const themeAudio = $("#themeAudio");
 themeAudio.volume = .58;
+let audioNeedsGesture = false;
+const activationEvents = ["click", "pointerup", "touchend", "keydown"];
 
-function startThemeAudio() {
-  if (isPaused || !themeAudio.paused) return;
-  const attempt = themeAudio.play();
-  if (attempt?.catch) attempt.catch(() => {});
+function updatePauseButton() {
+  const button = $("#pauseButton");
+  const needsStart = audioNeedsGesture && !isPaused && themeAudio.paused;
+  button.querySelector("b").textContent = needsStart ? "开启音乐" : (isPaused ? "继续流动" : "暂停流动");
+  button.setAttribute("aria-label", needsStart ? "开启音乐" : (isPaused ? "继续音乐与页面流动" : "暂停音乐与页面流动"));
+  button.querySelector(".pulse-dot").classList.toggle("paused", isPaused || needsStart);
+}
+
+function disarmAudioUnlock() {
+  activationEvents.forEach((eventName) => document.removeEventListener(eventName, unlockThemeAudio, true));
+}
+
+async function startThemeAudio() {
+  if (isPaused) return false;
+  if (!themeAudio.paused) {
+    audioNeedsGesture = false;
+    updatePauseButton();
+    disarmAudioUnlock();
+    return true;
+  }
+  try {
+    await themeAudio.play();
+    audioNeedsGesture = false;
+    updatePauseButton();
+    disarmAudioUnlock();
+    return true;
+  } catch {
+    audioNeedsGesture = true;
+    updatePauseButton();
+    return false;
+  }
 }
 
 function syncPauseState() {
@@ -184,13 +212,31 @@ function syncPauseState() {
   else startThemeAudio();
 }
 
-$("#pauseButton").addEventListener("click", syncPauseState);
+function unlockThemeAudio(event) {
+  if (event.target instanceof Element && event.target.closest("#pauseButton")) return;
+  startThemeAudio();
+}
+
+activationEvents.forEach((eventName) => document.addEventListener(eventName, unlockThemeAudio, true));
+$("#pauseButton").addEventListener("click", async () => {
+  if (!isPaused && themeAudio.paused && audioNeedsGesture) {
+    await startThemeAudio();
+    return;
+  }
+  isPaused = !isPaused;
+  $("#cloudStage").classList.toggle("paused", isPaused);
+  $("#tickerTrack").classList.toggle("paused", isPaused);
+  updatePauseButton();
+  syncPauseState();
+});
 window.addEventListener("load", startThemeAudio, { once: true });
 document.addEventListener("DOMContentLoaded", startThemeAudio, { once: true });
 document.addEventListener("WeixinJSBridgeReady", startThemeAudio, { once: true });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) startThemeAudio(); });
-["touchstart", "pointerdown", "keydown"].forEach((eventName) => {
-  document.addEventListener(eventName, startThemeAudio, { once: true, passive: true });
+themeAudio.addEventListener("playing", () => {
+  audioNeedsGesture = false;
+  updatePauseButton();
+  disarmAudioUnlock();
 });
 $("#searchInput").addEventListener("input", (event) => { query = event.target.value; selectedWord = null; visibleCount = 12; renderCloud(); renderComments(); });
 $("#clearFilter").addEventListener("click", () => { selectedWord = null; visibleCount = 12; renderCloud(); renderComments(); });
