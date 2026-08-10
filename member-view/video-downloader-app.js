@@ -26,6 +26,7 @@ const transcriptText = document.querySelector('[data-transcript-text]');
 const transcriptSwitch = document.querySelector('[data-transcript-switch]');
 const transcriptViewButtons = [...document.querySelectorAll('[data-transcript-view]')];
 const commentButton = document.querySelector('[data-comment-action]');
+const commentRefreshButton = document.querySelector('[data-comment-refresh]');
 const commentExcelButton = document.querySelector('[data-comment-excel]');
 const commentStatus = document.querySelector('[data-comment-status]');
 const commentText = document.querySelector('[data-comment-text]');
@@ -449,6 +450,7 @@ function resetComments() {
   commentText.hidden = !cached;
   commentButton.disabled = false;
   commentButton.textContent = cached ? '复制评论' : '提取并复制评论';
+  commentRefreshButton.hidden = !cached;
   commentExcelButton.hidden = false;
   if (cached) showCommentStatus('已读取本机缓存的评论，可直接复制或导出 Excel。');
   else renderLocalHelperPrompt();
@@ -1105,10 +1107,10 @@ async function fetchLocalComments(objectId, nonceId) {
   return comments;
 }
 
-async function extractCurrentComments() {
+async function extractCurrentComments(forceRefresh = false) {
   if (!currentVideo?.shareUrl) return;
   const existingText = commentText.value.trim();
-  if (existingText) {
+  if (existingText && !forceRefresh) {
     const copied = await copyText(existingText, commentText);
     showCommentStatus(copied ? '评论区内容已复制到剪贴板。' : '请长按或全选下方评论后复制。', copied ? '' : 'error');
     return;
@@ -1141,6 +1143,7 @@ async function extractCurrentComments() {
     commentText.hidden = false;
     saveComments(video.shareUrl, text, currentCommentRows);
     commentButton.textContent = '复制评论';
+    commentRefreshButton.hidden = false;
     commentExcelButton.hidden = false;
     const copied = await copyText(text, commentText);
     const limited = comments.length >= COMMENT_LIMIT ? `（已达到 ${COMMENT_LIMIT} 条上限）` : '';
@@ -1164,6 +1167,7 @@ window.addEventListener('message', (event) => {
   commentText.value = text;
   commentText.hidden = false;
   commentButton.textContent = '复制评论';
+  commentRefreshButton.hidden = false;
   commentExcelButton.hidden = false;
   saveComments(currentVideo?.shareUrl, text, currentCommentRows);
   showCommentStatus(String(event.data.message || '评论已提取并复制。'));
@@ -1466,7 +1470,8 @@ transcriptSwitch.addEventListener('click', (event) => {
   const target = event.target.closest('[data-transcript-view]');
   if (target) showTranscriptView(target.dataset.transcriptView);
 });
-commentButton.addEventListener('click', extractCurrentComments);
+commentButton.addEventListener('click', () => extractCurrentComments(false));
+commentRefreshButton.addEventListener('click', () => extractCurrentComments(true));
 commentExcelButton.addEventListener('click', exportCommentsExcel);
 commentStatus.addEventListener('click', async (event) => {
   const entry = event.target.closest('[data-local-helper-entry]');
