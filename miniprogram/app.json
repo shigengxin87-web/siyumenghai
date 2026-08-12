@@ -2,7 +2,9 @@
   "pages": [
     "pages/home/index",
     "pages/archive/index",
-    "pages/members/index"
+    "pages/members/index",
+    "pages/tools/index",
+    "pages/webview/index"
   ],
   "window": {
     "navigationBarTitleText": "成长朋友圈",
@@ -28,9 +30,14 @@
       {
         "pagePath": "pages/members/index",
         "text": "群友名录"
+      },
+      {
+        "pagePath": "pages/tools/index",
+        "text": "社群工具"
       }
     ]
   },
+  "lazyCodeLoading": "requiredComponents",
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

@@ -1,15 +1,15 @@
-<view class="members-page">
+<view class="members-page page-enter">
   <view class="members-hero">
-    <text class="kicker">WHO'S HERE · 群友名录</text>
-    <text class="title">在这里，认识一起成长的人</text>
-    <text class="desc">按进群时间排列，目前共 {{members.length}} 位群友。这里只展示公开昵称和头像。</text>
+    <view><text class="kicker">WHO'S HERE</text><text class="title">群友名录</text></view>
+    <view class="member-total"><text>{{members.length}}</text><text>位群友</text></view>
+    <text class="desc">按进群时间排列。这里展示大家在群里的公开昵称和头像。</text>
   </view>
-  <view class="search-wrap"><input type="text" value="{{query}}" placeholder="输入昵称查找" confirm-type="search" bindinput="onSearch" /></view>
-  <view class="result-count">找到 {{filteredMembers.length}} 位群友</view>
+  <view class="search-wrap"><view class="search-box"><text>⌕</text><input type="text" value="{{query}}" placeholder="输入昵称查找" confirm-type="search" bindinput="onSearch" /></view></view>
+  <view class="result-count"><text>找到 {{filteredMembers.length}} 位群友</text><text>按进群顺序</text></view>
   <view class="member-grid">
     <view class="member-card" wx:for="{{filteredMembers}}" wx:key="order">
       <text class="number">{{item.number}}</text>
-      <image src="{{item.avatar}}" mode="aspectFill" />
+      <image src="{{item.avatar}}" mode="aspectFill" lazy-load="true" />
       <text class="name">{{item.name}}</text>
     </view>
   </view>

@@ -1,0 +1,7 @@
+<web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onWebError" />
+<view class="fallback page-enter" wx:else>
+  <view class="fallback-icon">下</view>
+  <text class="title">暂时无法在小程序内打开</text>
+  <text class="desc">工具地址可以继续正常使用。复制后粘贴到系统浏览器即可。</text>
+  <button bindtap="copyUrl">复制工具地址</button>
+</view>

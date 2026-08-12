@@ -1,0 +1,6 @@
+.fallback { min-height: 100vh; padding: 150rpx 55rpx; box-sizing: border-box; background: #f5f8f6; text-align: center; }
+.fallback-icon { display: flex; align-items: center; justify-content: center; width: 100rpx; height: 100rpx; margin: 0 auto 28rpx; border-radius: 29rpx; background: #e7f8f0; color: #08795c; font-size: 40rpx; font-weight: 900; }
+.fallback text { display: block; }
+.title { font-size: 36rpx; font-weight: 900; }
+.desc { margin-top: 17rpx; color: #64766f; font-size: 24rpx; line-height: 1.7; }
+.fallback button { height: 72rpx; margin-top: 35rpx; border-radius: 36rpx; background: #08795c; color: #fff; font-size: 24rpx; line-height: 72rpx; }

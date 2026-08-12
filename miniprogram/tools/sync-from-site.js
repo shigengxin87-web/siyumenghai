@@ -21,7 +21,15 @@ function normalizedLinks(item) {
     : item.url
       ? [{ label: item.linkLabel || '查看完整内容', url: item.url }]
       : [];
-  return candidates.filter((link) => /^https?:\/\//.test(link.url || ''));
+  return candidates
+    .map((link) => {
+      if (/^https?:\/\//.test(link.url || '')) return link;
+      if (/^\.\//.test(link.url || '')) {
+        return { ...link, url: `https://siyumenghai.cn/member-view/${link.url.replace(/^\.\//, '')}` };
+      }
+      return link;
+    })
+    .filter((link) => /^https?:\/\//.test(link.url || ''));
 }
 
 function prepareItem(item) {

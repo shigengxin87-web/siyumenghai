@@ -1,14 +1,18 @@
-.members-page { min-height: 100vh; padding: 30rpx; box-sizing: border-box; }
-.members-hero { padding: 32rpx 8rpx 28rpx; }
-.kicker { display: block; color: #0a8f6a; font-size: 22rpx; font-weight: 800; letter-spacing: 1rpx; }
-.title { display: block; font-size: 46rpx; font-weight: 900; line-height: 1.25; margin: 16rpx 0; }
-.desc { display: block; color: #60766f; line-height: 1.7; }
-.search-wrap { position: sticky; top: 0; z-index: 5; padding: 12rpx 0 20rpx; background: #f6fbf8; }
-.search-wrap input { height: 86rpx; border: 1rpx solid #d8e9e2; border-radius: 24rpx; background: #fff; padding: 0 26rpx; box-sizing: border-box; }
-.result-count { color: #73877f; font-size: 23rpx; margin: 4rpx 4rpx 20rpx; }
-.member-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18rpx; }
-.member-card { position: relative; min-height: 260rpx; padding: 24rpx 18rpx; box-sizing: border-box; border: 1rpx solid #e0ece7; border-radius: 26rpx; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10rpx 28rpx rgba(30,82,66,.05); }
-.member-card .number { position: absolute; left: 18rpx; top: 16rpx; color: #87aa9f; font-size: 20rpx; font-weight: 800; }
-.member-card image { width: 112rpx; height: 112rpx; border-radius: 50%; background: #eaf4f0; }
-.member-card .name { margin-top: 18rpx; font-size: 24rpx; line-height: 1.35; text-align: center; word-break: break-all; }
-.empty { padding: 80rpx 20rpx; text-align: center; color: #7b9088; }
+.members-page { min-height: 100vh; padding: 28rpx; box-sizing: border-box; }
+.members-hero { position: relative; padding: 29rpx 7rpx 27rpx; }
+.kicker { display: block; color: #09815f; font-size: 20rpx; font-weight: 850; letter-spacing: 2rpx; }
+.title { display: block; margin-top: 8rpx; font-size: 48rpx; font-weight: 950; }
+.member-total { position: absolute; top: 30rpx; right: 6rpx; display: flex; flex-direction: column; align-items: flex-end; color: #71857d; font-size: 19rpx; }
+.member-total text:first-child { color: #08795c; font-size: 40rpx; font-weight: 900; }
+.desc { display: block; margin-top: 13rpx; padding-right: 120rpx; color: #65776f; font-size: 23rpx; line-height: 1.65; }
+.search-wrap { position: sticky; top: 0; z-index: 6; margin: 0 -28rpx; padding: 13rpx 28rpx 18rpx; background: rgba(245,248,246,.96); }
+.search-box { display: flex; align-items: center; gap: 12rpx; height: 82rpx; padding: 0 24rpx; border: 1rpx solid #dce7e2; border-radius: 23rpx; background: #fff; }
+.search-box > text { color: #7d9088; font-size: 30rpx; }
+.search-box input { flex: 1; font-size: 24rpx; }
+.result-count { display: flex; justify-content: space-between; padding: 13rpx 4rpx 19rpx; color: #81918b; font-size: 21rpx; }
+.member-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13rpx; }
+.member-card { position: relative; min-height: 218rpx; padding: 24rpx 9rpx 18rpx; box-sizing: border-box; border: 1rpx solid #dfeae5; border-radius: 23rpx; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8rpx 22rpx rgba(30,75,61,.045); }
+.member-card .number { position: absolute; top: 11rpx; left: 13rpx; color: #63a793; font-size: 17rpx; font-weight: 850; }
+.member-card image { width: 94rpx; height: 94rpx; border: 5rpx solid #edf9f4; border-radius: 50%; background: #e7efeb; }
+.member-card .name { display: -webkit-box; overflow: hidden; width: 100%; margin-top: 13rpx; color: #21342d; font-size: 21rpx; line-height: 1.35; text-align: center; word-break: break-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.empty { padding: 80rpx 20rpx; color: #7b9088; text-align: center; }

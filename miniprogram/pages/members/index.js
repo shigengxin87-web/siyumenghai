@@ -17,7 +17,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: `成长朋友圈｜${members.length} 位群友名录`,
+      title: `石董会｜${members.length} 位群友名录`,
       path: '/pages/members/index',
     };
   },
