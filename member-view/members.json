@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一同成长朋友圈",
   "count": 48,
-  "updatedAt": "2026-08-12T00:07:17+08:00",
+  "updatedAt": "2026-08-12T00:15:00+08:00",
   "members": [
     {
       "name": "石更新（23:00睡觉）",
@@ -33,7 +33,7 @@
     },
     {
       "name": "李鑫",
-      "avatar": "./assets/members/member-08.jpg?v=20260812000717"
+    "avatar": "./assets/members/member-08.jpg?v=20260812001500"
     },
     {
       "name": "康老师本人",
@@ -193,7 +193,7 @@
     },
     {
       "name": "丸子",
-      "avatar": "./assets/members/member-48.jpg?v=20260812000717"
+    "avatar": "./assets/members/member-48.jpg?v=20260812001500"
     }
   ]
 }
