@@ -876,6 +876,48 @@ const days = {
       { time: '17:01', title: '低转高团队的旧经验与新短板', text: '从熟悉业务的近况出发，反思过往优势在今天可能带来的限制，并讨论少人、清晰分工和减少内部竞争的管理取舍。', url: 'https://my.feishu.cn/wiki/Nkf1wNXjniGGfhkjEBOc3xiSn4d?from=from_copylink', linkLabel: '阅读完整洞察' },
       { time: '23:47', title: '欢迎丸子加入社群', text: '介绍新成员的品牌运营、线下用户体验与创业经历，并分享她接下来深耕心理学的方向。' }
     ]
+  },
+  '2026-08-12': {
+    dateLabel: '2026 年 8 月 12 日', weekday: '星期三', messages: 105, themesCount: 6, readTime: '7 分钟',
+    title: '从直播变现倒推产品节奏，把 AI 工具真正装进日常工作',
+    summary: '今天从民宿经营的选址、房型与回本周期聊起，随后重点为英语教师同行业务拆解直播和产品节奏：不把涨粉当作唯一目标，而是用 298 元课程持续拉新与交付、498 元知识圈承接复购，并提前测试 2980 元线下师训。下午继续交流技能安装、视频号工具、Codex 协作和内容工作台；晚间解决旧电脑聊天记录迁移到新 Mac 的常见问题，讨论 AI 开发环境选择，并分享微信小微进入财报后的体验入口。最后欢迎依灵加入社群。',
+    insights: [
+      { roles: ['private', 'product'], tag: '直播变现', source: '英语韩老师 × 石更新 × 群友', time: '11:34', title: '直播策略要从产品和成交目标倒推，而不是只比较涨粉快慢', text: '面对抖音答疑直播精准但涨粉慢、上课直播涨粉更快却容易被举报的两难，当天先补齐现有产品、交付和客单价，再把直播任务拆成日常拉新、复购与高客单测试。这样平台选择和内容形式都有明确的商业终点。', url: 'https://my.feishu.cn/wiki/VXWSwLClTi3oiEkc4HccgroynMD?from=from_copylink', linkLabel: '查看完整解答' },
+      { roles: ['private', 'product'], tag: '轻团队', source: '石更新', time: '16:07', title: '百元课用来养，千元课用来收，高客单可以先卖再定期交付', text: '298 元师训可持续拉新，498 元知识圈承接日常复购，线下课则按月集中测试。先用本人、线上辅助和现场小助理跑通轻团队模型，等线下课形成声量后，再决定保持中转高还是切换其他获客与转化方式。' },
+      { roles: ['content', 'product'], tag: '工具共享', source: '石更新 × 群友', time: '17:29', title: '把个人脚本做成网站入口，再把本地能力交给成员安装', text: '当天继续拆解视频号下载、逐字稿和本地助手的差异，也鼓励成员在额度不足时互相协作。工具被封装成可直接访问或安装的入口后，个人经验才更容易变成社群可复用的基础设施。' },
+      { roles: ['product', 'content'], tag: '设备迁移', source: '一月语文 × 石更新 × 群友', time: '18:49', title: '换到新 Mac 前，先把手机里的微信记录完整同步过去', text: '针对 Windows 旧聊天记录能否继续使用的问题，当天形成了从手机同步记录到新 Mac、再安装本地技能的操作入口。讨论也延伸到 Mac 与 Windows 在 AI 工具、路径处理和软件适配上的差异。', url: 'https://my.feishu.cn/wiki/GHrQwMgJ2irMQtkkALEcNf04ngg?from=from_copylink', linkLabel: '查看迁移与安装提示词' },
+      { roles: ['product', 'content'], tag: '微信 AI', source: '石更新', time: '22:06', title: '微信小微进入财报，让微信内 AI 的产品位置更清晰', text: '当天分享微信小微首次出现在财报相关内容中的消息，并补充没有内测入口时的快速体验方法。它既是产品进展，也为社群成员观察微信内 AI 的入口与使用场景提供了新样本。', links: [
+        { label: '阅读微信小微财报文章', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NjM4MDAxMg==&mid=2655157375&idx=1&sn=2884137c9b8cb017230dc08e63ce1396&chksm=bc7318d121114d24eed14bc406829b4307f3c20c7f5244e18356b3c644cf193aac7253ddfa55&mpshare=1&scene=1&srcid=0812L4aCtw3x3W8TDHCqhH3L&sharer_shareinfo=8614b8252fbe9b857027ad2a47fb9980&sharer_shareinfo_first=8614b8252fbe9b857027ad2a47fb9980#rd' },
+        { label: '查看快速体验方法', url: 'https://my.feishu.cn/wiki/PhCNwqk7miXjLVkmCH4cCXDEnVd?from=from_copylink' }
+      ] }
+    ],
+    actions: [
+      { title: '给每种直播写清唯一任务', text: '分别标注这场直播是拉新、卖 298 元课程、推动 498 元复购，还是测试 2980 元线下课，再选择内容形式与平台。', url: 'https://my.feishu.cn/wiki/VXWSwLClTi3oiEkc4HccgroynMD?from=from_copylink', linkLabel: '参考直播问题解答' },
+      { title: '提前测试一次线下课', text: '确定一个可交付日期和最小班型，在现有 298 元学员热度仍在时先发售，验证高客单需求而不急着扩团队。' },
+      { title: '完成旧电脑到新 Mac 的微信迁移', text: '先从手机把聊天记录同步到新 Mac，再安装所需技能并验证能够读取目标记录。', url: 'https://my.feishu.cn/wiki/GHrQwMgJ2irMQtkkALEcNf04ngg?from=from_copylink', linkLabel: '使用一键安装提示词' },
+      { title: '按实际 AI 工作流选电脑', text: '不要只比较参数；把常用工具、系统适配、路径兼容和后续扩展列出来，再决定是否换 Mac。', url: 'https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=MzI1MTUxNzgxMA==&mid=2247501978&idx=1&sn=8f3b209ae7ce305dbe94e32729f4d99e&from_masonry=1&sharer_shareinfo_first=07bb6cca1f7dac3cbda6079e1bc597ad&sharer_shareinfo=07bb6cca1f7dac3cbda6079e1bc597ad#wechat_redirect', linkLabel: '阅读 MacBook 选购文章' }
+    ],
+    resources: [
+      { kind: '文档', title: '韩老师直播问题解答：以终为始，从变现倒推', text: '围绕教师同行赛道、直播安全、涨粉速度和现有产品结构给出的完整拆解。', url: 'https://my.feishu.cn/wiki/VXWSwLClTi3oiEkc4HccgroynMD?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '提示词', title: '手机同步微信聊天记录到新 Mac', text: '用于解决换电脑后保留微信记录并安装本地读取技能的常见迁移问题。', url: 'https://my.feishu.cn/wiki/GHrQwMgJ2irMQtkkALEcNf04ngg?from=from_copylink', linkLabel: '打开安装提示词' },
+      { kind: '文章', title: '聊聊 MacBook 的几个秘密，看完省钱', text: '当天围绕 AI 工具为何更常在 Mac 上使用展开讨论时转发的选购参考。', url: 'https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=MzI1MTUxNzgxMA==&mid=2247501978&idx=1&sn=8f3b209ae7ce305dbe94e32729f4d99e&from_masonry=1&sharer_shareinfo_first=07bb6cca1f7dac3cbda6079e1bc597ad&sharer_shareinfo=07bb6cca1f7dac3cbda6079e1bc597ad#wechat_redirect', linkLabel: '阅读公众号文章' },
+      { kind: '文章', title: '微信小微首登财报', text: '记录微信小微进入财报相关内容的产品进展，适合继续观察微信内 AI 的定位与入口。', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NjM4MDAxMg==&mid=2655157375&idx=1&sn=2884137c9b8cb017230dc08e63ce1396&chksm=bc7318d121114d24eed14bc406829b4307f3c20c7f5244e18356b3c644cf193aac7253ddfa55&mpshare=1&scene=1&srcid=0812L4aCtw3x3W8TDHCqhH3L&sharer_shareinfo=8614b8252fbe9b857027ad2a47fb9980&sharer_shareinfo_first=8614b8252fbe9b857027ad2a47fb9980#rd', linkLabel: '阅读微信派文章' },
+      { kind: '指南', title: '微信小微快速体验入口', text: '面向暂时没有内测入口的用户，整理快速体验微信小微的方法。', url: 'https://my.feishu.cn/wiki/PhCNwqk7miXjLVkmCH4cCXDEnVd?from=from_copylink', linkLabel: '打开飞书指南' }
+    ],
+    themes: [
+      { time: '00:02', title: '民宿选址与回本周期', text: '从禾木是否适合做民宿聊到院子、房间数量、消防、当地协作与投资回收周期，强调好位置之外还有一整套经营约束。' },
+      { time: '11:34', title: '教师同行直播与产品节奏诊断', text: '围绕精准涨粉、举报风险和三档产品，形成从变现目标倒推直播内容、用轻团队推进高客单测试的方案。', url: 'https://my.feishu.cn/wiki/VXWSwLClTi3oiEkc4HccgroynMD?from=from_copylink', linkLabel: '查看完整解答' },
+      { time: '15:39', title: '技能安装、视频号工具与社群协作', text: '说明文件型和网址型技能怎样交给 AI 安装，继续拆解网站工具与本地助手，并鼓励成员在额度和项目上互相支持。' },
+      { time: '18:49', title: '微信记录迁移与 AI 电脑选择', text: '先解决 Windows 旧记录怎样随手机迁移到新 Mac，再讨论系统适配、路径处理、内存与存储选择。', links: [
+        { label: '查看迁移提示词', url: 'https://my.feishu.cn/wiki/GHrQwMgJ2irMQtkkALEcNf04ngg?from=from_copylink' },
+        { label: '阅读 MacBook 文章', url: 'https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=MzI1MTUxNzgxMA==&mid=2247501978&idx=1&sn=8f3b209ae7ce305dbe94e32729f4d99e&from_masonry=1&sharer_shareinfo_first=07bb6cca1f7dac3cbda6079e1bc597ad&sharer_shareinfo=07bb6cca1f7dac3cbda6079e1bc597ad#wechat_redirect' }
+      ] },
+      { time: '22:06', title: '微信小微进入财报与快速体验', text: '分享微信小微首登财报的文章，并补充没有内测入口时的体验方法。', links: [
+        { label: '阅读财报相关文章', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NjM4MDAxMg==&mid=2655157375&idx=1&sn=2884137c9b8cb017230dc08e63ce1396&chksm=bc7318d121114d24eed14bc406829b4307f3c20c7f5244e18356b3c644cf193aac7253ddfa55&mpshare=1&scene=1&srcid=0812L4aCtw3x3W8TDHCqhH3L&sharer_shareinfo=8614b8252fbe9b857027ad2a47fb9980&sharer_shareinfo_first=8614b8252fbe9b857027ad2a47fb9980#rd' },
+        { label: '查看快速体验方法', url: 'https://my.feishu.cn/wiki/PhCNwqk7miXjLVkmCH4cCXDEnVd?from=from_copylink' }
+      ] },
+      { time: '22:30', title: '欢迎依灵加入社群', text: '介绍新成员的学习背景与文化项目经验，她也表达了与群友交流、探讨和互相学习的意愿。' }
+    ]
   }
 };
 
