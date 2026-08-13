@@ -1413,7 +1413,7 @@ function render(historyMode = 'replace') {
   else if (state.view === 'resources') content.innerHTML = renderResources();
   else if (state.view === 'discussion') content.innerHTML = renderDiscussion();
   else content.innerHTML = renderOverview();
-  const nextUrl = `#${state.day}/${state.view}`;
+  const nextUrl = `${window.location.pathname}#${state.day}/${state.view}`;
   if (historyMode === 'push') history.pushState({ day: state.day, view: state.view }, '', nextUrl);
   else if (historyMode === 'replace') history.replaceState({ day: state.day, view: state.view }, '', nextUrl);
   bindDynamicEvents();
