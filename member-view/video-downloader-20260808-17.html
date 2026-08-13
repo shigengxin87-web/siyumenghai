@@ -113,7 +113,7 @@
               <p class="download-tip">如果手机浏览器没有直接保存，请长按视频或在浏览器菜单中选择下载。</p>
               <div class="transcript-card" data-transcript-card>
                 <div class="transcript-heading">
-                  <div><strong>中文视频逐字稿</strong><small>优先提取独立字幕轨；没有字幕轨时自动提取音频并识别人声；单条最长 10 分钟</small></div>
+                  <div><strong>中文视频逐字稿</strong><small>智能生成并校准逐字稿；单条最长 10 分钟</small></div>
                   <button type="button" data-transcript-action>生成并复制逐字稿</button>
                 </div>
                 <p class="transcript-status" data-transcript-status role="status" aria-live="polite">建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快、更准</strong>）</p>
@@ -125,7 +125,7 @@
               </div>
               <div class="transcript-card" data-comment-card>
                 <div class="transcript-heading">
-                  <div><strong>视频评论区</strong><small>纯脚本提取，不消耗模型 Token；最多提取 1000 条主评论</small></div>
+                  <div><strong>视频评论区</strong><small>自动提取；最多提取 1000 条主评论</small></div>
                   <div class="comment-actions">
                     <button type="button" data-comment-action>提取并复制评论</button>
                     <button type="button" class="is-secondary" data-comment-refresh hidden>重新提取评论</button>
@@ -158,7 +158,7 @@
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
-  <script src="./video-downloader-app-v37.js?v=20260813-context-1"></script>
+  <script src="./video-downloader-app-v38.js?v=20260813-accuracy-1"></script>
   <script src="./video-batch.js?v=20260808-31-final"></script>
 </body>
 </html>

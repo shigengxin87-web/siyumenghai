@@ -24,7 +24,7 @@ MAX_QUEUE = 20
 MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
 JOB_SECONDS = 86400
-PIPELINE_VERSION = "subtitle-track-asr-v2"
+PIPELINE_VERSION = "transcript-accuracy-v1"
 MIN_FREE_BYTES = 6 * 1024 * 1024 * 1024
 
 JOBS_DIR = DATA_DIR / "jobs"
@@ -187,17 +187,12 @@ def public_job(job):
                 "text": job.get("text", ""),
                 "segments": job.get("segments", []),
                 "audio_text": job.get("audio_text", ""),
-                "ocr_text": job.get("ocr_text", ""),
-                "source": job.get("source", "asr"),
+                "raw_segments": job.get("raw_segments", []),
+                "calibration_status": job.get("deepseek_status", "disabled"),
+                "calibration_changes": job.get("deepseek_changes", []),
+                "source": "calibrated" if job.get("deepseek_status") == "applied" else "original",
                 "duration": job.get("duration"),
                 "elapsed": job.get("elapsed"),
-                "model": job.get("model"),
-                "pipeline_version": job.get("pipeline_version"),
-                "ocr_elapsed": job.get("ocr_elapsed", 0),
-                "ocr_source": job.get("ocr_source", "unavailable"),
-                "ocr_region": job.get("ocr_region"),
-                "ocr_confidence": job.get("ocr_confidence", 0),
-                "fusion_similarity": job.get("fusion_similarity", 0),
                 "cached": bool(job.get("cached")),
             })
         elif status == "error":
@@ -257,7 +252,7 @@ def worker_loop():
             if job_id in pending:
                 pending.remove(job_id)
             current_job_id = job_id
-            job.update(status="running", stage="正在检查字幕轨并识别人声", started_at=now(), updated_at=now())
+            job.update(status="running", stage="正在生成逐字稿", started_at=now(), updated_at=now())
             persist(job)
 
         job_dir = TMP_DIR / job_id
@@ -288,6 +283,10 @@ def worker_loop():
                 "text": value["text"],
                 "segments": value.get("segments", []),
                 "audio_text": value.get("audio_text", ""),
+                "raw_segments": value.get("raw_segments", []),
+                "deepseek_status": value.get("deepseek_status", "disabled"),
+                "deepseek_changes": value.get("deepseek_changes", []),
+                "deepseek_usage": value.get("deepseek_usage", {}),
                 "ocr_text": value.get("ocr_text", ""),
                 "source": value.get("source", "asr"),
                 "duration": value.get("duration"),
@@ -349,7 +348,7 @@ class Handler(BaseHTTPRequestHandler):
         if parsed_path.path == "/healthz":
             with lock:
                 self.send_json(200, {
-                    "ok": True, "model": "large-v3-turbo", "running": bool(current_job_id), "queued": len(pending),
+                    "ok": True, "running": bool(current_job_id), "queued": len(pending),
                     "today": daily_count(), "daily_limit": MAX_GLOBAL_DAILY,
                     "user_daily_limit": MAX_USER_DAILY, "user_active_limit": MAX_USER_ACTIVE,
                     "max_video_seconds": MAX_VIDEO_SECONDS,

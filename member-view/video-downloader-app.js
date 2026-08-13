@@ -36,7 +36,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v8-context';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v9-accuracy';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v1';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
@@ -143,7 +143,9 @@ function cachedTranscript(shareUrl) {
     correctionCount: Number(item.correctionCount || 0),
     source: String(item.source || 'asr'),
     audioRaw: typeof item.audioRaw === 'string' ? item.audioRaw : '',
-    pipelineVersion: String(item.pipelineVersion || '')
+    pipelineVersion: String(item.pipelineVersion || ''),
+    calibrationStatus: String(item.calibrationStatus || ''),
+    calibrationChanges: Number(item.calibrationChanges || 0)
   };
 }
 
@@ -730,9 +732,12 @@ function buildTranscriptResult(result, video) {
   const correctedSource = Array.isArray(result?.segments) && result.segments.length
     ? result.segments.map((item) => String(item?.text || '').trim()).filter(Boolean)
     : String(result?.text || '').split('\n').map((item) => item.trim()).filter(Boolean);
+  const rawSource = Array.isArray(result?.raw_segments) && result.raw_segments.length
+    ? result.raw_segments.map((item) => String(item?.text || '').trim()).filter(Boolean).join('\n')
+    : String(result?.audio_text || result?.text || '');
   const originalText = source === 'ocr_asr_fusion' && String(result?.ocr_text || '').trim()
     ? String(result.ocr_text)
-    : String(result?.text || '');
+    : rawSource;
   const rawSegments = originalText.split('\n').map((item) => item.trim()).filter(Boolean);
   const terms = transcriptHotTerms(video);
   let correctionCount = 0;
@@ -748,24 +753,26 @@ function buildTranscriptResult(result, video) {
   const consistent = correctContextConsistency(correctedSegments);
   correctedSegments = consistent.segments;
   correctionCount += consistent.correctionCount;
+  const calibrationChanges = Array.isArray(result?.calibration_changes) ? result.calibration_changes.length : 0;
+  correctionCount += calibrationChanges;
   return {
     raw: rawSegments.join('\n'),
     corrected: correctedSegments.join('\n'),
     correctionCount,
     source,
     audioRaw: String(result?.audio_text || ''),
-    pipelineVersion: String(result?.pipeline_version || '')
+    calibrationStatus: String(result?.calibration_status || ''),
+    calibrationChanges
   };
 }
 
 function showTranscriptView(view = 'corrected') {
   if (!currentTranscript) return;
-  const fused = currentTranscript.source === 'ocr_asr_fusion';
-  const embedded = currentTranscript.source === 'embedded_subtitle';
+  const calibrated = currentTranscript.calibrationStatus === 'applied' || currentTranscript.source === 'calibrated';
   transcriptViewButtons.forEach((button) => {
     button.textContent = button.dataset.transcriptView === 'corrected'
-      ? (embedded ? '字幕轨逐字稿' : (fused ? '融合校正稿' : '校正逐字稿'))
-      : (embedded ? '原始字幕轨' : (fused ? '画面字幕 OCR 稿' : '原始识别稿'));
+      ? (calibrated ? '智能校准稿' : '校正逐字稿')
+      : '原始识别稿';
   });
   transcriptText.value = currentTranscript[view] || currentTranscript.corrected;
   transcriptText.hidden = false;
@@ -829,10 +836,7 @@ function renderResult(payload, shareUrl) {
     currentTranscript = previousTranscript;
     showTranscriptView('corrected');
     transcriptButton.textContent = '复制逐字稿';
-    const sourceText = previousTranscript.source === 'embedded_subtitle'
-      ? '独立字幕轨逐字稿'
-      : '音频语音识别稿';
-    showTranscriptStatus(`已读取本机缓存的${sourceText}${previousTranscript.correctionCount ? `，其中校正 ${previousTranscript.correctionCount} 处` : ''}。`);
+    showTranscriptStatus(`已读取本机缓存的逐字稿${previousTranscript.correctionCount ? `，其中校正 ${previousTranscript.correctionCount} 处` : ''}。`);
   }
 
   // The stripped "raw" URL can resolve to HEVC even when the parser returned
@@ -874,7 +878,7 @@ function transcriptProgress(message) {
     const percent = Math.max(0, Math.min(100, Math.round(message.progress)));
     showTranscriptStatus(`首次使用正在下载中文识别组件，当前文件 ${percent}%（下载一次后会缓存）`, 'working');
   } else if (message.status === 'loading') {
-    showTranscriptStatus(message.data || '正在载入语音识别模型…', 'working');
+    showTranscriptStatus(message.data || '正在准备识别组件…', 'working');
   } else if (message.status === 'recognizing') {
     showTranscriptStatus(`正在识别第 ${message.current || 1}/${message.total || 1} 段人声…`, 'working');
   }
@@ -899,7 +903,7 @@ async function ensureTranscriptWorker() {
         worker.terminate();
         if (transcriptWorker === worker) transcriptWorker = null;
         transcriptPromise = null;
-        reject(new Error(event.data.message || '语音识别模型加载失败'));
+        reject(new Error(event.data.message || '识别组件加载失败'));
       }
     };
 
@@ -908,7 +912,7 @@ async function ensureTranscriptWorker() {
       worker.terminate();
       if (transcriptWorker === worker) transcriptWorker = null;
       transcriptPromise = null;
-      reject(new Error(event.message || '语音识别组件加载失败'));
+      reject(new Error(event.message || '识别组件加载失败'));
     }, { once: true });
     worker.postMessage({ type: 'load' });
   });
@@ -1285,7 +1289,7 @@ function showTranscriptTaskStatus(task) {
       : '任务已在后台排队；现在可以继续查询其他视频。', 'working');
     return;
   }
-  showTranscriptStatus(`${task.stage || '服务器正在后台识别人声'}；现在可以继续查询其他视频。`, 'working');
+  showTranscriptStatus(`${task.stage || '服务器正在后台生成逐字稿'}；现在可以继续查询其他视频。`, 'working');
 }
 
 function transcriptCompletionMessage(payload, result) {
@@ -1294,8 +1298,8 @@ function transcriptCompletionMessage(payload, result) {
   const timeText = seconds > 0
     ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
     : '';
-  const correctionText = result.source === 'embedded_subtitle'
-    ? '，已直接提取视频内的独立字幕轨'
+  const correctionText = result.calibrationStatus === 'applied'
+    ? `，智能校准 ${result.calibrationChanges} 处（原始识别稿已保留）`
     : (result.correctionCount
       ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
       : '，暂未命中词库校正项，仍建议对照口播复核');

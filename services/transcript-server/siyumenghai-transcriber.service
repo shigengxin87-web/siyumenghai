@@ -13,6 +13,7 @@ Environment=TRANSCRIPT_HOST=127.0.0.1
 Environment=TRANSCRIPT_PORT=2026
 Environment=TRANSCRIPT_DATA_DIR=/var/lib/siyumenghai-transcriber
 Environment=TRANSCRIPT_WORKER=/opt/siyumenghai-transcriber/worker.py
+EnvironmentFile=-/etc/siyumenghai-transcriber.env
 ExecStart=/usr/bin/python3 /opt/siyumenghai-transcriber/server.py
 Restart=on-failure
 RestartSec=3

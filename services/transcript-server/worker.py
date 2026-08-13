@@ -8,11 +8,20 @@ import sys
 import time
 from pathlib import Path
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "subtitle-track-asr-v2"
+PIPELINE_VERSION = "transcript-accuracy-v1"
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+DEEPSEEK_API_URL = os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+DEEPSEEK_DAILY_CALL_LIMIT = int(os.environ.get("DEEPSEEK_DAILY_CALL_LIMIT", "30"))
+DEEPSEEK_DAILY_TOKEN_LIMIT = int(os.environ.get("DEEPSEEK_DAILY_TOKEN_LIMIT", "300000"))
+DEEPSEEK_MAX_CHANGES = int(os.environ.get("DEEPSEEK_MAX_CHANGES", "20"))
+DEEPSEEK_MAX_CHANGE_RATIO = float(os.environ.get("DEEPSEEK_MAX_CHANGE_RATIO", "0.08"))
+DATA_DIR = Path(os.environ.get("TRANSCRIPT_DATA_DIR", "/var/lib/siyumenghai-transcriber"))
 
 FUSION_CORRECTIONS = (
     ("Workbuddy", "WorkBuddy"),
@@ -94,6 +103,129 @@ def contextual_consistency(segments):
         value["text"] = pattern.sub(r"\1\2粉丝", str(value.get("text", "")))
         output.append(value)
     return output
+
+
+def deepseek_usage_path():
+    return DATA_DIR / "deepseek-usage.json"
+
+
+def load_deepseek_usage():
+    day = time.strftime("%Y-%m-%d", time.localtime())
+    try:
+        value = json.loads(deepseek_usage_path().read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        value = {}
+    if value.get("day") != day:
+        value = {"day": day, "calls": 0, "tokens": 0}
+    return value
+
+
+def save_deepseek_usage(value):
+    path = deepseek_usage_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
+    temporary.replace(path)
+
+
+def protected_numbers(value):
+    return re.findall(r"\d+(?:\.\d+)?", str(value or ""))
+
+
+def parse_deepseek_json(value):
+    text = str(value or "").strip()
+    text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text, flags=re.I | re.S).strip()
+    parsed = json.loads(text)
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def apply_controlled_changes(segments, changes):
+    accepted = []
+    output = [dict(item) for item in segments]
+    original = "\n".join(str(item.get("text", "")) for item in output)
+    seen = set()
+    for change in changes[:DEEPSEEK_MAX_CHANGES]:
+        if not isinstance(change, dict):
+            continue
+        wrong = normalize_text(change.get("from", "")).strip("，。！？；：,.!?;: ")
+        right = normalize_text(change.get("to", "")).strip("，。！？；：,.!?;: ")
+        if (not wrong or not right or wrong == right or (wrong, right) in seen
+                or len(wrong) > 16 or len(right) > 16
+                or abs(len(wrong) - len(right)) > 3
+                or difflib.SequenceMatcher(None, wrong, right).ratio() < 0.25
+                or protected_numbers(wrong) != protected_numbers(right)):
+            continue
+        matching = [item for item in output if wrong in str(item.get("text", ""))]
+        if not matching:
+            continue
+        before = "\n".join(str(item.get("text", "")) for item in output)
+        for item in matching:
+            item["text"] = str(item.get("text", "")).replace(wrong, right)
+        after = "\n".join(str(item.get("text", "")) for item in output)
+        changed = sum(max(i2 - i1, j2 - j1) for tag, i1, i2, j1, j2 in
+                      difflib.SequenceMatcher(None, original, after).get_opcodes() if tag != "equal")
+        if changed > max(4, int(len(original) * DEEPSEEK_MAX_CHANGE_RATIO)):
+            for item, previous in zip(output, before.split("\n")):
+                item["text"] = previous
+            continue
+        accepted.append({"from": wrong, "to": right, "reason": str(change.get("reason", ""))[:80]})
+        seen.add((wrong, right))
+    corrected = "\n".join(str(item.get("text", "")) for item in output)
+    similarity = difflib.SequenceMatcher(None, original, corrected).ratio()
+    if similarity < 1 - DEEPSEEK_MAX_CHANGE_RATIO:
+        return segments, [], "guard_rejected"
+    return output, accepted, "applied" if accepted else "no_changes"
+
+
+def deepseek_calibrate(segments, description="", author=""):
+    if not DEEPSEEK_API_KEY or not segments:
+        return segments, [], "disabled", {}
+    usage = load_deepseek_usage()
+    if usage["calls"] >= DEEPSEEK_DAILY_CALL_LIMIT or usage["tokens"] >= DEEPSEEK_DAILY_TOKEN_LIMIT:
+        return segments, [], "daily_limit", {}
+    transcript = "\n".join(str(item.get("text", "")) for item in segments)
+    system = (
+        "你是中文逐字稿校准器。只能返回逐项文字替换建议，禁止重写全文、禁止增删句子、"
+        "禁止润色、总结或改变顺序。只修正根据全文可确定的同音错字、专有名词、平台名和"
+        "前后不一致的词；不确定时不修改。数字必须原样保留。返回严格 JSON："
+        '{"changes":[{"from":"原错误词或短语","to":"正确词或短语","reason":"上下文依据"}]}。'
+        "from 必须逐字存在于输入，单项不超过16字，最多20项。"
+    )
+    context = f"作者：{author[:80]}\n视频说明：{description[:300]}\n" if author or description else ""
+    payload = json.dumps({
+        "model": DEEPSEEK_MODEL,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": context + "ASR逐字稿：\n" + transcript},
+        ],
+        "temperature": 0,
+        "max_tokens": 1600,
+        "response_format": {"type": "json_object"},
+    }, ensure_ascii=False).encode("utf-8")
+    request = Request(DEEPSEEK_API_URL, data=payload, headers={
+        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+        "Content-Type": "application/json",
+        "User-Agent": "siyumenghai-transcriber/1",
+    })
+    try:
+        with urlopen(request, timeout=60) as response:
+            result = json.loads(response.read().decode("utf-8"))
+        tokens = result.get("usage") or {}
+        total_tokens = int(tokens.get("total_tokens", 0) or 0)
+        usage["calls"] += 1
+        usage["tokens"] += total_tokens
+        save_deepseek_usage(usage)
+        content = result["choices"][0]["message"]["content"]
+        suggestions = parse_deepseek_json(content).get("changes") or []
+        corrected, accepted, status = apply_controlled_changes(segments, suggestions)
+        return corrected, accepted, status, {
+            "model": DEEPSEEK_MODEL,
+            "prompt_tokens": int(tokens.get("prompt_tokens", 0) or 0),
+            "completion_tokens": int(tokens.get("completion_tokens", 0) or 0),
+            "total_tokens": total_tokens,
+        }
+    except Exception:
+        return segments, [], "fallback", {}
 
 
 def punctuation_assignments(events, words):
@@ -448,11 +580,22 @@ def main():
     fused_segments, source_type, fusion_similarity, selected_ocr_segments = fuse_transcript(
         ocr_value, asr_segments, asr_words,
     )
+    raw_segments = [dict(item) for item in fused_segments]
+    calibrated_segments, deepseek_changes, deepseek_status, deepseek_usage = deepseek_calibrate(
+        fused_segments, description, author,
+    )
+    if deepseek_status == "applied":
+        fused_segments = calibrated_segments
+        source_type = f"{source_type}_deepseek"
     text = "\n".join(item["text"] for item in fused_segments).strip() or audio_text
     Path(output_path).write_text(json.dumps({
         "text": text,
         "segments": fused_segments,
         "audio_text": audio_text,
+        "raw_segments": raw_segments,
+        "deepseek_status": deepseek_status,
+        "deepseek_changes": deepseek_changes,
+        "deepseek_usage": deepseek_usage,
         "ocr_text": "\n".join(item.get("text", "") for item in selected_ocr_segments).strip(),
         "source": source_type,
         "duration": round(duration, 1),
