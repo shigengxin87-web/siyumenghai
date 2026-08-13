@@ -124,7 +124,7 @@
               <div class="transcript-card" data-transcript-card>
                 <div class="transcript-heading">
                   <div><strong>中文视频逐字稿</strong><small>智能生成并校准逐字稿；单条最长 10 分钟</small></div>
-                  <button type="button" data-transcript-action>生成并复制逐字稿</button>
+                  <button type="button" data-transcript-action>生成逐字稿</button>
                 </div>
                 <p class="transcript-status" data-transcript-status role="status" aria-live="polite">建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快、更准</strong>）</p>
                 <div class="transcript-switch" data-transcript-switch hidden>
@@ -132,6 +132,18 @@
                   <button type="button" data-transcript-view="raw">原始识别稿</button>
                 </div>
                 <textarea data-transcript-text aria-label="视频逐字稿" readonly hidden></textarea>
+                <div class="bc-transcript-dual" data-transcript-dual hidden>
+                  <article class="bc-transcript-pane">
+                    <header><div><strong>原始识别稿</strong><small>SenseVoice 原始输出；保留 ITN，仅清除控制标记和必要格式 · <span data-transcript-raw-count></span></small></div><button type="button" data-transcript-copy-kind="raw">复制原始稿</button></header>
+                    <textarea data-transcript-raw-text aria-label="完整原始识别稿" readonly></textarea>
+                  </article>
+                  <article class="bc-transcript-pane">
+                    <header><div><strong>DeepSeek 校正识别稿</strong><small>只校正错字、同音词、专名、数字与标点 · <span data-transcript-corrected-count></span></small></div><span class="bc-transcript-actions"><button type="button" data-transcript-copy-kind="corrected">复制校正稿</button><button type="button" data-transcript-retry hidden>重试校正</button></span></header>
+                    <textarea data-transcript-corrected-text aria-label="完整 DeepSeek 校正识别稿" readonly></textarea>
+                  </article>
+                  <p class="bc-transcript-meta" data-transcript-meta></p>
+                  <details class="bc-diff-details" data-transcript-diff><summary>查看修改差异</summary><ol class="bc-diff-list" data-transcript-diff-list></ol></details>
+                </div>
               </div>
               <div class="transcript-card" data-comment-card>
                 <div class="transcript-heading">
@@ -165,7 +177,7 @@
       </div>
     </main>
   </div>
-  <script src="./video-downloader-test-app.js?v=20260814-abc-1"></script>
+  <script src="./video-downloader-test-bc-app.js?v=20260814-bc-deepseek-1"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
