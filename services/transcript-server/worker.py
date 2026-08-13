@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "ocr-asr-completeness-v5"
+PIPELINE_VERSION = "subtitle-track-asr-v1"
 
 FUSION_CORRECTIONS = (
     ("Workbuddy", "WorkBuddy"),
@@ -285,6 +285,12 @@ def fuse_transcript(ocr_value, asr_segments, asr_words):
     asr_text = normalize_text("".join(item["text"] for item in asr_segments))
     asr_chars = len(re.sub(r"\s", "", asr_text))
     source = ocr_value.get("source")
+    if source == "embedded_subtitle" and raw_ocr_segments:
+        segments = [{
+            "start": item["start"], "end": item["end"],
+            "text": normalize_text(item["text"]), "source": "embedded_subtitle",
+        } for item in raw_ocr_segments if normalize_text(item.get("text", ""))]
+        return segments, "embedded_subtitle", 1.0, raw_ocr_segments
     ocr_segments = raw_ocr_segments if source == "embedded_subtitle" else aligned_ocr_segments(
         raw_ocr_segments, asr_segments, asr_words,
     )
@@ -429,7 +435,7 @@ def main():
         "source": source_type,
         "duration": round(duration, 1),
         "elapsed": round(time.monotonic() - started, 1),
-        "model": f"{ocr_value.get('model', 'OCR-unavailable')} + large-v3-turbo-int8",
+        "model": (ocr_value.get("model") if source_type == "embedded_subtitle" else "large-v3-turbo-int8"),
         "pipeline_version": PIPELINE_VERSION,
         "ocr_elapsed": ocr_value.get("elapsed", 0),
         "ocr_source": ocr_value.get("source", "unavailable"),

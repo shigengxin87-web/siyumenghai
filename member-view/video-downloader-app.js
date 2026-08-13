@@ -36,7 +36,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v6';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v7-asr';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v1';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
@@ -742,10 +742,11 @@ function buildTranscriptResult(result, video) {
 function showTranscriptView(view = 'corrected') {
   if (!currentTranscript) return;
   const fused = currentTranscript.source === 'ocr_asr_fusion';
+  const embedded = currentTranscript.source === 'embedded_subtitle';
   transcriptViewButtons.forEach((button) => {
     button.textContent = button.dataset.transcriptView === 'corrected'
-      ? (fused ? '融合校正稿' : '校正逐字稿')
-      : (fused ? '画面字幕 OCR 稿' : '原始识别稿');
+      ? (embedded ? '字幕轨逐字稿' : (fused ? '融合校正稿' : '校正逐字稿'))
+      : (embedded ? '原始字幕轨' : (fused ? '画面字幕 OCR 稿' : '原始识别稿'));
   });
   transcriptText.value = currentTranscript[view] || currentTranscript.corrected;
   transcriptText.hidden = false;
@@ -809,9 +810,9 @@ function renderResult(payload, shareUrl) {
     currentTranscript = previousTranscript;
     showTranscriptView('corrected');
     transcriptButton.textContent = '复制逐字稿';
-    const sourceText = previousTranscript.source === 'ocr_asr_fusion'
-      ? '画面字幕与本地语音时间轴融合稿'
-      : '校正逐字稿';
+    const sourceText = previousTranscript.source === 'embedded_subtitle'
+      ? '独立字幕轨逐字稿'
+      : '音频语音识别稿';
     showTranscriptStatus(`已读取本机缓存的${sourceText}${previousTranscript.correctionCount ? `，其中校正 ${previousTranscript.correctionCount} 处` : ''}。`);
   }
 
@@ -1274,8 +1275,8 @@ function transcriptCompletionMessage(payload, result) {
   const timeText = seconds > 0
     ? `，服务器用时 ${seconds < 60 ? `${Math.ceil(seconds)} 秒` : `${Math.round(seconds / 60)} 分钟`}`
     : '';
-  const correctionText = result.source === 'ocr_asr_fusion'
-    ? `，已读取画面字幕并与本地语音识别按时间轴融合${result.correctionCount ? `，校正 ${result.correctionCount} 处` : ''}`
+  const correctionText = result.source === 'embedded_subtitle'
+    ? '，已直接提取视频内的独立字幕轨'
     : (result.correctionCount
       ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
       : '，暂未命中词库校正项，仍建议对照口播复核');

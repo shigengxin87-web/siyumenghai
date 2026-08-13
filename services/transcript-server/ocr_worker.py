@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 OCR_RUNTIME = os.environ.get("TRANSCRIPT_OCR_RUNTIME", "/opt/siyumenghai-transcriber/ocr-runtime")
+HARD_SUBTITLE_OCR_ENABLED = os.environ.get("TRANSCRIPT_HARD_SUBTITLE_OCR_ENABLED", "0") == "1"
 DISCOVERY_SAMPLES = 24
 
 
@@ -363,6 +364,23 @@ def main():
     video_path, output_path = map(Path, sys.argv[1:3])
     started = time.monotonic()
     if embedded_subtitles(video_path, output_path, started):
+        return
+
+    # Burned-in picture text is not a trustworthy transcript source. A frame
+    # may contain phones, slides, menus or posters whose text is unrelated to
+    # the narration. Only a real embedded subtitle stream is authoritative by
+    # default; hard-subtitle OCR remains available for offline diagnostics.
+    if not HARD_SUBTITLE_OCR_ENABLED:
+        output_path.write_text(json.dumps({
+            "text": "",
+            "segments": [],
+            "elapsed": round(time.monotonic() - started, 1),
+            "model": "disabled",
+            "source": "no_embedded_subtitle",
+            "frame_rate": 0,
+            "region": None,
+            "mean_confidence": 0,
+        }, ensure_ascii=False), encoding="utf-8")
         return
 
     runtime = Path(OCR_RUNTIME)

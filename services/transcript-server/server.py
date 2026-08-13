@@ -24,7 +24,7 @@ MAX_QUEUE = 20
 MAX_VIDEO_SECONDS = 600
 CACHE_SECONDS = 7 * 86400
 JOB_SECONDS = 86400
-PIPELINE_VERSION = "ocr-asr-completeness-v5"
+PIPELINE_VERSION = "subtitle-track-asr-v1"
 MIN_FREE_BYTES = 6 * 1024 * 1024 * 1024
 
 JOBS_DIR = DATA_DIR / "jobs"
@@ -257,7 +257,7 @@ def worker_loop():
             if job_id in pending:
                 pending.remove(job_id)
             current_job_id = job_id
-            job.update(status="running", stage="正在读取画面字幕并识别人声", started_at=now(), updated_at=now())
+            job.update(status="running", stage="正在检查字幕轨并识别人声", started_at=now(), updated_at=now())
             persist(job)
 
         job_dir = TMP_DIR / job_id
