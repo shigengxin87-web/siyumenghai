@@ -111,8 +111,8 @@ def validate_release(root: Path, entries: list[dict]) -> dict[str, object]:
         raise RuntimeError("members.json count mismatch or empty")
 
     homepage = (root / "index.html").read_text(encoding="utf-8")
-    if "【石董会】" not in homepage or "群聊学习情报" in homepage:
-        raise RuntimeError("root homepage is not the Shidonghui site")
+    if "网站升级中" not in homepage or "【石董会】" in homepage or "群聊学习情报" in homepage:
+        raise RuntimeError("root homepage is not the reserved holding page")
 
     node = shutil.which("node")
     if node:
