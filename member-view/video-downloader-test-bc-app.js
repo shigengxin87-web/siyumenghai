@@ -9,12 +9,14 @@
   const storagePrefix = `siyumenghai-video-test-${variant}`;
   const payloadCacheKey = `${storagePrefix}-transcripts-deepseek-chat-bc-proofread-zh-v1.0.1`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
+  const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
   const jobToShare = readJson(jobShareKey, {});
   let lastRenderedSignature = '';
 
   const style = document.createElement('style');
   style.textContent = `
     .bc-transcript-dual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
+    .transcript-switch[data-transcript-switch],textarea[data-transcript-text]{display:none!important}
     .bc-transcript-pane{min-width:0;border:1px solid #dce8e3;border-radius:12px;background:#f8fcfa;padding:12px}
     .bc-transcript-pane header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
     .bc-transcript-pane header div{display:flex;flex-direction:column;gap:2px}.bc-transcript-pane header small{color:#64756f}
@@ -148,6 +150,8 @@
       ? `DeepSeek 校正失败：${payload.correction_error || '可点击重试校正'}。原始识别稿不受影响。`
       : '';
     container.hidden = false;
+    const action = document.querySelector('[data-transcript-action]');
+    if (action) action.hidden = true;
 
     const rawCount = textCount(raw);
     const correctedCount = textCount(corrected);
@@ -241,6 +245,12 @@
     if (!event.target.matches('[data-download-form]')) return;
     const container = document.querySelector('[data-transcript-dual]');
     if (container) container.hidden = true;
+    const action = document.querySelector('[data-transcript-action]');
+    if (action) action.hidden = false;
+    const shareUrl = document.querySelector('[data-share-url]')?.value.trim() || '';
+    if (shareUrl) {
+      try { localStorage.setItem(lastShareKey, shareUrl); } catch { /* no-op */ }
+    }
     lastRenderedSignature = '';
   }, true);
 
@@ -252,6 +262,19 @@
 
   const legacy = document.createElement('script');
   legacy.src = './video-downloader-test-app.js?v=20260814-abc-1';
-  legacy.onload = restoreForCurrentShare;
+  legacy.onload = () => {
+    restoreForCurrentShare();
+    const navigation = performance.getEntriesByType('navigation')[0];
+    if (navigation?.type !== 'reload') return;
+    let shareUrl = '';
+    try { shareUrl = localStorage.getItem(lastShareKey) || ''; } catch { /* no-op */ }
+    if (!shareUrl || !readJson(payloadCacheKey, {})[shareUrl]) return;
+    const input = document.querySelector('[data-share-url]');
+    const form = document.querySelector('[data-download-form]');
+    if (input && form) {
+      input.value = shareUrl;
+      form.requestSubmit();
+    }
+  };
   document.head.appendChild(legacy);
 })();
