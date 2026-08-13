@@ -169,7 +169,10 @@ def main() -> None:
 
     try:
         staging.mkdir(parents=True)
-        subprocess.run(["cp", "-al", f"{active}/.", str(staging)], check=True, timeout=120)
+        # Copy the accepted local release as the base. Network transfer remains
+        # incremental: unchanged Git blobs are reused from this local copy.
+        # A normal copy also works with Linux protected_hardlinks enabled.
+        shutil.copytree(active, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
         member_root = staging / "member-view"
         member_root.mkdir(parents=True, exist_ok=True)
 
