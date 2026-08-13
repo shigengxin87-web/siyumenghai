@@ -1409,15 +1409,50 @@ async function downloadVideo(url) {
   if (!currentVideo || !url) return;
   downloadButton.disabled = true;
   rawDownloadButton.disabled = true;
-  showStatus('正在准备视频文件，请稍候…');
+  const suggestedName = filename(currentVideo.description, currentVideo.createTime);
+  let fileHandle = null;
+
+  if (window.isSecureContext && 'showSaveFilePicker' in window) {
+    try {
+      fileHandle = await window.showSaveFilePicker({
+        suggestedName,
+        types: [{ description: 'MP4 视频', accept: { 'video/mp4': ['.mp4'] } }]
+      });
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        showStatus('已取消下载');
+        downloadButton.disabled = false;
+        rawDownloadButton.disabled = false;
+        return;
+      }
+      fileHandle = null;
+    }
+  }
+
+  showStatus('正在从视频源高速下载…');
   try {
-    const response = await fetch(mediaProxyUrl(url));
-    if (!response.ok) throw new Error(`服务器返回 ${response.status}`);
+    let response;
+    try {
+      response = await fetch(url, { mode: 'cors', credentials: 'omit' });
+      if (!response.ok) throw new Error(`视频源返回 ${response.status}`);
+    } catch (directError) {
+      showStatus('视频源直连失败，正在切换备用下载通道…');
+      response = await fetch(mediaProxyUrl(url));
+      if (!response.ok) throw new Error(`备用通道返回 ${response.status}`);
+    }
+
+    if (fileHandle && response.body) {
+      const writable = await fileHandle.createWritable();
+      await response.body.pipeTo(writable);
+      showStatus('视频已保存');
+      return;
+    }
+
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = blobUrl;
-    link.download = filename(currentVideo.description, currentVideo.createTime);
+    link.download = suggestedName;
     document.body.appendChild(link);
     link.click();
     link.remove();
