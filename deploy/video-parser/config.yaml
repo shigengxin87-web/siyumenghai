@@ -1,0 +1,27 @@
+debug:
+  error: false
+  echolog: false
+
+download:
+  defaultHighest: false
+  dir: /var/lib/siyumenghai-video-parser/downloads
+  frontend: false
+
+api:
+  protocol: http
+  hostname: 127.0.0.1
+  port: 2027
+
+proxy:
+  system: false
+  hostname: 127.0.0.1
+  port: 2029
+  tun: false
+  skipInstallRootCert: true
+  upstreamProxy: ""
+
+mp:
+  enabled: false
+
+cloudflare:
+  sphCookie: ""

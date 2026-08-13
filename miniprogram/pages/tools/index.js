@@ -1,11 +1,12 @@
 const SERVICES = {
   video: {
     title: '视频号下载',
-    url: 'https://siyumenghai.cn/member-view/video-downloader.html',
+    url: 'https://siyumenghai.cn/member-view/video-downloader-20260808-17.html',
   },
   ima: {
     title: 'IMA 知识库',
     url: 'https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79',
+    appId: 'wx4c6401744b734596',
   },
   feishu: {
     title: '飞书知识库',
@@ -18,24 +19,52 @@ const SERVICES = {
 };
 
 Page({
-  openVideoTool() {
-    const url = encodeURIComponent(SERVICES.video.url);
-    const title = encodeURIComponent(SERVICES.video.title);
-    wx.navigateTo({ url: `/pages/webview/index?url=${url}&title=${title}` });
+  openWebService(service) {
+    const url = encodeURIComponent(service.url);
+    const title = encodeURIComponent(service.title);
+    wx.navigateTo({
+      url: `/pages/webview/index?url=${url}&title=${title}&copyOnError=1`,
+      fail: () => this.copyWithHelp(service),
+    });
   },
 
-  copyService(event) {
-    const service = SERVICES[event.currentTarget.dataset.service];
-    if (!service) return;
+  openVideoTool() {
+    this.openWebService(SERVICES.video);
+  },
+
+  openIma() {
+    const service = SERVICES.ima;
+    wx.navigateToMiniProgram({
+      appId: service.appId,
+      extraData: { shareId: service.url.split('shareId=')[1] },
+      envVersion: 'release',
+      fail: () => this.copyWithHelp(service),
+    });
+  },
+
+  openFeishu() {
+    const service = SERVICES.feishu;
+    wx.setClipboardData({
+      data: service.url,
+      success: () => this.openWebService(service),
+      fail: () => this.openWebService(service),
+    });
+  },
+
+  copyWithHelp(service) {
     wx.setClipboardData({
       data: service.url,
       success: () => wx.showModal({
-        title: `${service.title}入口已复制`,
-        content: '可粘贴到微信聊天或系统浏览器中打开。',
+        title: `${service.title}链接已复制`,
+        content: '微信未允许直接打开时，可粘贴到聊天或对应 App 中继续打开。',
         showCancel: false,
         confirmText: '知道了',
       }),
     });
+  },
+
+  copyWebsite() {
+    this.copyWithHelp(SERVICES.website);
   },
 
   onShareAppMessage() {

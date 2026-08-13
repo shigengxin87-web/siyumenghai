@@ -1,0 +1,22 @@
+[Unit]
+Description=Siyumenghai WeChat Channels parser
+After=network-online.target lighthouse-chromium.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=video-parser
+Group=video-parser
+WorkingDirectory=/var/lib/siyumenghai-video-parser
+ExecStartPre=/usr/local/bin/siyumenghai-refresh-yuanbao-cookie /etc/siyumenghai-video-parser/config.yaml
+ExecStart=/opt/siyumenghai-video-parser/wx_video_download --config /etc/siyumenghai-video-parser/config.yaml
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/etc/siyumenghai-video-parser /var/lib/siyumenghai-video-parser
+
+[Install]
+WantedBy=multi-user.target

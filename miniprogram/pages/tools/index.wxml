@@ -1,31 +1,37 @@
-<view class="tools-page page-enter">
+<view class="tools-page">
   <view class="tools-hero">
     <text class="kicker">COMMUNITY TOOLKIT</text>
     <text class="title">社群工具</text>
     <text class="desc">日报负责快速浏览，飞书负责完整存档，IMA 负责 AI 问答，视频号工具解决日常素材需求。</text>
   </view>
 
-  <view class="video-card">
-    <view class="tool-icon is-video">下</view>
-    <view class="video-copy"><text class="tool-label">实用工具</text><text class="tool-title">视频号下载</text><text class="tool-desc">粘贴视频号分享链接，查询并下载本人拥有或已获授权的视频。</text></view>
-    <button bindtap="openVideoTool">进入工具</button>
+  <view class="video-card" bindtap="openVideoTool">
+    <view class="tool-row">
+      <view class="tool-icon is-video">下</view>
+      <view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">视频号下载</text><text class="tool-desc">粘贴视频号分享链接，查询并下载本人拥有或已获授权的视频。</text></view>
+    </view>
+    <button catchtap="openVideoTool">进入工具</button>
   </view>
 
   <view class="section-title"><text>知识沉淀</text><text>选择适合的入口</text></view>
-  <view class="knowledge-card">
-    <view class="tool-icon is-ima">知</view>
-    <view class="knowledge-copy"><text class="tool-label">AI 问答</text><text class="tool-title">IMA 知识库</text><text class="tool-desc">适合在微信里快速提问，调用已经沉淀的社群知识。</text></view>
-    <button data-service="ima" bindtap="copyService">复制入口</button>
+  <view class="knowledge-card" bindtap="openIma">
+    <view class="tool-row">
+      <view class="tool-icon is-ima">知</view>
+      <view class="tool-copy"><text class="tool-label">AI 问答</text><text class="tool-title">IMA 知识库</text><text class="tool-desc">适合在微信里快速提问，调用已经沉淀的社群知识。</text></view>
+    </view>
+    <button catchtap="openIma">打开 IMA</button>
   </view>
-  <view class="knowledge-card">
-    <view class="tool-icon is-feishu">飞</view>
-    <view class="knowledge-copy"><text class="tool-label">完整存档</text><text class="tool-title">飞书知识库</text><text class="tool-desc">适合查阅完整文档、教程、案例和长期积累的资料。</text></view>
-    <button data-service="feishu" bindtap="copyService">复制入口</button>
+  <view class="knowledge-card" bindtap="openFeishu">
+    <view class="tool-row">
+      <view class="tool-icon is-feishu">飞</view>
+      <view class="tool-copy"><text class="tool-label">完整存档</text><text class="tool-title">飞书知识库</text><text class="tool-desc">适合查阅完整文档、教程、案例和长期积累的资料。</text></view>
+    </view>
+    <button catchtap="openFeishu">打开飞书</button>
   </view>
 
   <view class="section-title"><text>更多入口</text></view>
-  <view class="plain-cell" data-service="website" bindtap="copyService"><view><text class="tool-title">社群官网</text><text class="tool-desc">电脑大屏浏览与完整网页工具</text></view><text>复制网址 ›</text></view>
+  <view class="plain-cell" bindtap="copyWebsite"><view><text class="tool-title">社群官网</text><text class="tool-desc">电脑大屏浏览与完整网页工具</text></view><text>复制网址 ›</text></view>
 
-  <view class="notice"><text class="notice-title">使用说明</text><text>小程序内优先保留原生、轻量的阅读体验。知识库入口复制后可在微信或对应 App 中打开；视频号工具使用现有社群官网服务。</text></view>
+  <view class="notice"><text class="notice-title">使用说明</text><text>IMA 会直接进入官方小程序；飞书会先复制知识库链接再尝试打开；视频号工具在站内完成解析和下载。</text></view>
   <view class="safe-bottom"></view>
 </view>

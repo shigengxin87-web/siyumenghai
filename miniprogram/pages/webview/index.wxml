@@ -1,7 +1,8 @@
 <web-view wx:if="{{url && !failed}}" src="{{url}}" binderror="onWebError" />
 <view class="fallback page-enter" wx:else>
   <view class="fallback-icon">下</view>
-  <text class="title">暂时无法在小程序内打开</text>
-  <text class="desc">工具地址可以继续正常使用。复制后粘贴到系统浏览器即可。</text>
-  <button bindtap="copyUrl">复制工具地址</button>
+  <text class="title">{{title}}已准备好</text>
+  <text class="desc" wx:if="{{copied}}">链接已自动复制。请打开对应 App，粘贴后即可继续访问。</text>
+  <text class="desc" wx:else>微信暂时没有允许页面内打开，复制链接后仍可继续访问。</text>
+  <button bindtap="copyUrl">{{copied ? '重新复制链接' : '复制访问链接'}}</button>
 </view>

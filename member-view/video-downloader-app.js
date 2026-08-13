@@ -5,7 +5,7 @@
  * Source: https://github.com/ltaoo/wx_channels_download
  */
 
-const API_URL = 'https://sph.litao.workers.dev/api/fetch_video_profile';
+const API_URL = '/api/video/profile';
 
 const form = document.querySelector('[data-download-form]');
 const input = document.querySelector('[data-share-url]');
@@ -541,13 +541,7 @@ async function refreshHistoryCover(item, image) {
   if (!item?.shareUrl || image.dataset.refreshing) return;
   image.dataset.refreshing = '1';
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: item.shareUrl })
-    });
-    if (!response.ok) throw new Error('refresh failed');
-    const payload = await response.json();
+    const payload = await queryVideoProfile(item.shareUrl);
     const freshCoverUrl = validHttpUrl(payload?.data?.feedInfo?.coverUrl);
     const freshVideoUrl = bestVideoUrl(payload?.data?.feedInfo) || validHttpUrl(item?.videoUrl);
     if (!freshCoverUrl) throw new Error('cover missing');
@@ -572,6 +566,18 @@ function bestVideoUrl(feedInfo) {
   return validHttpUrl(feedInfo?.h264VideoInfo?.videoUrl)
     || validHttpUrl(feedInfo?.h265VideoInfo?.videoUrl)
     || validHttpUrl(feedInfo?.videoUrl);
+}
+
+async function queryVideoProfile(shareUrl) {
+  const response = await fetch(`${API_URL}?url=${encodeURIComponent(shareUrl)}`, {
+    method: 'GET',
+    headers: { Accept: 'application/json' }
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || (typeof result?.code === 'number' && result.code !== 0)) {
+    throw new Error(result?.msg || result?.errMsg || '解析服务暂时不可用');
+  }
+  return result?.data?.feedInfo ? result : result?.data || result;
 }
 
 function rawVideoUrl(value) {
@@ -1458,13 +1464,8 @@ form.addEventListener('submit', async (event) => {
   showStatus('正在查询视频信息…');
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: shareUrl })
-    });
-    const payload = await response.json();
-    if (!response.ok || payload.errCode) throw new Error(payload.errMsg || '查询失败');
+    const payload = await queryVideoProfile(shareUrl);
+    if (payload.errCode) throw new Error(payload.errMsg || '查询失败');
     renderResult(payload, shareUrl);
     saveCurrentQuery();
     showStatus('');

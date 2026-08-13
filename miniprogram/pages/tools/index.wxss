@@ -1,26 +1,27 @@
-.tools-page { min-height: 100vh; padding: 28rpx; box-sizing: border-box; }
+.tools-page { min-height: 100vh; padding: 28rpx; box-sizing: border-box; background: #f5f8f6; }
 .tools-hero { padding: 28rpx 7rpx 30rpx; }
 .kicker { display: block; color: #09815f; font-size: 20rpx; font-weight: 850; letter-spacing: 2rpx; }
 .title { display: block; margin: 8rpx 0; font-size: 48rpx; font-weight: 950; }
 .desc { display: block; color: #64766f; font-size: 24rpx; line-height: 1.7; }
-.video-card { display: grid; grid-template-columns: 84rpx 1fr; gap: 19rpx; padding: 28rpx; border-radius: 29rpx; background: linear-gradient(145deg, #063e30, #0a8d69); color: #fff; box-shadow: 0 16rpx 38rpx rgba(6,96,71,.17); }
+.video-card { padding: 28rpx; border-radius: 29rpx; background: linear-gradient(145deg, #063e30, #0a8d69); color: #fff; box-shadow: 0 16rpx 38rpx rgba(6,96,71,.17); }
+.tool-row { display: flex; align-items: flex-start; }
 .tool-icon { display: flex; align-items: center; justify-content: center; width: 82rpx; height: 82rpx; border-radius: 23rpx; font-size: 31rpx; font-weight: 900; }
 .tool-icon.is-video { background: rgba(255,255,255,.15); color: #fff; }
-.video-copy, .knowledge-copy { min-width: 0; }
+.tool-copy { min-width: 0; flex: 1; margin-left: 19rpx; }
 .tool-label, .tool-title, .tool-desc { display: block; }
 .tool-label { color: #68b89f; font-size: 19rpx; font-weight: 800; letter-spacing: 1rpx; }
 .video-card .tool-label { color: #a8e7d3; }
 .tool-title { margin-top: 5rpx; font-size: 30rpx; font-weight: 900; }
 .tool-desc { margin-top: 8rpx; color: #6b7d76; font-size: 22rpx; line-height: 1.58; }
 .video-card .tool-desc { color: rgba(255,255,255,.77); }
-.video-card button { grid-column: 1 / 3; width: 100%; height: 70rpx; margin: 9rpx 0 0; border-radius: 35rpx; background: #fff; color: #077154; font-size: 23rpx; font-weight: 800; line-height: 70rpx; }
+.video-card button { width: 100%; height: 70rpx; margin: 22rpx 0 0; border-radius: 35rpx; background: #fff; color: #077154; font-size: 23rpx; font-weight: 800; line-height: 70rpx; }
 .section-title { display: flex; justify-content: space-between; padding: 39rpx 5rpx 17rpx; }
 .section-title text:first-child { font-size: 31rpx; font-weight: 900; }
 .section-title text:last-child { color: #83938d; font-size: 21rpx; }
-.knowledge-card { display: grid; grid-template-columns: 82rpx 1fr; gap: 18rpx; margin-bottom: 14rpx; padding: 25rpx; border: 1rpx solid #dfeae5; border-radius: 25rpx; background: #fff; box-shadow: 0 9rpx 25rpx rgba(28,72,58,.045); }
+.knowledge-card { margin-bottom: 14rpx; padding: 25rpx; border: 1rpx solid #dfeae5; border-radius: 25rpx; background: #fff; box-shadow: 0 9rpx 25rpx rgba(28,72,58,.045); }
 .tool-icon.is-ima { background: #e9f4ff; color: #2b74c8; }
 .tool-icon.is-feishu { background: #edf0ff; color: #4e60d8; }
-.knowledge-card button { grid-column: 2; width: 150rpx; height: 56rpx; margin: 8rpx 0 0; padding: 0; border-radius: 28rpx; background: #eaf8f2; color: #08795c; font-size: 21rpx; line-height: 56rpx; }
+.knowledge-card button { width: 180rpx; height: 58rpx; margin: 18rpx 0 0 101rpx; padding: 0; border-radius: 29rpx; background: #eaf8f2; color: #08795c; font-size: 21rpx; line-height: 58rpx; }
 .plain-cell { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; padding: 25rpx; border: 1rpx solid #dfeae5; border-radius: 23rpx; background: #fff; }
 .plain-cell > view { min-width: 0; flex: 1; }
 .plain-cell > text { color: #09815f; font-size: 22rpx; }
