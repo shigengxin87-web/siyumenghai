@@ -7,7 +7,18 @@
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
   <link rel="stylesheet" href="./portal.css?v=20260809-2">
-  <script src="./coi-serviceworker.js?v=20260808-4"></script>
+  <script>
+    // Remove the obsolete worker that caused repeated page reloads.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        registrations.forEach(function (registration) {
+          if (registration.scope.indexOf('/member-view/') !== -1) registration.unregister();
+        });
+      }).catch(function () {});
+    }
+    sessionStorage.removeItem('coiReloadedBySelf');
+    sessionStorage.removeItem('coiCoepHasFailed');
+  </script>
   <script>
     var _hmt = _hmt || [];
     (function () {
@@ -155,10 +166,11 @@
       </div>
     </main>
   </div>
+  <!-- Render local history before loading optional Excel and text helpers. -->
+  <script src="./video-downloader-app-v40.js?v=20260814-fast-history"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
-  <script src="./video-downloader-app-v39.js?v=20260814-direct-download"></script>
   <script src="./video-batch.js?v=20260808-31-final"></script>
 </body>
 </html>
