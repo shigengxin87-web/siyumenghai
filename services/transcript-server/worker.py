@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "transcript-accuracy-v1"
+PIPELINE_VERSION = "transcript-accuracy-v2"
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_API_URL = os.environ.get("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
@@ -52,6 +52,12 @@ FUSION_CORRECTIONS = (
     ("不自闭环", "不做闭环"),
     ("必4无疑", "必死无疑"),
 )
+
+TRUSTED_CALIBRATION_TERMS = {
+    "公众号", "封禁", "粉丝", "直播", "视频号", "小红书", "二维码", "朋友圈",
+    "私域", "私域流量", "私域流量池", "超级个体", "咨询", "爆品", "合法合规",
+    "无源之水", "一千", "不紧不慢", "混元模型", "WorkBuddy", "Kimi K3",
+}
 
 
 def validate_video_url(video_url):
@@ -93,14 +99,21 @@ def contextual_consistency(segments):
     """
     combined = "".join(str(item.get("text", "")) for item in segments)
     follower_context = "粉丝" in combined and re.search(r"视频号|抖音|小红书|快手|微博|账号", combined)
-    if not follower_context:
-        return segments
     count = r"(?:\d+(?:\.\d+)?|[零〇一二三四五六七八九十百千万两]+)(?:万|千|百)?(?:\d+)?"
     pattern = re.compile(rf"({count})(的?)(粉钉|粉色)(?=的|吧|呢|，|。|、|\s|$)")
+    account_context = "公众号" in combined and re.search(r"引流|私域|封号|流量|二维码|视频号", combined)
+    ban_context = re.search(r"永久|封号|平台|违规", combined)
     output = []
     for item in segments:
         value = dict(item)
-        value["text"] = pattern.sub(r"\1\2粉丝", str(value.get("text", "")))
+        text = str(value.get("text", ""))
+        if follower_context:
+            text = pattern.sub(r"\1\2粉丝", text)
+        if account_context:
+            text = re.sub(r"公(?:伟|传|伦|共)号", "公众号", text)
+        if ban_context:
+            text = text.replace("封军", "封禁")
+        value["text"] = text
         output.append(value)
     return output
 
@@ -155,6 +168,9 @@ def apply_controlled_changes(segments, changes):
                 or difflib.SequenceMatcher(None, wrong, right).ratio() < 0.25
                 or protected_numbers(wrong) != protected_numbers(right)):
             continue
+        established_elsewhere = right in original.replace(wrong, "")
+        if right not in TRUSTED_CALIBRATION_TERMS and not established_elsewhere:
+            continue
         matching = [item for item in output if wrong in str(item.get("text", ""))]
         if not matching:
             continue
@@ -202,30 +218,33 @@ def deepseek_calibrate(segments, description="", author=""):
         "max_tokens": 1600,
         "response_format": {"type": "json_object"},
     }, ensure_ascii=False).encode("utf-8")
-    request = Request(DEEPSEEK_API_URL, data=payload, headers={
-        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-        "Content-Type": "application/json",
-        "User-Agent": "siyumenghai-transcriber/1",
-    })
-    try:
-        with urlopen(request, timeout=60) as response:
-            result = json.loads(response.read().decode("utf-8"))
-        tokens = result.get("usage") or {}
-        total_tokens = int(tokens.get("total_tokens", 0) or 0)
-        usage["calls"] += 1
-        usage["tokens"] += total_tokens
-        save_deepseek_usage(usage)
-        content = result["choices"][0]["message"]["content"]
-        suggestions = parse_deepseek_json(content).get("changes") or []
-        corrected, accepted, status = apply_controlled_changes(segments, suggestions)
-        return corrected, accepted, status, {
-            "model": DEEPSEEK_MODEL,
-            "prompt_tokens": int(tokens.get("prompt_tokens", 0) or 0),
-            "completion_tokens": int(tokens.get("completion_tokens", 0) or 0),
-            "total_tokens": total_tokens,
-        }
-    except Exception:
-        return segments, [], "fallback", {}
+    for attempt in range(3):
+        request = Request(DEEPSEEK_API_URL, data=payload, headers={
+            "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+            "Content-Type": "application/json",
+            "User-Agent": "siyumenghai-transcriber/1",
+        })
+        try:
+            with urlopen(request, timeout=75) as response:
+                result = json.loads(response.read().decode("utf-8"))
+            tokens = result.get("usage") or {}
+            total_tokens = int(tokens.get("total_tokens", 0) or 0)
+            usage["calls"] += 1
+            usage["tokens"] += total_tokens
+            save_deepseek_usage(usage)
+            content = result["choices"][0]["message"]["content"]
+            suggestions = parse_deepseek_json(content).get("changes") or []
+            corrected, accepted, status = apply_controlled_changes(segments, suggestions)
+            return corrected, accepted, status, {
+                "model": DEEPSEEK_MODEL,
+                "prompt_tokens": int(tokens.get("prompt_tokens", 0) or 0),
+                "completion_tokens": int(tokens.get("completion_tokens", 0) or 0),
+                "total_tokens": total_tokens,
+            }
+        except Exception:
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+    return segments, [], "fallback", {}
 
 
 def punctuation_assignments(events, words):

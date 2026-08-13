@@ -36,7 +36,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v9-accuracy';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v10-accuracy';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v1';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
@@ -1300,6 +1300,8 @@ function transcriptCompletionMessage(payload, result) {
     : '';
   const correctionText = result.calibrationStatus === 'applied'
     ? `，智能校准 ${result.calibrationChanges} 处（原始识别稿已保留）`
+    : result.calibrationStatus === 'fallback'
+    ? '，智能校准暂未完成，当前已保留基础校正稿和原始识别稿，可稍后重新生成'
     : (result.correctionCount
       ? `，脚本结合专名和常用表达校正 ${result.correctionCount} 处`
       : '，暂未命中词库校正项，仍建议对照口播复核');
