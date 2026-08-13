@@ -37,6 +37,7 @@ EXCLUDED_SUFFIXES = (
     "member-view/assets/paraformer-zh-small/sherpa-onnx-wasm-main-vad-asr.data",
 )
 FAILPOINT = os.environ.get("SIYUMENGHAI_FAILPOINT", "")
+FORCE = os.environ.get("SIYUMENGHAI_FORCE", "") == "1"
 
 
 def get_bytes(url: str, attempts: int = 3, timeout: int = 120) -> bytes:
@@ -149,7 +150,7 @@ def main() -> None:
         active_commit = json.loads(manifest_path.read_text(encoding="utf-8")).get("commit")
     except (FileNotFoundError, json.JSONDecodeError):
         active_commit = ""
-    if active_commit == commit:
+    if active_commit == commit and not FORCE:
         print(json.dumps({"status": "unchanged", "commit": commit}, ensure_ascii=False))
         return
 
@@ -173,6 +174,8 @@ def main() -> None:
         # incremental: unchanged Git blobs are reused from this local copy.
         # A normal copy also works with Linux protected_hardlinks enabled.
         shutil.copytree(active, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
+        if FAILPOINT == "download_timeout":
+            raise RuntimeError("injected GitHub large-file timeout")
         member_root = staging / "member-view"
         member_root.mkdir(parents=True, exist_ok=True)
 

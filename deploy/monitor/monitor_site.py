@@ -15,7 +15,7 @@ import urllib.parse
 import urllib.request
 
 
-BASE = "https://siyumenghai.cn"
+BASE = os.environ.get("SIYUMENGHAI_MONITOR_BASE", "https://siyumenghai.cn").rstrip("/")
 REPO = "shigengxin87-web/siyumenghai"
 API = f"https://api.github.com/repos/{REPO}"
 CDN = f"https://cdn.jsdelivr.net/gh/{REPO}"
@@ -242,7 +242,19 @@ def main() -> int:
     parser.add_argument("--state-file", type=Path, default=DEFAULT_STATE)
     parser.add_argument("--check-local-comments", action="store_true")
     parser.add_argument("--no-notify", action="store_true")
-    return run(parser.parse_args())
+    parser.add_argument("--test-alert", action="store_true")
+    args = parser.parse_args()
+    if args.test_alert:
+        if not args.recipient_id:
+            raise SystemExit("test alert requires recipient id")
+        receipt = notify(
+            args.recipient_id,
+            "【石董会官网监控验收】外部 5 分钟巡检、连续两次告警、去重与恢复通知链路已启用。",
+            f"site-monitor-acceptance-{int(time.time()) // 300}",
+        )
+        print(json.dumps({"test_alert": True, "receipt": receipt}, ensure_ascii=False))
+        return 0
+    return run(args)
 
 
 if __name__ == "__main__":
