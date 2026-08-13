@@ -25,6 +25,7 @@ PREVIOUS = RELEASES / "previous"
 STATE = Path("/home/site-deploy/.siyumenghai-main-sha")
 KEEP_RELEASES = 6
 REQUIRED = (
+    "index.html",
     "member-view/index.html",
     "member-view/app.js",
     "member-view/members.json",
@@ -74,7 +75,7 @@ def wanted(entry: dict) -> bool:
     path = entry.get("path", "")
     return (
         entry.get("type") == "blob"
-        and path.startswith("member-view/")
+        and (path == "index.html" or path.startswith("member-view/"))
         and not any(path.startswith(prefix) for prefix in EXCLUDED_PREFIXES)
         and path not in EXCLUDED_SUFFIXES
     )
@@ -107,6 +108,10 @@ def validate_release(root: Path, entries: list[dict]) -> dict[str, object]:
     members = json.loads((root / "member-view/members.json").read_text(encoding="utf-8"))
     if members.get("count") != len(members.get("members", [])) or not members.get("members"):
         raise RuntimeError("members.json count mismatch or empty")
+
+    homepage = (root / "index.html").read_text(encoding="utf-8")
+    if "【石董会】" not in homepage or "群聊学习情报" in homepage:
+        raise RuntimeError("root homepage is not the Shidonghui site")
 
     node = shutil.which("node")
     if node:
