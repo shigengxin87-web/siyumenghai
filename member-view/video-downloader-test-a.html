@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN" data-transcript-variant="a">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ECFDF5">
+  <title>视频号下载 · 逐字稿测试 A</title>
+  <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
+  <link rel="stylesheet" href="./portal.css?v=20260809-2">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        registrations.forEach(function (registration) {
+          if (registration.scope.indexOf('/member-view/') !== -1) registration.unregister();
+        });
+      }).catch(function () {});
+    }
+    sessionStorage.removeItem('coiReloadedBySelf');
+    sessionStorage.removeItem('coiCoepHasFailed');
+  </script>
+  <script>
+    var _hmt = _hmt || [];
+    (function () {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?988df064ef0151f56c045c2241c2c6d3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</head>
+<body>
+  <div class="portal-shell tool-shell">
+    <header class="portal-header">
+      <div class="portal-brand">
+        <span class="portal-mark">下</span>
+        <span><strong>视频号下载</strong><small>打开想下载的视频，点击分享找到复制链接</small></span>
+      </div>
+      <div class="portal-actions">
+        <span class="usage-note">仅用于本人拥有或已获授权的内容</span>
+      </div>
+    </header>
+
+    <main class="tool-main">
+      <div class="tool-container">
+        <section class="tool-query-card">
+          <div class="tool-heading">
+            <p>视频号工具</p>
+            <h1>粘贴分享链接，解析视频</h1>
+            <span>支持单条查询、批量粘贴和 Excel 导入。</span>
+          </div>
+
+          <div class="mode-switch" role="tablist" aria-label="解析方式">
+            <button type="button" class="is-active" role="tab" aria-selected="true" data-mode-button="single">单条解析</button>
+            <button type="button" role="tab" aria-selected="false" data-mode-button="batch">批量解析</button>
+          </div>
+
+          <div data-mode-panel="single">
+            <form class="download-form" data-download-form>
+              <label class="visually-hidden" for="share-url">视频号分享链接</label>
+              <input id="share-url" data-share-url type="url" inputmode="url" autocomplete="off" placeholder="粘贴视频号分享链接，如 https://weixin.qq.com/sph/xxx" required>
+              <button type="submit" data-query-button>查询视频</button>
+            </form>
+            <p class="tool-status" data-tool-status role="status" aria-live="polite" hidden></p>
+          </div>
+
+          <div class="batch-panel" data-mode-panel="batch" hidden>
+            <label class="batch-label" for="batch-links">一次粘贴多条链接，每行一条；带文字粘贴也会自动提取链接</label>
+            <textarea id="batch-links" data-batch-input rows="7" placeholder="https://weixin.qq.com/sph/xxx&#10;https://weixin.qq.com/sph/xxx"></textarea>
+            <div class="batch-import-row">
+              <label class="batch-file-button" for="batch-file">上传 Excel</label>
+              <input id="batch-file" data-batch-file type="file" accept=".xlsx,.xls,.csv" hidden>
+              <a class="batch-template-link" href="./assets/video-batch-template.xlsx" download>下载 Excel 模板</a>
+              <span data-batch-file-name>表格只在当前浏览器读取，不会上传</span>
+            </div>
+            <div class="batch-start-row">
+              <span data-batch-count>已识别 0 条链接</span>
+              <button type="button" data-batch-start disabled>开始批量解析</button>
+            </div>
+            <p class="tool-status" data-batch-status role="status" aria-live="polite" hidden></p>
+          </div>
+        </section>
+
+        <section class="batch-progress" data-batch-progress hidden aria-live="polite">
+          <header class="batch-progress-heading">
+            <div><span>批量解析进度</span><small data-batch-summary>准备开始</small></div>
+            <div class="batch-control-actions">
+              <button type="button" data-batch-pause disabled>暂停</button>
+              <button type="button" data-batch-cancel disabled>取消</button>
+            </div>
+          </header>
+          <div class="batch-progress-track"><span data-batch-progress-bar></span></div>
+        </section>
+
+        <section class="batch-results" data-batch-results hidden>
+          <header class="batch-results-heading">
+            <div><span>批量解析结果</span><small>成功的视频可以单独下载，也可以在电脑端依次下载</small></div>
+            <div class="batch-result-actions">
+              <button type="button" data-batch-export>导出 Excel</button>
+              <button type="button" class="is-primary" data-batch-download-all>依次下载（电脑）</button>
+            </div>
+          </header>
+          <div class="batch-result-list" data-batch-result-list></div>
+        </section>
+
+        <section class="video-result" data-video-result hidden aria-live="polite">
+          <header class="result-heading"><span>查询结果</span><small>确认内容后即可下载</small></header>
+          <div class="result-layout">
+            <div class="video-preview">
+              <video data-video controls preload="metadata" playsinline></video>
+            </div>
+            <div class="video-details">
+              <div class="author-row">
+                <img data-author-avatar alt="" hidden>
+                <div><small>视频作者</small><strong data-author-name>视频号作者</strong></div>
+              </div>
+              <p class="video-description" data-video-description></p>
+              <div class="video-stats" data-video-stats></div>
+              <div class="download-actions">
+                <button type="button" class="download-button" data-download-video>下载视频</button>
+                <button type="button" class="download-button is-secondary" data-download-raw>下载原始视频</button>
+                <button type="button" class="download-button is-secondary" data-download-cover>下载封面</button>
+              </div>
+              <p class="download-tip">如果手机浏览器没有直接保存，请长按视频或在浏览器菜单中选择下载。</p>
+              <div class="transcript-card" data-transcript-card>
+                <div class="transcript-heading">
+                  <div><strong>中文视频逐字稿</strong><small>智能生成并校准逐字稿；单条最长 10 分钟</small></div>
+                  <button type="button" data-transcript-action>生成并复制逐字稿</button>
+                </div>
+                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快、更准</strong>）</p>
+                <div class="transcript-switch" data-transcript-switch hidden>
+                  <button type="button" class="is-active" data-transcript-view="corrected">校正逐字稿</button>
+                  <button type="button" data-transcript-view="raw">原始识别稿</button>
+                </div>
+                <textarea data-transcript-text aria-label="视频逐字稿" readonly hidden></textarea>
+              </div>
+              <div class="transcript-card" data-comment-card>
+                <div class="transcript-heading">
+                  <div><strong>视频评论区</strong><small>自动提取；最多提取 1000 条主评论</small></div>
+                  <div class="comment-actions">
+                    <button type="button" data-comment-action>提取并复制评论</button>
+                    <button type="button" class="is-secondary" data-comment-refresh hidden>重新提取评论</button>
+                    <button type="button" class="is-secondary" data-comment-excel>导出 Excel</button>
+                  </div>
+                </div>
+                <p class="transcript-status" data-comment-status role="status" aria-live="polite">本地助手：<a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer" data-local-helper-entry data-helper-action="checking" style="display:inline-block;padding:3px 9px;background:#eaf8f1;border-radius:7px;color:#067653;font-weight:750">正在自动检测…</a></p>
+                <textarea data-comment-text aria-label="视频评论区内容" readonly hidden></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="download-history" data-download-history>
+          <header class="history-heading">
+            <div><span>查询记录</span><small>查询成功后自动保存，仅保存在当前浏览器</small></div>
+            <button type="button" data-clear-history>清空记录</button>
+          </header>
+          <div class="history-list" data-history-list></div>
+        </section>
+
+        <section class="tool-steps" aria-label="使用步骤">
+          <article><span>01</span><div><strong>复制链接</strong><small>在视频号分享菜单里点击“复制链接”</small></div></article>
+          <article><span>02</span><div><strong>查询视频</strong><small>粘贴到输入框，等待系统解析内容</small></div></article>
+          <article><span>03</span><div><strong>保存文件</strong><small>确认封面和作者后选择需要的版本</small></div></article>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="./video-downloader-test-app.js?v=20260814-abc-1"></script>
+  <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
+  <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
+  <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
+  <script src="./video-batch.js?v=20260808-31-final"></script>
+</body>
+</html>
