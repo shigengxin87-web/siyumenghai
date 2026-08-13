@@ -7,7 +7,7 @@
   const apiBase = variant === 'b' ? 'http://127.0.0.1:8768/jobs' : '/api/transcripts-test-cloud/jobs';
   const locationLabel = variant === 'b' ? '本机处理用时' : '云端处理用时';
   const storagePrefix = `siyumenghai-video-test-${variant}`;
-  const payloadCacheKey = `${storagePrefix}-transcripts-deepseek-chat-bc-proofread-zh-v1.0.0`;
+  const payloadCacheKey = `${storagePrefix}-transcripts-deepseek-chat-bc-proofread-zh-v1.0.1`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const jobToShare = readJson(jobShareKey, {});
   let lastRenderedSignature = '';
