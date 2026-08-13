@@ -24,6 +24,7 @@ CURRENT = RELEASES / "current"
 PREVIOUS = RELEASES / "previous"
 STATE = Path("/home/site-deploy/.siyumenghai-main-sha")
 KEEP_RELEASES = 6
+ROOT_PRESERVE = {"index.html", "member-view"}
 REQUIRED = (
     "index.html",
     "member-view/index.html",
@@ -181,6 +182,18 @@ def main() -> None:
         shutil.copytree(active, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
         if FAILPOINT == "download_timeout":
             raise RuntimeError("injected GitHub large-file timeout")
+
+        # The public root now belongs exclusively to Shidonghui. Legacy report,
+        # group and learning-intelligence files remain recoverable in previous
+        # releases, but must not survive in the active public release.
+        for existing in staging.iterdir():
+            if existing.name in ROOT_PRESERVE:
+                continue
+            if existing.is_dir() and not existing.is_symlink():
+                shutil.rmtree(existing)
+            else:
+                existing.unlink(missing_ok=True)
+
         member_root = staging / "member-view"
         member_root.mkdir(parents=True, exist_ok=True)
 
