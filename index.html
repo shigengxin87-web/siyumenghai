@@ -2,335 +2,96 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#00a99d">
-  <title>私域梦海 · 石更新群聊学习情报</title>
-  <meta name="description" content="私域梦海：石更新从多个群聊中整理的个人学习情报、资源地图、行动清单和长期趋势。">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ECFDF5">
+  <base href="/member-view/">
+  <title>【石董会】一起成长朋友圈 · 群友版</title>
+  <meta name="description" content="面向【石董会】一起成长朋友圈群友的每日启发、行动建议、本周回顾与长期专题。">
   <link rel="canonical" href="https://siyumenghai.cn/">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=20260717-2">
 </head>
 <body>
-  <div class="progress-bar" aria-hidden="true"><div class="fill"></div></div>
-  <div class="site-shell">
-    <header class="hero">
-      <div class="wave-label">🌊 私域梦海 · 群聊学习情报</div>
-      <h1>把高质量群聊变成我的成长资产</h1>
-      <p class="sub">保留每个来源群名，但分析都从石更新的学习、行动、资源调用和长期成长出发。</p>
-      <div class="hero-meta">
-        <span class="pill">siyumenghai.cn</span>
-        <span class="pill">石更新整理</span>
-        <span class="pill">每日 23:00 更新</span>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="成长朋友圈群友版首页">
+        <span class="brand-mark">石</span>
+        <span><strong>成长朋友圈</strong><small>群友学习版</small></span>
+      </a>
+
+      <div class="group-intro">
+        <p><span class="live-dot"></span>单群专属学习站</p>
+        <h1>每天从群里，<br>带走一点真东西</h1>
+        <p class="group-description">每天 3 分钟，找到值得记住的观点、可以执行的动作和能够连接的人。</p>
       </div>
-    </header>
 
-    <nav class="anchors">
-      <a href="#latest">🎯 最新情报</a>
-      <a href="#groups">👥 群聊</a>
-      <a href="#archive">📜 归档</a>
-      <a href="#review">🔁 回顾</a>
-      <a href="#about">🧭 关于</a>
-    </nav>
-
-    <main>
-      <section id="latest" class="open-card">
-        <span class="tag">📝 最新</span>
-        <p>最新学习情报已更新：<span class="hl">ai航海家俱乐部 · 2026-05-04 学习情报</span>。重点是 ChatGPT 账号验证、公众号内容采集接口、小红书数据采集频率和账号风控。</p>
-      </section>
-
-      <section>
-        <div class="grid">
-          <div class="stat"><div class="num">172</div><div class="name">峰值消息量</div></div>
-          <div class="stat"><div class="num">4类</div><div class="name">核心分类</div></div>
-          <div class="stat"><div class="num">23:00</div><div class="name">计划更新时间</div></div>
-          <div class="stat"><div class="num">7日</div><div class="name">趋势回顾</div></div>
+      <section class="calendar-panel" aria-label="日报日历">
+        <div class="calendar-heading">
+          <div>
+            <p class="nav-label">日报日历</p>
+            <strong data-month-label>2026 年 7 月</strong>
+          </div>
+          <div class="calendar-controls">
+            <button type="button" data-calendar-prev aria-label="上一个月">‹</button>
+            <button type="button" data-calendar-next aria-label="下一个月">›</button>
+          </div>
         </div>
-      </section>
 
-      <section>
-        <article class="card">
-          <div class="row-title">
-            <div class="badge">读</div>
-            <h3>ai航海家俱乐部 · 2026-05-04 学习情报</h3>
-          </div>
-          <p>先看“今日必看 / 为我所用 / 资源地图 / 风险趋势”，再按需查看原始主题摘要。</p>
-          <div class="note"><a href="./reports/ai-hanghai-daily-2026-05-04.html">打开学习情报 →</a></div>
-        </article>
-      </section>
+        <button type="button" class="today-button" data-today>
+          <span>回到今天</span>
+          <strong data-today-label>7 月 16 日</strong>
+        </button>
 
-      <section id="groups">
-        <div class="sec-head"><div class="bar"></div><h2>群聊入口</h2><span class="count">3 个</span></div>
-        <div class="archive-list">
-          <a class="archive-card" href="./groups/dontbesilent.html">
-            <div class="archive-date"><div><div class="md">D</div><div class="year">群聊</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群</h3>
-              <p>保留原群名，后续按个人学习情报框架继续整理。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./groups/ai-hanghai.html">
-            <div class="archive-date"><div><div class="md">AI</div><div class="year">群聊</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部</h3>
-              <p>最新两篇已升级为“为我所用”的学习情报格式。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./groups/ops-club.html">
-            <div class="archive-date"><div><div class="md">OP</div><div class="year">群聊</div></div></div>
-            <div class="archive-body">
-              <h3>运营操盘手俱乐部·荣耀元老</h3>
-              <p>已回看近 30 天，沉淀 12 篇高价值学习情报。</p>
-            </div>
-          </a>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
         </div>
+        <div class="calendar-grid" data-calendar role="grid" aria-label="选择任意日期"></div>
+        <div class="calendar-legend"><span><i></i>已有日报</span><span>点击任意日期即可跳转</span></div>
       </section>
 
-      <section id="archive">
-        <div class="sec-head"><div class="bar"></div><h2>情报归档</h2><span class="count">28 篇</span></div>
-        <div class="archive-list">
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-05-04.html">
-            <div class="archive-date"><div><div class="md">05/04</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-05-04 学习情报</h3>
-              <p>账号安全验证、公众号内容采集、小红书数据采集频率和账号风控。</p>
-            </div>
-          </a>
+      <button type="button" class="member-entry" data-member-entry aria-selected="false">
+        <span class="member-entry-mark">友</span>
+        <span class="member-entry-copy"><small>独立入口</small><strong>群友名录</strong></span>
+        <span class="member-entry-count"><b data-member-count>21</b> 人</span>
+      </button>
 
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-05-04.html">
-            <div class="archive-date"><div><div class="md">05/04</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-05-04 学习情报</h3>
-              <p>Skill 体验、模型效果定义、咨询杠杆、服务对象选择和反规模化判断。</p>
-            </div>
-          </a>
+      <a class="member-entry knowledge-entry" href="https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79" target="_blank" rel="noopener noreferrer" aria-label="在新页面打开 IMA 知识库">
+        <span class="member-entry-mark">知</span>
+        <span class="member-entry-copy"><small>内容沉淀</small><strong>IMA 知识库</strong></span>
+        <span class="member-entry-count">打开 ↗</span>
+      </a>
 
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-05-03.html">
-            <div class="archive-date"><div><div class="md">05/03</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-05-03 学习情报</h3>
-              <p>Claude 入门、接入文档、航海家大会、账号充值、PPT 工具和线下分享。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ops-club-daily-2026-04-30.html">
-          <div class="archive-date"><div><div class="md">04/30</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-30 学习情报</h3>
-            <p>运营早报、AI 落地、线上运营招聘、短信触达合规和平台风控。</p>
-          </div>
-        </a>
+      <div class="sidebar-note">
+        <p>内容基于群聊记录整理，帮助群友快速学习和行动，不替代原始讨论。</p>
+      </div>
+    </aside>
 
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-29.html">
-          <div class="archive-date"><div><div class="md">04/29</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-29 学习情报</h3>
-            <p>小红书私信导流、liblib live 图、蒸馏自己、运营经验 Agent 和 AI SaaS。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-28.html">
-          <div class="archive-date"><div><div class="md">04/28</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-28 学习情报</h3>
-            <p>豆包搜索排名骗局、AI 内容标识监管、小红书官方 AI 治理、保险 KOS AI 提效。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-27.html">
-          <div class="archive-date"><div><div class="md">04/27</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-27 学习情报</h3>
-            <p>0.5 人获客、AI 标识治理、小红书起号成功率、跨平台同款销售和自动化封号。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-24.html">
-          <div class="archive-date"><div><div class="md">04/24</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-24 学习情报</h3>
-            <p>运营 x AI 小饭桌、Claude 充值、线索放量、本地推计划、小红书投放课和 AI 治理。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-23.html">
-          <div class="archive-date"><div><div class="md">04/23</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-23 学习情报</h3>
-            <p>抖音新号自然流、国家电网教培、医疗大健康获客、AI 健康合伙人和资源对接。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-22.html">
-          <div class="archive-date"><div><div class="md">04/22</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-22 学习情报</h3>
-            <p>微信小店 ICP/证书资质、青少年心理获客、小红书达人和 AI 半自动化。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-20.html">
-          <div class="archive-date"><div><div class="md">04/20</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-20 学习情报</h3>
-            <p>本地达人分发、三方转诊渠道、私域内容半自动化回放。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-17.html">
-          <div class="archive-date"><div><div class="md">04/17</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-17 学习情报</h3>
-            <p>短直联动、多平台布局、飞书接龙虾体验和 AI 获客课报名。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-16.html">
-          <div class="archive-date"><div><div class="md">04/16</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-16 学习情报</h3>
-            <p>个微群发 SOP 风险、矩阵发布工具、飞书多维表格私域 AI 工作流。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-15.html">
-          <div class="archive-date"><div><div class="md">04/15</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-15 学习情报</h3>
-            <p>私域内容半自动化、副业 MVP、陪跑转顾问年框和客户需求选择。</p>
-          </div>
-        </a>
-
-        <a class="archive-card" href="./reports/ops-club-daily-2026-04-14.html">
-          <div class="archive-date"><div><div class="md">04/14</div><div class="year">2026</div></div></div>
-          <div class="archive-body">
-            <h3>运营操盘手俱乐部·荣耀元老 · 2026-04-14 学习情报</h3>
-            <p>素人代发、小红书/抖音刷量风险、Pexels 素材和小红书蓝 V 实名。</p>
-          </div>
-        </a>
-
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-05-03.html">
-            <div class="archive-date"><div><div class="md">05/03</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-05-03 学习情报</h3>
-              <p>标准化交付、卖人还是卖产品、虚拟商品上架、账号充值和 Skill 提炼。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-05-02.html">
-            <div class="archive-date"><div><div class="md">05/02</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-05-02 学习情报</h3>
-              <p>小红书店铺规则、对标逻辑、Claude/Codex 工具、卖课判断和 Skill 使用。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-05-01.html">
-            <div class="archive-date"><div><div class="md">05/01</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-05-01 学习情报</h3>
-              <p>内容保护、教培私域、AI 学习、小红书风控和小机会判断。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-05-02.html">
-            <div class="archive-date"><div><div class="md">05/02</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-05-02 学习情报</h3>
-              <p>Hermes Agent、陪娃学 AI、AI 合规红线、GitHub 注册和 Codex 登录。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-05-01.html">
-            <div class="archive-date"><div><div class="md">05/01</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-05-01 学习情报</h3>
-              <p>健康 AI、账号风控、中转站、飞书录音豆和代充风险。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-04-30.html">
-            <div class="archive-date"><div><div class="md">04/30</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-04-30 学习情报</h3>
-              <p>每日精华站、飞书豆团购、AI 作文、cc-switch 和迎新日。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-04-29.html">
-            <div class="archive-date"><div><div class="md">04/29</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-04-29 学习情报</h3>
-              <p>销售 AI 复盘、销冠 Skill、AI 【亦仁】、迎新日和信息资产 Skill。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/ai-hanghai-daily-2026-04-28.html">
-            <div class="archive-date"><div><div class="md">04/28</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>ai航海家俱乐部 · 2026-04-28 学习情报</h3>
-              <p>录音硬件、逐字稿 Skill、私域销售 AI 和聊天记录分析。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-2026-05-01.html">
-            <div class="archive-date"><div><div class="md">05/01</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 近一周学习情报</h3>
-              <p>短视频获客、小红书变现、知识付费产品、AI 工具工作流、内容表达。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-04-30.html">
-            <div class="archive-date"><div><div class="md">04/30</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-04-30 学习情报</h3>
-              <p>AI 工具安装、视频号投流、小红书风控、支付方式和内容选题。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-04-29.html">
-            <div class="archive-date"><div><div class="md">04/29</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-04-29 学习情报</h3>
-              <p>公众号产品化、小红书投流、虚拟资料升单和知识付费边界。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-04-28.html">
-            <div class="archive-date"><div><div class="md">04/28</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-04-28 学习情报</h3>
-              <p>企业 AI 应用定位、AI 视频获客、代运营交付和工具安装。</p>
-            </div>
-          </a>
-          <a class="archive-card" href="./reports/dontbesilent-daily-2026-04-27.html">
-            <div class="archive-date"><div><div class="md">04/27</div><div class="year">2026</div></div></div>
-            <div class="archive-body">
-              <h3>dontbesilent 聊赚钱的群 · 2026-04-27 学习情报</h3>
-              <p>流量变现、找对标五标准、小红书数据分析和模型工具成本。</p>
-            </div>
-          </a>
+    <section class="workspace">
+      <canvas class="ambient-particles" data-ambient-particles aria-hidden="true"></canvas>
+      <header class="workspace-header">
+        <div class="current-context">
+          <p>【石董会】一起成长朋友圈</p>
+          <h2 data-current-date>2026 年 7 月 16 日</h2>
         </div>
-      </section>
+        <button class="copy-button" type="button" data-copy>复制今日重点</button>
+      </header>
 
-      <section id="review">
-        <div class="sec-head"><div class="bar"></div><h2>回顾功能</h2><span class="count">已上线</span></div>
-        <article class="card gold">
-          <ul class="clean">
-            <li>每篇学习情报右上角都有“回顾”，按月份显示该群已有情报日期。</li>
-            <li>点击日期后会直接跳转到对应日报页面。</li>
-            <li>每日新增日报后，回顾菜单和首页归档会继续增加。</li>
-          </ul>
-        </article>
-      </section>
+      <nav class="view-tabs" aria-label="内容栏目">
+        <button type="button" data-view="overview" class="view-tab is-active" aria-selected="true"><span>01</span>今日概览</button>
+        <button type="button" data-view="actions" class="view-tab" aria-selected="false"><span>02</span>行动清单</button>
+        <button type="button" data-view="weekly" class="view-tab" aria-selected="false"><span>03</span>本周回顾</button>
+        <button type="button" data-view="topics" class="view-tab" aria-selected="false"><span>04</span>专题沉淀</button>
+        <button type="button" data-view="resources" class="view-tab" aria-selected="false"><span>05</span>资源连接</button>
+        <button type="button" data-view="discussion" class="view-tab" aria-selected="false"><span>06</span>原始讨论</button>
+      </nav>
 
-      <section id="about">
-        <div class="sec-head"><div class="bar"></div><h2>关于私域梦海</h2></div>
-        <article class="card">
-          <p>这是一个面向私域经营、内容获客、知识 IP 和社群运营的日报站点。目标不是堆聊天记录，而是把一线讨论整理成能复盘、能行动、能长期检索的知识资产。</p>
-          <div class="quote">先确认产品能卖，再确认谁会买，再确认他们会搜什么，最后才是内容、平台、工具和投流。</div>
-        </article>
-      </section>
-    </main>
-
-    <div class="footer-wave" aria-hidden="true">
-      <svg viewBox="0 0 760 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#e6f7f5" d="M0,30 C90,54 178,7 262,27 C355,49 455,10 545,29 C640,47 706,20 760,18 L760,58 L0,58 Z"/>
-        <path fill="#00a99d" fill-opacity=".18" d="M0,40 C95,18 185,55 283,36 C380,17 472,49 572,33 C650,22 710,28 760,29 L760,58 L0,58 Z"/>
-      </svg>
-    </div>
-    <footer>
-      <div><span class="line"></span>石更新整理<span class="line"></span></div>
-      <a class="icp-link" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">陕ICP备2024050468号-1</a>
-    </footer>
+      <main class="workspace-scroll">
+        <div id="app-content" aria-live="polite"></div>
+      </main>
+    </section>
   </div>
-  <script src="./script.js"></script>
+
+  <div class="toast" role="status" aria-live="polite" hidden>今日重点已复制</div>
+  <script src="./archive-days.js?v=20260717-2"></script>
+  <script src="./app.js?v=20260717-2"></script>
 </body>
 </html>
