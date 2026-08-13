@@ -24,7 +24,7 @@ EXPECTED_AUTHOR = "车车导演爱提问"
 DEFAULT_STATE = Path.home() / "Library/Application Support/Siyumenghai Monitor/state.json"
 LARK = "/Users/murphys/.npm-global/bin/lark-cli"
 CRITICAL = {
-    "index.html": ("text/html", 5_000),
+    "index.html": ("text/html", 4_500),
     "member-view/index.html": ("text/html", 5_000),
     "member-view/app.js": ("javascript", 20_000),
     "member-view/members.json": ("json", 500),
