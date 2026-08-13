@@ -430,7 +430,7 @@ async function localHelperRequest(url, options = {}) {
     const response = await fetch(url, {
       cache: 'no-store',
       headers: { Accept: 'application/json' },
-      targetAddressSpace: 'local',
+      targetAddressSpace: 'loopback',
       ...options,
       signal: controller.signal
     });
@@ -1003,7 +1003,7 @@ async function localCommentRequest(path, params) {
       signal: controller.signal,
       cache: 'no-store',
       credentials: 'omit',
-      targetAddressSpace: 'local'
+      targetAddressSpace: 'loopback'
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || (payload.code !== undefined && Number(payload.code) !== 0)) {
