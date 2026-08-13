@@ -21,6 +21,7 @@ DEST = pathlib.Path("/var/www/html/member-view")
 STATE = pathlib.Path("/home/site-deploy/.siyumenghai-main-sha")
 API = f"https://api.github.com/repos/{REPO}"
 RAW = f"https://raw.githubusercontent.com/{REPO}"
+CDN = f"https://cdn.jsdelivr.net/gh/{REPO}"
 EXCLUDED_PREFIXES = ("member-view/tools/",)
 EXCLUDED_SUFFIXES = (
     "member-view/assets/paraformer-zh-small/sherpa-onnx-wasm-main-vad-asr.wasm",
@@ -46,6 +47,16 @@ def get_bytes(url: str, attempts: int = 4) -> bytes:
 
 def get_json(url: str) -> dict:
     return json.loads(get_bytes(url).decode("utf-8"))
+
+
+def get_repo_file(commit: str, path: str) -> bytes:
+    errors: list[str] = []
+    for url in (f"{CDN}@{commit}/{path}", f"{RAW}/{commit}/{path}"):
+        try:
+            return get_bytes(url)
+        except RuntimeError as error:
+            errors.append(str(error))
+    raise RuntimeError("; ".join(errors))
 
 
 def wanted(path: str, kind: str) -> bool:
@@ -87,7 +98,7 @@ def main() -> None:
         if current.is_file() and git_blob_sha(current) == entry["sha"]:
             shutil.copy2(current, target)
             return
-        target.write_bytes(get_bytes(f"{RAW}/{commit}/{path}"))
+        target.write_bytes(get_repo_file(commit, path))
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
