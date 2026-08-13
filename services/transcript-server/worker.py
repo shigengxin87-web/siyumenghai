@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 MODEL_DIR = "/var/lib/siyumenghai-transcriber/models/large-v3-turbo"
 MAX_SECONDS = 600
 OCR_WORKER = os.environ.get("TRANSCRIPT_OCR_WORKER", str(Path(__file__).with_name("ocr_worker.py")))
-PIPELINE_VERSION = "subtitle-track-asr-v1"
+PIPELINE_VERSION = "subtitle-track-asr-v2"
 
 FUSION_CORRECTIONS = (
     ("Workbuddy", "WorkBuddy"),
@@ -73,6 +73,27 @@ def normalize_text(value):
         text = text.replace(wrong, right)
     text = re.sub(r"大错特(?!错)", "大错特错", text)
     return text
+
+
+def contextual_consistency(segments):
+    """Fix repeated business terms only when the full transcript proves context.
+
+    ASR can decode the same spoken word differently across nearby sentences.
+    When the transcript already establishes a social-platform follower context,
+    normalize number-qualified homophone errors without rewriting other prose.
+    """
+    combined = "".join(str(item.get("text", "")) for item in segments)
+    follower_context = "粉丝" in combined and re.search(r"视频号|抖音|小红书|快手|微博|账号", combined)
+    if not follower_context:
+        return segments
+    count = r"(?:\d+(?:\.\d+)?|[零〇一二三四五六七八九十百千万两]+)(?:万|千|百)?(?:\d+)?"
+    pattern = re.compile(rf"({count})(的?)(粉钉|粉色)(?=的|吧|呢|，|。|、|\s|$)")
+    output = []
+    for item in segments:
+        value = dict(item)
+        value["text"] = pattern.sub(r"\1\2粉丝", str(value.get("text", "")))
+        output.append(value)
+    return output
 
 
 def punctuation_assignments(events, words):
@@ -415,6 +436,7 @@ def main():
         "end": round(float(segment.end), 2),
         "text": normalize_text(segment.text),
     } for segment in whisper_segments]
+    asr_segments = contextual_consistency(asr_segments)
     asr_words = [{
         "start": round(float(word.start), 2),
         "end": round(float(word.end), 2),

@@ -36,7 +36,7 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v7-asr';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v8-context';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v1';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
@@ -709,6 +709,22 @@ function cleanSegment(value, terms) {
   return { text, correctionCount };
 }
 
+function correctContextConsistency(segments) {
+  const combined = segments.join('');
+  if (!combined.includes('粉丝') || !/(?:视频号|抖音|小红书|快手|微博|账号)/u.test(combined)) {
+    return { segments, correctionCount: 0 };
+  }
+  const pattern = /((?:\d+(?:\.\d+)?|[零〇一二三四五六七八九十百千万两]+)(?:万|千|百)?(?:\d+)?)(的?)(?:粉钉|粉色)(?=的|吧|呢|，|。|、|\s|$)/gu;
+  let correctionCount = 0;
+  return {
+    segments: segments.map((segment) => segment.replace(pattern, (...match) => {
+      correctionCount += 1;
+      return `${match[1]}${match[2]}粉丝`;
+    })),
+    correctionCount
+  };
+}
+
 function buildTranscriptResult(result, video) {
   const source = String(result?.source || 'asr');
   const correctedSource = Array.isArray(result?.segments) && result.segments.length
@@ -724,11 +740,14 @@ function buildTranscriptResult(result, video) {
     correctionCount += originalText.split(wrong).length - 1;
   }
   correctionCount += (originalText.match(/大错特(?!错)/gu) || []).length;
-  const correctedSegments = correctedSource.map((segment) => {
+  let correctedSegments = correctedSource.map((segment) => {
     const item = cleanSegment(segment, terms);
     correctionCount += item.correctionCount;
     return item.text;
   }).filter(Boolean);
+  const consistent = correctContextConsistency(correctedSegments);
+  correctedSegments = consistent.segments;
+  correctionCount += consistent.correctionCount;
   return {
     raw: rawSegments.join('\n'),
     corrected: correctedSegments.join('\n'),
