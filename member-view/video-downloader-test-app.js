@@ -221,6 +221,11 @@ function isActiveTranscriptTask(task) {
   return Boolean(task?.jobId && !['completed', 'error'].includes(task.status));
 }
 
+function normalizedTranscriptStatus(value) {
+  const status = String(value || '').toLowerCase();
+  return ['failed', 'failure'].includes(status) ? 'error' : status;
+}
+
 function transcriptTaskLabel(task) {
   if (!task) return '';
   if (task.status === 'error') return '逐字稿识别失败';
@@ -1262,7 +1267,7 @@ async function transcribeCurrentVideo() {
     const task = {
       shareUrl: video.shareUrl,
       jobId: payload.id,
-      status: payload.status || 'queued',
+      status: normalizedTranscriptStatus(payload.status) || 'queued',
       stage: payload.stage || '',
       ahead: Number(payload.ahead || 0),
       createdAt: Date.now(),
@@ -1321,7 +1326,7 @@ function transcriptCompletionMessage(payload, result) {
 async function applyTranscriptPayload(payload, originalTask) {
   const task = {
     ...originalTask,
-    status: payload.status || originalTask.status || 'running',
+    status: normalizedTranscriptStatus(payload.status) || originalTask.status || 'running',
     stage: payload.stage || originalTask.stage || '',
     ahead: Number(payload.ahead || 0),
     error: payload.error || '',
