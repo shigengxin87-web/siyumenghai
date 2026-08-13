@@ -1,0 +1,15 @@
+[Unit]
+Description=Semantic health check and self-heal for Siyumenghai video parser
+After=network-online.target siyumenghai-video-parser.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/siyumenghai-video-parser-healthcheck
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/siyumenghai-video-parser
+

@@ -1139,7 +1139,8 @@ async function extractCurrentComments(forceRefresh = false) {
   if (!isLocalPage) {
     const bridgeUrl = new URL(COMMENT_BRIDGE_URL);
     bridgeUrl.searchParams.set('url', video.shareUrl);
-    const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge', 'width=760,height=760');
+    bridgeUrl.searchParams.set('v', '20260813-2');
+    const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge-v2', 'width=760,height=760');
     showCommentStatus(
       popup ? '已打开安全评论窗口；浏览器询问本地网络权限时请选择“允许”。' : '浏览器拦截了评论窗口，请允许此网站打开弹窗后重试。',
       popup ? 'working' : 'error'

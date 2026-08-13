@@ -1,1 +1,1 @@
-document.write('<script src="./video-downloader-app.js?v=20260811-hd-cover"><\/script>');
+document.write('<script src="./video-downloader-app.js?v=20260813-comment-v2"><\/script>');
