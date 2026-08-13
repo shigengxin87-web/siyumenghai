@@ -2,96 +2,53 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ECFDF5">
-  <base href="/member-view/">
-  <title>【石董会】一起成长朋友圈 · 群友版</title>
-  <meta name="description" content="面向【石董会】一起成长朋友圈群友的每日启发、行动建议、本周回顾与长期专题。">
-  <link rel="canonical" href="https://siyumenghai.cn/">
-  <link rel="stylesheet" href="./styles.css?v=20260717-2">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#f7f7f5">
+  <title>网站升级中</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #f7f7f5;
+      color: #242421;
+    }
+    main {
+      width: min(520px, calc(100% - 40px));
+      padding: 48px 40px;
+      border: 1px solid #e3e2dc;
+      border-radius: 24px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(33, 33, 28, 0.06);
+    }
+    .mark {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: #252521;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+    h1 { margin: 0; font-size: clamp(28px, 7vw, 40px); letter-spacing: -0.03em; }
+    p { margin: 18px 0 0; color: #74736c; font-size: 16px; line-height: 1.8; }
+    small { display: block; margin-top: 28px; color: #aaa8a0; }
+  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="brand" href="#" aria-label="成长朋友圈群友版首页">
-        <span class="brand-mark">石</span>
-        <span><strong>成长朋友圈</strong><small>群友学习版</small></span>
-      </a>
-
-      <div class="group-intro">
-        <p><span class="live-dot"></span>单群专属学习站</p>
-        <h1>每天从群里，<br>带走一点真东西</h1>
-        <p class="group-description">每天 3 分钟，找到值得记住的观点、可以执行的动作和能够连接的人。</p>
-      </div>
-
-      <section class="calendar-panel" aria-label="日报日历">
-        <div class="calendar-heading">
-          <div>
-            <p class="nav-label">日报日历</p>
-            <strong data-month-label>2026 年 7 月</strong>
-          </div>
-          <div class="calendar-controls">
-            <button type="button" data-calendar-prev aria-label="上一个月">‹</button>
-            <button type="button" data-calendar-next aria-label="下一个月">›</button>
-          </div>
-        </div>
-
-        <button type="button" class="today-button" data-today>
-          <span>回到今天</span>
-          <strong data-today-label>7 月 16 日</strong>
-        </button>
-
-        <div class="calendar-weekdays" aria-hidden="true">
-          <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
-        </div>
-        <div class="calendar-grid" data-calendar role="grid" aria-label="选择任意日期"></div>
-        <div class="calendar-legend"><span><i></i>已有日报</span><span>点击任意日期即可跳转</span></div>
-      </section>
-
-      <button type="button" class="member-entry" data-member-entry aria-selected="false">
-        <span class="member-entry-mark">友</span>
-        <span class="member-entry-copy"><small>独立入口</small><strong>群友名录</strong></span>
-        <span class="member-entry-count"><b data-member-count>21</b> 人</span>
-      </button>
-
-      <a class="member-entry knowledge-entry" href="https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79" target="_blank" rel="noopener noreferrer" aria-label="在新页面打开 IMA 知识库">
-        <span class="member-entry-mark">知</span>
-        <span class="member-entry-copy"><small>内容沉淀</small><strong>IMA 知识库</strong></span>
-        <span class="member-entry-count">打开 ↗</span>
-      </a>
-
-      <div class="sidebar-note">
-        <p>内容基于群聊记录整理，帮助群友快速学习和行动，不替代原始讨论。</p>
-      </div>
-    </aside>
-
-    <section class="workspace">
-      <canvas class="ambient-particles" data-ambient-particles aria-hidden="true"></canvas>
-      <header class="workspace-header">
-        <div class="current-context">
-          <p>【石董会】一起成长朋友圈</p>
-          <h2 data-current-date>2026 年 7 月 16 日</h2>
-        </div>
-        <button class="copy-button" type="button" data-copy>复制今日重点</button>
-      </header>
-
-      <nav class="view-tabs" aria-label="内容栏目">
-        <button type="button" data-view="overview" class="view-tab is-active" aria-selected="true"><span>01</span>今日概览</button>
-        <button type="button" data-view="actions" class="view-tab" aria-selected="false"><span>02</span>行动清单</button>
-        <button type="button" data-view="weekly" class="view-tab" aria-selected="false"><span>03</span>本周回顾</button>
-        <button type="button" data-view="topics" class="view-tab" aria-selected="false"><span>04</span>专题沉淀</button>
-        <button type="button" data-view="resources" class="view-tab" aria-selected="false"><span>05</span>资源连接</button>
-        <button type="button" data-view="discussion" class="view-tab" aria-selected="false"><span>06</span>原始讨论</button>
-      </nav>
-
-      <main class="workspace-scroll">
-        <div id="app-content" aria-live="polite"></div>
-      </main>
-    </section>
-  </div>
-
-  <div class="toast" role="status" aria-live="polite" hidden>今日重点已复制</div>
-  <script src="./archive-days.js?v=20260717-2"></script>
-  <script src="./app.js?v=20260717-2"></script>
+  <main>
+    <div class="mark" aria-hidden="true">石</div>
+    <h1>网站升级中</h1>
+    <p>这里正在为下一阶段做准备。<br>正式开放时，再和你见面。</p>
+    <small>siyumenghai.cn</small>
+  </main>
 </body>
 </html>
