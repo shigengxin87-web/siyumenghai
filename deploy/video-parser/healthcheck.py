@@ -17,6 +17,8 @@ ENDPOINT = "http://127.0.0.1:2027/api/channels/parse_sph"
 CANARY_URL = "https://weixin.qq.com/sph/AKlMnWudWP"
 STATE_FILE = Path("/var/lib/siyumenghai-video-parser/health.json")
 SERVICE = "siyumenghai-video-parser.service"
+RESTART_WINDOW_SECONDS = 1800
+MAX_RESTARTS = 3
 
 
 def probe() -> dict[str, object]:
@@ -55,9 +57,24 @@ def write_state(state: dict[str, object]) -> None:
     os.replace(temporary, STATE_FILE)
 
 
+def load_state() -> dict[str, object]:
+    try:
+        return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
 def main() -> int:
     checked_at = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat(timespec="seconds")
     attempts: list[dict[str, object]] = []
+    previous = load_state()
+    now_epoch = int(time.time())
+    restart_history = [
+        int(value)
+        for value in previous.get("restart_history", [])
+        if now_epoch - int(value) < RESTART_WINDOW_SECONDS
+    ]
+    restart_suppressed = False
 
     for index in range(3):
         try:
@@ -68,6 +85,9 @@ def main() -> int:
                 "repaired": index > 0,
                 "attempts": attempts,
                 "details": details,
+                "consecutive_failures": 0,
+                "restart_history": restart_history,
+                "restart_suppressed": restart_suppressed,
             }
             write_state(state)
             print(json.dumps(state, ensure_ascii=False))
@@ -75,10 +95,22 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             attempts.append({"attempt": index + 1, "error": f"{type(exc).__name__}: {exc}"})
             if index == 0:
-                subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=30)
+                if len(restart_history) < MAX_RESTARTS:
+                    subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=30)
+                    restart_history.append(now_epoch)
+                else:
+                    restart_suppressed = True
             time.sleep(3)
 
-    state = {"healthy": False, "checked_at": checked_at, "repaired": False, "attempts": attempts}
+    state = {
+        "healthy": False,
+        "checked_at": checked_at,
+        "repaired": False,
+        "attempts": attempts,
+        "consecutive_failures": int(previous.get("consecutive_failures", 0)) + 1,
+        "restart_history": restart_history,
+        "restart_suppressed": restart_suppressed,
+    }
     write_state(state)
     print(json.dumps(state, ensure_ascii=False))
     return 1

@@ -2,6 +2,8 @@
 Description=Siyumenghai WeChat Channels parser
 After=network-online.target lighthouse-chromium.service
 Wants=network-online.target
+StartLimitIntervalSec=1800
+StartLimitBurst=3
 
 [Service]
 Type=simple
@@ -11,7 +13,7 @@ WorkingDirectory=/var/lib/siyumenghai-video-parser
 ExecStartPre=/usr/local/bin/siyumenghai-refresh-yuanbao-cookie /etc/siyumenghai-video-parser/config.yaml
 ExecStart=/opt/siyumenghai-video-parser/wx_video_download --config /etc/siyumenghai-video-parser/config.yaml
 Restart=on-failure
-RestartSec=5
+RestartSec=15
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict

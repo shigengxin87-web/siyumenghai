@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>cn.siyumenghai.site-monitor</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/murphys/Library/Application Support/Siyumenghai Monitor/monitor_site.py</string>
+    <string>--recipient-id</string>
+    <string>ou_70a1d9ac9caf8e8c8d1607a3cae44ab3</string>
+    <string>--check-local-comments</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>300</integer>
+  <key>ThrottleInterval</key>
+  <integer>60</integer>
+  <key>StandardOutPath</key>
+  <string>/Users/murphys/Library/Logs/siyumenghai-site-monitor.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/murphys/Library/Logs/siyumenghai-site-monitor.err.log</string>
+</dict>
+</plist>

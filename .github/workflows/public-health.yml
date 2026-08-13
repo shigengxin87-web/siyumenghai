@@ -1,0 +1,22 @@
+name: Public semantic health
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: siyumenghai-public-health
+  cancel-in-progress: true
+
+jobs:
+  public-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify HTTPS, assets and real parser sample
+        run: python3 deploy/monitor/monitor_site.py --no-notify --state-file /tmp/siyumenghai-monitor.json
