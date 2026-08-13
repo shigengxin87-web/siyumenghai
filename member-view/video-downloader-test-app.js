@@ -1249,6 +1249,7 @@ async function transcribeCurrentVideo() {
     const response = await fetch(TRANSCRIPT_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      ...(TEST_VARIANT === 'b' ? { targetAddressSpace: 'local' } : {}),
       body: JSON.stringify({
         share_url: video.shareUrl,
         video_url: video.url,
@@ -1368,7 +1369,10 @@ async function applyTranscriptPayload(payload, originalTask) {
 async function pollTranscriptTask(task) {
   if (!task?.jobId) return;
   try {
-    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, { cache: 'no-store' });
+    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, {
+      cache: 'no-store',
+      ...(TEST_VARIANT === 'b' ? { targetAddressSpace: 'local' } : {})
+    });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
     await applyTranscriptPayload(payload, task);
