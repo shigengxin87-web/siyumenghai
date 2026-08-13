@@ -24,6 +24,7 @@ EXPECTED_AUTHOR = "车车导演爱提问"
 DEFAULT_STATE = Path.home() / "Library/Application Support/Siyumenghai Monitor/state.json"
 LARK = "/Users/murphys/.npm-global/bin/lark-cli"
 CRITICAL = {
+    "index.html": ("text/html", 5_000),
     "member-view/index.html": ("text/html", 5_000),
     "member-view/app.js": ("javascript", 20_000),
     "member-view/members.json": ("json", 500),
@@ -84,6 +85,10 @@ def check_public() -> tuple[list[str], dict[str, object]]:
     if members.get("count") != len(members.get("members", [])) or not members.get("members"):
         failures.append("群友名录为空或人数不一致")
     details["members"] = len(members.get("members", []))
+
+    homepage = fetch(f"{BASE}/?monitor={int(time.time())}")[1].decode("utf-8", errors="replace")
+    if "【石董会】" not in homepage or "群聊学习情报" in homepage:
+        failures.append("根域名仍不是石董会首页")
 
     parser_url = f"{BASE}/api/video/profile?" + urllib.parse.urlencode(
         {"url": CANARY, "monitor": int(time.time())}
