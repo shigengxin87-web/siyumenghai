@@ -12,7 +12,7 @@ RELEASES = Path("/var/www/releases/siyumenghai")
 CURRENT = RELEASES / "current"
 PREVIOUS = RELEASES / "previous"
 STATE = Path("/home/site-deploy/.siyumenghai-main-sha")
-REQUIRED = ("member-view/index.html", "member-view/app.js", "member-view/members.json")
+REQUIRED = ("index.html", "member-view/index.html", "member-view/app.js", "member-view/members.json")
 
 
 def atomic_link(link: Path, target: Path) -> None:
