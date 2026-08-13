@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import concurrent.futures
+import hashlib
 import json
 import os
 import pathlib
@@ -55,6 +56,12 @@ def wanted(path: str, kind: str) -> bool:
     return path not in EXCLUDED_SUFFIXES
 
 
+def git_blob_sha(path: pathlib.Path) -> str:
+    data = path.read_bytes()
+    header = f"blob {len(data)}\0".encode("ascii")
+    return hashlib.sha1(header + data).hexdigest()
+
+
 def main() -> None:
     commit = get_json(f"{API}/commits/{BRANCH}")["sha"]
     if STATE.exists() and STATE.read_text(encoding="utf-8").strip() == commit:
@@ -63,22 +70,28 @@ def main() -> None:
     tree = get_json(f"{API}/git/trees/{commit}?recursive=1")
     if tree.get("truncated"):
         raise RuntimeError("GitHub tree response was truncated")
-    paths = [entry["path"] for entry in tree["tree"] if wanted(entry["path"], entry["type"])]
+    entries = [entry for entry in tree["tree"] if wanted(entry["path"], entry["type"])]
+    paths = [entry["path"] for entry in entries]
     if "member-view/index.html" not in paths or "member-view/members.json" not in paths:
         raise RuntimeError("required website files are missing from GitHub tree")
 
     stage_root = pathlib.Path(tempfile.mkdtemp(prefix="siyumenghai-sync-"))
     stage = stage_root / "member-view"
 
-    def download(path: str) -> None:
+    def download(entry: dict) -> None:
+        path = entry["path"]
         relative = pathlib.Path(path).relative_to("member-view")
         target = stage / relative
         target.parent.mkdir(parents=True, exist_ok=True)
+        current = DEST / relative
+        if current.is_file() and git_blob_sha(current) == entry["sha"]:
+            shutil.copy2(current, target)
+            return
         target.write_bytes(get_bytes(f"{RAW}/{commit}/{path}"))
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
-            list(pool.map(download, paths))
+            list(pool.map(download, entries))
 
         members = json.loads((stage / "members.json").read_text(encoding="utf-8"))
         if members.get("count") != len(members.get("members", [])):
