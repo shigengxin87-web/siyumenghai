@@ -32,7 +32,9 @@ def get_bytes(url: str, attempts: int = 4) -> bytes:
     error: Exception | None = None
     for attempt in range(attempts):
         try:
-            with urllib.request.urlopen(request, timeout=30) as response:
+            # Large static assets (for example background audio) can exceed the
+            # old 30-second limit when raw.githubusercontent.com is slow in CN.
+            with urllib.request.urlopen(request, timeout=120) as response:
                 return response.read()
         except Exception as exc:  # network errors are retried and surfaced afterward
             error = exc
