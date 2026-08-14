@@ -73,6 +73,27 @@
     try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* no-op */ }
   }
 
+  async function responsePayload(response) {
+    const text = await response.text();
+    let payload = {};
+    if (text) {
+      try { payload = JSON.parse(text); } catch { payload = {}; }
+    }
+    if (!response.ok) {
+      const message = String(payload?.error || '').trim()
+        || (response.status === 429
+          ? '请求过于频繁，请稍后再试。'
+          : response.status >= 500
+          ? '云端逐字稿服务暂时不可用，请稍后重试。'
+          : `服务器返回 ${response.status}`);
+      throw new Error(message);
+    }
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw new Error('云端逐字稿服务返回了无法识别的数据，请稍后重试。');
+    }
+    return payload;
+  }
+
   function capturePayload(url, options, payload) {
     if (!payload?.id) return;
     let shareUrl = jobToShare[payload.id] || '';
@@ -224,8 +245,7 @@
         method: 'POST',
         ...(variant === 'b' ? { targetAddressSpace: 'loopback' } : {}),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+      const payload = await responsePayload(response);
       capturePayload(`${apiBase}/${jobId}/correction`, { method: 'POST' }, payload);
     } catch (error) {
       const status = document.querySelector('[data-transcript-status]');
@@ -268,7 +288,7 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260814-production-c-2'
+    ? './video-downloader-app.js?v=20260814-production-c-3'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();

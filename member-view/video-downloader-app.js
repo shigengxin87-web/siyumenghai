@@ -1252,8 +1252,7 @@ async function transcribeCurrentVideo() {
         author: video.author
       })
     });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+    const payload = await readTranscriptResponse(response);
     const task = {
       shareUrl: video.shareUrl,
       jobId: payload.id,
@@ -1365,8 +1364,7 @@ async function pollTranscriptTask(task) {
   if (!task?.jobId) return;
   try {
     const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, { cache: 'no-store' });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || `服务器返回 ${response.status}`);
+    const payload = await readTranscriptResponse(response);
     await applyTranscriptPayload(payload, task);
   } catch (error) {
     const failures = Number(task.pollFailures || 0) + 1;
@@ -1388,6 +1386,31 @@ async function pollTranscriptTask(task) {
       }
     }
   }
+}
+
+async function readTranscriptResponse(response) {
+  const text = await response.text();
+  let payload = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = {};
+    }
+  }
+  if (!response.ok) {
+    const message = String(payload?.error || '').trim()
+      || (response.status === 429
+        ? '请求过于频繁，请稍后再试。'
+        : response.status >= 500
+        ? '云端逐字稿服务暂时不可用，请稍后重试。'
+        : `服务器返回 ${response.status}`);
+    throw new Error(message);
+  }
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    throw new Error('云端逐字稿服务返回了无法识别的数据，请稍后重试。');
+  }
+  return payload;
 }
 
 async function monitorTranscriptTasks() {
