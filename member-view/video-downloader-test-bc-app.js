@@ -4,9 +4,10 @@
   const variant = String(document.documentElement.dataset.transcriptVariant || '').toLowerCase();
   if (!['b', 'c'].includes(variant)) throw new Error('B/C 逐字稿脚本只能用于测试 B 或 C');
 
+  const productionC = document.documentElement.dataset.transcriptProduction === 'c';
   const apiBase = variant === 'b' ? 'http://127.0.0.1:8768/jobs' : '/api/transcripts-test-cloud/jobs';
   const locationLabel = variant === 'b' ? '本机处理用时' : '云端处理用时';
-  const storagePrefix = `siyumenghai-video-test-${variant}`;
+  const storagePrefix = productionC ? 'siyumenghai-video-production-c' : `siyumenghai-video-test-${variant}`;
   const payloadCacheKey = `${storagePrefix}-transcripts-deepseek-chat-bc-proofread-zh-v1.0.1`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
@@ -261,7 +262,9 @@
   observer.observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
 
   const legacy = document.createElement('script');
-  legacy.src = './video-downloader-test-app.js?v=20260814-abc-1';
+  legacy.src = productionC
+    ? './video-downloader-app.js?v=20260814-production-c-1'
+    : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();
     const navigation = performance.getEntriesByType('navigation')[0];
