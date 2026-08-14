@@ -944,6 +944,50 @@ const days = {
       { time: '14:31', title: '视频号与公众号导流规则变化', text: '从“是否都必须挂微信小店”切入，区分电商闭环、企业微信线索和其他官方方式，并把合规差异还原为业务模式选择。', url: 'https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink', linkLabel: '查看五大导流场景' },
       { time: '19:40', title: '兼职公域引流的来源标记与分佣', text: '围绕多人使用自有账号引流，比较获客助手、参数二维码和独立员工号三种归因方式，并结合链接、二维码和微信号的渠道限制选择。' }
     ]
+  },
+  '2026-08-14': {
+    dateLabel: '2026 年 8 月 14 日', weekday: '星期五', messages: 117, themesCount: 7, readTime: '8 分钟',
+    title: '把 AI 能力变成业务结果，也把社群答疑沉淀成共同成长',
+    summary: '当天从 DeepSeek Harness 的本地 Agent 实测开始，讨论模型、工具与成本的差异；新成员 A梦带来更关键的问题：高价值 AI 咨询怎样产品化，才能避免非标交付不断切碎时间。群内随后把问题延伸到按需学习、精准找人解决业务问题、长期关系经营和社群知识共享。晚间又交流多维表格、Hermes、Codex 与 ChatCut 的内容工作流，并欢迎内容工程化实践者楚川加入。',
+    insights: [
+      { roles: ['product', 'content'], tag: '工具判断', source: '石更新 × 群友', time: '14:43', title: '判断新 Agent，不只看热度，还要看开放连接方式和真实使用成本', text: 'DeepSeek Harness 的讨论把关注点从“是不是又一个 Agent”转向两件事：能否像插座一样连接不同模型、Agent 和工具，以及接入后的调用成本是否适合自己的任务。先用具体业务小测，再决定是否迁移工作流。', url: 'https://mp.weixin.qq.com/s/Kf_jYRjZim32DpiWT__W-g', linkLabel: '查看实测与安装教程' },
+      { roles: ['product', 'private'], tag: '服务产品化', source: 'A梦 × 石更新 × 群友', time: '16:07', title: 'AI 咨询要先分清持续会员价值与重交付项目，再谈统一定价', text: '长期一对一陪跑容易让时间被非标需求切碎；会员群、集中答疑、半天共创和具体项目则是不同交付层级。定价之前应先明确解决什么问题、交付到什么程度、哪些需求必须单独报价。', links: [
+        { label: '阅读社群产品化答疑', url: 'https://my.feishu.cn/wiki/SuPoweXcdifItJkOntQcZGICnwo?from=from_copylink' },
+        { label: '了解 A梦的创作减负实践', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NDQ3ODI3NQ==&mid=2651433203&idx=1&sn=be821c53b425fa813a678cd4fd073f13&chksm=bcac91eece63dd4b63991a8be4de1a5ef71c14015d4653cc30b2a0cc1636dc9615fb7d04722b&mpshare=1&scene=1&srcid=0814MQRqmhpMeWZbH3W62y9p&sharer_shareinfo=95d7e04d32c2b33377aa2acbf16c6cea&sharer_shareinfo_first=95d7e04d32c2b33377aa2acbf16c6cea#rd' }
+      ] },
+      { roles: ['product', 'content'], tag: '按需学习', source: '群友共同讨论', time: '18:16', title: '老板学习 AI，更有效的方式常常是带着正在发生的业务问题去找答案', text: '课程可能太基础，也可能离当前业务太远。当天形成的共识是：先把要解决的场景说清楚，再去 B 站、闲鱼或行业圈层寻找能精准匹配需求的人，用一次小额共创验证结果，比囤积暂时用不上的知识更直接。' },
+      { roles: ['private', 'product'], tag: '长期关系', source: '石更新 × 群友', time: '18:36', title: '技术性打法会失效，认真做产品和经营关系更容易形成长期复利', text: '讨论从社群里的信任反馈回到经营本质：短期技巧会不断变化，但用心解决问题、持续分享和真实关心成员，会降低焦虑，也让口碑、合作与转介绍自然累积。', url: 'https://sw21ksbvrf.feishu.cn/wiki/TURpw42OFiJSywkk7pocIr7RnHQ', linkLabel: '重读上海交流后的心得' },
+      { roles: ['content', 'product'], tag: '内容工作流', source: '群友共同讨论', time: '19:08', title: '内容工程化不是堆工具，而是让下载、识别、二创、成图与剪辑连成闭环', text: '多维表格提供结构化字段和解析能力，Hermes 可承担下载与上传，Codex 或 ChatCut 可继续处理剪辑。真正值得验证的是各环节能否稳定传递素材、保留人工检查点，并减少重复操作。' },
+      { roles: ['private', 'product'], tag: '知识共享', source: '石更新 × 群友', time: '20:00', title: '高质量社群答疑表面服务一个人，实际可以沉淀为全场共享的知识资产', text: '围绕 A梦的提问形成的长答，不只帮助提问者判断会员群，也启发群友重新设计自己的产品阶梯。公开问题、结构化回应、结合自身立刻行动，让一次答疑同时产生情绪支持、方法参考和业务决策。', url: 'https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect', linkLabel: '查看延伸阅读' },
+      { roles: ['content', 'product'], tag: '内容工程化', source: '楚川', time: '23:56', title: '大规模内容生产的关键，是把方法、流程和人机协作做成可复制系统', text: '新成员楚川的实践把“AI 内容工厂”落到团队与客户交付：内容产能来自工程化流程，而不是单纯增加人手。对小团队而言，更值得研究的是任务拆解、质量门槛、复用组件和最终人工验收。', url: 'https://mp.weixin.qq.com/s?__biz=MzU1NTE0MjQyNw==&mid=2247486586&idx=1&sn=6c2be282651ef7cb7e3cbd18d4ae97c1&chksm=fa2c8e932d732603939770cf8b796343966160d983c30ae1ceeff0e1801d94a226a46c0c8610&mpshare=1&scene=1&srcid=0814qbLTYSRngfYbJMfr18pz&sharer_shareinfo=1b2a78166f9ed7b353787a6ff6ef098e&sharer_shareinfo_first=1b2a78166f9ed7b353787a6ff6ef098e#rd', linkLabel: '阅读内容工程化方法论' }
+    ],
+    actions: [
+      { title: '用一个真实任务测试 DeepSeek Harness', text: '选择低风险、可核对的业务任务，记录安装成本、工具连接、模型调用费用和结果质量。', url: 'https://mp.weixin.qq.com/s/Kf_jYRjZim32DpiWT__W-g', linkLabel: '参考安装教程' },
+      { title: '画出自己的服务交付阶梯', text: '把会员群、集中答疑、半天共创和项目合作分别写清目标、边界、时间成本与报价方式。', url: 'https://my.feishu.cn/wiki/SuPoweXcdifItJkOntQcZGICnwo?from=from_copylink', linkLabel: '参考完整答疑' },
+      { title: '为一个卡点寻找精准解决者', text: '先写清具体问题和验收结果，再从 B 站、闲鱼或同行圈层寻找能现场带做的人，用小范围合作验证。' },
+      { title: '搭一条最小内容自动化链路', text: '只连接素材下载、结构化识别和一次人工审核，稳定后再增加二创、成图或剪辑环节。' },
+      { title: '把一次答疑改造成共享资产', text: '保留原问题，补充判断框架、行动清单和适用边界，让其他成员也能直接复用。', url: 'https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect', linkLabel: '查看延伸阅读' }
+    ],
+    resources: [
+      { kind: '教程', title: 'DeepSeek Harness 本地 Agent 实测与一键安装', text: '包含工具定位、实际体验和 Windows、Mac 安装路径，适合用具体任务小范围验证。', url: 'https://mp.weixin.qq.com/s/Kf_jYRjZim32DpiWT__W-g', linkLabel: '打开公众号文章' },
+      { kind: '案例', title: '创作减负计划与黑客松实践', text: 'A梦对创作减负产品和黑客松经历的复盘，可作为理解其 AI 产品与业务落地背景的补充。', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NDQ3ODI3NQ==&mid=2651433203&idx=1&sn=be821c53b425fa813a678cd4fd073f13&chksm=bcac91eece63dd4b63991a8be4de1a5ef71c14015d4653cc30b2a0cc1636dc9615fb7d04722b&mpshare=1&scene=1&srcid=0814MQRqmhpMeWZbH3W62y9p&sharer_shareinfo=95d7e04d32c2b33377aa2acbf16c6cea&sharer_shareinfo_first=95d7e04d32c2b33377aa2acbf16c6cea#rd', linkLabel: '阅读文章' },
+      { kind: '答疑', title: '是否建立 999 元会员社群', text: '围绕非标咨询、会员价值、交付边界和个人选择形成的长答，也呈现了石董会社群的价值主张。', url: 'https://my.feishu.cn/wiki/SuPoweXcdifItJkOntQcZGICnwo?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '复盘', title: '上海交流后的经营心得', text: '围绕产品、关系、长期主义和焦虑觉察的旧文重读，与当天关于踏实经营的讨论直接呼应。', url: 'https://sw21ksbvrf.feishu.cn/wiki/TURpw42OFiJSywkk7pocIr7RnHQ', linkLabel: '阅读飞书文章' },
+      { kind: '文章', title: 'dontbesilent 的文字分享', text: '当天围绕行动、产品层级和商业思考分享的延伸阅读，帮助把讨论继续落到个人决策。', url: 'https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect', linkLabel: '打开公众号文章' },
+      { kind: '方法论', title: '六年内容工程化与两年 AI 内容工程化', text: '楚川对大规模内容生产方法的系统复盘，适合用于检查团队流程、产能与质量控制。', url: 'https://mp.weixin.qq.com/s?__biz=MzU1NTE0MjQyNw==&mid=2247486586&idx=1&sn=6c2be282651ef7cb7e3cbd18d4ae97c1&chksm=fa2c8e932d732603939770cf8b796343966160d983c30ae1ceeff0e1801d94a226a46c0c8610&mpshare=1&scene=1&srcid=0814qbLTYSRngfYbJMfr18pz&sharer_shareinfo=1b2a78166f9ed7b353787a6ff6ef098e&sharer_shareinfo_first=1b2a78166f9ed7b353787a6ff6ef098e#rd', linkLabel: '阅读完整方法论' }
+    ],
+    themes: [
+      { time: '14:43', title: 'DeepSeek Harness 本地 Agent 实测', text: '从新工具刷屏切入，比较其开放连接方式、国内模型生态和使用成本，并分享实测与安装教程。', url: 'https://mp.weixin.qq.com/s/Kf_jYRjZim32DpiWT__W-g', linkLabel: '查看实测教程' },
+      { time: '16:02', title: 'A梦加入与 AI 服务产品化讨论', text: '新成员介绍企业 AI Agent 落地经历，并提出如何把咨询、培训和陪跑做成可持续产品；群内从交付成本与社群归属感两侧回应。', links: [
+        { label: '查看社群产品化答疑', url: 'https://my.feishu.cn/wiki/SuPoweXcdifItJkOntQcZGICnwo?from=from_copylink' },
+        { label: '了解创作减负实践', url: 'https://mp.weixin.qq.com/s?__biz=MjM5NDQ3ODI3NQ==&mid=2651433203&idx=1&sn=be821c53b425fa813a678cd4fd073f13&chksm=bcac91eece63dd4b63991a8be4de1a5ef71c14015d4653cc30b2a0cc1636dc9615fb7d04722b&mpshare=1&scene=1&srcid=0814MQRqmhpMeWZbH3W62y9p&sharer_shareinfo=95d7e04d32c2b33377aa2acbf16c6cea&sharer_shareinfo_first=95d7e04d32c2b33377aa2acbf16c6cea#rd' }
+      ] },
+      { time: '18:16', title: '从报课学习转向按业务问题找人', text: '群友讨论课程难以完全匹配个人需求，转而用 B 站、闲鱼和同行网络寻找能精准带做的人，以结果验证学习价值。' },
+      { time: '18:36', title: '长期经营、真实关系与焦虑觉察', text: '从口碑反馈和生活改变聊到技术打法会失效，认真做产品、用心经营关系与保持价值引领更能形成长期复利。', url: 'https://sw21ksbvrf.feishu.cn/wiki/TURpw42OFiJSywkk7pocIr7RnHQ', linkLabel: '重读相关心得' },
+      { time: '19:08', title: '多维表格与 AI 内容工作流', text: '围绕带货二创，讨论用 Hermes 下载、多维表格识别与生成，再由 Codex 或 ChatCut 完成剪辑的自动化链路。' },
+      { time: '20:00', title: '社群答疑转化为共享知识与行动', text: '群友总结高质量答疑可以服务全场，并立即把产品层级思路用于自己的直播课设计；晚间继续分享商业思考文章。', url: 'https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect', linkLabel: '查看延伸阅读' },
+      { time: '23:56', title: '欢迎楚川与内容工程化方法论', text: '介绍楚川的 AI 内容工厂实践，并分享其六年内容工程化、两年 AI 内容工程化的方法论文章。', url: 'https://mp.weixin.qq.com/s?__biz=MzU1NTE0MjQyNw==&mid=2247486586&idx=1&sn=6c2be282651ef7cb7e3cbd18d4ae97c1&chksm=fa2c8e932d732603939770cf8b796343966160d983c30ae1ceeff0e1801d94a226a46c0c8610&mpshare=1&scene=1&srcid=0814qbLTYSRngfYbJMfr18pz&sharer_shareinfo=1b2a78166f9ed7b353787a6ff6ef098e&sharer_shareinfo_first=1b2a78166f9ed7b353787a6ff6ef098e#rd', linkLabel: '阅读完整方法论' }
+    ]
   }
 };
 
