@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>视频逐字稿｜48小时测试</title>
+  <link rel="stylesheet" href="video-transcript-tencent-test.css?v=20260815-1">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <span class="badge">48小时稳定性测试</span>
+      <h1>粘贴视频号链接，生成完整逐字稿</h1>
+      <p>任务提交后会在后台继续处理。刷新页面、切换视频或关闭页面，都不会中断已经提交的任务。</p>
+      <form id="query-form" class="query-form">
+        <label for="share-url">视频号分享链接</label>
+        <div class="query-row">
+          <input id="share-url" name="share-url" type="url" autocomplete="off" placeholder="https://weixin.qq.com/sph/..." required>
+          <button id="submit-button" type="submit">生成逐字稿</button>
+        </div>
+        <p class="hint">本次测试单条最长10分钟；超过上限会明确提示，不会静默截断。</p>
+      </form>
+    </header>
+
+    <section id="current-card" class="card hidden" aria-live="polite">
+      <div class="card-head">
+        <div><span class="eyebrow">当前任务</span><h2 id="current-title">处理中</h2></div>
+        <span id="status-pill" class="status-pill">等待处理</span>
+      </div>
+      <div id="player-wrap" class="player-wrap hidden"><video id="video-player" controls preload="metadata"></video></div>
+      <div id="metrics" class="metrics hidden"></div>
+      <p id="task-message" class="task-message"></p>
+      <div id="result-wrap" class="result-wrap hidden">
+        <div class="result-toolbar"><strong>原始识别稿</strong><button id="copy-button" type="button" class="secondary">复制全文</button></div>
+        <textarea id="transcript-text" readonly></textarea>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div><span class="eyebrow">本机记录</span><h2>测试历史</h2></div><button id="refresh-all" type="button" class="secondary">刷新状态</button></div>
+      <div id="history-empty" class="empty">还没有提交任务。</div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+  </main>
+  <script src="video-transcript-tencent-test.js?v=20260815-1" defer></script>
+</body>
+</html>
+

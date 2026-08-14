@@ -1,0 +1,15 @@
+[Unit]
+Description=Clean isolated Tencent transcript test data
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+EnvironmentFile=/etc/siyumenghai-transcript-tencent-test.env
+ExecStart=/opt/siyumenghai-transcript-tencent-test/.venv/bin/python /opt/siyumenghai-transcript-tencent-test/cleanup.py
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/siyumenghai-transcript-tencent-test
+

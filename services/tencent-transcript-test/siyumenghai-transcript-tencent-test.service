@@ -1,0 +1,23 @@
+[Unit]
+Description=Siyumenghai isolated Tencent transcript 48-hour test
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/siyumenghai-transcript-tencent-test
+EnvironmentFile=/etc/siyumenghai-transcript-tencent-test.env
+ExecStart=/opt/siyumenghai-transcript-tencent-test/.venv/bin/python /opt/siyumenghai-transcript-tencent-test/server.py
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/siyumenghai-transcript-tencent-test
+
+[Install]
+WantedBy=multi-user.target
+
