@@ -1297,6 +1297,10 @@ function showTranscriptTaskStatus(task) {
 }
 
 function transcriptCompletionMessage(payload, result) {
+  if (document.documentElement.dataset.transcriptProduction === 'c') {
+    const finalText = String(payload.corrected_text || payload.text || '').replace(/\s/g, '');
+    return `最终逐字稿已生成，共 ${Array.from(finalText).length} 字，可直接复制使用。`;
+  }
   const cacheText = payload.cached ? '（已读取缓存）' : '';
   const seconds = Number(payload.elapsed || 0);
   const timeText = seconds > 0
