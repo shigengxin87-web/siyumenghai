@@ -17,6 +17,7 @@
   const style = document.createElement('style');
   style.textContent = `
     .bc-transcript-dual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
+    .bc-transcript-dual[hidden]{display:none!important}
     .transcript-switch[data-transcript-switch],textarea[data-transcript-text]{display:none!important}
     .bc-transcript-pane{min-width:0;border:1px solid #dce8e3;border-radius:12px;background:#f8fcfa;padding:12px}
     .bc-transcript-pane header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
