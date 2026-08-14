@@ -42,7 +42,7 @@ const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v2-cloud-c';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;
-const TRANSCRIPT_API = '/api/transcripts-test-cloud/jobs';
+const TRANSCRIPT_API = '/api/transcripts-cloud/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
 const MEDIA_PROXY_API = '/api/transcripts/media?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
