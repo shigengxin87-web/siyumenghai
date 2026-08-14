@@ -429,6 +429,11 @@ async function localHelperRequest(url, options = {}) {
 }
 
 async function detectLocalHelper() {
+  const isLocalBridgePage = ['127.0.0.1', 'localhost'].includes(location.hostname) && location.port === '2024';
+  if (!isLocalBridgePage) {
+    setLocalHelperEntry('浏览器将通过安全窗口连接', 'bridge');
+    return;
+  }
   setLocalHelperEntry('正在自动检测…', 'checking');
   try {
     const payload = await localHelperRequest(LOCAL_HELPER_STATUS_API);
