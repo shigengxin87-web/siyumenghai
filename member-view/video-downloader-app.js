@@ -435,7 +435,7 @@ async function detectLocalHelper() {
     if (!payload.installed) return setLocalHelperEntry('未安装，点击下载', 'download');
     setLocalHelperEntry(payload.running ? '本地助手已打开' : '已安装，点击打开', payload.running ? 'running' : 'launch');
   } catch {
-    setLocalHelperEntry('未检测到，点击下载', 'download');
+    setLocalHelperEntry('浏览器将通过安全窗口连接', 'bridge');
   }
 }
 
@@ -1163,7 +1163,7 @@ async function extractCurrentComments(forceRefresh = false) {
   if (!isLocalPage) {
     const bridgeUrl = new URL(COMMENT_BRIDGE_URL);
     bridgeUrl.searchParams.set('url', video.shareUrl);
-    bridgeUrl.searchParams.set('v', '20260813-2');
+    bridgeUrl.searchParams.set('v', '20260814-1');
     const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge-v2', 'width=760,height=760');
     showCommentStatus(
       popup ? '已打开安全评论窗口；浏览器询问本地网络权限时请选择“允许”。' : '浏览器拦截了评论窗口，请允许此网站打开弹窗后重试。',
@@ -1552,6 +1552,10 @@ commentExcelButton.addEventListener('click', exportCommentsExcel);
 commentStatus.addEventListener('click', async (event) => {
   const entry = event.target.closest('[data-local-helper-entry]');
   if (!entry || entry.dataset.helperAction === 'download') return;
+  if (entry.dataset.helperAction === 'bridge') {
+    extractCurrentComments(false);
+    return;
+  }
   event.preventDefault();
   if (entry.dataset.helperAction === 'running') {
     showCommentStatus('本地助手已经打开，可以直接提取评论。');
