@@ -180,24 +180,12 @@
     retry.dataset.jobId = payload.id;
 
     const meta = container.querySelector('[data-transcript-meta]');
-    const entries = [
-      `语音识别 ${formatTime(payload.asr_elapsed)}`,
-      `画面字幕 ${formatTime(payload.ocr_elapsed)}`,
-      `智能校正 ${formatTime(payload.correction_elapsed)}`,
-      `总用时 ${formatTime(payload.total_elapsed || payload.elapsed)}`,
-    ];
-    meta.replaceChildren(...entries.map((value, index) => {
+    const entries = [`总用时 ${formatTime(payload.total_elapsed || payload.elapsed)}`];
+    meta.replaceChildren(...entries.map((value) => {
       const item = document.createElement('span');
       item.textContent = value;
-      if (index === 1 && payload.visual_evidence_available) item.className = 'is-visual';
       return item;
     }));
-    if (payload.visual_evidence_available) {
-      const evidence = document.createElement('span');
-      evidence.className = 'is-visual';
-      evidence.textContent = '已参考画面字幕';
-      meta.appendChild(evidence);
-    }
 
     const status = document.querySelector('[data-transcript-status]');
     if (status) {
