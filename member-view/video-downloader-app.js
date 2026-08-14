@@ -36,9 +36,9 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v11-cloud-c-deepseek';
+const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v12-cloud-c-ocr-final';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
-const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v2-cloud-c';
+const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v3-cloud-c-ocr-final';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;

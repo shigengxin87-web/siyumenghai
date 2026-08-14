@@ -10,14 +10,28 @@
     : (productionC ? '/api/transcripts-cloud/jobs' : '/api/transcripts-test-cloud/jobs');
   const locationLabel = variant === 'b' ? '本机处理用时' : '云端处理用时';
   const storagePrefix = productionC ? 'siyumenghai-video-production-c' : `siyumenghai-video-test-${variant}`;
-  const payloadCacheKey = `${storagePrefix}-transcripts-deepseek-chat-bc-proofread-zh-v1.0.1`;
+  const payloadCacheKey = `${storagePrefix}-transcripts-production-ocr-proofread-zh-v2.0.0`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
   const jobToShare = readJson(jobShareKey, {});
   let lastRenderedSignature = '';
 
   const style = document.createElement('style');
-  style.textContent = `
+  style.textContent = productionC ? `
+    .transcript-card[data-transcript-card]{border:1px solid #d9ebe4;background:linear-gradient(155deg,#ffffff 0%,#f5fbf8 100%);box-shadow:0 14px 34px rgba(19,76,56,.08);padding:24px}
+    .transcript-card[data-transcript-card] .transcript-heading{align-items:flex-start}.transcript-card[data-transcript-card] .transcript-heading strong{font-size:22px;letter-spacing:-.02em;color:#14251f}.transcript-card[data-transcript-card] .transcript-heading small{margin-top:6px;color:#6b7d76;line-height:1.55}
+    .transcript-card[data-transcript-card] .transcript-heading>button{border-radius:12px;padding:12px 18px;box-shadow:0 8px 20px rgba(5,150,105,.18)}
+    .transcript-card[data-transcript-card] .transcript-status{margin:18px 0 0;padding:12px 14px;border:0;border-radius:12px;background:#edf8f3;color:#49625a}
+    .final-transcript-result{margin-top:18px;border:1px solid #d9e9e3;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 12px 28px rgba(24,70,54,.07)}
+    .final-transcript-result[hidden]{display:none!important}.transcript-switch[data-transcript-switch],textarea[data-transcript-text]{display:none!important}
+    .final-transcript-topline{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 22px 16px;border-bottom:1px solid #edf3f0}
+    .final-transcript-topline>div:first-child{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:5px 10px}.final-transcript-topline strong{font-size:19px;color:#16251f}.final-transcript-topline small{grid-column:2;color:#75847e}
+    .final-transcript-kicker{grid-row:1/3;display:grid;place-items:center;min-width:58px;height:58px;border-radius:16px;background:#e3f8ed;color:#087b58;font-size:12px;font-weight:850;line-height:1.15;text-align:center}
+    .final-transcript-actions{display:flex;gap:9px}.final-transcript-actions button{border:1px solid #bfe4d3;border-radius:11px;background:#f5fcf8;color:#087b58;padding:10px 15px;font-weight:750}.final-transcript-actions button:last-child{border-color:#059669;background:#059669;color:white}
+    .final-transcript-result textarea{display:block;width:100%;min-height:360px;max-height:64vh;box-sizing:border-box;resize:vertical;border:0;outline:0;background:#fff;padding:24px 26px;color:#1b2924;font:16px/1.9 ui-sans-serif,system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:.015em}
+    .final-transcript-meta{display:flex;flex-wrap:wrap;gap:8px;padding:14px 22px 18px;border-top:1px solid #edf3f0}.final-transcript-meta span{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#f0f6f3;color:#63736d;font-size:12px}.final-transcript-meta span.is-visual{background:#e6f8ef;color:#087b58}
+    @media(max-width:760px){.transcript-card[data-transcript-card]{padding:17px}.final-transcript-topline{align-items:flex-start;padding:17px;flex-direction:column}.final-transcript-actions{width:100%}.final-transcript-actions button{flex:1}.final-transcript-result textarea{min-height:300px;padding:19px 18px;font-size:15px}.final-transcript-meta{padding:12px 17px 16px}}
+  ` : `
     .bc-transcript-dual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
     .bc-transcript-dual[hidden]{display:none!important}
     .transcript-switch[data-transcript-switch],textarea[data-transcript-text]{display:none!important}
@@ -150,6 +164,51 @@
     return item;
   }
 
+  function renderProductionPayload(payload, container, raw, corrected) {
+    const finalText = corrected.trim() ? corrected : raw;
+    const correctedNode = container.querySelector('[data-transcript-corrected-text]');
+    correctedNode.value = finalText;
+    container.hidden = false;
+
+    const action = document.querySelector('[data-transcript-action]');
+    if (action) action.hidden = true;
+    const count = textCount(finalText);
+    container.querySelector('[data-transcript-corrected-count]').textContent = `${count} 字 · 完整结果`;
+
+    const retry = container.querySelector('[data-transcript-retry]');
+    retry.hidden = payload.correction_status === 'completed';
+    retry.dataset.jobId = payload.id;
+
+    const meta = container.querySelector('[data-transcript-meta]');
+    const entries = [
+      `语音识别 ${formatTime(payload.asr_elapsed)}`,
+      `画面字幕 ${formatTime(payload.ocr_elapsed)}`,
+      `智能校正 ${formatTime(payload.correction_elapsed)}`,
+      `总用时 ${formatTime(payload.total_elapsed || payload.elapsed)}`,
+    ];
+    meta.replaceChildren(...entries.map((value, index) => {
+      const item = document.createElement('span');
+      item.textContent = value;
+      if (index === 1 && payload.visual_evidence_available) item.className = 'is-visual';
+      return item;
+    }));
+    if (payload.visual_evidence_available) {
+      const evidence = document.createElement('span');
+      evidence.className = 'is-visual';
+      evidence.textContent = '已参考画面字幕';
+      meta.appendChild(evidence);
+    }
+
+    const status = document.querySelector('[data-transcript-status]');
+    if (status) {
+      status.textContent = payload.correction_status === 'completed'
+        ? `最终逐字稿已生成，共 ${count} 字，可直接复制使用。`
+        : `语音识别稿已生成，智能校正暂未完成：${payload.correction_error || '可点击重试校正'}。`;
+      status.classList.toggle('is-error', payload.correction_status !== 'completed');
+      status.classList.remove('is-working');
+    }
+  }
+
   function renderPayload(payload) {
     const container = document.querySelector('[data-transcript-dual]');
     if (!container || payload?.status !== 'completed') return;
@@ -157,6 +216,11 @@
     const corrected = String(payload.corrected_text || '');
     if (!raw.trim()) return;
     const signature = `${payload.id}:${payload.correction_status}:${raw.length}:${corrected.length}:${payload.correction_count}`;
+    if (productionC) {
+      if (signature !== lastRenderedSignature) renderProductionPayload(payload, container, raw, corrected);
+      lastRenderedSignature = signature;
+      return;
+    }
     const status = document.querySelector('[data-transcript-status]');
     const statusText = payload.correction_status === 'completed'
       ? `原始稿与 DeepSeek 校正稿均已完成，共修改 ${Number(payload.correction_count || 0)} 处。`
@@ -288,7 +352,7 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260814-production-c-3'
+    ? './video-downloader-app.js?v=20260815-production-ocr-final-1'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();
