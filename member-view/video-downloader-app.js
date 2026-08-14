@@ -375,13 +375,13 @@ function resetTranscript() {
     button.textContent = button.dataset.transcriptView === 'corrected' ? '校正逐字稿' : '原始识别稿';
   });
   transcriptButton.disabled = false;
-  transcriptButton.textContent = '生成并复制逐字稿';
+  transcriptButton.textContent = '生成逐字稿';
   const task = transcriptTask(currentVideo?.shareUrl);
   if (task) {
     transcriptButton.textContent = isActiveTranscriptTask(task) ? '查看后台进度' : '重新生成逐字稿';
     showTranscriptTaskStatus(task);
   } else {
-    showTranscriptStatus('建议优先把<strong style="color:#059669;font-weight:850">视频链接</strong>直接转发给你的微信好友<strong style="color:#059669;font-weight:850">“元宝”</strong>，并附提示词<strong style="color:#059669;font-weight:850">“提取逐字稿”</strong>。（<strong style="color:#059669;font-weight:850">速度更快、更准</strong>）', '', true);
+    showTranscriptStatus('点击生成后，系统会在后台完成识别与校正，离开或刷新页面后仍可继续查看。');
   }
 }
 
