@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>视频逐字稿｜48小时测试</title>
-  <link rel="stylesheet" href="video-transcript-tencent-test.css?v=20260815-1">
+  <link rel="stylesheet" href="video-transcript-tencent-test.css?v=20260815-2">
+  <link rel="stylesheet" href="video-transcript-tencent-test-format.css?v=20260815-2">
 </head>
 <body>
   <main class="shell">
@@ -32,8 +33,16 @@
       <div id="metrics" class="metrics hidden"></div>
       <p id="task-message" class="task-message"></p>
       <div id="result-wrap" class="result-wrap hidden">
-        <div class="result-toolbar"><strong>原始识别稿</strong><button id="copy-button" type="button" class="secondary">复制全文</button></div>
+        <div class="result-toolbar">
+          <div class="result-title"><strong>排版逐字稿</strong><span id="format-check" class="format-check">仅增加段落，原文校验通过</span></div>
+          <button id="copy-button" type="button" class="secondary">复制排版稿</button>
+        </div>
         <textarea id="transcript-text" readonly></textarea>
+        <details class="raw-details">
+          <summary>查看腾讯原始识别稿</summary>
+          <div class="result-toolbar raw-toolbar"><span>未经排版的原始返回文字</span><button id="copy-raw-button" type="button" class="secondary">复制原始稿</button></div>
+          <textarea id="raw-transcript-text" readonly></textarea>
+        </details>
       </div>
     </section>
 
@@ -43,7 +52,6 @@
       <div id="history-list" class="history-list"></div>
     </section>
   </main>
-  <script src="video-transcript-tencent-test.js?v=20260815-1" defer></script>
+  <script src="video-transcript-tencent-test.js?v=20260815-2" defer></script>
 </body>
 </html>
-
