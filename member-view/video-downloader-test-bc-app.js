@@ -352,7 +352,7 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260815-production-ocr-final-1'
+    ? './video-downloader-app.js?v=20260815-production-ocr-final-2'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();
