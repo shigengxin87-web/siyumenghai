@@ -1094,7 +1094,7 @@ function exportCommentsExcel() {
     if (cell) cell.z = 'yyyy-mm-dd hh:mm';
   }
   worksheet['!cols'] = [
-    { wch: 12 }, { wch: 10 }, { wch: 20 }, { wch: 56 },
+    { wch: 12 }, { wch: 10 }, { wch: 20 }, { wch: 80 },
     { wch: 10 }, { wch: 20 }, { wch: 14 }, { wch: 20 }
   ];
   worksheet['!autofilter'] = { ref: worksheet['!ref'] };
