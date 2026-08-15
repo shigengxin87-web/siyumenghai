@@ -988,6 +988,29 @@ const days = {
       { time: '20:00', title: '社群答疑转化为共享知识与行动', text: '群友总结高质量答疑可以服务全场，并立即把产品层级思路用于自己的直播课设计；晚间继续分享商业思考文章。', url: 'https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect', linkLabel: '查看延伸阅读' },
       { time: '23:56', title: '欢迎楚川与内容工程化方法论', text: '介绍楚川的 AI 内容工厂实践，并分享其六年内容工程化、两年 AI 内容工程化的方法论文章。', url: 'https://mp.weixin.qq.com/s?__biz=MzU1NTE0MjQyNw==&mid=2247486586&idx=1&sn=6c2be282651ef7cb7e3cbd18d4ae97c1&chksm=fa2c8e932d732603939770cf8b796343966160d983c30ae1ceeff0e1801d94a226a46c0c8610&mpshare=1&scene=1&srcid=0814qbLTYSRngfYbJMfr18pz&sharer_shareinfo=1b2a78166f9ed7b353787a6ff6ef098e&sharer_shareinfo_first=1b2a78166f9ed7b353787a6ff6ef098e#rd', linkLabel: '阅读完整方法论' }
     ]
+  },
+  '2026-08-15': {
+    dateLabel: '2026 年 8 月 15 日', weekday: '星期六', messages: 10, themesCount: 2, readTime: '3 分钟',
+    title: '把工具做快做准之后，还要交给真实使用来验证',
+    summary: '当天围绕视频号逐字稿提取工具的继续迭代展开：从免费但较慢的官网版本，到速度和准确度都更高的独立体验页，重点不再只是把功能做出来，而是让群友用真实视频验证效果，再根据个人使用与商用需求决定是否继续开放。随后群友询问企微跳转链路的数据表现，群内直接连接已有实践者继续交流。',
+    insights: [
+      { roles: ['content', 'product'], tag: '工具验证', source: '石更新', time: '14:43', title: '工具从“做出来”走向“值得使用”，关键是速度、准确度和真实反馈一起过关', text: '同一项逐字稿提取能力可以有不同实现：免费方案降低长期成本，付费接口换取更快速度。先让用户用自己的视频体验，再根据反馈决定个人版、商用版和开源边界，比只凭开发者自测更接近真实需求。', url: 'https://siyumenghai.cn/member-view/video-transcript-tencent-test.html', linkLabel: '体验逐字稿提取' },
+      { roles: ['private', 'product'], tag: '数据验证', source: '忠仁 × 石更新', time: '17:01', title: '判断企微跳转链路，先找正在做的人核对真实数据', text: '当群友询问跳转企微链路的实际效果时，群内没有用猜测替代答案，而是直接连接已有实践者。对渠道方案而言，真实样本、转化口径和使用场景比一句“效果好不好”更有判断价值。' }
+    ],
+    actions: [
+      { title: '用自己的视频完成一次体验', text: '选择一个熟悉内容的五分钟内视频，核对逐字稿完整性、明显错词和实际耗时，并记录是否满足使用需求。', url: 'https://siyumenghai.cn/member-view/video-transcript-tencent-test.html', linkLabel: '打开体验页' },
+      { title: '收集个人使用与商用需求', text: '分别询问使用频次、视频时长、并发量、结果格式和可接受成本，为是否开源及产品边界提供依据。' },
+      { title: '统一企微链路的数据口径', text: '向实践者确认曝光、点击或跳转、加好友、有效咨询和成交等指标，再比较不同链路的真实效果。' }
+    ],
+    resources: [
+      { kind: '工具', title: '视频号逐字稿快速提取体验页', text: '复制视频分享链接后即可体验逐字稿提取，适合用真实样本核对速度、完整性和明显错词。', url: 'https://siyumenghai.cn/member-view/video-transcript-tencent-test.html', linkLabel: '立即体验' },
+      { kind: '方法', title: '工具体验四项记录', text: '固定记录输入视频时长、处理耗时、输出长度与明显错词，使用同一输入比较不同方案。' },
+      { kind: '清单', title: '企微跳转链路验证指标', text: '至少统一曝光、跳转、加好友、有效咨询、成交和成本口径，再判断链路效果。' }
+    ],
+    themes: [
+      { time: '14:43', title: '视频号逐字稿工具继续提速提准', text: '石更新复盘旧版速度和准确度不足，介绍免费官网版与更快独立体验页的差异，并邀请群友用真实视频体验后反馈个人或商用需求。', url: 'https://siyumenghai.cn/member-view/video-transcript-tencent-test.html', linkLabel: '体验快速提取' },
+      { time: '17:01', title: '企微跳转链路的数据与实践者连接', text: '群友询问企微跳转链路效果，群内直接连接正在实践的成员继续交流，把泛泛询问推进为真实数据核对。' }
+    ]
   }
 };
 
