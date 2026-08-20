@@ -1011,6 +1011,96 @@ const days = {
       { time: '14:43', title: '视频号逐字稿工具继续提速提准', text: '石更新复盘旧版速度和准确度不足，介绍免费官网版与更快独立体验页的差异，并邀请群友用真实视频体验后反馈个人或商用需求。', url: 'https://siyumenghai.cn/member-view/video-transcript-tencent-test.html', linkLabel: '体验快速提取' },
       { time: '17:01', title: '企微跳转链路的数据与实践者连接', text: '群友询问企微跳转链路效果，群内直接连接正在实践的成员继续交流，把泛泛询问推进为真实数据核对。' }
     ]
+  },
+  '2026-08-17': {
+    dateLabel: '2026 年 8 月 17 日', weekday: '星期一', messages: 20, themesCount: 2, readTime: '3 分钟',
+    title: '把零散工具整理成清单，才能真正降低行动成本',
+    summary: '今天发布了一份持续共建的工具清单，把 AI 工具、效率工具和 Skills 分成清晰入口，并同步放入飞书与 ima 知识库。群友提出需求后，社群没有停在口头推荐，而是把可复用资源整理成任何人都能随时查阅、补充和使用的公共资产。',
+    insights: [
+      { roles: ['content', 'product'], tag: '资源沉淀', source: '石更新', time: '14:04', title: '工具越多，越需要按任务分类，而不是继续收藏', text: '把工具分成内容生成、图片视频、Agent、录屏转写、排版剪辑和 Skills 等任务入口，能够减少反复搜索与选择，让成员从“知道很多工具”走向“遇到问题就能找到工具”。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '打开工具清单' },
+      { roles: ['private', 'product'], tag: '社群共建', source: '群友共同讨论', time: '14:07', title: '一份清单的价值，会随着真实需求持续增长', text: '清单同时进入飞书和 ima 知识库，并邀请成员继续补充工具与使用需求。社群资源因此不再依赖某次聊天，而能在后续实践中不断修订。' }
+    ],
+    actions: [
+      { title: '按当前任务查一次工具清单', text: '先明确今天要完成的任务，再从对应分类中只选一个工具开始使用。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '查阅清单' },
+      { title: '补充一个真实使用反馈', text: '记录工具解决了什么问题、适用条件和限制，让后续成员少走一步弯路。' },
+      { title: '把常用工具固定到自己的流程', text: '从收藏夹中挑出高频使用的三项，分别绑定到输入、处理和交付环节。' }
+    ],
+    resources: [
+      { kind: '清单', title: 'AI、效率工具与 Skills 共建清单', text: '覆盖文字、图片、视频、Agent、录屏、转写、排版、剪辑、直播与 Skills，并将持续更新。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '打开飞书清单' },
+      { kind: '方法', title: '任务驱动的工具选择法', text: '先写清要交付的结果，再选择最短路径工具；完成一次真实任务后再决定是否长期保留。' }
+    ],
+    themes: [
+      { time: '14:04', title: '三类工具清单发布', text: '围绕群友需求整理 AI 工具、效率工具与 Skills，并提供可直接查阅的飞书入口。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '查看完整清单' },
+      { time: '14:07', title: '飞书、ima 双入口与群友共建', text: '清单同步进入两个知识库，并邀请群友继续补充真实需求和好用工具，让资源随社群一起成长。' }
+    ]
+  },
+  '2026-08-18': {
+    dateLabel: '2026 年 8 月 18 日', weekday: '星期二', messages: 52, themesCount: 3, readTime: '6 分钟',
+    title: '自然表达不是即兴发挥，而是把准备做得足够轻',
+    summary: '今天先讨论视频号与直播引流的合规路径，再集中拆解短视频口播训练。群友共同验证了一条更容易启动的流程：有想法时先用语音输入快速口喷，整理成逐字稿，经过结构优化和一次简单彩排后，再借助提词器完成拍摄。设备不是主要门槛，稳定练习、内容结构和持续发布才是。',
+    insights: [
+      { roles: ['private', 'content'], tag: '平台引流', source: '一月语文 × 群友', time: '12:52', title: '平台引流没有零风险捷径，需要按内容形式选择承接路径', text: '不露脸直播、矩阵图文、蓝 V 挂企微和低价线索商品各有适用条件。与其反复寻找隐藏联系方式的技巧，不如结合账号身份、内容形式和平台规则，选择可长期执行的官方路径。' },
+      { roles: ['content'], tag: '口播训练', source: '石更新', time: '16:24', title: '看起来随时随地的自然记录，背后仍然有一份轻量逐字稿', text: '灵感出现时先用语音输入口喷，再快速检查表达，把稿子放进提词器。放慢语速、加重关键句，并在镜头和提词器之间自然切换，可以减少卡顿和重复录制。' },
+      { roles: ['content', 'product'], tag: '内容结构', source: '群友共同讨论', time: '21:02', title: '语音输入解决自然感，结构优化才更可能解决数据', text: '口喷能保留真实语气，但只优化表达还不够。发布前仍要检查开头钩子、信息顺序、核心观点和结尾动作，让自然表达与传播效率同时成立。' },
+      { roles: ['content'], tag: '启动成本', source: '群友共同讨论', time: '22:34', title: '先用手里的手机完成第一轮，不要把设备选择变成拖延', text: '苹果手机配合提词器已经足够完成多数日常口播。先建立从写稿到拍摄、发布的熟练度，再根据真实使用频次决定是否增加相机设备。' }
+    ],
+    actions: [
+      { title: '完成一条“口喷—改稿—拍摄”闭环', text: '选一个今天最想表达的观点，语音输入成稿，优化结构后直接用提词器录制并发布。' },
+      { title: '翻拍三条对标视频练流程', text: '暂时不追求原创和数据，只练习架机、提词、眼神、语速和一次录完。' },
+      { title: '为引流方式做一次合规检查', text: '列出当前平台、账号类型、内容形式和承接目标，优先采用官方允许且能长期执行的入口。' },
+      { title: '记录一次发布复盘', text: '分别记录自然度、结构清晰度、完播反馈和私域转化，不只看点赞数量。' }
+    ],
+    resources: [
+      { kind: '流程', title: '轻量口播六步法', text: '捕捉想法、语音口喷、结构优化、简单彩排、提词拍摄、发布复盘。' },
+      { kind: '练习', title: '30 条对标翻拍训练', text: '用高频重复熟悉完整拍摄动作；训练阶段关注流程熟练度，不以单条数据评价自己。' },
+      { kind: '工具', title: '手机与提词器组合', text: '先用现有手机和提词器降低启动门槛，等稳定产出后再判断是否需要新增设备。' }
+    ],
+    themes: [
+      { time: '12:52', title: '视频号与直播引流路径', text: '围绕不露脸、蓝 V、矩阵内容、企微挂载和直播节奏，讨论如何在平台规则下选择可持续方案。' },
+      { time: '16:02', title: '自然口播的准备与刻意练习', text: '从镜头心理、语音口喷、逐字稿、提词器、语速到对标翻拍，形成一套低成本启动流程。' },
+      { time: '21:02', title: '自然表达、内容结构与设备选择', text: '群友继续比较口喷后是否需要 AI 改稿，并形成“先用手机开拍、先跑通流程再升级设备”的共识。' }
+    ]
+  },
+  '2026-08-19': {
+    dateLabel: '2026 年 8 月 19 日', weekday: '星期三', messages: 15, themesCount: 2, readTime: '3 分钟',
+    title: '把新能力做成需求清单，让成员按自己的阶段选择',
+    summary: '今天集中发布四项可申请或对接的新能力：更稳定的 Claude 账号渠道、企业微信 AI 内测、企微 CLI 与 MCP 开放能力，以及多平台指定博主与内容监控。群友根据自身需求快速认领资源，同时交流短视频启动课程与学习机会。',
+    insights: [
+      { roles: ['product', 'private'], tag: '需求匹配', source: '石更新', time: '14:01', title: '资源通知不必人人都用，关键是让需要的人快速对号入座', text: '把不同资源的适用对象、能力边界和申请方式集中写清，成员就能按当前问题选择，而不是被新工具和新机会牵着走。', url: 'https://my.feishu.cn/wiki/OzNLwVWS1icbcdkmIqbcPtWHnV1?from=from_copylink', linkLabel: '查看四项需求通知' },
+      { roles: ['product'], tag: '企业微信能力', source: '群内资源分享', time: '14:01', title: '企微开放 CLI 与 MCP 后，自动化更接近真实业务入口', text: '当消息、客户与工作流可以通过标准能力连接，AI 不再只是对话工具，而能进入客户服务、信息整理和运营协作。真正上线前仍需验证权限、稳定性和数据边界。' },
+      { roles: ['content', 'private'], tag: '内容监控', source: '群内资源分享', time: '14:01', title: '指定博主监控的价值，是持续获取可行动信号', text: '跨平台监控不只是收集内容，更适合用于跟踪选题变化、产品动作与用户反馈。只有明确监控对象、频率和后续动作，信息才不会重新变成负担。' }
+    ],
+    actions: [
+      { title: '按需认领一项能力', text: '先写清当前最需要解决的问题，再从四项资源中只选择一个进行申请或对接。', url: 'https://my.feishu.cn/wiki/OzNLwVWS1icbcdkmIqbcPtWHnV1?from=from_copylink', linkLabel: '打开需求通知' },
+      { title: '为内容监控设置行动出口', text: '明确看到新内容后是进入选题库、竞品复盘还是销售跟进，避免只收集不处理。' },
+      { title: '小范围验证企微自动化', text: '先选一个低风险内部流程，核对权限、准确性和异常处理后再扩大使用。' }
+    ],
+    resources: [
+      { kind: '通知', title: '8 月 19 日四项功能需求通知', text: '包含 Claude 账号渠道、企业微信 AI 内测、企微 CLI/MCP 和多平台内容监控等资源入口。', url: 'https://my.feishu.cn/wiki/OzNLwVWS1icbcdkmIqbcPtWHnV1?from=from_copylink', linkLabel: '打开飞书文档' },
+      { kind: '方法', title: '资源认领三问', text: '它解决我当前什么问题、今天能完成什么验证、验证失败如何退出。' }
+    ],
+    themes: [
+      { time: '14:01', title: '四项新能力集中发布', text: '发布 Claude、企业微信 AI、CLI/MCP 与多平台内容监控需求通知，方便群友按需申请和对接。', url: 'https://my.feishu.cn/wiki/OzNLwVWS1icbcdkmIqbcPtWHnV1?from=from_copylink', linkLabel: '查看完整通知' },
+      { time: '16:23', title: '资源认领与短视频学习机会', text: '群友快速提出 Claude 对接需求，并交流适合短视频账号启动者参加的课程与学习机会。' }
+    ]
+  },
+  '2026-08-20': {
+    dateLabel: '2026 年 8 月 20 日', weekday: '星期四', messages: 1, themesCount: 1, readTime: '1 分钟',
+    title: '看到合适的机会，先报名进入真实学习场景',
+    summary: '今天群内内容不多，但行动很明确：成员看到适合自己的学习机会后直接报名。与其继续比较和收藏，先进入真实场景、带着问题学习，才能更快判断这项投入是否适合自己。',
+    insights: [
+      { roles: ['content', 'product'], tag: '行动验证', source: '群友反馈', time: '06:50', title: '学习机会的价值，需要通过参与和产出验证', text: '报名只是开始。提前写下想解决的问题、过程中的关键收获和结束后的一个实际产出，才能把一次学习转化为可复用能力。' }
+    ],
+    actions: [
+      { title: '写下一个学习目标', text: '在开始前明确这次最想解决的一个问题，以及怎样才算学会。' },
+      { title: '安排一次课后输出', text: '学习结束后用一段总结、一个案例或一次实际操作完成复盘。' }
+    ],
+    resources: [
+      { kind: '方法', title: '带着问题学习', text: '开始前确定问题，过程中记录答案，结束后用真实任务检验。' }
+    ],
+    themes: [
+      { time: '06:50', title: '群友报名进入学习场景', text: '成员看到合适机会后直接行动，接下来更重要的是把参与转化为真实产出。' }
+    ]
   }
 };
 
