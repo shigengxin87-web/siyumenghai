@@ -1085,21 +1085,31 @@ const days = {
     ]
   },
   '2026-08-20': {
-    dateLabel: '2026 年 8 月 20 日', weekday: '星期四', messages: 1, themesCount: 1, readTime: '1 分钟',
-    title: '看到合适的机会，先报名进入真实学习场景',
-    summary: '今天群内内容不多，但行动很明确：成员看到适合自己的学习机会后直接报名。与其继续比较和收藏，先进入真实场景、带着问题学习，才能更快判断这项投入是否适合自己。',
+    dateLabel: '2026 年 8 月 20 日', weekday: '星期四', messages: 130, themesCount: 4, readTime: '7 分钟',
+    title: '降低信息密度，把社群交付做深、做清楚、做出边界',
+    summary: '今天从一次报名行动延伸到社群交付方式的集中讨论：专题内容应减少频次、增加深度，让成员真正吸收；交付要有明确的价值底线，也要允许成员随时提出需求；咨询与陪跑产品则需要通过分层、定价、规则和转交机制保护服务者精力。',
     insights: [
-      { roles: ['content', 'product'], tag: '行动验证', source: '群友反馈', time: '06:50', title: '学习机会的价值，需要通过参与和产出验证', text: '报名只是开始。提前写下想解决的问题、过程中的关键收获和结束后的一个实际产出，才能把一次学习转化为可复用能力。' }
+      { roles: ['content', 'product'], tag: '内容减负', source: '专题规划', time: '21:25', title: '少更新一些，把一个问题真正写透', text: '高频分享不等于高质量交付。把专题调整为每周一次深度更新，减少主题分散，再用日常答疑补足个性化需求，更有利于成员吸收和行动。', url: 'https://my.feishu.cn/wiki/HiqYwwTwTi8bj6knCGHcperJn9f?from=from_copylink', linkLabel: '查看低转高专题课程' },
+      { roles: ['product', 'operations'], tag: '交付底线', source: '社群复盘', time: '21:38', title: '永久社群也要有可被检验的价值承诺', text: '交付底线不是持续堆内容，而是让成员在足够长的周期里赚回或减少相应损失；尚未获得价值的人，应被主动邀请提出真实需求。' },
+      { roles: ['sales', 'product'], tag: '产品分层', source: '群友共创', time: '21:47', title: '免费答疑与深度咨询需要明确分界', text: '公开连麦可以用于轻量答疑和问题收集，一对一私密咨询则应收费；标准问题可由员工或流程承接，把创始人的时间留给高价值、强信任的深度服务。' },
+      { roles: ['product', 'operations'], tag: '陪跑边界', source: '群友共创', time: '22:09', title: '陪跑产品先选对象，再定规则与交付标准', text: '家庭教育类陪跑往往主要服务家长。产品方向应匹配自身专业背景与已有案例，并限制人数、周期和责任边界，避免把咨询做成无限责任。' }
     ],
     actions: [
-      { title: '写下一个学习目标', text: '在开始前明确这次最想解决的一个问题，以及怎样才算学会。' },
-      { title: '安排一次课后输出', text: '学习结束后用一段总结、一个案例或一次实际操作完成复盘。' }
+      { title: '固定每周一个深度专题', text: '围绕一个真实问题写透背景、方法、案例和可执行清单，其余时间以答疑补充。', url: 'https://my.feishu.cn/wiki/D6j2wbUglijQzmk2hkCctK4QnQb?from=from_copylink', linkLabel: '参考内容系统文字课程' },
+      { title: '发起一次交付缺口征集', text: '邀请尚未获得预期价值的成员直接提需，并把共性需求沉淀为下一期专题或工具。' },
+      { title: '画出咨询服务阶梯', text: '明确公开答疑、员工承接、一对一咨询和长期陪跑各自的价格、时长、交付物与隐私规则。' },
+      { title: '先用少量名额验证陪跑', text: '限定人群与周期，记录高频问题、有效动作和超出边界的需求，再决定是否扩大。' }
     ],
     resources: [
-      { kind: '方法', title: '带着问题学习', text: '开始前确定问题，过程中记录答案，结束后用真实任务检验。' }
+      { kind: '课程', title: '低转高公开课到课率提升专题', text: '把原本的一篇分享扩展为可系统学习的文字课程，用于拆解到课率提升。', url: 'https://my.feishu.cn/wiki/HiqYwwTwTi8bj6knCGHcperJn9f?from=from_copylink', linkLabel: '打开文字课程' },
+      { kind: '课程', title: 'IMA、Obsidian、飞书内容流转系统', text: '从读取微信聊天记录出发，演示如何把多个知识工具串成一条内容流转路径。', url: 'https://my.feishu.cn/wiki/D6j2wbUglijQzmk2hkCctK4QnQb?from=from_copylink', linkLabel: '查看内容系统课程' },
+      { kind: '框架', title: '咨询服务四层阶梯', text: '公开答疑解决共性问题，员工承接标准问题，一对一处理私密问题，长期陪跑解决持续变化的问题。' }
     ],
     themes: [
-      { time: '06:50', title: '群友报名进入学习场景', text: '成员看到合适机会后直接行动，接下来更重要的是把参与转化为真实产出。' }
+      { time: '06:50', title: '先进入真实学习场景', text: '成员看到合适机会后直接报名，用参与和产出验证学习价值。' },
+      { time: '21:25', title: '专题内容从高频转向深度', text: '两次文字课程的写作经验促成更新策略调整：每周写透一个主题，让成员有时间吸收。', url: 'https://my.feishu.cn/wiki/HiqYwwTwTi8bj6knCGHcperJn9f?from=from_copylink', linkLabel: '查看本周专题' },
+      { time: '21:38', title: '重新确认社群交付底线', text: '主动邀请尚未收回价值的成员提需，群友也反馈交付已经超值，真正的压力反而来自信息过多。' },
+      { time: '21:47', title: '共创咨询与陪跑产品边界', text: '围绕私域诊断、公开答疑、付费咨询、员工承接和家庭教育陪跑展开讨论，核心是定价、规则与精力保护。' }
     ]
   }
 };
