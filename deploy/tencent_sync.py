@@ -43,7 +43,14 @@ FORCE = os.environ.get("SIYUMENGHAI_FORCE", "") == "1"
 
 
 def get_bytes(url: str, attempts: int = 3, timeout: int = 120) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "siyumenghai-tencent-sync/2"})
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "siyumenghai-tencent-sync/2",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+        },
+    )
     errors: list[str] = []
     for attempt in range(attempts):
         try:
@@ -149,7 +156,9 @@ def cleanup_releases() -> None:
 
 def main() -> None:
     RELEASES.mkdir(parents=True, exist_ok=True)
-    commit = get_json(f"{API}/commits/{BRANCH}")["sha"]
+    # Some mainland routes cache the branch endpoint for hours. A unique query
+    # keeps scheduled deployments from mistaking a stale SHA for the latest one.
+    commit = get_json(f"{API}/commits/{BRANCH}?deploy_check={time.time_ns()}")["sha"]
     active = current_root()
     manifest_path = active / ".deploy-manifest.json"
     try:
