@@ -127,12 +127,12 @@
                   <div><strong>智能逐字稿</strong></div>
                   <button type="button" data-transcript-action>生成逐字稿</button>
                 </div>
-                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">点击生成后，系统会在后台完成识别与校正，离开或刷新页面后仍可继续查看。</p>
+                <p class="transcript-status" data-transcript-status role="status" aria-live="polite">点击生成后，系统会在后台完成识别，离开或刷新页面后仍可继续查看。</p>
                 <div class="transcript-switch" data-transcript-switch hidden></div>
                 <textarea data-transcript-text aria-label="视频逐字稿" readonly hidden></textarea>
                 <div class="final-transcript-result" data-transcript-dual hidden>
                   <div class="final-transcript-topline">
-                    <div><span class="final-transcript-kicker">生成完成</span><strong>最终逐字稿</strong><small data-transcript-corrected-count></small></div>
+                    <div><span class="final-transcript-kicker">生成完成</span><strong>逐字稿</strong><small data-transcript-corrected-count></small></div>
                     <div class="final-transcript-actions"><button type="button" data-transcript-retry hidden>重试校正</button><button type="button" data-transcript-copy-kind="corrected">复制逐字稿</button></div>
                   </div>
                   <textarea data-transcript-corrected-text aria-label="最终完整逐字稿" readonly></textarea>
@@ -172,7 +172,7 @@
     </main>
   </div>
   <!-- Render local history before loading optional Excel and text helpers. -->
-  <script src="./video-downloader-c-app.js?v=20260815-production-ocr-final-4"></script>
+  <script src="./video-downloader-c-app.js?v=20260821-tencent-transcript-1"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>

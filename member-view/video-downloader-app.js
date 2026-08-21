@@ -36,13 +36,20 @@ const clearHistoryButton = document.querySelector('[data-clear-history]');
 
 const HISTORY_KEY = 'siyumenghai-video-download-history-v1';
 const HISTORY_LIMIT = 20;
-const TRANSCRIPT_CACHE_KEY = 'siyumenghai-video-transcripts-v12-cloud-c-ocr-final';
+const USE_TENCENT_TRANSCRIPT = document.documentElement.dataset.transcriptRoute === 'tencent';
+const TRANSCRIPT_CACHE_KEY = USE_TENCENT_TRANSCRIPT
+  ? 'siyumenghai-video-transcripts-v1-tencent'
+  : 'siyumenghai-video-transcripts-v12-cloud-c-ocr-final';
 const TRANSCRIPT_CACHE_LIMIT = HISTORY_LIMIT;
-const TRANSCRIPT_TASK_KEY = 'siyumenghai-video-transcript-tasks-v3-cloud-c-ocr-final';
+const TRANSCRIPT_TASK_KEY = USE_TENCENT_TRANSCRIPT
+  ? 'siyumenghai-video-transcript-tasks-v1-tencent'
+  : 'siyumenghai-video-transcript-tasks-v3-cloud-c-ocr-final';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;
-const TRANSCRIPT_API = '/api/transcripts-cloud/jobs';
+const TRANSCRIPT_API = USE_TENCENT_TRANSCRIPT
+  ? '/api/transcripts-test-tencent/jobs'
+  : '/api/transcripts-cloud/jobs';
 const IMAGE_PROXY_API = '/api/transcripts/images?url=';
 const MEDIA_PROXY_API = '/api/transcripts/media?url=';
 const LOCAL_COMMENT_API = 'http://127.0.0.1:2022';
@@ -210,6 +217,10 @@ function removeTranscriptTask(shareUrl) {
 
 function isActiveTranscriptTask(task) {
   return Boolean(task?.jobId && !['completed', 'error'].includes(task.status));
+}
+
+function normalizeTranscriptStatus(status) {
+  return status === 'failed' ? 'error' : status;
 }
 
 function transcriptTaskLabel(task) {
@@ -733,6 +744,20 @@ function correctContextConsistency(segments) {
 }
 
 function buildTranscriptResult(result, video) {
+  if (USE_TENCENT_TRANSCRIPT) {
+    const raw = String(result?.text || '');
+    const corrected = formatTranscriptPreservingText(raw);
+    return {
+      raw,
+      corrected,
+      correctionCount: 0,
+      source: 'cloud',
+      audioRaw: raw,
+      pipelineVersion: String(result?.pipeline_version || ''),
+      calibrationStatus: '',
+      calibrationChanges: 0
+    };
+  }
   const source = String(result?.source || 'asr');
   const correctedSource = Array.isArray(result?.segments) && result.segments.length
     ? result.segments.map((item) => String(item?.text || '').trim()).filter(Boolean)
@@ -769,6 +794,34 @@ function buildTranscriptResult(result, video) {
     calibrationStatus: String(result?.calibration_status || ''),
     calibrationChanges
   };
+}
+
+function formatTranscriptPreservingText(value) {
+  const source = String(value || '');
+  if (!source) return '';
+  const terminal = '。！？!?；;';
+  const soft = '，、：:';
+  const paragraphs = [];
+  let paragraph = '';
+  let visibleChars = 0;
+  let sentences = 0;
+  for (const character of source) {
+    paragraph += character;
+    if (!/\s/.test(character)) visibleChars += 1;
+    if (terminal.includes(character)) sentences += 1;
+    const terminalBreak = terminal.includes(character) && (sentences >= 3 || visibleChars >= 120);
+    const softBreak = soft.includes(character) && visibleChars >= 180;
+    const hardBreak = visibleChars >= 240;
+    if (terminalBreak || softBreak || hardBreak) {
+      paragraphs.push(paragraph);
+      paragraph = '';
+      visibleChars = 0;
+      sentences = 0;
+    }
+  }
+  if (paragraph) paragraphs.push(paragraph);
+  const formatted = paragraphs.join('\n\n');
+  return formatted.replace(/[\r\n]/g, '') === source.replace(/[\r\n]/g, '') ? formatted : source;
 }
 
 function showTranscriptView(view = 'corrected') {
@@ -1256,7 +1309,7 @@ async function transcribeCurrentVideo() {
     const task = {
       shareUrl: video.shareUrl,
       jobId: payload.id,
-      status: payload.status || 'queued',
+      status: normalizeTranscriptStatus(payload.status || 'queued'),
       stage: payload.stage || '',
       ahead: Number(payload.ahead || 0),
       createdAt: Date.now(),
@@ -1299,7 +1352,9 @@ function showTranscriptTaskStatus(task) {
 function transcriptCompletionMessage(payload, result) {
   if (document.documentElement.dataset.transcriptProduction === 'c') {
     const finalText = String(payload.corrected_text || payload.text || '').replace(/\s/g, '');
-    return `最终逐字稿已生成，共 ${Array.from(finalText).length} 字，可直接复制使用。`;
+    const seconds = Number(payload.elapsed_seconds || payload.total_elapsed || payload.elapsed || 0);
+    const timeText = seconds > 0 ? `，用时 ${seconds < 60 ? `${seconds.toFixed(seconds < 10 ? 1 : 0)} 秒` : `${Math.floor(seconds / 60)} 分 ${Math.round(seconds % 60)} 秒`}` : '';
+    return `逐字稿已生成，共 ${Array.from(finalText).length} 字${timeText}，可直接复制使用。`;
   }
   const cacheText = payload.cached ? '（已读取缓存）' : '';
   const seconds = Number(payload.elapsed || 0);
@@ -1319,7 +1374,7 @@ function transcriptCompletionMessage(payload, result) {
 async function applyTranscriptPayload(payload, originalTask) {
   const task = {
     ...originalTask,
-    status: payload.status || originalTask.status || 'running',
+    status: normalizeTranscriptStatus(payload.status || originalTask.status || 'running'),
     stage: payload.stage || originalTask.stage || '',
     ahead: Number(payload.ahead || 0),
     error: payload.error || '',

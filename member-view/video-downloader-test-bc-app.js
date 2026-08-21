@@ -7,10 +7,12 @@
   const productionC = document.documentElement.dataset.transcriptProduction === 'c';
   const apiBase = variant === 'b'
     ? 'http://127.0.0.1:8768/jobs'
-    : (productionC ? '/api/transcripts-cloud/jobs' : '/api/transcripts-test-cloud/jobs');
+    : (productionC ? '/api/transcripts-test-tencent/jobs' : '/api/transcripts-test-cloud/jobs');
   const locationLabel = variant === 'b' ? '本机处理用时' : '云端处理用时';
   const storagePrefix = productionC ? 'siyumenghai-video-production-c' : `siyumenghai-video-test-${variant}`;
-  const payloadCacheKey = `${storagePrefix}-transcripts-production-ocr-proofread-zh-v2.0.0`;
+  const payloadCacheKey = productionC
+    ? `${storagePrefix}-transcripts-tencent-v1`
+    : `${storagePrefix}-transcripts-production-ocr-proofread-zh-v2.0.0`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
   const jobToShare = readJson(jobShareKey, {});
@@ -68,6 +70,7 @@
       const parsed = new URL(url, location.href);
       return parsed.pathname.includes('/transcripts-test-cloud/jobs')
         || parsed.pathname.includes('/transcripts-cloud/jobs')
+        || parsed.pathname.includes('/transcripts-test-tencent/jobs')
         || parsed.port === '8768';
     } catch {
       return false;
@@ -165,7 +168,7 @@
   }
 
   function renderProductionPayload(payload, container, raw, corrected) {
-    const finalText = corrected.trim() ? corrected : raw;
+    const finalText = formatTranscriptPreservingText(corrected.trim() ? corrected : raw);
     const correctedNode = container.querySelector('[data-transcript-corrected-text]');
     correctedNode.value = finalText;
     container.hidden = false;
@@ -176,11 +179,11 @@
     container.querySelector('[data-transcript-corrected-count]').textContent = `${count} 字 · 完整结果`;
 
     const retry = container.querySelector('[data-transcript-retry]');
-    retry.hidden = payload.correction_status === 'completed';
-    retry.dataset.jobId = payload.id;
+    retry.hidden = true;
+    retry.removeAttribute('data-job-id');
 
     const meta = container.querySelector('[data-transcript-meta]');
-    const entries = [`总用时 ${formatTime(payload.total_elapsed || payload.elapsed)}`];
+    const entries = [`总用时 ${formatTime(payload.elapsed_seconds || payload.total_elapsed || payload.elapsed)}`];
     meta.replaceChildren(...entries.map((value) => {
       const item = document.createElement('span');
       item.textContent = value;
@@ -189,10 +192,8 @@
 
     const status = document.querySelector('[data-transcript-status]');
     if (status) {
-      status.textContent = payload.correction_status === 'completed'
-        ? `最终逐字稿已生成，共 ${count} 字，可直接复制使用。`
-        : `语音识别稿已生成，智能校正暂未完成：${payload.correction_error || '可点击重试校正'}。`;
-      status.classList.toggle('is-error', payload.correction_status !== 'completed');
+      status.textContent = `逐字稿已生成，共 ${count} 字，可直接复制使用。`;
+      status.classList.remove('is-error');
       status.classList.remove('is-working');
     }
   }
@@ -200,10 +201,10 @@
   function renderPayload(payload) {
     const container = document.querySelector('[data-transcript-dual]');
     if (!container || payload?.status !== 'completed') return;
-    const raw = String(payload.raw_text || '');
-    const corrected = String(payload.corrected_text || '');
+    const raw = String(payload.raw_text || payload.text || '');
+    const corrected = String(payload.corrected_text || payload.text || '');
     if (!raw.trim()) return;
-    const signature = `${payload.id}:${payload.correction_status}:${raw.length}:${corrected.length}:${payload.correction_count}`;
+    const signature = `${payload.id}:${payload.status}:${raw.length}:${corrected.length}:${payload.char_count || payload.correction_count || 0}`;
     if (productionC) {
       if (signature !== lastRenderedSignature) renderProductionPayload(payload, container, raw, corrected);
       lastRenderedSignature = signature;
@@ -261,6 +262,34 @@
       status.classList.remove('is-working');
     }
     lastRenderedSignature = signature;
+  }
+
+  function formatTranscriptPreservingText(value) {
+    const source = String(value || '');
+    if (!source) return '';
+    const terminal = '。！？!?；;';
+    const soft = '，、：:';
+    const paragraphs = [];
+    let paragraph = '';
+    let visibleChars = 0;
+    let sentences = 0;
+    for (const character of source) {
+      paragraph += character;
+      if (!/\s/.test(character)) visibleChars += 1;
+      if (terminal.includes(character)) sentences += 1;
+      const terminalBreak = terminal.includes(character) && (sentences >= 3 || visibleChars >= 120);
+      const softBreak = soft.includes(character) && visibleChars >= 180;
+      const hardBreak = visibleChars >= 240;
+      if (terminalBreak || softBreak || hardBreak) {
+        paragraphs.push(paragraph);
+        paragraph = '';
+        visibleChars = 0;
+        sentences = 0;
+      }
+    }
+    if (paragraph) paragraphs.push(paragraph);
+    const formatted = paragraphs.join('\n\n');
+    return formatted.replace(/[\r\n]/g, '') === source.replace(/[\r\n]/g, '') ? formatted : source;
   }
 
   function restoreForCurrentShare() {
@@ -340,7 +369,7 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260815-production-ocr-final-3'
+    ? './video-downloader-app.js?v=20260821-tencent-transcript-1'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();
