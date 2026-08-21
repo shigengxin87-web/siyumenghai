@@ -1,0 +1,26 @@
+[Unit]
+Description=Siyumenghai isolated video comment cloud service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/siyumenghai-video-comment-cloud
+Environment=PYTHONUNBUFFERED=1
+Environment=COMMENT_CLOUD_DATA_DIR=/var/lib/siyumenghai-video-comment-cloud
+Environment=COMMENT_CLOUD_KEY_FILE=/etc/siyumenghai-video-comment-cloud.key
+Environment=COMMENT_CLOUD_MAX_PROVIDER_CALLS_PER_DAY=100
+ExecStart=/usr/bin/python3 /opt/siyumenghai-video-comment-cloud/server.py
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/etc/siyumenghai-video-comment-cloud.key
+ReadWritePaths=/var/lib/siyumenghai-video-comment-cloud
+
+[Install]
+WantedBy=multi-user.target

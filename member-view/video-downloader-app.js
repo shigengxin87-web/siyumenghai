@@ -47,6 +47,8 @@ const TRANSCRIPT_TASK_KEY = USE_TENCENT_TRANSCRIPT
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;
+const COMMENT_TASK_KEY = 'siyumenghai-video-comment-tasks-v1-cloud';
+const COMMENT_API = '/api/video-comments/jobs';
 const TRANSCRIPT_API = USE_TENCENT_TRANSCRIPT
   ? '/api/transcripts-test-tencent/jobs'
   : '/api/transcripts-cloud/jobs';
@@ -284,6 +286,44 @@ function saveComments(shareUrl, text, rows) {
   }
 }
 
+function readCommentTasks() {
+  try {
+    const value = JSON.parse(localStorage.getItem(COMMENT_TASK_KEY) || '{}');
+    return value && typeof value === 'object' ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeCommentTasks(tasks) {
+  try {
+    const entries = Object.entries(tasks || {})
+      .sort((left, right) => Number(right[1]?.createdAt || 0) - Number(left[1]?.createdAt || 0))
+      .slice(0, COMMENT_CACHE_LIMIT);
+    localStorage.setItem(COMMENT_TASK_KEY, JSON.stringify(Object.fromEntries(entries)));
+  } catch {
+    // A submitted server job still continues when local storage is unavailable.
+  }
+}
+
+function commentTask(shareUrl) {
+  return shareUrl ? readCommentTasks()[shareUrl] || null : null;
+}
+
+function saveCommentTask(task) {
+  if (!task?.shareUrl || !task?.jobId) return;
+  const tasks = readCommentTasks();
+  tasks[task.shareUrl] = task;
+  writeCommentTasks(tasks);
+}
+
+function removeCommentTask(shareUrl) {
+  const tasks = readCommentTasks();
+  if (!tasks[shareUrl]) return;
+  delete tasks[shareUrl];
+  writeCommentTasks(tasks);
+}
+
 function historyTime(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
@@ -465,6 +505,7 @@ function renderLocalHelperPrompt() {
 
 function resetComments() {
   const cached = cachedComments(currentVideo?.shareUrl);
+  const task = commentTask(currentVideo?.shareUrl);
   currentCommentRows = cached?.rows || [];
   commentText.value = cached?.text || '';
   commentText.hidden = !cached;
@@ -472,8 +513,13 @@ function resetComments() {
   commentButton.textContent = cached ? '复制评论' : '提取并复制评论';
   commentRefreshButton.hidden = !cached;
   commentExcelButton.hidden = false;
-  if (cached) showCommentStatus('已读取本机缓存的评论，可直接复制或导出 Excel。');
-  else renderLocalHelperPrompt();
+  if (cached) showCommentStatus('已读取缓存的评论，可直接复制或导出 Excel。');
+  else if (task?.jobId && !['completed', 'failed'].includes(task.status)) {
+    commentButton.textContent = '查看提取进度';
+    showCommentStatus(task.stage || '评论正在后台提取，刷新或离开页面都不会中断。', 'working');
+  } else {
+    showCommentStatus('点击后由服务器直接读取评论，不需要打开或操作微信。');
+  }
 }
 
 function validHttpUrl(value) {
@@ -1209,6 +1255,79 @@ async function fetchLocalComments(objectId, nonceId) {
   return comments;
 }
 
+async function readCommentResponse(response) {
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = String(payload?.error || '').trim()
+      || (response.status === 429 ? '当前请求较多，请稍后再试。' : '评论服务暂时不可用，请稍后再试。');
+    throw new Error(message);
+  }
+  return payload;
+}
+
+async function applyCommentPayload(payload, task) {
+  task.status = String(payload.status || task.status || 'processing');
+  task.stage = String(payload.stage || '正在提取评论');
+  task.error = String(payload.error || '');
+  saveCommentTask(task);
+  if (task.status === 'failed') {
+    if (currentVideo?.shareUrl === task.shareUrl) {
+      commentButton.textContent = '重新提取评论';
+      showCommentStatus(`评论提取失败：${task.error || '请稍后重试。'}`, 'error');
+    }
+    return true;
+  }
+  if (task.status !== 'completed') {
+    if (currentVideo?.shareUrl === task.shareUrl) {
+      commentButton.textContent = '查看提取进度';
+      showCommentStatus(`${task.stage}。刷新或离开页面都不会中断。`, 'working');
+    }
+    return false;
+  }
+  const comments = Array.isArray(payload.comments) ? payload.comments : [];
+  if (!comments.length) {
+    task.status = 'failed';
+    task.error = '这条视频没有返回可见评论。';
+    saveCommentTask(task);
+    if (currentVideo?.shareUrl === task.shareUrl) showCommentStatus(`评论提取失败：${task.error}`, 'error');
+    return true;
+  }
+  const text = formatComments(comments);
+  const rows = commentRows(comments);
+  saveComments(task.shareUrl, text, rows);
+  removeCommentTask(task.shareUrl);
+  if (currentVideo?.shareUrl === task.shareUrl) {
+    currentCommentRows = rows;
+    commentText.value = text;
+    commentText.hidden = false;
+    commentButton.textContent = '复制评论';
+    commentRefreshButton.hidden = false;
+    commentExcelButton.hidden = false;
+    const copied = await copyText(text, commentText);
+    const limited = comments.length >= COMMENT_LIMIT ? `（已达到 ${COMMENT_LIMIT} 条上限）` : '';
+    showCommentStatus(
+      copied ? `已提取 ${comments.length} 条主评论${limited}并复制到剪贴板。` : `已提取 ${comments.length} 条主评论，请再次点击“复制评论”。`,
+      copied ? '' : 'error'
+    );
+  }
+  return true;
+}
+
+async function pollCommentTask(task) {
+  for (let attempt = 0; attempt < 180; attempt += 1) {
+    const response = await fetch(`${COMMENT_API}/${encodeURIComponent(task.jobId)}`, {
+      cache: 'no-store',
+      credentials: 'omit'
+    });
+    const payload = await readCommentResponse(response);
+    if (await applyCommentPayload(payload, task)) return;
+    await new Promise((resolve) => window.setTimeout(resolve, 2000));
+  }
+  if (currentVideo?.shareUrl === task.shareUrl) {
+    showCommentStatus('评论任务仍在后台处理，请稍后再点击查看进度。', 'working');
+  }
+}
+
 async function extractCurrentComments(forceRefresh = false) {
   if (!currentVideo?.shareUrl) return;
   const existingText = commentText.value.trim();
@@ -1219,43 +1338,36 @@ async function extractCurrentComments(forceRefresh = false) {
   }
 
   const video = { ...currentVideo };
-  const isLocalPage = ['127.0.0.1', 'localhost'].includes(location.hostname);
-  if (!isLocalPage) {
-    const bridgeUrl = new URL(COMMENT_BRIDGE_URL);
-    bridgeUrl.searchParams.set('url', video.shareUrl);
-    bridgeUrl.searchParams.set('v', '20260814-1');
-    const popup = window.open(bridgeUrl, 'siyumenghai-comment-bridge-v2', 'width=760,height=760');
-    showCommentStatus(
-      popup ? '已打开安全评论窗口；浏览器询问本地网络权限时请选择“允许”。' : '浏览器拦截了评论窗口，请允许此网站打开弹窗后重试。',
-      popup ? 'working' : 'error'
-    );
-    return;
-  }
   commentButton.disabled = true;
   commentButton.textContent = '正在提取…';
   try {
-    showCommentStatus('正在连接本地评论助手…', 'working');
-    const { objectId, nonceId } = await resolveLocalVideo(video.shareUrl);
-    showCommentStatus('已识别视频，正在分页读取评论…', 'working');
-    const comments = await fetchLocalComments(objectId, nonceId);
-    if (!comments.length) throw new Error('这条视频没有返回可见评论');
-    if (currentVideo?.shareUrl !== video.shareUrl) return;
-    const text = formatComments(comments);
-    currentCommentRows = commentRows(comments);
-    commentText.value = text;
-    commentText.hidden = false;
-    saveComments(video.shareUrl, text, currentCommentRows);
-    commentButton.textContent = '复制评论';
-    commentRefreshButton.hidden = false;
-    commentExcelButton.hidden = false;
-    const copied = await copyText(text, commentText);
-    const limited = comments.length >= COMMENT_LIMIT ? `（已达到 ${COMMENT_LIMIT} 条上限）` : '';
-    showCommentStatus(copied ? `已提取 ${comments.length} 条主评论${limited}并复制到剪贴板。` : `已提取 ${comments.length} 条主评论，请再次点击“复制评论”。`, copied ? '' : 'error');
+    let task = !forceRefresh ? commentTask(video.shareUrl) : null;
+    if (!task?.jobId || ['completed', 'failed'].includes(task.status)) {
+      showCommentStatus('正在提交评论提取任务…', 'working');
+      const response = await fetch(COMMENT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'omit',
+        body: JSON.stringify({ share_url: video.shareUrl })
+      });
+      const payload = await readCommentResponse(response);
+      task = {
+        shareUrl: video.shareUrl,
+        jobId: payload.id,
+        status: payload.status || 'queued',
+        stage: payload.stage || '等待处理',
+        createdAt: Date.now(),
+        error: ''
+      };
+      saveCommentTask(task);
+      await applyCommentPayload(payload, task);
+    }
+    await pollCommentTask(task);
   } catch (error) {
     commentButton.textContent = '重新提取评论';
-    showCommentStatus(`评论提取失败：${localCommentError(error)}`, 'error');
+    showCommentStatus(`评论提取失败：${error.message || '请稍后重试。'}`, 'error');
   } finally {
-    commentButton.disabled = false;
+    if (currentVideo?.shareUrl === video.shareUrl) commentButton.disabled = false;
   }
 }
 
@@ -1726,5 +1838,5 @@ clearHistoryButton.addEventListener('click', () => {
 });
 
 renderHistory();
-renderLocalHelperPrompt();
+showCommentStatus('查询视频后可直接提取评论，不需要打开或操作微信。');
 ensureTranscriptMonitor(800);
