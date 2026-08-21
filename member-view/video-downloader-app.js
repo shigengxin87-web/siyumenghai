@@ -392,7 +392,9 @@ function resetTranscript() {
     transcriptButton.textContent = isActiveTranscriptTask(task) ? '查看后台进度' : '重新生成逐字稿';
     showTranscriptTaskStatus(task);
   } else {
-    showTranscriptStatus('点击生成后，系统会在后台完成识别与校正，离开或刷新页面后仍可继续查看。');
+    showTranscriptStatus(USE_TENCENT_TRANSCRIPT
+      ? '点击生成后，系统会在后台完成识别，离开或刷新页面后仍可继续查看。'
+      : '点击生成后，系统会在后台完成识别与校正，离开或刷新页面后仍可继续查看。');
   }
 }
 
