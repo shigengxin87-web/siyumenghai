@@ -1111,6 +1111,35 @@ const days = {
       { time: '21:38', title: '重新确认社群交付底线', text: '主动邀请尚未收回价值的成员提需，群友也反馈交付已经超值，真正的压力反而来自信息过多。' },
       { time: '21:47', title: '共创咨询与陪跑产品边界', text: '围绕私域诊断、公开答疑、付费咨询、员工承接和家庭教育陪跑展开讨论，核心是定价、规则与精力保护。' }
     ]
+  },
+  '2026-08-21': {
+    dateLabel: '2026 年 8 月 21 日', weekday: '星期五', messages: 41, themesCount: 4, readTime: '5 分钟',
+    title: '把工具交给真实场景，也把社群关系变成可连接的资源',
+    summary: '今天从欢迎两位在线教育老兵开始，继续验证视频号逐字稿工具的速度与访问体验，并形成新的成员邀请机制。晚上又把公众号排版 Skill、效果示例和工具清单集中分享，让好用的能力从一次展示变成群友可以直接复用的资源。',
+    insights: [
+      { roles: ['product', 'content'], tag: '工具验证', source: '石更新 × 群友', time: '17:57', title: '工具的速度提升，要用真实访问和真实反馈一起验收', text: '8 分 43 秒的视频在 11 秒内完成文案提取，证明能力提升只是第一步；群友从不同浏览器、网络和手机端实际访问，才能继续发现兼容性与入口问题。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '查看工具说明' },
+      { roles: ['private', 'product'], tag: '成员连接', source: '新成员介绍', time: '15:40', title: '欢迎新成员时把经历与能力说清，合作机会才更容易出现', text: 'W 的在线教育前端操盘、短视频、直播和投流经验，以及张斌的大团队销售与闭环项目经历，都被具体介绍。成员标签越清晰，群内有相关需求的人越容易主动连接。' },
+      { roles: ['private', 'sales'], tag: '邀请机制', source: '石更新', time: '20:35', title: '熟人推荐可以降低信任成本，但规则要简单透明', text: '当群里出现多组合伙人和同事后，社群尝试用赠送名额或转介绍回馈机制，让成员把真正合适的人带进来，同时保持明确的费用和进入方式。' },
+      { roles: ['content', 'product'], tag: '技能复用', source: '石更新', time: '21:26', title: '把效果示例、安装入口和工具清单放在一起，Skill 才能被真正用起来', text: '群内不仅展示公众号排版后的真实文章效果，也补充 GitHub 安装入口与飞书工具清单，让成员可以按主题选择并直接进入自己的内容生产流程。', url: 'https://github.com/isjiamu/gzh-design-skill', linkLabel: '查看排版 Skill' }
+    ],
+    actions: [
+      { title: '用一条真实视频复测工具', text: '从官网进入视频号下载工具，记录视频时长、提取耗时、输出完整性和明显错词。', url: 'https://siyumenghai.cn/member-view/', linkLabel: '进入石董会官网' },
+      { title: '补全自己的成员标签', text: '用三句话写清过往经历、当前能力和希望连接的需求，降低群友认识与合作成本。' },
+      { title: '安装并试用一种排版主题', text: '用同一篇文章测试一套公众号排版主题，检查阅读层级、移动端效果和复制发布流程。', url: 'https://github.com/isjiamu/gzh-design-skill', linkLabel: '打开安装说明' },
+      { title: '从工具清单只选一个能力落地', text: '围绕当前交付选择一个设计或排版 Skill，完成一次真实成品后再决定是否长期保留。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '查看工具清单' }
+    ],
+    resources: [
+      { kind: '工具', title: '石董会视频号逐字稿工具', text: '从社群官网左下角进入，可用本人拥有或已获授权的视频测试提取速度、完整性与明显错词。', url: 'https://siyumenghai.cn/member-view/#2026-07-17/discussion', linkLabel: '查看使用入口' },
+      { kind: 'Skill', title: 'gzh-design 公众号排版 Skill', text: '提供六套主题，可用于把 Markdown 内容转换成适合公众号发布的排版结果。', url: 'https://github.com/isjiamu/gzh-design-skill', linkLabel: '查看 GitHub 仓库' },
+      { kind: '案例', title: '公众号排版效果示例', text: '群内分享的实际成品，用于观察公众号长文在字体、留白、层级和重点呈现上的效果。', url: 'https://mp.weixin.qq.com/s?__biz=MzkxODI2MTExOQ==&mid=2247484685&idx=1&sn=ee8ff33552a82f6112a01d8044bbea9b&chksm=c01dbaff4879560c38ea5b0d26c1c62a5f8b1d52d8645cd26c7f101e22bfdcfd3d9f39bd3158&mpshare=1&scene=1&srcid=0821ynFvxVLYSBO3dz6RIF8t&sharer_shareinfo=79b9a995605fdc5750a27d7a969b8cbe&sharer_shareinfo_first=79b9a995605fdc5750a27d7a969b8cbe#rd', linkLabel: '查看排版示例' },
+      { kind: '清单', title: 'AI、效率工具与 Skills 共建清单', text: '集中整理排版、设计及其他生产工具，适合按当前任务查找可直接使用的能力。', url: 'https://my.feishu.cn/wiki/Mx8VwhjdIi6dBfkiYyQcfFvfnvO?table=tblr6EIKOO3Wvpb8&view=vewbw3zrhU', linkLabel: '打开飞书清单' }
+    ],
+    themes: [
+      { time: '15:40', title: 'W 加入并介绍前端操盘经验', text: '群内欢迎 W，并介绍她在在线教育、短视频、直播和投流等前端业务中的经验，为后续打法分享与资源连接建立背景。' },
+      { time: '17:57', title: '视频号逐字稿工具提速与访问测试', text: '分享 8 分 43 秒视频在 11 秒内完成文案提取的结果，群友随后从浏览器、网络和手机端测试官网入口，继续暴露并核对访问差异。', url: 'https://siyumenghai.cn/member-view/', linkLabel: '进入官网体验' },
+      { time: '19:30', title: '张斌加入与成员邀请机制', text: '欢迎拥有在线教育销售团队和闭环项目经验的张斌，并基于群内合伙人与同事关系增多，提出赠送名额和转介绍回馈机制。' },
+      { time: '21:26', title: '公众号排版 Skill 与工具清单再分享', text: '以真实公众号文章展示排版效果，同时补充 GitHub 安装地址和飞书共建清单，让群友可以直接选择主题、安装并试用。', url: 'https://github.com/isjiamu/gzh-design-skill', linkLabel: '查看 Skill' }
+    ]
   }
 };
 
