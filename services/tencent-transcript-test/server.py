@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Isolated Tencent ASR job service for the 48-hour transcript test."""
+"""Isolated Tencent ASR transcript job service."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ PROFILE_API = os.environ.get(
 )
 TEST_EXPIRES_EPOCH = int(os.environ.get("TENCENT_TEST_EXPIRES_EPOCH", "0"))
 MAX_VIDEO_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_VIDEO_SECONDS", "600"))
-MAX_BILLED_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_BILLED_SECONDS", "3600"))
+MAX_BILLED_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_BILLED_SECONDS", "0"))
 MAX_WORKERS = int(os.environ.get("TENCENT_TEST_MAX_WORKERS", "1"))
 POLL_TIMEOUT_SECONDS = int(os.environ.get("TENCENT_TEST_POLL_TIMEOUT_SECONDS", "900"))
 JOBS_DIR = DATA_DIR / "jobs"
@@ -306,10 +306,10 @@ def process(job_id: str) -> None:
         update_job(job_id, video_duration_seconds=round(duration, 3))
         if duration > MAX_VIDEO_SECONDS + 0.05:
             raise PublicError(
-                f"视频时长 {duration / 60:.1f} 分钟，超过本次测试的10分钟上限；未提交识别，也没有截断。"
+                f"视频时长 {duration / 60:.1f} 分钟，超过10分钟上限；未提交识别，也没有截断。"
             )
-        if billed_seconds() > MAX_BILLED_SECONDS:
-            raise PublicError("48小时测试额度已用完，未产生本次识别费用。")
+        if MAX_BILLED_SECONDS > 0 and billed_seconds() > MAX_BILLED_SECONDS:
+            raise PublicError("已达到当前设置的累计识别额度，未产生本次识别费用。")
 
         update_job(job_id, stage="正在提交识别任务")
         api = client()
@@ -378,7 +378,7 @@ def process(job_id: str) -> None:
 
 def enqueue(share_url: str) -> dict[str, Any]:
     if TEST_EXPIRES_EPOCH and time.time() >= TEST_EXPIRES_EPOCH:
-        raise PublicError("48小时测试期已结束，当前不再接受新任务。")
+        raise PublicError("当前服务已暂停接收新任务。")
     job_id = secrets.token_urlsafe(18)
     job = {
         "id": job_id,
