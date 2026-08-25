@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260825-tabs-1">
+  <link rel="stylesheet" href="./portal.css?v=20260825-creator-hidden-1">
   <script>
     // Remove the obsolete worker that caused repeated page reloads.
     if ('serviceWorker' in navigator) {
@@ -46,14 +46,14 @@
         <section class="tool-query-card">
           <div class="tool-heading">
             <p>视频号工具</p>
-            <h1>单条下载，也能提取博主全部作品</h1>
-            <span>支持分享链接、博主搜索、批量解析和 Excel 导出。</span>
+            <h1>粘贴分享链接，解析视频</h1>
+            <span>支持单条查询、批量粘贴和 Excel 导入。</span>
           </div>
 
           <div class="mode-switch" role="tablist" aria-label="解析方式">
             <button type="button" class="is-active" role="tab" aria-selected="true" data-mode-button="single">单条解析</button>
             <button type="button" role="tab" aria-selected="false" data-mode-button="batch">批量解析</button>
-            <button type="button" role="tab" aria-selected="false" data-mode-button="creator">博主作品</button>
+            <button type="button" role="tab" aria-selected="false" aria-hidden="true" tabindex="-1" data-mode-button="creator" hidden>博主作品</button>
           </div>
 
           <div data-mode-panel="single">
