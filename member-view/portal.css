@@ -92,8 +92,8 @@ button { color: inherit; font: inherit; }
 .tool-heading p { margin: 0; color: var(--green); font-size: 11px; font-weight: 900; letter-spacing: 2px; }
 .tool-heading h1 { margin: 8px 0 9px; color: var(--ink); font-size: clamp(28px, 3.5vw, 42px); line-height: 1.2; letter-spacing: -1px; }
 .tool-heading span { color: var(--muted); font-size: 14px; }
-.mode-switch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 520px; margin: 25px auto 0; padding: 5px; background: #f3f6f4; border-radius: 13px; }
-.mode-switch button { min-height: 39px; color: var(--muted); background: transparent; border: 0; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 800; }
+.mode-switch { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; width: min(100%, 560px); margin: 25px auto 0; padding: 5px; background: #f3f6f4; border-radius: 13px; }
+.mode-switch button { min-width: 0; min-height: 39px; padding: 0 10px; color: var(--muted); background: transparent; border: 0; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 800; white-space: nowrap; }
 .mode-switch button.is-active { color: var(--green); background: #fff; box-shadow: 0 5px 14px rgba(17, 24, 39, .07); }
 .download-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; max-width: 880px; margin: 28px auto 0; }
 .download-form input {
@@ -127,6 +127,26 @@ button { color: inherit; font: inherit; }
 .creator-panel { max-width: 880px; margin: 0 auto; }
 .creator-form { margin-top: 23px; }
 .creator-hint { max-width: 880px; margin: 11px auto 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.7; }
+.creator-requirement {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  max-width: 880px;
+  margin: 24px auto 0;
+  padding: 13px 15px;
+  color: #255046;
+  background: #f0f8f4;
+  border: 1px solid #d5eadf;
+  border-radius: 13px;
+}
+.creator-requirement-badge { padding: 5px 8px; color: #087a56; background: #dff3e9; border-radius: 7px; font-size: 11px; font-weight: 900; white-space: nowrap; }
+.creator-requirement p { display: grid; gap: 2px; margin: 0; font-size: 12px; line-height: 1.5; }
+.creator-requirement p strong { color: #173e34; font-size: 13px; }
+.creator-requirement p span { color: #58746d; }
+.creator-requirement a { color: #07815a; font-size: 12px; font-weight: 850; text-decoration: none; white-space: nowrap; }
+.creator-requirement a:hover { text-decoration: underline; }
+.creator-form { margin-top: 14px; }
 .batch-panel { max-width: 880px; margin: 23px auto 0; }
 .batch-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 12px; font-weight: 750; }
 .batch-panel textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 16px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 13px; outline: none; font: inherit; font-size: 14px; line-height: 1.65; }
@@ -247,6 +267,10 @@ button { color: inherit; font: inherit; }
   .tool-query-card { padding: 24px 16px; }
   .tool-heading h1 { font-size: 29px; }
   .tool-heading span { display: block; font-size: 13px; line-height: 1.6; }
+  .mode-switch { width: 100%; }
+  .mode-switch button { padding: 0 5px; font-size: 12px; }
+  .creator-requirement { grid-template-columns: auto minmax(0, 1fr); gap: 8px 10px; padding: 12px; }
+  .creator-requirement a { grid-column: 2; justify-self: start; }
   .download-form { grid-template-columns: 1fr; margin-top: 21px; }
   .download-form button { width: 100%; }
   .batch-import-row { flex-wrap: wrap; }

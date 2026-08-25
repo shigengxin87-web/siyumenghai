@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ECFDF5">
   <title>视频号下载 · 石更新成长朋友圈</title>
   <meta name="description" content="粘贴视频号分享链接，查询视频信息并下载视频文件。">
-  <link rel="stylesheet" href="./portal.css?v=20260809-2">
+  <link rel="stylesheet" href="./portal.css?v=20260825-tabs-1">
   <script>
     // Remove the obsolete worker that caused repeated page reloads.
     if ('serviceWorker' in navigator) {
@@ -82,6 +82,11 @@
           </div>
 
           <div class="creator-panel" data-mode-panel="creator" hidden>
+            <div class="creator-requirement">
+              <span class="creator-requirement-badge">需要本机助手</span>
+              <p><strong>批量提取博主作品需要连接微信电脑版。</strong><span>请先安装并运行助手，再在微信中打开任意视频号页面。</span></p>
+              <a href="./local-comment-helper.html" target="_blank" rel="noopener noreferrer">安装或检查助手</a>
+            </div>
             <form class="download-form creator-form" data-creator-form>
               <label class="visually-hidden" for="creator-query">博主名称或任意一条作品链接</label>
               <input id="creator-query" data-creator-query type="text" autocomplete="off" placeholder="输入博主名称，或粘贴该博主任意一条视频链接" required>
