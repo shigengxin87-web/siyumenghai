@@ -1214,6 +1214,40 @@ const days = {
       { time: '19:02', title: '小规模训练营的低成本交付选型', text: '围绕直播、录播、音频、作业和社群打卡比较腾讯会议、小鹅通、螳螂、星橙等方案，建议首期少量学员先粗糙启动、验证模型。' },
       { time: '19:23', title: '用 OBS 把腾讯会议扩展为录播方案', text: '通过虚拟摄像头把预制视频和统一画面传入腾讯会议，并用双重本地录制保障回放；同时强调把直播时展示的画面和文字尽量提前合成完整素材。' }
     ]
+  },
+  '2026-08-25': {
+    dateLabel: '2026 年 8 月 25 日', weekday: '星期二', messages: 24, themesCount: 4, readTime: '4 分钟',
+    title: '把难点做成能用的工具，把成员问题沉淀成公开答案',
+    summary: '今天先发布小红书视频笔记逐字稿工具，并围绕不同平台的解析难度、付费 API 与真实使用规模继续讨论；随后把群友提出的备课方法和知识付费行业判断整理成两篇可直接查阅的问答。共同方向是：先解决具体需求，再把一次解答沉淀为可复用的工具与内容。',
+    insights: [
+      { roles: ['content', 'product'], tag: '需求开发', source: '石更新 × 群友', time: '21:55', title: '工具从一个明确场景开始，比先追求全平台更容易做出真实价值', text: '这次先解决小红书视频笔记逐字稿需求，并将单次输出限制为主页前三条，用小范围真实体验检验解析稳定性和使用价值。', url: 'https://siyumenghai.cn/xhs-transcripts/', linkLabel: '体验逐字稿工具' },
+      { roles: ['product', 'operations'], tag: '能力边界', source: '工具实现讨论', time: '21:57', title: '内部可用只是第一步，大规模使用还要验证成本与稳定性', text: '抖音、B 站与小红书、视频号的解析难度不同；付费 API、图片 OCR 和视频笔记解析也属于不同路径。上线前先写清支持范围，再用真实流量验证批量能力。' },
+      { roles: ['content', 'product'], tag: '知识沉淀', source: '石更新', time: '23:23', title: '成员提出的具体问题，可以直接变成下一份可复用交付', text: '备课方法是首次集中解答，知识付费行业判断则是在既有思考上继续补充。把问题整理成独立问答，能让一次群聊回应变成后来成员也能查阅的内容资产。', links: [
+        { label: '查看备课方法问答', url: 'https://my.feishu.cn/wiki/QPaowMO3SiIeoekS6vEc06NXn9e?from=from_copylink' },
+        { label: '查看行业判断问答', url: 'https://my.feishu.cn/wiki/VN0JwC6V8iF8lwktjGicQ2iRnAf?from=from_copylink' }
+      ] },
+      { roles: ['product', 'sales'], tag: '行业判断', source: '石更新', time: '23:25', title: '知识付费的形式会变，用户为认知、结果和服务付费的需求仍在', text: '课程形态、价格和表达会随着红利变化而调整，“知识服务”也更强调质量与陪伴；判断行业时应区分旧打法衰退与整体需求消失，不因一个新名称就简单唱衰市场。', url: 'https://my.feishu.cn/wiki/VN0JwC6V8iF8lwktjGicQ2iRnAf?from=from_copylink', linkLabel: '阅读完整判断' }
+    ],
+    actions: [
+      { title: '用一个真实对标账号测试工具', text: '粘贴本人有权分析的小红书账号主页链接，核对前三条视频逐字稿的完整性、耗时和明显错词。', url: 'https://siyumenghai.cn/xhs-transcripts/', linkLabel: '进入工具' },
+      { title: '为解析能力写清支持边界', text: '分别列出视频笔记、图文笔记、平台范围、单次数量、付费 API 成本和批量使用风险。' },
+      { title: '把一个高频问题整理成独立问答', text: '保留提问背景、核心判断和可执行步骤，让群内回答可以被后续成员直接复用。', url: 'https://my.feishu.cn/wiki/QPaowMO3SiIeoekS6vEc06NXn9e?from=from_copylink', linkLabel: '参考备课问答' },
+      { title: '区分行业变化与需求消失', text: '复盘自己的产品：正在衰退的是获客红利、低质交付还是用户愿意付费的核心需求。', url: 'https://my.feishu.cn/wiki/VN0JwC6V8iF8lwktjGicQ2iRnAf?from=from_copylink', linkLabel: '参考行业判断' }
+    ],
+    resources: [
+      { kind: '工具', title: '小红书视频逐字稿提取', text: '输入对标账号主页链接，当前可输出前三条视频笔记逐字稿，适合先做小范围真实体验。', url: 'https://siyumenghai.cn/xhs-transcripts/', linkLabel: '打开工具' },
+      { kind: '问答', title: '净心：备课方法', text: '围绕备课这一具体问题形成的独立整理，可作为课程准备和方法梳理的参考。', url: 'https://my.feishu.cn/wiki/QPaowMO3SiIeoekS6vEc06NXn9e?from=from_copylink', linkLabel: '阅读飞书问答' },
+      { kind: '问答', title: '子非鱼：知识付费行业判断', text: '讨论知识付费与知识服务的变化、质量要求和市场判断，帮助区分形式变化与长期需求。', url: 'https://my.feishu.cn/wiki/VN0JwC6V8iF8lwktjGicQ2iRnAf?from=from_copylink', linkLabel: '阅读飞书问答' }
+    ],
+    themes: [
+      { time: '21:55', title: '小红书视频逐字稿工具开放体验', text: '基于对标账号逐字稿需求发布新工具，当前限制输出主页前三条视频笔记，用真实体验继续验证解析质量与规模边界。', url: 'https://siyumenghai.cn/xhs-transcripts/', linkLabel: '进入工具体验' },
+      { time: '21:57', title: '平台解析难度与付费 API 路径', text: '围绕抖音、B 站、小红书和视频号的解析差异，继续讨论图文 OCR、视频笔记与第三方付费 API 的适用边界。' },
+      { time: '23:23', title: '备课方法与行业判断问答发布', text: '把净心提出的备课问题和子非鱼提出的知识付费行业问题分别整理成独立问答，让成员可以直接阅读和复用。', links: [
+        { label: '备课方法', url: 'https://my.feishu.cn/wiki/QPaowMO3SiIeoekS6vEc06NXn9e?from=from_copylink' },
+        { label: '行业判断', url: 'https://my.feishu.cn/wiki/VN0JwC6V8iF8lwktjGicQ2iRnAf?from=from_copylink' }
+      ] },
+      { time: '23:36', title: '恢复生活节奏与群友互助', text: '当天最后简短交流近两日恢复正常入睡、早起和日常活动的变化，群友随后主动表示愿意分享自己的方法。' }
+    ]
   }
 };
 
