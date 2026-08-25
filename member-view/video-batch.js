@@ -15,11 +15,17 @@ const batchResults = document.querySelector('[data-batch-results]');
 const batchResultList = document.querySelector('[data-batch-result-list]');
 const batchExportButton = document.querySelector('[data-batch-export]');
 const batchDownloadAllButton = document.querySelector('[data-batch-download-all]');
+const creatorForm = document.querySelector('[data-creator-form]');
+const creatorQuery = document.querySelector('[data-creator-query]');
+const creatorStartButton = document.querySelector('[data-creator-start]');
+const creatorStatus = document.querySelector('[data-creator-status]');
 
 const BATCH_LIMIT = 100;
 const BATCH_CONCURRENCY = 2;
 const BATCH_RETRIES = 1;
 const BATCH_TIMEOUT = 30000;
+const CREATOR_BRIDGE_ORIGIN = 'http://127.0.0.1:2024';
+const CREATOR_BRIDGE_URL = `${CREATOR_BRIDGE_ORIGIN}/creator`;
 
 let batchItems = [];
 let batchLinkNotes = new Map();
@@ -28,6 +34,7 @@ let batchPaused = false;
 let batchCancelled = false;
 let batchResumeWaiters = [];
 let batchControllers = new Set();
+let creatorPopup = null;
 
 function batchDelay(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
@@ -42,6 +49,12 @@ function setBatchStatus(message, isError = false) {
   batchStatus.textContent = message;
   batchStatus.classList.toggle('is-error', isError);
   batchStatus.hidden = !message;
+}
+
+function setCreatorStatus(message, isError = false) {
+  creatorStatus.textContent = message;
+  creatorStatus.classList.toggle('is-error', isError);
+  creatorStatus.hidden = !message;
 }
 
 function currentBatchLinks() {
@@ -296,8 +309,10 @@ async function importBatchWorkbook(file) {
 }
 
 function recordBatchDownload(item) {
+  if (!item.url) return;
+  const historyKey = item.url;
   const historyItem = {
-    shareUrl: item.url,
+    shareUrl: historyKey,
     coverUrl: item.coverUrl,
     videoUrl: item.videoUrl,
     author: item.author,
@@ -336,10 +351,12 @@ function exportBatchResults() {
   if (!window.XLSX || !batchItems.length) return;
   const rows = batchItems.map((item, index) => ({
     序号: index + 1,
-    原始链接: item.url,
+    作品ID: item.workId || '',
+    分享链接: item.url,
     解析状态: statusText(item),
     作者: item.author,
     视频标题: item.description,
+    发布时间: item.createTime || '',
     备注: item.note,
     封面链接: item.coverUrl,
     视频地址: item.videoUrl,
@@ -347,8 +364,8 @@ function exportBatchResults() {
   }));
   const sheet = XLSX.utils.json_to_sheet(rows);
   sheet['!cols'] = [
-    { wch: 8 }, { wch: 38 }, { wch: 14 }, { wch: 22 }, { wch: 45 },
-    { wch: 20 }, { wch: 42 }, { wch: 42 }, { wch: 28 }
+    { wch: 8 }, { wch: 24 }, { wch: 38 }, { wch: 14 }, { wch: 22 },
+    { wch: 45 }, { wch: 20 }, { wch: 20 }, { wch: 42 }, { wch: 42 }, { wch: 28 }
   ];
   sheet['!autofilter'] = { ref: sheet['!ref'] };
   const workbook = XLSX.utils.book_new();
@@ -357,8 +374,89 @@ function exportBatchResults() {
   XLSX.writeFile(workbook, `视频号批量解析结果_${stamp}.xlsx`);
 }
 
+function creatorBatchItems(works) {
+  const seen = new Set();
+  return works.slice(0, 2000).map((work, index) => {
+    const workId = String(work?.id || '').trim();
+    const videoUrl = validHttpUrl(work?.videoUrl);
+    if (!workId || !videoUrl || seen.has(workId)) return null;
+    seen.add(workId);
+    return {
+      id: `creator-${workId}-${index}`,
+      workId,
+      url: validHttpUrl(work?.shareUrl),
+      note: '',
+      status: 'success',
+      attempts: 1,
+      author: String(work?.author || '视频号作者'),
+      description: String(work?.description || '该作品没有文字说明'),
+      coverUrl: validHttpUrl(work?.coverUrl),
+      videoUrl,
+      rawUrl: validHttpUrl(work?.rawUrl) || videoUrl,
+      createTime: work?.createTime || '',
+      decryptKey: String(work?.decryptKey || ''),
+      source: 'creator',
+      error: ''
+    };
+  }).filter(Boolean);
+}
+
+function acceptCreatorWorks(payload) {
+  const works = Array.isArray(payload?.works) ? payload.works : [];
+  batchItems = creatorBatchItems(works);
+  if (!batchItems.length) {
+    setCreatorStatus('没有收到可下载的作品，请确认微信电脑版已经打开视频号页面。', true);
+    return;
+  }
+  batchRunning = false;
+  batchPaused = false;
+  batchCancelled = false;
+  batchProgress.hidden = false;
+  batchResults.hidden = false;
+  batchPauseButton.disabled = true;
+  batchCancelButton.disabled = true;
+  batchProgressBar.style.width = '100%';
+  renderBatchResults();
+  updateBatchProgress();
+  const author = String(payload?.author?.nickname || batchItems[0].author || '该博主');
+  batchSummary.textContent = `${author} · 已提取 ${batchItems.length} 条作品`;
+  setCreatorStatus(`已提取 ${author} 的 ${batchItems.length} 条可见作品，可以导出 Excel 或依次下载。`);
+  creatorStartButton.disabled = false;
+  creatorStartButton.textContent = '重新查找';
+}
+
 batchModeButtons.forEach((button) => {
   button.addEventListener('click', () => switchBatchMode(button.dataset.modeButton));
+});
+
+creatorForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const query = creatorQuery.value.trim();
+  if (!query) return;
+  const url = new URL(CREATOR_BRIDGE_URL);
+  url.searchParams.set('query', query);
+  url.searchParams.set('return_origin', window.location.origin);
+  creatorStartButton.disabled = true;
+  creatorStartButton.textContent = '正在打开';
+  setCreatorStatus('已打开博主确认窗口；如果浏览器询问是否访问本地网络，请选择“允许”。');
+  creatorPopup = window.open(url, 'siyumenghai-creator-extractor', 'popup,width=860,height=760');
+  if (!creatorPopup) {
+    creatorStartButton.disabled = false;
+    creatorStartButton.textContent = '查找全部作品';
+    setCreatorStatus('浏览器拦截了窗口，请允许弹出窗口后重试。', true);
+    return;
+  }
+  window.setTimeout(() => {
+    if (creatorStartButton.disabled) {
+      creatorStartButton.disabled = false;
+      creatorStartButton.textContent = batchItems.length ? '重新查找' : '查找全部作品';
+    }
+  }, 1500);
+});
+
+window.addEventListener('message', (event) => {
+  if (event.source !== creatorPopup || event.origin !== CREATOR_BRIDGE_ORIGIN || event.data?.type !== 'siyumenghai-creator-works') return;
+  acceptCreatorWorks(event.data);
 });
 
 batchInput.addEventListener('input', updateBatchCount);

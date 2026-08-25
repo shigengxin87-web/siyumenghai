@@ -46,13 +46,14 @@
         <section class="tool-query-card">
           <div class="tool-heading">
             <p>视频号工具</p>
-            <h1>粘贴分享链接，解析视频</h1>
-            <span>支持单条查询、批量粘贴和 Excel 导入。</span>
+            <h1>单条下载，也能提取博主全部作品</h1>
+            <span>支持分享链接、博主搜索、批量解析和 Excel 导出。</span>
           </div>
 
           <div class="mode-switch" role="tablist" aria-label="解析方式">
             <button type="button" class="is-active" role="tab" aria-selected="true" data-mode-button="single">单条解析</button>
             <button type="button" role="tab" aria-selected="false" data-mode-button="batch">批量解析</button>
+            <button type="button" role="tab" aria-selected="false" data-mode-button="creator">博主作品</button>
           </div>
 
           <div data-mode-panel="single">
@@ -78,6 +79,16 @@
               <button type="button" data-batch-start disabled>开始批量解析</button>
             </div>
             <p class="tool-status" data-batch-status role="status" aria-live="polite" hidden></p>
+          </div>
+
+          <div class="creator-panel" data-mode-panel="creator" hidden>
+            <form class="download-form creator-form" data-creator-form>
+              <label class="visually-hidden" for="creator-query">博主名称或任意一条作品链接</label>
+              <input id="creator-query" data-creator-query type="text" autocomplete="off" placeholder="输入博主名称，或粘贴该博主任意一条视频链接" required>
+              <button type="submit" data-creator-start>查找全部作品</button>
+            </form>
+            <p class="creator-hint">同名账号会先展示头像供你确认；提取结果可直接导出 Excel 或依次下载。仅处理本人拥有或已获授权的内容。</p>
+            <p class="tool-status" data-creator-status role="status" aria-live="polite" hidden></p>
           </div>
         </section>
 
@@ -176,6 +187,6 @@
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
-  <script src="./video-batch.js?v=20260808-31-final"></script>
+  <script src="./video-batch.js?v=20260825-creator-1"></script>
 </body>
 </html>

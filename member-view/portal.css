@@ -92,7 +92,7 @@ button { color: inherit; font: inherit; }
 .tool-heading p { margin: 0; color: var(--green); font-size: 11px; font-weight: 900; letter-spacing: 2px; }
 .tool-heading h1 { margin: 8px 0 9px; color: var(--ink); font-size: clamp(28px, 3.5vw, 42px); line-height: 1.2; letter-spacing: -1px; }
 .tool-heading span { color: var(--muted); font-size: 14px; }
-.mode-switch { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; max-width: 360px; margin: 25px auto 0; padding: 5px; background: #f3f6f4; border-radius: 13px; }
+.mode-switch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 520px; margin: 25px auto 0; padding: 5px; background: #f3f6f4; border-radius: 13px; }
 .mode-switch button { min-height: 39px; color: var(--muted); background: transparent; border: 0; border-radius: 9px; cursor: pointer; font-size: 13px; font-weight: 800; }
 .mode-switch button.is-active { color: var(--green); background: #fff; box-shadow: 0 5px 14px rgba(17, 24, 39, .07); }
 .download-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; max-width: 880px; margin: 28px auto 0; }
@@ -124,6 +124,9 @@ button { color: inherit; font: inherit; }
 .download-form button:disabled, .download-button:disabled { opacity: .55; cursor: wait; }
 .tool-status { max-width: 880px; margin: 14px auto 0; padding: 11px 14px; color: var(--green); background: var(--green-soft); border-radius: 11px; text-align: center; font-size: 13px; }
 .tool-status.is-error { color: #b42318; background: #fef3f2; }
+.creator-panel { max-width: 880px; margin: 0 auto; }
+.creator-form { margin-top: 23px; }
+.creator-hint { max-width: 880px; margin: 11px auto 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.7; }
 .batch-panel { max-width: 880px; margin: 23px auto 0; }
 .batch-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 12px; font-weight: 750; }
 .batch-panel textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 16px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 13px; outline: none; font: inherit; font-size: 14px; line-height: 1.65; }
