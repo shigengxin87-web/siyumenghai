@@ -1276,6 +1276,30 @@ const days = {
       { time: '10:21', title: '手机分离与信息焦虑', text: '把手机移出睡眠空间、设置停止输入的边界，引出“怕错过信息”如何让休息仍处于工作状态的讨论。' },
       { time: '10:35', title: '从全知冲动回到有限注意力', text: '讨论信息过载下不必事事都懂，接受暂时不知道，把有限注意力重新放回当下真正重要的事情。' }
     ]
+  },
+  '2026-08-27': {
+    dateLabel: '2026 年 8 月 27 日', weekday: '星期四', messages: 3, themesCount: 2, readTime: '3 分钟',
+    title: '平台规则收紧后，承接能力比单一“解密路径”更重要',
+    summary: '今天转播了一则抖音教培与读书卡承接规则变化的信息，并补充了此前关于低价引流课限制的分析文章。当天信息的核心不是寻找新的擦边路径，而是及时核对平台规则，把成交承接建立在合规授权、多触点沟通和真实转化数据上。',
+    insights: [
+      { roles: ['operations', 'sales'], tag: '规则变化', source: '当天转播信息', time: '09:26', title: '依赖平台直接获取联系方式的旧路径正在变窄', text: '当天转播信息称，教培与读书卡类目仍受邀约和资质要求影响，部分过去可直接获取联系方式的能力也在调整。具体执行前仍应以平台当前后台规则和官方通知为准。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd', linkLabel: '阅读完整分析' },
+      { roles: ['operations', 'sales'], tag: '承接设计', source: '群内业务讨论', time: '09:26', title: '实物、虚拟商品的差别，最终要落到合规触达能力', text: '包裹卡、短信和小程序授权各有不同的触达链路。真正要比较的是用户是否清楚授权、触达是否符合平台规则，以及每一步的实际到达率和加微率。' },
+      { roles: ['product', 'operations'], tag: '风险判断', source: '文章补充', time: '09:26', title: '规则变化不等于业务终点，但要求更强的内容与交付', text: '当低价引流和单一承接方式受限，增长更依赖产品价值、内容信任、合规承接和后续服务，而不是某个短期通道。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd', linkLabel: '查看应对思路' }
+    ],
+    actions: [
+      { title: '先核对当前类目与承接规则', text: '进入平台后台确认自己的类目资格、商品形态和联系方式授权能力，不把转播信息直接当成所有账号的统一规则。' },
+      { title: '画出完整的合规承接链路', text: '从下单、短信、包裹卡或小程序授权，到进入私域和后续服务，逐步标明用户知情、授权与退出机制。' },
+      { title: '用自己的数据替代行业口述比例', text: '分别记录短信到达、授权、加微和成交数据；当天提到的比例仅是转播经验，不作为通用基准。' },
+      { title: '准备不依赖单一路径的增长方案', text: '同步加强内容获客、产品价值、私域承接与交付复购，降低平台某项能力调整带来的波动。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd', linkLabel: '参考完整文章' }
+    ],
+    resources: [
+      { kind: '文章', title: '面对抖音低价引流课限制，如何调整增长路径', text: '围绕平台规则变化、低价引流限制和第二增长路径的进一步分析，与当天转播信息直接相关。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd', linkLabel: '阅读公众号文章' },
+      { kind: '核对项', title: '规则变化后的四项数据', text: '按触达、授权、加微、成交四步记录自己的真实数据，并同时检查平台规则与用户授权是否清楚。' }
+    ],
+    themes: [
+      { time: '09:26', title: '抖音教培与读书卡承接规则变化', text: '转播信息集中说明类目门槛、联系方式获取方式，以及实物商品和虚拟商品在触达环节的差异。' },
+      { time: '09:26', title: '从规则焦虑转向第二增长路径', text: '补充相关文章，把讨论从寻找单一解密能力拉回合规承接、产品内容和长期增长。', url: 'https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd', linkLabel: '阅读相关分析' }
+    ]
   }
 };
 
