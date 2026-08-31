@@ -1325,6 +1325,34 @@ const days = {
       { time: '11:58', title: '分享 Skill 安装提示与群聊素材', text: '通过转发文件提供安装入口，目标是让其他成员可以在自己的环境中复用同一套微信数据能力。' },
       { time: '12:01', title: '明确可处理的微信组件范围', text: '补充说明工具可以覆盖私信、群聊、收藏、朋友圈和公众号；同时分享演示视频，但画面内容未作推断。' }
     ]
+  },
+  '2026-08-31': {
+    dateLabel: '2026 年 8 月 31 日', weekday: '星期一', messages: 14, themesCount: 4, readTime: '4 分钟',
+    title: '选对获客模式，再设计能承接的钩子',
+    summary: '今天先有群友寻找抖音加密链接跳转企业微信的服务商，并迅速获得同伴引荐；晚间「每周一课」发布获客模式选择与钩子设计内容，同时用 HTML 页面提供类似 PPT 的投屏演示。讨论把一个完整链路串了起来：先选择适合自己的公域获客方式，再设计钩子与公转私承接，最后用私域完成后续转化。',
+    insights: [
+      { roles: ['operations', 'sales'], tag: '资源协同', source: '群友需求与引荐', time: '08:46', title: '明确说出具体需求，群内资源才能快速匹配', text: '需求被描述为“抖音加密链接跳转企业微信的服务商”后，很快得到直接引荐。提出需求时写清平台、跳转目标和服务类型，比泛泛求推荐更容易得到有效回应。' },
+      { roles: ['content', 'sales'], tag: '获客选择', source: '每周一课', time: '21:13', title: '先选获客模式，再决定用什么钩子', text: '钩子不是孤立的文案技巧，它要与平台流量、目标客群、产品承接和后续成交方式匹配。先明确模式，才能判断赠品、体验、内容或咨询入口是否合适。', url: 'https://my.feishu.cn/wiki/VSE7w3AooiqGLVkD5YBcHBokndd?from=from_copylink', linkLabel: '学习完整课程' },
+      { roles: ['content', 'product'], tag: '内容呈现', source: '石更新', time: '21:15', title: '同一份内容可以换一种载体继续交付', text: '没有制作海报时，改用 HTML 页面展示，并提供分页投屏模式。载体变化不影响核心内容，关键是保证阅读、演示和分享路径顺畅。', url: 'https://workbuddy.link/p/YS4CrgPjAnrrZzBPHhwGGW?source=2', linkLabel: '打开演示页面' },
+      { roles: ['operations', 'sales'], tag: '完整链路', source: '下期预告', time: '21:31', title: '公域、公转私、私域要作为一套系统设计', text: '下一期将集中讨论工具系统，覆盖公域获客、公转私承接与私域运营。工具的价值不是堆功能，而是让每个环节的数据和动作能够连续。' }
+    ],
+    actions: [
+      { title: '写清自己的获客模式', text: '明确目标平台、目标人群、核心内容、转化入口和最终成交场景，再判断当前模式是否完整。', url: 'https://my.feishu.cn/wiki/VSE7w3AooiqGLVkD5YBcHBokndd?from=from_copylink', linkLabel: '参考课程框架' },
+      { title: '为一个产品设计三种钩子', text: '分别尝试内容型、工具型和体验型钩子，并写清用户为什么愿意下一步行动。' },
+      { title: '检查公转私承接的合规性', text: '核对跳转、授权、企业微信添加和后续触达是否符合平台规则，不把技术可行等同于合规可用。' },
+      { title: '把现有内容做成可演示版本', text: '将一份课程或方案整理为分页展示，测试阅读端与投屏端是否都清晰。', url: 'https://workbuddy.link/p/YS4CrgPjAnrrZzBPHhwGGW?source=2', linkLabel: '查看 HTML 演示' }
+    ],
+    resources: [
+      { kind: '课程', title: '获客模式的选择和钩子的设计', text: '每周一课的新内容，与上一期衔接，帮助从获客模式出发设计更匹配的转化钩子。', url: 'https://my.feishu.cn/wiki/VSE7w3AooiqGLVkD5YBcHBokndd?from=from_copylink', linkLabel: '阅读飞书课程' },
+      { kind: '演示', title: 'HTML 分页与投屏版本', text: '同一课程的另一种呈现方式，右上角菜单可进入投屏演示，按页播放。', url: 'https://workbuddy.link/p/YS4CrgPjAnrrZzBPHhwGGW?source=2', linkLabel: '打开演示' },
+      { kind: '预告', title: '公域、公转私、私域工具系统专场', text: '下一期将把三个环节放在同一系统中讨论，关注工具如何支撑完整转化链路。' }
+    ],
+    themes: [
+      { time: '08:46', title: '抖音到企业微信的服务商需求', text: '群友提出明确的公转私服务商需求，随后获得直接引荐；当天两张图片缺少可验证说明，未推断其内容。' },
+      { time: '21:13', title: '每周一课：获客模式与钩子设计', text: '发布与上期承接的新课程，从获客模式选择出发讨论钩子如何匹配后续转化。', url: 'https://my.feishu.cn/wiki/VSE7w3AooiqGLVkD5YBcHBokndd?from=from_copylink', linkLabel: '进入课程' },
+      { time: '21:15', title: '用 HTML 与投屏模式替代海报', text: '因制作条件变化，改用网页呈现课程，并提供类似 PPT 的分页投屏体验。', url: 'https://workbuddy.link/p/YS4CrgPjAnrrZzBPHhwGGW?source=2', linkLabel: '查看演示效果' },
+      { time: '21:31', title: '预告完整工具系统专场', text: '下一期将覆盖公域、公转私和私域，进一步把获客、承接与转化串成一套工具系统。' }
+    ]
   }
 };
 
