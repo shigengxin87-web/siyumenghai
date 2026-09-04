@@ -1353,6 +1353,34 @@ const days = {
       { time: '21:15', title: '用 HTML 与投屏模式替代海报', text: '因制作条件变化，改用网页呈现课程，并提供类似 PPT 的分页投屏体验。', url: 'https://workbuddy.link/p/YS4CrgPjAnrrZzBPHhwGGW?source=2', linkLabel: '查看演示效果' },
       { time: '21:31', title: '预告完整工具系统专场', text: '下一期将覆盖公域、公转私和私域，进一步把获客、承接与转化串成一套工具系统。' }
     ]
+  },
+  '2026-09-03': {
+    dateLabel: '2026 年 9 月 3 日', weekday: '星期四', messages: 30, themesCount: 4, readTime: '5 分钟',
+    title: '先分清自己要学习，还是要真正做出产品',
+    summary: '今天从 WorkBuddy 热度和群响短视频线下课聊起，多位群友因群内与朋友圈推荐相约杭州。讨论随后从获客培训延伸到知识产品打造：通用课程适合建立认知和方法，若目标是把自己的课程真正设计并交付出来，更需要先说清背景与具体结果，再决定是否采用一对一咨询或陪跑。',
+    insights: [
+      { roles: ['operations', 'content'], tag: '实战学习', source: '群响课程讨论', time: '15:34', title: '从“听懂”升级为“现场做完”，学习设计才更接近结果', text: '当天介绍的短视频课采用现场讲解、分组合作、助教跟进、工具辅助和作品路演。评估培训时，不只看讲师和主题，还要看是否包含练习、反馈与最终产出。', url: 'https://www.qunxiang.club/form/1283', linkLabel: '查看课程安排' },
+      { roles: ['product', 'sales'], tag: '需求判断', source: '石更新 × 群友', time: '15:39', title: '“学产品”与“做出自己的产品”是两种不同需求', text: '如果只是理解产品方法，系统课程可以提供框架；如果目标是围绕个人业务做出一门可卖、可交付的课程，就需要更具体的诊断、设计与持续陪跑。' },
+      { roles: ['product', 'operations'], tag: '交付体系', source: 'Allen 课程笔记', time: '15:49', title: '超级个体的产品设计，必须同时考虑交付体系', text: '产品不只是一组课程内容，还包括目标用户、结果承诺、交付路径、反馈机制和可持续运营。当天分享的完整笔记可用于进一步梳理。', url: 'https://my.feishu.cn/wiki/F12BwSBXditQOeklPADc6afAn5b?from=from_copylink', linkLabel: '阅读完整总结' },
+      { roles: ['private', 'sales'], tag: '信任推荐', source: '群友反馈', time: '13:00', title: '持续分享真实体验，会沉淀为可验证的推荐影响力', text: '多位群友提到因为群内或朋友圈推荐而加入课程，并在线下相约见面。推荐真正有效，来自持续筛选、亲身参与和对适合人群的清晰说明。' }
+    ],
+    actions: [
+      { title: '先写清这次学习的结果', text: '明确自己是想了解方法、完成一套产品方案，还是直接做出可以销售与交付的课程。' },
+      { title: '用四项标准筛选实战课', text: '检查是否有现场练习、分组协作、助教反馈和最终作品展示，而不只看宣传主题。', url: 'https://www.qunxiang.club/form/1283', linkLabel: '核对课程详情' },
+      { title: '整理产品打造的具体背景', text: '写下现有用户、核心问题、期望结果、已有内容和当前卡点，再决定通用学习还是单独咨询。' },
+      { title: '按交付体系审视现有产品', text: '逐项检查定位、承诺、内容结构、服务动作、反馈和复购，而不是只补更多课程章节。', url: 'https://my.feishu.cn/wiki/F12BwSBXditQOeklPADc6afAn5b?from=from_copylink', linkLabel: '参考 Allen 分享' }
+    ],
+    resources: [
+      { kind: '课程', title: '群响短视频线下实战大课', text: '9 月 4–6 日杭州课程，强调分组合作、助教跟进、工具辅助、现场实操和作品路演。', url: 'https://www.qunxiang.club/form/1283', linkLabel: '查看报名页' },
+      { kind: '笔记', title: 'Allen：超级个体产品设计与交付体系', text: '石更新整理的线下课程完整总结，回应当天关于知识产品打造与交付的具体提问。', url: 'https://my.feishu.cn/wiki/F12BwSBXditQOeklPADc6afAn5b?from=from_copylink', linkLabel: '阅读飞书笔记' },
+      { kind: '方法', title: '学习需求三分法', text: '认知学习、方案设计、落地陪跑对应不同投入与交付方式，先确定结果再选服务。' }
+    ],
+    themes: [
+      { time: '12:10', title: 'WorkBuddy 热度与知识付费新话题', text: '群友观察近期国内知识付费市场对 WorkBuddy 的关注，并简短讨论其流量热度。' },
+      { time: '12:49', title: '相约杭州参加群响短视频课', text: '多位成员因群内与朋友圈推荐加入群响，并确认在线下课程现场见面。' },
+      { time: '15:34', title: '短视频课升级为现场实战', text: '课程强调讲解后立即实操、分组合作、助教跟进、工具辅助与作品路演。', url: 'https://www.qunxiang.club/form/1283', linkLabel: '查看实战课程' },
+      { time: '15:35', title: '获客学习与知识产品打造的区别', text: '围绕“是否教产品”展开讨论，最终回到具体诉求：通用学习适合建立认知，明确要做出课程时可考虑定制咨询与陪跑，并补充 Allen 产品体系笔记。', url: 'https://my.feishu.cn/wiki/F12BwSBXditQOeklPADc6afAn5b?from=from_copylink', linkLabel: '阅读产品体系总结' }
+    ]
   }
 };
 
