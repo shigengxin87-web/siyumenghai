@@ -1471,6 +1471,28 @@ const days = {
       { time: '17:12', title: 'AI 外呼试用与真实业务反馈', text: '成员现场体验数字员工，并结合业务说明传统无差别电话的局限。' },
       { time: '17:28', title: '伪直播、语音直播与社群共创', text: '讨论直播实现方式、服务商连接，以及未来邀请成员主动分享的可能性。' }
     ]
+  },
+  '2026-09-14': {
+    dateLabel: '2026 年 9 月 14 日', weekday: '星期一', messages: 3, themesCount: 2, readTime: '3 分钟',
+    title: '增长不是一个点，而是十个动作的组合',
+    summary: '本期“每周一刻”重新发布石更新的业务增长核心方法论“增长十字诀”：新、续、转、扩、升，裂、销、撬、导、合。内容同时提供文字版、视频讲解和此前直播答疑，帮助成员从单一获客视角，转向审视客户全生命周期与外部杠杆。',
+    insights: [
+      { roles: ['operations', 'sales'], tag: '增长全局', source: '增长十字诀', time: '22:18', title: '增长不能只盯“新客”，还要同时经营存量和杠杆', text: '“新续转扩升”覆盖客户生命周期，“裂销撬导合”覆盖传播、销售与资源协同。十个字的价值，是让团队快速发现增长动作是否缺位。', url: 'https://my.feishu.cn/wiki/QjopwukixinMi6kcSgLcodrCntu?from=from_copylink', linkLabel: '阅读完整方法论' },
+      { roles: ['operations', 'product'], tag: '内容交付', source: '视频讲解与直播答疑', time: '22:18', title: '同一套方法需要文字、讲解和答疑三层交付', text: '文字适合检索和复盘，视频适合理解推演过程，完整答疑能呈现真实问题如何被拆解。多种载体共同降低理解与应用门槛。', url: 'https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink', linkLabel: '观看视频与答疑' }
+    ],
+    actions: [
+      { title: '用十字诀做一次增长盘点', text: '逐项写下当前已有动作、关键数据和最大卡点，优先补最薄弱的一环。', url: 'https://my.feishu.cn/wiki/QjopwukixinMi6kcSgLcodrCntu?from=from_copylink', linkLabel: '对照文字版' },
+      { title: '选一个真实业务问题带入答疑', text: '观看讲解时，不只记概念；带着自己的增长问题，记录可直接执行的一步。', url: 'https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink', linkLabel: '进入视频版' },
+      { title: '把获客与存量经营分开复盘', text: '分别检查新增、续费、转化、扩品和升单，避免把所有增长压力都压在流量上。' }
+    ],
+    resources: [
+      { kind: '方法论', title: '增长十字诀文字版', text: '以“新续转扩升、裂销撬导合”梳理业务增长的十个关键动作。', url: 'https://my.feishu.cn/wiki/QjopwukixinMi6kcSgLcodrCntu?from=from_copylink', linkLabel: '阅读飞书文档' },
+      { kind: '视频', title: '增长十字诀视频讲解与直播答疑', text: '包含本次视频版讲解，以及此前直播后半小时的完整答疑。', url: 'https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink', linkLabel: '查看飞书妙记' }
+    ],
+    themes: [
+      { time: '22:18', title: '每周一刻：增长十字诀', text: '重新讲解九个月前分享过的核心增长框架，帮助新成员建立业务增长全局视角。', url: 'https://my.feishu.cn/wiki/QjopwukixinMi6kcSgLcodrCntu?from=from_copylink', linkLabel: '阅读本期内容' },
+      { time: '22:18', title: '新增视频讲解与完整答疑', text: '本次在文字内容之外补充视频版，并保留此前直播答疑，方便按不同方式学习。', url: 'https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink', linkLabel: '观看视频与答疑' }
+    ]
   }
 };
 
