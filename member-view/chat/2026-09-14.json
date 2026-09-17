@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "date": "2026-09-14",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-14 22:18:25",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-09-14/22-18-25.jpg",
+        "alt": "2026年知识付费IP的破局之路与增长十字诀"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-14 22:18:42",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@所有人 每周一刻，我来啦。\n\n今天的主题分享，是我「业务增长」的核心方法论——我称之为增长十字诀：\n\n新续转扩升、裂销撬导合。\n\n上一次拿出来分享还是在9个月前，我觉得它还是非常重要的，我预估群里有九成朋友，之前应该没有听过。\n\n我个人以及听过的大佬们都觉得这十个字很牛逼。\n\n所以，我决定今天把它搬出来。\n\n今天和之前有一点很不一样，主要有视频版讲解！还有当时我直播时后面的半小时答疑无删减。\n\n本文链接 ：https://my.feishu.cn/wiki/QjopwukixinMi6kcSgLcodrCntu?from=from_copylink\n\n视频版讲解：https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-14 22:24:49",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "\"石更新（23:00睡觉）\"置顶了一条消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-09-14 22:38:49",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"荣耀元\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
