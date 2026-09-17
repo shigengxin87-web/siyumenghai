@@ -1777,6 +1777,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
+const chatDataVersion = '20260917-chat-5';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
@@ -2014,19 +2015,31 @@ async function loadDiscussion(key) {
   try {
     let payload = chatCache.get(key);
     if (!payload) {
-      const response = await fetch(`./chat/${key}.json`, { cache: 'no-store' });
+      let response;
+      let lastError;
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+          response = await fetch(`./chat/${encodeURIComponent(key)}.json?v=${chatDataVersion}&attempt=${attempt}`, { cache: 'no-store' });
+          if (response.ok || response.status === 404) break;
+          lastError = new Error(`HTTP ${response.status}`);
+        } catch (error) {
+          lastError = error;
+        }
+        await new Promise((resolve) => window.setTimeout(resolve, 350 * (attempt + 1)));
+      }
+      if (!response) throw lastError || new Error('network error');
       if (response.status === 404) {
         stream.innerHTML = '<div class="chat-empty">这一天的完整聊天记录尚未回填</div>';
         return;
       }
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) throw lastError || new Error(`HTTP ${response.status}`);
       payload = await response.json();
       if (!Array.isArray(payload.messages)) throw new Error('invalid payload');
       chatCache.set(key, payload);
     }
     if (state.day === key && state.view === 'discussion') stream.innerHTML = renderChatPayload(payload);
   } catch {
-    if (state.day === key && state.view === 'discussion') stream.innerHTML = '<div class="chat-empty">聊天记录载入失败，请稍后刷新重试</div>';
+    if (state.day === key && state.view === 'discussion') stream.innerHTML = '<div class="chat-empty">聊天记录暂时没有载入。<button type="button" class="text-button" data-retry-discussion>重新载入</button></div>';
   }
 }
 
@@ -2133,6 +2146,7 @@ function render(historyMode = 'replace') {
 function bindDynamicEvents() {
   content.querySelectorAll('[data-lens]').forEach((button) => button.addEventListener('click', () => { state.lens = button.dataset.lens; render('none'); }));
   content.querySelectorAll('[data-go-view]').forEach((button) => button.addEventListener('click', () => navigateView(button.dataset.goView)));
+  content.querySelectorAll('[data-retry-discussion]').forEach((button) => button.addEventListener('click', () => loadDiscussion(state.day)));
   content.querySelectorAll('[data-open-day]').forEach((button) => button.addEventListener('click', () => {
     state.view = 'overview';
     selectDate(button.dataset.openDay);
