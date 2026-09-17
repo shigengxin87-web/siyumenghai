@@ -18,6 +18,7 @@ BANK_RE = re.compile(r"(?<!\d)(\d{4})\d{8,11}(\d{4})(?!\d)")
 SENSITIVE_LABEL_RE = re.compile(
     r"((?:收货|家庭|详细)?地址|身份证号?|银行卡号?|订单号|支付单号|交易单号)(\s*[：:]\s*)([^\s，。；;]{4,})"
 )
+LOCAL_PATH_RE = re.compile(r"(?m)^/(?:Users|Volumes|private|var|tmp)/[^\r\n]+$")
 TYPE_MAP = {
     "文本": "text",
     "链接/文件": "link",
@@ -79,6 +80,7 @@ def find_text(root: ET.Element, path: str) -> str:
 def parse_link(content: str) -> tuple[str, str, list[dict[str, str]]]:
     if not content.lstrip().startswith("<"):
         title = re.sub(r"^\[(?:链接|文件|链接/文件|小程序)\]\s*", "", content).strip()
+        title = LOCAL_PATH_RE.sub("", title).strip()
         return title or "链接或文件", "", []
     try:
         root = ET.fromstring(content)
@@ -89,6 +91,37 @@ def parse_link(content: str) -> tuple[str, str, list[dict[str, str]]]:
     description = find_text(root, ".//appmsg/des") or find_text(root, ".//des")
     url = safe_url(find_text(root, ".//appmsg/url") or find_text(root, ".//url"))
     return title, description, ([{"label": "打开原内容", "url": url}] if url else [])
+
+
+def parse_system(content: str) -> str:
+    content = re.sub(r"^[^\n<]+@chatroom:\s*", "", (content or "").strip())
+    if not content.startswith("<"):
+        return content or "系统消息"
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError:
+        return "系统消息"
+
+    revoke = find_text(root, ".//revokemsg/content")
+    if revoke:
+        return revoke
+    plain = find_text(root, ".//plain") or find_text(root, ".//pc_plain")
+    if plain:
+        return plain
+    if root.get("type") == "mmchatroomtopmsg":
+        nickname = find_text(root, ".//nickname")
+        return f'"{nickname}"置顶了一条消息' if nickname else "群管理员置顶了一条消息"
+
+    template = find_text(root, ".//template")
+    nicknames = [node.text.strip() for node in root.findall(".//nickname") if node.text and node.text.strip()]
+    history = find_text(root, ".//link[@name='history']/newformattitle") or find_text(root, ".//link[@name='history']/title")
+    if "邀请" in template and nicknames:
+        if len(nicknames) == 1:
+            text = f'邀请"{nicknames[0]}"加入了群聊'
+        else:
+            text = f'"{nicknames[0]}"邀请"{nicknames[-1]}"加入了群聊'
+        return f"{text}，并分享了{history}" if history else text
+    return "系统消息"
 
 
 def load_avatar_map(path: Path) -> dict[str, str]:
@@ -102,6 +135,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
     redacted_count = 0
     missing_media_count = 0
     unavailable_count = 0
+    omitted_sticker_count = 0
 
     for index, item in enumerate(raw.get("messages", []), start=1):
         time_value = str(item.get("time", ""))
@@ -113,6 +147,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
 
         # Stickers are decorative and are intentionally omitted from the public archive.
         if public_type == "sticker":
+            omitted_sticker_count += 1
             continue
         links: list[dict[str, str]] = []
         media = None
@@ -128,9 +163,13 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                 unavailable_count += 1
             else:
                 title, description, links = parse_link(original_content)
+                attachment = media_map.get(time_value, {})
+                attachment_url = str(attachment.get("url") or "")
+                if attachment.get("kind") == "file" and attachment_url.startswith("./assets/"):
+                    links = [{"label": str(attachment.get("label") or "下载文件"), "url": attachment_url}]
                 if "当前微信版本不支持展示该内容" in title:
                     text = "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
-                elif original_content.lstrip().startswith("[") and not links:
+                elif original_content.lstrip().startswith("[") and not links and not re.search(r"\.[A-Za-z0-9]{1,8}$", title):
                     # WeChat also stores some quoted/replied text as an app message.
                     public_type = "text"
                     text = title
@@ -139,7 +178,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                     if not links:
                         text += "\n原内容没有可公开访问的跳转链接"
         elif public_type == "system":
-            text = original_content or "系统消息"
+            text = parse_system(original_content)
         elif public_type in {"image", "video", "voice", "sticker"} and time_value in media_map:
             candidate = media_map[time_value]
             media_url = str(candidate.get("url") or "")
@@ -189,6 +228,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
         "generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "sourceCount": len(raw.get("messages", [])),
         "displayedCount": len(messages),
+        "omittedStickerCount": omitted_sticker_count,
         "redactedCount": redacted_count,
         "missingMediaCount": missing_media_count,
         "unavailableCount": unavailable_count,
