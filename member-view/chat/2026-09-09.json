@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "date": "2026-09-09",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-09 23:28:15",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "邀请\"扶光\"加入了群聊，并分享了99条聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-09 23:28:15",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "\"扶光\"与群里其他人都不是朋友关系，请注意隐私安全",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

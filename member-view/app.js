@@ -1354,6 +1354,16 @@ const days = {
       { time: '21:31', title: '预告完整工具系统专场', text: '下一期将覆盖公域、公转私和私域，进一步把获客、承接与转化串成一套工具系统。' }
     ]
   },
+  '2026-09-01': {
+    dateLabel: '2026 年 9 月 1 日', weekday: '星期二', messages: 0, themesCount: 0, readTime: '1 分钟',
+    title: '当天没有群聊记录', summary: '当天没有群聊记录。',
+    insights: [], actions: [], resources: [], themes: []
+  },
+  '2026-09-02': {
+    dateLabel: '2026 年 9 月 2 日', weekday: '星期三', messages: 0, themesCount: 0, readTime: '1 分钟',
+    title: '当天没有群聊记录', summary: '当天没有群聊记录。',
+    insights: [], actions: [], resources: [], themes: []
+  },
   '2026-09-03': {
     dateLabel: '2026 年 9 月 3 日', weekday: '星期四', messages: 30, themesCount: 4, readTime: '5 分钟',
     title: '先分清自己要学习，还是要真正做出产品',
@@ -1470,6 +1480,26 @@ const days = {
       { time: '17:10', title: '发布公域与私域工具系统方案', text: '从列工具转向识别需求，并承诺通过建议、讨论或资源对接帮助推进。', url: 'https://my.feishu.cn/wiki/Wjdfwa1EciLxL1k2Sr4ccYvdn9g?from=from_copylink', linkLabel: '查看解决方案' },
       { time: '17:12', title: 'AI 外呼试用与真实业务反馈', text: '成员现场体验数字员工，并结合业务说明传统无差别电话的局限。' },
       { time: '17:28', title: '伪直播、语音直播与社群共创', text: '讨论直播实现方式、服务商连接，以及未来邀请成员主动分享的可能性。' }
+    ]
+  },
+  '2026-09-08': {
+    dateLabel: '2026 年 9 月 8 日', weekday: '星期二', messages: 0, themesCount: 0, readTime: '1 分钟',
+    title: '当天没有群聊记录', summary: '当天没有群聊记录。',
+    insights: [], actions: [], resources: [], themes: []
+  },
+  '2026-09-09': {
+    dateLabel: '2026 年 9 月 9 日', weekday: '星期三', messages: 2, themesCount: 1, readTime: '1 分钟',
+    title: '新成员加入，是下一段连接的开始',
+    summary: '当天群内没有展开主题讨论，主要记录为邀请扶光加入群聊，以及微信给出的隐私安全提示。完整系统消息已在原始讨论中按可读文字保留。',
+    insights: [
+      { roles: ['private'], tag: '成员连接', source: '入群系统消息', time: '23:28', title: '新成员加入后，需要从认识彼此开始建立连接', text: '入群只是起点。后续通过自我介绍、具体问题与真实参与，才能逐步形成信任与合作机会。' }
+    ],
+    actions: [
+      { title: '欢迎新成员并提供介绍入口', text: '邀请新成员用几句话介绍当前方向、正在解决的问题和希望链接的资源。' }
+    ],
+    resources: [],
+    themes: [
+      { time: '23:28', title: '邀请扶光加入群聊', text: '系统记录扶光加入，并提示成员注意非好友关系下的隐私安全。' }
     ]
   },
   '2026-09-10': {
@@ -1777,7 +1807,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20260917-chat-5';
+const chatDataVersion = '20260917-chat-6';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
@@ -1993,7 +2023,9 @@ function renderChatMessage(message, previous) {
   const mediaUrl = message.media?.url ? safeExternalUrl(message.media.url) : '';
   const media = message.media?.kind === 'image' && mediaUrl
     ? `<a class="chat-media-link" href="${escapeHtml(mediaUrl)}" target="_blank" rel="noopener noreferrer" aria-label="查看原图"><img class="chat-media" src="${escapeHtml(mediaUrl)}" alt="${escapeHtml(message.media.alt || '群聊图片')}" loading="lazy"></a>`
-    : '';
+    : message.media?.kind === 'video' && mediaUrl
+      ? `<video class="chat-media chat-video" controls preload="metadata" playsinline aria-label="${escapeHtml(message.media.alt || '群聊视频')}"><source src="${escapeHtml(mediaUrl)}" type="video/mp4">当前浏览器无法播放此视频。</video>`
+      : '';
   return `<article class="chat-message is-${message.side === 'right' ? 'right' : 'left'} ${sameSender ? 'is-consecutive' : ''}">
     <div class="chat-time"><time datetime="${escapeHtml(message.time.replace(' ', 'T') + '+08:00')}">${time}</time></div>
     <div class="chat-row">${avatar}<div class="chat-body"><div class="chat-sender">${escapeHtml(message.sender)}</div><div class="chat-bubble ${media ? 'has-media' : ''}">${typeLabel}${media}${message.text ? `<div class="chat-text">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>` : ''}${links}${redacted}</div></div></div>

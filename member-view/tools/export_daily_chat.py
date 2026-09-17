@@ -30,6 +30,7 @@ TYPE_MAP = {
     "位置": "location",
     "通话": "call",
     "系统": "system",
+    "名片": "contact",
 }
 UNAVAILABLE_LABELS = {
     "image": "该消息为图片，无法同步到网站",
@@ -158,6 +159,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
         elif public_type == "text":
             text = original_content
         elif public_type == "link":
+            app_subtype = int(item.get("local_type") or 0) >> 32
             if is_unreadable(original_content):
                 text = "该消息为链接或文件，内容无法正确解码，无法同步到网站"
                 unavailable_count += 1
@@ -167,9 +169,14 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                 attachment_url = str(attachment.get("url") or "")
                 if attachment.get("kind") == "file" and attachment_url.startswith("./assets/"):
                     links = [{"label": str(attachment.get("label") or "下载文件"), "url": attachment_url}]
-                if "当前微信版本不支持展示该内容" in title:
-                    text = "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
-                elif original_content.lstrip().startswith("[") and not links and not re.search(r"\.[A-Za-z0-9]{1,8}$", title):
+                if app_subtype == 51 or "当前微信版本不支持展示该内容" in title:
+                    readable_title = "" if "当前微信版本不支持展示该内容" in title else f"：{title}"
+                    text = f"视频号内容{readable_title}\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
+                elif app_subtype == 33 and not links:
+                    text = f"小程序内容：{title}\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转"
+                elif app_subtype == 5 and not links:
+                    text = f"公众号或网页内容：{title}\n原内容没有提供可公开访问的跳转链接"
+                elif app_subtype in {57, 62} and original_content.lstrip().startswith("[") and not links:
                     # WeChat also stores some quoted/replied text as an app message.
                     public_type = "text"
                     text = title
@@ -179,6 +186,9 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                         text += "\n原内容没有可公开访问的跳转链接"
         elif public_type == "system":
             text = parse_system(original_content)
+        elif public_type == "contact":
+            attachment = media_map.get(time_value, {})
+            text = str(attachment.get("text") or "微信名片无法从网页直接跳转，请在微信中查看")
         elif public_type in {"image", "video", "voice", "sticker"} and time_value in media_map:
             candidate = media_map[time_value]
             media_url = str(candidate.get("url") or "")

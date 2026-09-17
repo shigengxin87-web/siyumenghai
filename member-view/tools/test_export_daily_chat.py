@@ -39,6 +39,33 @@ class ExportDailyChatTests(unittest.TestCase):
         self.assertIn("视频号", payload["messages"][0]["text"])
         self.assertIn("无法同步或跳转", payload["messages"][0]["text"])
 
+    def test_video_channel_subtype_is_not_misread_as_plain_text(self):
+        raw = {"messages": [{"time": "2026-09-05 09:54:17", "sender": "石更新", "type": "链接/文件", "local_type": 219043332145, "content": "[文件] 一段视频号内容"}]}
+        payload, _ = EXPORTER.convert(raw, "2026-09-05", "石更新", {})
+        self.assertEqual("link", payload["messages"][0]["type"])
+        self.assertIn("视频号内容", payload["messages"][0]["text"])
+        self.assertIn("无法同步或跳转", payload["messages"][0]["text"])
+
+    def test_mini_program_subtype_explains_web_limitation(self):
+        raw = {"messages": [{"time": "2026-09-07 17:12:41", "sender": "石更新", "type": "链接/文件", "local_type": 141733920817, "content": "[文件] K12 学科辅导"}]}
+        payload, _ = EXPORTER.convert(raw, "2026-09-07", "石更新", {})
+        self.assertIn("小程序内容", payload["messages"][0]["text"])
+        self.assertIn("无法从网页跳转", payload["messages"][0]["text"])
+
+    def test_webpage_subtype_keeps_title_and_reason(self):
+        raw = {"messages": [{"time": "2026-09-05 10:28:26", "sender": "石更新", "type": "链接/文件", "local_type": 21474836529, "content": "[文件] 一个普通女孩的十年"}]}
+        payload, _ = EXPORTER.convert(raw, "2026-09-05", "石更新", {})
+        self.assertIn("公众号或网页内容", payload["messages"][0]["text"])
+        self.assertIn("没有提供可公开访问", payload["messages"][0]["text"])
+
+    def test_contact_card_keeps_public_name_without_internal_id(self):
+        raw = {"messages": [{"time": "2026-09-07 17:37:51", "sender": "石更新", "type": "名片", "content": "[名片]"}]}
+        media = {"2026-09-07 17:37:51": {"kind": "contact", "text": "微信名片：大虫运营心经\n微信名片无法从网页直接跳转，请在微信中搜索或添加"}}
+        payload, report = EXPORTER.convert(raw, "2026-09-07", "石更新", {}, media)
+        self.assertEqual("contact", payload["messages"][0]["type"])
+        self.assertIn("大虫运营心经", payload["messages"][0]["text"])
+        self.assertEqual(0, report["missingMediaCount"])
+
     def test_redacts_common_sensitive_values(self):
         source = "手机 13812345678，身份证 110101199001011234，银行卡 6222021234567890"
         cleaned, changed = EXPORTER.redact(source)
