@@ -15,6 +15,22 @@ class ExportDailyChatTests(unittest.TestCase):
         payload, report = EXPORTER.convert(raw, "2026-09-16", "石更新", {})
         self.assertEqual([], payload["messages"])
         self.assertEqual(0, report["displayedCount"])
+        self.assertEqual(1, report["omittedStickerCount"])
+
+    def test_system_xml_is_reduced_to_safe_text(self):
+        xml = '<sysmsg type="revokemsg"><revokemsg><content>"群友" 撤回了一条消息</content></revokemsg></sysmsg>'
+        self.assertEqual('"群友" 撤回了一条消息', EXPORTER.parse_system(xml))
+
+    def test_local_file_path_is_removed(self):
+        title, _, _ = EXPORTER.parse_link("[文件] 工具.zip\n/Users/example/private/tool.zip")
+        self.assertEqual("工具.zip", title)
+
+    def test_attached_file_gets_public_download_link(self):
+        raw = {"messages": [{"time": "2026-09-10 18:04:35", "sender": "石更新", "type": "链接/文件", "content": "[文件] 工具.zip\n/Users/private/tool.zip"}]}
+        media = {"2026-09-10 18:04:35": {"kind": "file", "url": "./assets/chat/2026-09-10/tool.zip", "label": "下载文件"}}
+        payload, _ = EXPORTER.convert(raw, "2026-09-10", "石更新", {}, media)
+        self.assertEqual("下载文件", payload["messages"][0]["links"][0]["label"])
+        self.assertNotIn("/Users/", payload["messages"][0]["text"])
 
     def test_unsupported_wechat_channel_is_explained(self):
         raw = {"messages": [{"time": "2026-09-16 21:22:16", "sender": "石更新", "type": "链接/文件", "content": "[文件] 当前微信版本不支持展示该内容，请升级至最新版本。"}]}
