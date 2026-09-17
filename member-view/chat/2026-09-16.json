@@ -9,8 +9,8 @@
       "sender": "子非鱼",
       "avatar": "./assets/members/member-53.jpg?v=20260917192332",
       "side": "left",
-      "type": "link",
-      "text": "我勒个去呀，我这是加了个什么大宝藏呀，哎呀呀呀，虽然目前没有做这个知识付费，但是不得不说认识你之后我又开始重新思考这块啦[呲牙][呲牙][呲牙]\n原内容没有可公开访问的跳转链接",
+      "type": "text",
+      "text": "我勒个去呀，我这是加了个什么大宝藏呀，哎呀呀呀，虽然目前没有做这个知识付费，但是不得不说认识你之后我又开始重新思考这块啦[呲牙][呲牙][呲牙]",
       "links": [],
       "media": null,
       "redacted": false
@@ -21,8 +21,8 @@
       "sender": "石更新（23:00睡觉）",
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
-      "type": "link",
-      "text": "相互影响，一同成长[憨笑]\n原内容没有可公开访问的跳转链接",
+      "type": "text",
+      "text": "相互影响，一同成长[憨笑]",
       "links": [],
       "media": null,
       "redacted": false
@@ -129,8 +129,8 @@
       "sender": "石更新（23:00睡觉）",
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
-      "type": "link",
-      "text": "听你说之后，我对我自己的相信程度越来越高了，一定要相信自己就是天选之人[憨笑][憨笑]就会越来越好\n原内容没有可公开访问的跳转链接",
+      "type": "text",
+      "text": "听你说之后，我对我自己的相信程度越来越高了，一定要相信自己就是天选之人[憨笑][憨笑]就会越来越好",
       "links": [],
       "media": null,
       "redacted": false
@@ -149,18 +149,6 @@
         "url": "./assets/chat/2026-09-16/18-44-30.jpg",
         "alt": "石更新在群聊中分享的文字图片"
       },
-      "redacted": false
-    },
-    {
-      "id": "m013",
-      "time": "2026-09-16 18:45:07",
-      "sender": "石更新（23:00睡觉）",
-      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
-      "side": "right",
-      "type": "sticker",
-      "text": "该消息为表情，无法同步到网站",
-      "links": [],
-      "media": null,
       "redacted": false
     },
     {
@@ -194,7 +182,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "当前微信版本不支持展示该内容，请升级至最新版本。\n原内容没有可公开访问的跳转链接",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
       "links": [],
       "media": null,
       "redacted": false
