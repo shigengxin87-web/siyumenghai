@@ -10,6 +10,19 @@ SPEC.loader.exec_module(EXPORTER)
 
 
 class ExportDailyChatTests(unittest.TestCase):
+    def test_sticker_is_omitted(self):
+        raw = {"messages": [{"time": "2026-09-16 18:45:07", "sender": "石更新", "type": "表情", "content": "[表情]"}]}
+        payload, report = EXPORTER.convert(raw, "2026-09-16", "石更新", {})
+        self.assertEqual([], payload["messages"])
+        self.assertEqual(0, report["displayedCount"])
+
+    def test_unsupported_wechat_channel_is_explained(self):
+        raw = {"messages": [{"time": "2026-09-16 21:22:16", "sender": "石更新", "type": "链接/文件", "content": "[文件] 当前微信版本不支持展示该内容，请升级至最新版本。"}]}
+        payload, _ = EXPORTER.convert(raw, "2026-09-16", "石更新", {})
+        self.assertEqual("link", payload["messages"][0]["type"])
+        self.assertIn("视频号", payload["messages"][0]["text"])
+        self.assertIn("无法同步或跳转", payload["messages"][0]["text"])
+
     def test_redacts_common_sensitive_values(self):
         source = "手机 13812345678，身份证 110101199001011234，银行卡 6222021234567890"
         cleaned, changed = EXPORTER.redact(source)
