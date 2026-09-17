@@ -110,6 +110,10 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
         sender = str(item.get("sender") or "未知群友").strip()
         public_type = TYPE_MAP.get(str(item.get("type", "")), "unknown")
         original_content = str(item.get("content") or "").strip()
+
+        # Stickers are decorative and are intentionally omitted from the public archive.
+        if public_type == "sticker":
+            continue
         links: list[dict[str, str]] = []
         media = None
 
@@ -124,9 +128,16 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                 unavailable_count += 1
             else:
                 title, description, links = parse_link(original_content)
-                text = title if not description else f"{title}\n{description}"
-                if not links:
-                    text += "\n原内容没有可公开访问的跳转链接"
+                if "当前微信版本不支持展示该内容" in title:
+                    text = "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
+                elif original_content.lstrip().startswith("[") and not links:
+                    # WeChat also stores some quoted/replied text as an app message.
+                    public_type = "text"
+                    text = title
+                else:
+                    text = title if not description else f"{title}\n{description}"
+                    if not links:
+                        text += "\n原内容没有可公开访问的跳转链接"
         elif public_type == "system":
             text = original_content or "系统消息"
         elif public_type in {"image", "video", "voice", "sticker"} and time_value in media_map:
