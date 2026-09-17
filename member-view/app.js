@@ -1764,6 +1764,7 @@ const state = {
   memberQuery: '',
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
+const chatCache = new Map();
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
@@ -1957,9 +1958,60 @@ function renderResources() {
   return `<header class="page-head"><div><p class="kicker">资源连接</p><h1>今天值得记住的人、工具与方法</h1></div><p>不用记住群里所有信息，只保留以后遇到问题时能再次调用的资源。</p></header><div class="resource-grid">${data.resources.map((item) => `<article class="card resource-card"><span class="resource-kind">${item.kind}</span><h2>${item.title}</h2><p>${item.text}</p>${renderItemLinks(item)}</article>`).join('')}</div>`;
 }
 
+function safeExternalUrl(value) {
+  try {
+    const parsed = new URL(value, window.location.href);
+    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+  } catch { return ''; }
+}
+
+function renderChatMessage(message, previous) {
+  const sameSender = previous && previous.sender === message.sender && message.time.slice(0, 16) === previous.time.slice(0, 16);
+  const time = message.time.slice(11, 16);
+  const avatar = message.avatar
+    ? `<img class="chat-avatar" src="${escapeHtml(message.avatar)}" alt="" loading="lazy">`
+    : `<span class="chat-avatar chat-avatar-fallback" aria-hidden="true">${escapeHtml(message.sender.slice(0, 1))}</span>`;
+  const links = (message.links || []).map((link) => {
+    const url = safeExternalUrl(link.url);
+    return url ? `<a class="chat-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || '打开原内容')}<span aria-hidden="true">↗</span></a>` : '';
+  }).join('');
+  const typeLabel = message.type !== 'text' ? `<span class="chat-type">${escapeHtml(message.type)}</span>` : '';
+  const redacted = message.redacted ? '<span class="chat-redacted">部分信息已脱敏</span>' : '';
+  return `<article class="chat-message is-${message.side === 'right' ? 'right' : 'left'} ${sameSender ? 'is-consecutive' : ''}">
+    <div class="chat-time"><time datetime="${escapeHtml(message.time.replace(' ', 'T') + '+08:00')}">${time}</time></div>
+    <div class="chat-row">${avatar}<div class="chat-body"><div class="chat-sender">${escapeHtml(message.sender)}</div><div class="chat-bubble">${typeLabel}<div class="chat-text">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>${links}${redacted}</div></div></div>
+  </article>`;
+}
+
+function renderChatPayload(payload) {
+  if (!payload.messages.length) return '<div class="chat-empty">当天没有群聊记录</div>';
+  return payload.messages.map((message, index) => renderChatMessage(message, payload.messages[index - 1])).join('');
+}
+
 function renderDiscussion() {
-  const data = day();
-  return `<header class="page-head"><div><p class="kicker">原始讨论</p><h1>群里今天聊了什么</h1></div><p>保留时间和主题脉络，需要上下文时再回到原群查看完整对话。</p></header><div class="discussion-layout"><section class="card timeline-card">${data.themes.map((item) => `<article class="timeline-item"><time class="timeline-time">${item.time}</time><div><h2>${item.title}</h2><p>${item.text}</p>${renderItemLinks(item)}</div></article>`).join('')}</section><aside class="card discussion-note"><p class="kicker">阅读边界</p><h2>这是学习索引，不是聊天替代品</h2><p>页面帮助你快速判断哪些讨论值得回看。涉及具体合作、价格和个人观点时，请以群内原始消息为准。</p></aside></div>`;
+  return `<header class="page-head discussion-head"><div><p class="kicker">原始讨论</p><h1>当天完整群聊</h1></div><p>按北京时间还原 00:00—23:59 的群聊记录；部分隐私信息会自动脱敏。</p></header><section class="wechat-chat" aria-label="${escapeHtml(readableDate(state.day))}完整群聊"><div class="chat-date-divider"><span>${escapeHtml(readableDate(state.day))}</span></div><div class="chat-stream" data-chat-stream><div class="chat-loading"><span></span>正在载入当天群聊…</div></div></section>`;
+}
+
+async function loadDiscussion(key) {
+  const stream = content.querySelector('[data-chat-stream]');
+  if (!stream) return;
+  try {
+    let payload = chatCache.get(key);
+    if (!payload) {
+      const response = await fetch(`./chat/${key}.json`, { cache: 'no-store' });
+      if (response.status === 404) {
+        stream.innerHTML = '<div class="chat-empty">这一天的完整聊天记录尚未回填</div>';
+        return;
+      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      payload = await response.json();
+      if (!Array.isArray(payload.messages)) throw new Error('invalid payload');
+      chatCache.set(key, payload);
+    }
+    if (state.day === key && state.view === 'discussion') stream.innerHTML = renderChatPayload(payload);
+  } catch {
+    if (state.day === key && state.view === 'discussion') stream.innerHTML = '<div class="chat-empty">聊天记录载入失败，请稍后刷新重试</div>';
+  }
 }
 
 function visibleMembers() {
@@ -2058,6 +2110,7 @@ function render(historyMode = 'replace') {
   if (historyMode === 'push') history.pushState({ day: state.day, view: state.view }, '', nextUrl);
   else if (historyMode === 'replace') history.replaceState({ day: state.day, view: state.view }, '', nextUrl);
   bindDynamicEvents();
+  if (state.view === 'discussion' && data) loadDiscussion(state.day);
   document.querySelector('.workspace-scroll').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
