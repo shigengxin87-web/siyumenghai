@@ -1977,9 +1977,13 @@ function renderChatMessage(message, previous) {
   }).join('');
   const typeLabel = message.type !== 'text' ? `<span class="chat-type">${escapeHtml(message.type)}</span>` : '';
   const redacted = message.redacted ? '<span class="chat-redacted">部分信息已脱敏</span>' : '';
+  const mediaUrl = message.media?.url ? safeExternalUrl(message.media.url) : '';
+  const media = message.media?.kind === 'image' && mediaUrl
+    ? `<a class="chat-media-link" href="${escapeHtml(mediaUrl)}" target="_blank" rel="noopener noreferrer" aria-label="查看原图"><img class="chat-media" src="${escapeHtml(mediaUrl)}" alt="${escapeHtml(message.media.alt || '群聊图片')}" loading="lazy"></a>`
+    : '';
   return `<article class="chat-message is-${message.side === 'right' ? 'right' : 'left'} ${sameSender ? 'is-consecutive' : ''}">
     <div class="chat-time"><time datetime="${escapeHtml(message.time.replace(' ', 'T') + '+08:00')}">${time}</time></div>
-    <div class="chat-row">${avatar}<div class="chat-body"><div class="chat-sender">${escapeHtml(message.sender)}</div><div class="chat-bubble">${typeLabel}<div class="chat-text">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>${links}${redacted}</div></div></div>
+    <div class="chat-row">${avatar}<div class="chat-body"><div class="chat-sender">${escapeHtml(message.sender)}</div><div class="chat-bubble ${media ? 'has-media' : ''}">${typeLabel}${media}${message.text ? `<div class="chat-text">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>` : ''}${links}${redacted}</div></div></div>
   </article>`;
 }
 
