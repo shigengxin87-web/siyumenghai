@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "date": "2026-09-12",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-12 14:43:48",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "邀请\"跟谁学蒋梦涵\"加入了群聊，并分享了100条聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-12 14:43:48",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "\"跟谁学蒋梦涵\"与群里其他人都不是朋友关系，请注意隐私安全",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-12 14:51:05",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@蒋梦涵 \n\n欢迎梦涵加入[啤酒]\n\n梦涵也是跟谁学以前的老伙伴老朋友，在行业多年，目前也是行业为数不多的双栖发展选手，公域➕私域都有丰富的经验。\n\n做过教培，做过小吃，做过留学，做过中老年，做过儿童长高，做过业务做过主播，能力很强和各行业交叉经验丰富，特别爱研究琢磨[强]我都自叹不如\n\n再次欢迎梦涵[社会社会]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-09-12 14:55:43",
+      "sender": "跟谁学蒋梦涵",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "[捂脸]感谢石总，我来晚了，感谢相遇，遇见大家，向优秀的大伙儿学习",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-09-12 15:07:50",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "都是缘分，啥时候来啥时候就是对的[憨笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-09-12 15:11:28",
+      "sender": "跟谁学蒋梦涵",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "[笑脸]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-09-12 20:21:53",
+      "sender": "生财王娘娘!",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "热烈欢迎🎉🎉🎉",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
