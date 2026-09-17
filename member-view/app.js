@@ -1497,6 +1497,12 @@ const days = {
       { time: '21:45', title: '内容与直播违规风险讨论', text: '建议用检测和复盘工具辅助降低风险，同时不把注意力浪费在与恶意举报者对抗上。' }
     ]
   },
+  '2026-09-11': {
+    dateLabel: '2026 年 9 月 11 日', weekday: '星期五', messages: 0, themesCount: 0, readTime: '1 分钟',
+    title: '当天没有群聊记录',
+    summary: '当天没有群聊记录。',
+    insights: [], actions: [], resources: [], themes: []
+  },
   '2026-09-12': {
     dateLabel: '2026 年 9 月 12 日', weekday: '星期六', messages: 9, themesCount: 1, readTime: '2 分钟',
     title: '什么时候来，什么时候就是对的',
@@ -1515,6 +1521,12 @@ const days = {
     themes: [
       { time: '14:51', title: '欢迎蒋梦涵加入', text: '介绍其跨行业、跨角色以及公域与私域双栖经验，群友随后表达欢迎。' }
     ]
+  },
+  '2026-09-13': {
+    dateLabel: '2026 年 9 月 13 日', weekday: '星期日', messages: 0, themesCount: 0, readTime: '1 分钟',
+    title: '当天没有群聊记录',
+    summary: '当天没有群聊记录。',
+    insights: [], actions: [], resources: [], themes: []
   },
   '2026-09-14': {
     dateLabel: '2026 年 9 月 14 日', weekday: '星期一', messages: 3, themesCount: 2, readTime: '3 分钟',
