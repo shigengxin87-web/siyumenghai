@@ -2008,11 +2008,41 @@ function safeExternalUrl(value) {
   } catch { return ''; }
 }
 
+function normalizeChatMemberName(value) {
+  let normalized = String(value || '')
+    .normalize('NFKC')
+    .toLocaleLowerCase('zh-CN')
+    .replace(/[\s()（）【】\[\]·._#＃!！,，、~～\-—]+/g, '');
+  ['石董会', '生财', '跟谁学', '小鹅通'].some((prefix) => {
+    if (!normalized.startsWith(prefix)) return false;
+    normalized = normalized.slice(prefix.length);
+    return true;
+  });
+  return normalized;
+}
+
+function resolveChatAvatar(message) {
+  if (message.avatar) return message.avatar;
+  if (!message.sender || message.sender === '未知群友') return '';
+  const senderName = normalizeChatMemberName(message.sender);
+  if (!senderName) return '';
+  const matches = members.filter((member) => {
+    if (!member.avatar) return false;
+    const memberName = normalizeChatMemberName(member.name);
+    if (!memberName) return false;
+    if (senderName === memberName) return true;
+    return Math.min(senderName.length, memberName.length) >= 2
+      && (senderName.includes(memberName) || memberName.includes(senderName));
+  });
+  return matches.length === 1 ? matches[0].avatar : '';
+}
+
 function renderChatMessage(message, previous) {
   const sameSender = previous && previous.sender === message.sender && message.time.slice(0, 16) === previous.time.slice(0, 16);
   const time = message.time.slice(11, 16);
-  const avatar = message.avatar
-    ? `<img class="chat-avatar" src="${escapeHtml(message.avatar)}" alt="" loading="lazy">`
+  const avatarUrl = resolveChatAvatar(message);
+  const avatar = avatarUrl
+    ? `<img class="chat-avatar" src="${escapeHtml(avatarUrl)}" alt="" loading="lazy" data-chat-avatar>`
     : `<span class="chat-avatar chat-avatar-fallback" aria-hidden="true">${escapeHtml(message.sender.slice(0, 1))}</span>`;
   const links = (message.links || []).map((link) => {
     const url = safeExternalUrl(link.url);
@@ -2127,6 +2157,7 @@ async function refreshMembers() {
     members = payload.members.map((member, index) => ({ ...member, order: index + 1 }));
     membersUpdatedAt = payload.updatedAt || null;
     updateMemberDirectory();
+    if (state.view === 'discussion' && chatCache.has(state.day)) loadDiscussion(state.day);
   } catch {
     // Keep the last valid local snapshot when WeChat is unavailable.
   }

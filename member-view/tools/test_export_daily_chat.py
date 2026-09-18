@@ -10,6 +10,17 @@ SPEC.loader.exec_module(EXPORTER)
 
 
 class ExportDailyChatTests(unittest.TestCase):
+    def test_resolves_historical_prefixed_member_name(self):
+        avatars = {"初阳": "./assets/members/member-43.jpg"}
+        self.assertEqual(
+            "./assets/members/member-43.jpg",
+            EXPORTER.resolve_avatar(avatars, "生财初阳AI"),
+        )
+
+    def test_does_not_guess_when_member_match_is_ambiguous(self):
+        avatars = {"小王": "one.jpg", "小王老师": "two.jpg"}
+        self.assertEqual("", EXPORTER.resolve_avatar(avatars, "生财小王老师助理"))
+
     def test_sticker_is_omitted(self):
         raw = {"messages": [{"time": "2026-09-16 18:45:07", "sender": "石更新", "type": "表情", "content": "[表情]"}]}
         payload, report = EXPORTER.convert(raw, "2026-09-16", "石更新", {})

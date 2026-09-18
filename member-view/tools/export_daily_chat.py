@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
@@ -130,6 +131,34 @@ def load_avatar_map(path: Path) -> dict[str, str]:
     return {item["name"]: item.get("avatar", "") for item in payload.get("members", [])}
 
 
+def normalize_member_name(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value).lower()
+    normalized = re.sub(r"[\s()（）【】\[\]·._#＃!！,，、~～\-—]+", "", normalized)
+    for prefix in ("石董会", "生财", "跟谁学", "小鹅通"):
+        if normalized.startswith(prefix):
+            return normalized[len(prefix):]
+    return normalized
+
+
+def resolve_avatar(avatars: dict[str, str], sender: str) -> str:
+    if sender in avatars:
+        return avatars[sender]
+    if not sender or sender == "未知群友":
+        return ""
+    sender_name = normalize_member_name(sender)
+    matches = []
+    for member_name, avatar in avatars.items():
+        normalized = normalize_member_name(member_name)
+        if not avatar or not normalized:
+            continue
+        if sender_name == normalized or (
+            min(len(sender_name), len(normalized)) >= 2
+            and (sender_name in normalized or normalized in sender_name)
+        ):
+            matches.append(avatar)
+    return matches[0] if len(matches) == 1 else ""
+
+
 def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map: dict | None = None) -> tuple[dict, dict]:
     media_map = media_map or {}
     messages = []
@@ -221,7 +250,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
             "id": f"m{index:03d}",
             "time": time_value,
             "sender": sender,
-            "avatar": avatars.get(sender, ""),
+            "avatar": resolve_avatar(avatars, sender),
             "side": "right" if sender == owner else "left",
             "type": public_type,
             "text": text,
