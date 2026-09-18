@@ -687,7 +687,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "视频号内容：链接或文件\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "text": "视频号内容：链接或文件",
       "links": [
         {
           "label": "打开原内容",
