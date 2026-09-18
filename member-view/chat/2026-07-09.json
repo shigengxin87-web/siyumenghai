@@ -682,8 +682,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：如何帮教育IP、专家IP找到自己的生态位——三个信号和两个误区\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：如何帮教育IP、专家IP找到自己的生态位——三个信号和两个误区\n做定位要基于优势和特征出发，把自己放在该放的位置上，错位竞争，在这个赛道找到你的生态位。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484783&idx=1&sn=6a539d1724876f4834dab4797df746c3&chksm=c4e387316c3cf8afef6a0dc20487fd887adda74e887edf966c69d405d591e945dbf39ed27e94&mpshare=1&scene=1&srcid=0709mg6txgRNeCCZuLDHiEFj&sharer_shareinfo=85f873e1e22b4d3533ac512c86fc980b&sharer_shareinfo_first=85f873e1e22b4d3533ac512c86fc980b#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -22,8 +22,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：面对抖音对低价引流课的限制，不要太焦虑，这篇文章告诉你如何转危为机！甚至有可能让你二次增长。\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：面对抖音对低价引流课的限制，不要太焦虑，这篇文章告诉你如何转危为机！甚至有可能让你二次增长。\n每一次平台的调整，其实都在让你变得更好。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484054&idx=1&sn=7158f5780b46b530b9f1410399c95f92&chksm=c41b14bb90b5a20429b611eb2e105476c3631da7b5ffdf552eea553e64578be144b98fb95474&mpshare=1&scene=1&srcid=08272VfaqBpU1KhBKQQ6yJZT&sharer_shareinfo=c18c091e053082e15e91ef5e36825de1&sharer_shareinfo_first=c18c091e053082e15e91ef5e36825de1#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -34,7 +39,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "张以薰Joey👼的聊天记录\n原内容没有可公开访问的跳转链接",
+      "text": "张以薰Joey👼的聊天记录\n张以薰Joey👼: 【用户实时收到短信跳转加v登陆微信小程序获取手机号】+【虚拟号打电话提醒】+【抖店客服自动发领课链接跳抖音小程序获取手机号】\n张以薰Joey👼: [视频]\n张以薰Joey👼: 现在我们在推这个路径\n张以薰Joey👼: 上岸村就在用了",
       "links": [],
       "media": null,
       "redacted": false

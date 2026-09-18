@@ -83,7 +83,12 @@
       "side": "right",
       "type": "link",
       "text": "5.18 元引流 + 7980 元正价同框卖，叨叨的排品逻辑变了.pdf\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载PDF文件",
+          "url": "./assets/chat/2026-07-17/5.18 元引流 + 7980 元正价同框卖，叨叨的排品逻辑变了.pdf"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -262,8 +267,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：花了40万找人陪跑，回来还是做不起来！\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：花了40万找人陪跑，回来还是做不起来！\n花40万陪跑依旧卡在转化率，代运营式陪跑像吸毒，敢说的人才能赚到钱。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484752&idx=1&sn=3850d74b736801d1bf3ec0865ff15394&chksm=c4950285cf7a5ccd4757ab03e4c127a5701ff1f7bb4e313e985a1b8295c1faf8103b3555b8cd&mpshare=1&scene=1&srcid=0717WXEu3gaUbqSojeY7ENzg&sharer_shareinfo=aef9f902b8a6049d29093c2bc782ab26&sharer_shareinfo_first=aef9f902b8a6049d29093c2bc782ab26#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -394,7 +404,7 @@
       "avatar": "",
       "side": "left",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false
@@ -706,7 +716,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false
@@ -1150,8 +1160,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：5.18元引流课和7980元正价课同框卖，叨叨的排品逻辑变了\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：5.18元引流课和7980元正价课同框卖，叨叨的排品逻辑变了\n公域不再只推低价引流品，而是把正价品一起亮出来。拆解叨叨直播间从前置曝光到前置转化的排品升级。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484871&idx=1&sn=f8b0a90c75701df43c800443c347579b&chksm=c4cba6612cada98a73dcb5a1f88b758180b841f42525b8f31c618911a5dfc17700746fd8adba&mpshare=1&scene=1&srcid=0717JZlU7UpmQDEJPFkL56Nr&sharer_shareinfo=4396595c0fc5d329ee2a4530e745fe67&sharer_shareinfo_first=4396595c0fc5d329ee2a4530e745fe67#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -454,7 +454,7 @@
       "avatar": "./assets/members/member-14.jpg?v=20260917192332",
       "side": "left",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false
@@ -1343,7 +1343,12 @@
       "side": "right",
       "type": "link",
       "text": "视频号内容：链接或文件\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
-      "links": [],
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://finder.video.qq.com/251/20302/stodownload?encfilekey=rgjNqbibdAo0sA1yXmnKiaUGKd2CVRvStvpKZ34woqNwU46x9WHPzJR3gBicC2cIHXoGce58cLaTIPh0seeZJWneA&bizid=1023&dotrans=0&hy=SH&idx=1&m=&uzid=7a1ac"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -1366,7 +1371,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "石更新(999社群)的聊天记录\n原内容没有可公开访问的跳转链接",
+      "text": "石更新(999社群)的聊天记录\n石更新(999社群): [图片]\n石更新(999社群): [图片]\n石更新(999社群): [图片]\n石更新(999社群): 设置 帮助中心 在线客服",
       "links": [],
       "media": null,
       "redacted": false

@@ -898,8 +898,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：聊聊MacBook的几个秘密，看完省钱\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：聊聊MacBook的几个秘密，看完省钱\n如果你打算认真拥抱 AI Agent 时代，花一万左右买台MacBook，是这两年回报最高的一笔投资。我朋友橘子老师也同意这个判断。但这一万块怎么花，里面有几个秘密——多数人交了智商税还不知道。秘密一：MacBook Air 和 MacBook Pro 的单核性能几乎一样，价格却差5000以上。两台机器用的是同一颗M4芯片。Geekbench 6实测，Air单核 3698，Pro 3816，差距 3%。而且这 3% 不是芯片差异，是 Pro 多了一个风扇。（M3和M5时代同理）国行Air起售7999，Pro起售12999。多花的 5000，买的不是性能，是散热。*秘密二：AI Agent，只吃单核性能这个判断很多人想不到。直觉里 AI 应该是吃显卡、吃多核的——这当然没错，但前提是模型跑在你本地，大部分人根本没有这个需求。如果你用的是 Cursor、Claude Code 这类工具，模型其实都跑在云端，本地只是一个 Electron 或 Node.js 客户端。这两个东西天生单线程。GitHub 上有人实测 Claude Code，一个进程能持续把单核打到 99.8%，其他核全闲着。也就是说，AI 编程的速度上限，就是那一颗核的频率。多核，几乎没用。结论显而易见：买 Air，不是 Pro，更不是 Max。 多花的钱用不到刀刃上。*秘密三：Air没有风扇，但你不一定需要它。Air连一个风扇都没有，全靠铝合金机身被动散热。10分钟高负载之后就开始降频，跑长任务时尤其明显。我自己在公司配了一套外置半导体+水冷散热，能把Air的性能拉到Pro的水平。但出差就没法带这套装备。所以我又下单了一台M5 Pro，作为出差专用机——只是为了那一个风扇。如果你出差比较少的话，完全不用考虑Pro和Max。*秘密四：有些场景不需要屏幕，Mac Mini比 Air还便宜。如果你买电脑就是为了挂着跑小龙虾、爱马仕、Multica、Slock这些 AI Agent，你根本用不到笔记本的屏幕。Mac Mini M4起售价四千多，一台MacBook Pro的钱可以买两台同性能Mac Mini。同一颗M4芯片，性能完全一样。放桌上当个小服务器，远程连过去用就行。Agent 又不看屏幕。*秘密五：256GB硬盘是缩水版。苹果老把戏，256GB用单颗NAND芯片，512GB 用两颗并行。SSD 速度差一半。*秘密六：内存很重要。无论买啥请不要低于24GB，尽量32GB+，否则会挺影响你拔剑速度*总结同一代的Mac MiniMacBook AirMacBookMacBook ProMacBook Max性能一样 价格差很多 我说完了。省下的钱记得打赏给我，谢谢。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=MzI1MTUxNzgxMA==&mid=2247501978&idx=1&sn=8f3b209ae7ce305dbe94e32729f4d99e&from_masonry=1&sharer_shareinfo_first=07bb6cca1f7dac3cbda6079e1bc597ad&sharer_shareinfo=07bb6cca1f7dac3cbda6079e1bc597ad#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -1078,8 +1083,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：报！微信小微首登财报\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：报！微信小微首登财报",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MjM5NjM4MDAxMg==&mid=2655157375&idx=1&sn=2884137c9b8cb017230dc08e63ce1396&chksm=bc7318d121114d24eed14bc406829b4307f3c20c7f5244e18356b3c644cf193aac7253ddfa55&mpshare=1&scene=1&srcid=0812L4aCtw3x3W8TDHCqhH3L&sharer_shareinfo=8614b8252fbe9b857027ad2a47fb9980&sharer_shareinfo_first=8614b8252fbe9b857027ad2a47fb9980#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

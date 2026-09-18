@@ -10,8 +10,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：DeepSeek出了个本地Agent，我做了实测并且写了一个「一键安装教程」。\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：DeepSeek出了个本地Agent，我做了实测并且写了一个「一键安装教程」。\n我把 DeepSeek Harness 从安装、API 接入到真实任务执行完整跑了一遍，整理成这篇 Mac 实测教程。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s/Kf_jYRjZim32DpiWT__W-g"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -23,7 +28,12 @@
       "side": "right",
       "type": "link",
       "text": "DeepSeek-Harness-Windows-智能体一键安装指令.md\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载MD文件",
+          "url": "./assets/chat/2026-08-14/DeepSeek-Harness-Windows-智能体一键安装指令.md"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -35,7 +45,12 @@
       "side": "right",
       "type": "link",
       "text": "DeepSeek-Harness-mac智能体一键安装指令.md\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载MD文件",
+          "url": "./assets/chat/2026-08-14/DeepSeek-Harness-mac智能体一键安装指令.md"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -238,8 +253,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：拿了环球黑客松金奖后，我想聊聊这场比赛跟那个让我48小时没合眼的“创作减负”计划\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：拿了环球黑客松金奖后，我想聊聊这场比赛跟那个让我48小时没合眼的“创作减负”计划\n很开心拿下了杭州环球黑客松比赛的金奖，这里跟大家聊聊这次比赛和背后的作品。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MjM5NDQ3ODI3NQ==&mid=2651433203&idx=1&sn=be821c53b425fa813a678cd4fd073f13&chksm=bcac91eece63dd4b63991a8be4de1a5ef71c14015d4653cc30b2a0cc1636dc9615fb7d04722b&mpshare=1&scene=1&srcid=0814MQRqmhpMeWZbH3W62y9p&sharer_shareinfo=95d7e04d32c2b33377aa2acbf16c6cea&sharer_shareinfo_first=95d7e04d32c2b33377aa2acbf16c6cea#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -1198,8 +1218,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：dontbesilent的文字分享\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：dontbesilent的文字分享\n好多人交付一个知识服务就想着一定要保证某种结果我寻思你这事也不合法呀用户是否有权在购买了课程之后不看不行动？用户完全有这个权利啊你非逼着人家干，这不是非法限制人身自由？所谓的「知识付费案例」这个事也很奇怪。如果成功归因于你，那你的案例比例是不得超过 95 %？你的案例比例就 tm 5%，那说明那 5% 的人，他本来就努力，那跟你有啥关系？我觉得这一切都很奇怪。我和这个世界好像是相反的 ……你强迫别人看课程是满足你的需求，你应该花钱而不是赚钱呀别人在你的帮助下成功了，核心靠的是别人的行动而不是你的行动，怎么又「案例」了如果你觉得你的成功要归功于别人，那只能说明「你」和「别人」都没有功劳，你俩都是靠运气，且，你们这个「案例」还得靠实力赔进去要是法治健全，一半以上都要失业",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?scene=1&__biz=MzA5MDg2MzQ5NQ==&mid=2247489884&idx=1&sn=aa890234eaa4eb6c5af722a5090bb165&sharer_shareinfo_first=dd2079fd9447f0b4049e196a9e022e8f&sharer_shareinfo=dd2079fd9447f0b4049e196a9e022e8f#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -1342,8 +1367,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：我做了6年内容工程化，2年AI内容工程化，这是我全部的方法论\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：我做了6年内容工程化，2年AI内容工程化，这是我全部的方法论\n深度AI，一起进化。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MzU1NTE0MjQyNw==&mid=2247486586&idx=1&sn=6c2be282651ef7cb7e3cbd18d4ae97c1&chksm=fa2c8e932d732603939770cf8b796343966160d983c30ae1ceeff0e1801d94a226a46c0c8610&mpshare=1&scene=1&srcid=0814qbLTYSRngfYbJMfr18pz&sharer_shareinfo=1b2a78166f9ed7b353787a6ff6ef098e&sharer_shareinfo_first=1b2a78166f9ed7b353787a6ff6ef098e#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

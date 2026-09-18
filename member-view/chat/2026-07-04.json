@@ -46,8 +46,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：刷到同行直播间，我才发现自己卖课的话术一直有问题\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：刷到同行直播间，我才发现自己卖课的话术一直有问题\n卖课用奶茶、火锅做比价是错误的，会筛选错用户，强调价值才能真正提升前后端转化率。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484723&idx=1&sn=fecb7cc898dc380ceb2b5829badda660&chksm=c45b67a5bce37f9127c3d155954741f336efb84eff6ac77f35dd95afa02767f478c9f02199b5&mpshare=1&scene=1&srcid=0704V7AHHqcC3YcY1nHbrGNA&sharer_shareinfo=879fb94f590bee508e730b48998fb960&sharer_shareinfo_first=879fb94f590bee508e730b48998fb960#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -70,7 +75,7 @@
       "avatar": "./assets/members/member-05.jpg?v=20260917192332",
       "side": "left",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false

@@ -586,8 +586,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "小程序内容：【石董会】一同成长朋友圈\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
-      "links": [],
+      "text": "小程序内容：【石董会】一同成长朋友圈\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转\nima知识库",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx4c6401744b734596&type=upgrade&upgradetype=3#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -683,7 +688,12 @@
       "side": "right",
       "type": "link",
       "text": "视频号内容：链接或文件\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
-      "links": [],
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://finder.video.qq.com/251/20302/stodownload?encfilekey=nLWUlAoVvyykZVOFpwH3daRibGN8uWZbAv9FeJ9ibibnWhwF2HU9IH1OGjLqYkUGiavCvkbTm0JHDrpB5aZKRibRrkw&bizid=1023&dotrans=0&hy=SH&idx=1&m=&uzid=7a22e"
+        }
+      ],
       "media": null,
       "redacted": false
     },

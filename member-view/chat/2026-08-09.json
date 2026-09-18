@@ -10,8 +10,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：花200万做流量踩坑后，他不再迷信操盘手\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：花200万做流量踩坑后，他不再迷信操盘手\n花200万做流量踩坑后，他不再迷信操盘手。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485071&idx=1&sn=22f3a4240606ca8276d4e205512bbbe1&chksm=c400b42418a9d25b665f0e8d63610b8f7acf389f7d0e85b79ab2ad9ceb9d0d37b3afaf09bceb&mpshare=1&scene=1&srcid=08095VCQMraNOzeFLx0rvlIa&sharer_shareinfo=0a4006678156d327cb1d95b3fc85d817&sharer_shareinfo_first=0a4006678156d327cb1d95b3fc85d817#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -239,7 +244,12 @@
       "side": "right",
       "type": "link",
       "text": "「AI内容工作台」需求采访提示词.md\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载MD文件",
+          "url": "./assets/chat/2026-08-09/「AI内容工作台」需求采访提示词.md"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -82,8 +82,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：停下来，是为了更好的开始。\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：停下来，是为了更好的开始。\n刚从上海回来，在路上想这几天的收获，感悟，心得总结记录给圈子里的朋友们分享下，但是脑子就是转不动了。然后在一个群闲聊了一会儿。有一个朋友收了别人一万的服务费，反过来给对方付了五万学习费。这就是韭菜的自我修养。她一直也是这种学习和做业务，她提到她要去休息，要去看大海，她觉得看大海能清空脑子里的垃圾。我就算了一下，我这六个月以来，参加各种线下课累计三十天，累计xx万。不算往返路程时间，不算交通住宿费用。突然一下子觉得好累啊，这也确实，线下课就是会身体累，大脑累。不过，没有白走的路，都是值得的。这一切的来源都是因为一句话想做高客单就要体验高客单。最后听到一个消息:一个同仁去世了，这个消息侧面也是在提醒我们，stop slow停下来，慢一些最后，今天剩下的几个小时开始飞行模式，自主宕机。明天复活。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=Mzk4ODU4MjUxNg==&mid=2247484959&idx=1&sn=c9a4718142a1ebda27eb6628ac25b432&sharer_shareinfo_first=ec35bda1b5e77df50ddb8d8e0e9617ee&sharer_shareinfo=ec35bda1b5e77df50ddb8d8e0e9617ee#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },

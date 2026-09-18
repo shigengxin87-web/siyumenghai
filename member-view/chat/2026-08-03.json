@@ -58,8 +58,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：我突然发现：在地方创业，可能比留在北上广深杭更幸福\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：我突然发现：在地方创业，可能比留在北上广深杭更幸福\n我突然发现：在地方创业，可能比留在北上广更幸福 今天下午，一个创业群里来了位新成员。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485038&idx=1&sn=3348fd9dfc611c9b4b13b7ca47624406&chksm=c45c0a36986345a048755146d203c47b761173ad87210dd212d9cf2162ef0b2febf56be6ac99&mpshare=1&scene=1&srcid=0803BtWb6Ios1rEfpSngDr7w&sharer_shareinfo=30649019e24e670330e21bf75dc34e99&sharer_shareinfo_first=30649019e24e670330e21bf75dc34e99#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

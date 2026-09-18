@@ -10,7 +10,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "群聊的聊天记录\n原内容没有可公开访问的跳转链接",
+      "text": "群聊的聊天记录\n乐乐: [图片]\n乐乐: 请教一下，有人做种贴片吗？几个小时了，视频号都没有封控\n是水: 我也很想知道，为什么这些人不封\n是水: [破涕为笑][破涕为笑][",
       "links": [],
       "media": null,
       "redacted": false
@@ -59,7 +59,12 @@
       "side": "right",
       "type": "link",
       "text": "20260702155133_rec_.mp4\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载MP4文件",
+          "url": "./assets/chat/2026-07-02/20260702155133_rec_.mp4"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -226,7 +231,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "群聊的聊天记录\n原内容没有可公开访问的跳转链接",
+      "text": "群聊的聊天记录\n静静Doris: 咨询个提效的的动作哈，目前我这边的内容输出、发布都是一个人在做，要发布小绿书、小红书以及企微、微信朋友圈 用了小贤介绍的飞书多",
       "links": [],
       "media": null,
       "redacted": false

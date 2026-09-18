@@ -34,8 +34,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：知识付费业务模式已经到了4.0，你目前属于哪个阶段！\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：知识付费业务模式已经到了4.0，你目前属于哪个阶段！\n知识付费不会凉，只是“割韭菜”的凉了。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247483809&idx=1&sn=34c736c08897a131b18190048616089a&chksm=c491a246001edb0a680f2e401adba2b67234f99a5eab0cb528c67a137f86c0b503a06c0c0c6e&mpshare=1&scene=1&srcid=0723x8BlaG7sP5Gj5gWNEyEn&sharer_shareinfo=7bd6f4c411c2b5d8da7a6149aa7a183f&sharer_shareinfo_first=7bd6f4c411c2b5d8da7a6149aa7a183f#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -83,7 +88,12 @@
       "side": "right",
       "type": "link",
       "text": "梁文锋四小时投资人会议实录.pdf\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载PDF文件",
+          "url": "./assets/chat/2026-07-23/梁文锋四小时投资人会议实录.pdf"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -154,8 +154,13 @@
       "avatar": "./assets/members/member-26.jpg?v=20260917192332",
       "side": "left",
       "type": "link",
-      "text": "公众号或网页内容：@溪子的个人主页\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：@溪子的个人主页\n粉丝: 6.3万\n获赞与收藏: 45.5万",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://www.xiaohongshu.com/user/profile/5ec3964b0000000001006186?xsec_token=YBkQ2LgaU4F9qBfer0UQfi9lF-7fTTkF-jG_uLzY3LjgU=&xsec_source=app_share&xhsshare=WeixinSession&appuid=6995a5490000000021027818&apptime=1784458137&share_id=e7adf5ab071847428e755585dbeaf1ee"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -286,8 +291,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：志同道合，才能有更多火花💥\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：志同道合，才能有更多火花💥\n今天去萧山机场见了一个老朋友，同时又认识了几位新朋友我和张聪老师过往五年一直在做线下课操盘，包括产品的定位、销转、交付这一套，只要有朋友想要做线下课，我都会推荐他，因为他在我这里是不二人选。今天我在会场看了一下，一进去就感觉非常不一样，灯光设计得非常漂亮，氛围感非常好。我俩也是有阵子没见了，正好他操盘三把刀老师的线下课在杭州做交付，跟我说了之后，我就过来了。张聪老师引荐了好几位优秀的朋友，认识了三把刀老师，文迪老师，以及黑八队长。和黑八队长见面之后才知道，原来他之前也在高途，而且他老婆和我还是同一个业务线。（下次得补张照片）我和张聪老师最近在 AI 上没有什么深入交流，但我俩都做了同样一件事，就是花了好多钱专门去学 AI，然后应用到业务当中。刚才我俩交流了一下经验：1. 他给我分享了怎么把 AI 用到他们现在的业务上，以及好几个外人不知道新增长路径。2. 我也给他分享了一下我在 AI 知识库上面的经验，正好他需要。每次我们见面都会喝点，今天不赶趟，下次再补上[啤酒][啤酒]",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?t=pages/image_detail&scene=1&__biz=Mzk4ODU4MjUxNg==&mid=2247484901&idx=1&sn=c32543bcd53dfcf541ec7f6baa36b651&sharer_shareinfo_first=8c04d97677e9fac91a31259501abe19b&sharer_shareinfo=8c04d97677e9fac91a31259501abe19b#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -1807,7 +1807,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20260918-chat-8';
+const chatDataVersion = '20260918-chat-9';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
@@ -2025,7 +2025,9 @@ function renderChatMessage(message, previous) {
     ? `<a class="chat-media-link" href="${escapeHtml(mediaUrl)}" target="_blank" rel="noopener noreferrer" aria-label="查看原图"><img class="chat-media" src="${escapeHtml(mediaUrl)}" alt="${escapeHtml(message.media.alt || '群聊图片')}" loading="lazy"></a>`
     : message.media?.kind === 'video' && mediaUrl
       ? `<video class="chat-media chat-video" controls preload="metadata" playsinline aria-label="${escapeHtml(message.media.alt || '群聊视频')}"><source src="${escapeHtml(mediaUrl)}" type="video/mp4">当前浏览器无法播放此视频。</video>`
-      : '';
+      : message.media?.kind === 'voice' && mediaUrl
+        ? `<audio class="chat-audio" controls preload="none" aria-label="${escapeHtml(message.media.alt || '群聊语音')}"><source src="${escapeHtml(mediaUrl)}" type="audio/mpeg">当前浏览器无法播放此语音。</audio>`
+        : '';
   return `<article class="chat-message is-${message.side === 'right' ? 'right' : 'left'} ${sameSender ? 'is-consecutive' : ''}">
     <div class="chat-time"><time datetime="${escapeHtml(message.time.replace(' ', 'T') + '+08:00')}">${time}</time></div>
     <div class="chat-row">${avatar}<div class="chat-body"><div class="chat-sender">${escapeHtml(message.sender)}</div><div class="chat-bubble ${media ? 'has-media' : ''}">${typeLabel}${media}${message.text ? `<div class="chat-text">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>` : ''}${links}${redacted}</div></div></div>

@@ -334,7 +334,7 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "群聊的聊天记录\n原内容没有可公开访问的跳转链接",
+      "text": "群聊的聊天记录\n石更新: 视频号导流私域的五大场景 https://my.feishu.cn/wiki/BcurwyEubiWciukkHdycLyxtnfe?from=from_copylink 抖音导流私域的五大场景 https://my.feishu.cn/docx/VEOYdE0bNo5qlnxVwBHcbGP3nDf 小红书导流私域的五大场景 https://my.feishu.cn/docx/UZM7daZoaok7E8xtUzVcIkU7nwd",
       "links": [],
       "media": null,
       "redacted": false
@@ -898,9 +898,13 @@
       "avatar": "./assets/members/member-05.jpg?v=20260917192332",
       "side": "left",
       "type": "voice",
-      "text": "该消息为语音，本机未保存原始附件，当前无法播放",
+      "text": "",
       "links": [],
-      "media": null,
+      "media": {
+        "kind": "voice",
+        "url": "./assets/chat/2026-07-11/voice-190814.mp3",
+        "alt": "一月语文分享的语音"
+      },
       "redacted": false
     },
     {

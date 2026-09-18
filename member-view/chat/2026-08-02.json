@@ -502,8 +502,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "小程序内容：【石董会】一同成长朋友圈\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
-      "links": [],
+      "text": "小程序内容：【石董会】一同成长朋友圈\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转\nima知识库",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx4c6401744b734596&type=upgrade&upgradetype=3#wechat_redirect"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -790,8 +795,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：AI写作最重要的边界：它能整理你的经历，但不能替你经历\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：AI写作最重要的边界：它能整理你的经历，但不能替你经历\n一篇内容有没有“人味”，关键不在 AI 写得够不够漂亮，而在它整理的东西，原本是不是真的属于你。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247485015&idx=1&sn=e82bc563db7c28ab7626f6782ef1dcf7&chksm=c472ff587b288bc8f6a992006231e0d00952f92082ee790d44fb644d7d5db541bdcb50b2e92e&mpshare=1&scene=1&srcid=0802YLi7X7cdGRd0rppGPKSQ&sharer_shareinfo=fca5e84e801e389fa4c83f5e5ee7f774&sharer_shareinfo_first=fca5e84e801e389fa4c83f5e5ee7f774#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     }

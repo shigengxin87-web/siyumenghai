@@ -430,8 +430,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：心理咨询师的定价，到底由什么决定？\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：心理咨询师的定价，到底由什么决定？\n价格的本质，是你在来访者心中「不可替代性」的货币化",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MzkxODI2MTExOQ==&mid=2247484685&idx=1&sn=ee8ff33552a82f6112a01d8044bbea9b&chksm=c01dbaff4879560c38ea5b0d26c1c62a5f8b1d52d8645cd26c7f101e22bfdcfd3d9f39bd3158&mpshare=1&scene=1&srcid=0821ynFvxVLYSBO3dz6RIF8t&sharer_shareinfo=79b9a995605fdc5750a27d7a969b8cbe&sharer_shareinfo_first=79b9a995605fdc5750a27d7a969b8cbe#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

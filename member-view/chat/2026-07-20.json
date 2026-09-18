@@ -22,8 +22,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：实名夸一夸叨叨的合伙人夏博老师\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：实名夸一夸叨叨的合伙人夏博老师\n一条留言背后，是一个合伙人在公开场合对伙伴的坚定托举。聊聊我为什么想实名夸一夸夏博老师。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484922&idx=1&sn=a11fa9eda6b51aa859adde4a84c3d6f6&chksm=c4636aeeee0619f60fc4c9f9cb0baf1dad2f3d026895c7dd80da0256194dbcf1d472749470af&mpshare=1&scene=1&srcid=0720pZuGEdSxX2uYn5xbVC4m&sharer_shareinfo=b2675e28f161d1ca6e1aacf168614679&sharer_shareinfo_first=b2675e28f161d1ca6e1aacf168614679#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -34,8 +39,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：实名夸一夸叨叨的合伙人夏博老师\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：实名夸一夸叨叨的合伙人夏博老师\n一条留言背后，是一个合伙人在公开场合对伙伴的坚定托举。聊聊我为什么想实名夸一夸夏博老师。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484922&idx=1&sn=a11fa9eda6b51aa859adde4a84c3d6f6&chksm=c4636aeeee0619f60fc4c9f9cb0baf1dad2f3d026895c7dd80da0256194dbcf1d472749470af&mpshare=1&scene=1&srcid=0720pZuGEdSxX2uYn5xbVC4m&sharer_shareinfo=b2675e28f161d1ca6e1aacf168614679&sharer_shareinfo_first=b2675e28f161d1ca6e1aacf168614679#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -46,8 +56,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "陈勇敢当\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "text": "陈勇敢当\n更新私域笔记",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://channels-aladin.wxqcloud.qq.com/aladin/html/2fbfd7a4-b3cb-4951-a13c-b07cc2199af1.html#/"
+        }
+      ],
       "media": null,
       "redacted": false
     },

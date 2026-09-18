@@ -94,8 +94,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "北京北京\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "text": "北京北京\n汪峰",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "http://c.y.qq.com/v8/playsong.html?songmid=004fYl0E3GXqG9"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -118,8 +123,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "曾经的你 (2013此时此刻演唱会杭州站)\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "text": "曾经的你 (2013此时此刻演唱会杭州站)\n许巍",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "http://c.y.qq.com/v8/playsong.html?songmid=000mVXQD1PJ7gR"
+        }
+      ],
       "media": null,
       "redacted": false
     },

@@ -94,8 +94,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：一个999元的付费社群，运营7天，我到底交付了什么？\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：一个999元的付费社群，运营7天，我到底交付了什么？\n从4个人到11个人，发了349条消息，做了8次完整分享、7个深度答疑。999元永久的付费社群，运营第一周，我把真实记录摊开给你看。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484775&idx=1&sn=23dca10a47087fec826db7bba6aa40c6&chksm=c4c87425ea44ebf373360f8319e64f58108b2446f6654bdaa492caf83057a6b23f086d080e07&mpshare=1&scene=1&srcid=0708XEMg87LpTryalcMAkA9l&sharer_shareinfo=0f040dc893689392d77ce61c230c2920&sharer_shareinfo_first=0f040dc893689392d77ce61c230c2920#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },

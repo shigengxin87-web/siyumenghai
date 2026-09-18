@@ -95,7 +95,12 @@
       "side": "right",
       "type": "link",
       "text": "视频号导流私域的五大场景@石更新（26年7月）.pdf\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载PDF文件",
+          "url": "./assets/chat/2026-07-06/视频号导流私域的五大场景@石更新（26年7月）.pdf"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -107,7 +112,12 @@
       "side": "right",
       "type": "link",
       "text": "小红书导流私域的五大场景@石更新（26年7月）.pdf\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载PDF文件",
+          "url": "./assets/chat/2026-07-06/小红书导流私域的五大场景@石更新（26年7月）.pdf"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -119,7 +129,12 @@
       "side": "right",
       "type": "link",
       "text": "抖音导流私域的五大场@石更新（26年7月).pdf\n原内容没有可公开访问的跳转链接",
-      "links": [],
+      "links": [
+        {
+          "label": "下载PDF文件",
+          "url": "./assets/chat/2026-07-06/抖音导流私域的五大场@石更新（26年7月).pdf"
+        }
+      ],
       "media": null,
       "redacted": false
     },

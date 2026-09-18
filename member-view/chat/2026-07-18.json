@@ -10,8 +10,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：腾讯会议，把1万块卖爆了。\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：腾讯会议，把1万块卖爆了。\n腾讯会议本质上就是一个线下的转化道场。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s/ByFQOeJ_g6LvSi71GpkoGw"
+        }
+      ],
       "media": null,
       "redacted": false
     },

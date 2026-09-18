@@ -46,7 +46,7 @@
       "avatar": "",
       "side": "left",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false
@@ -58,8 +58,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "link",
-      "text": "公众号或网页内容：我最近在用的公众号排版 Skill，分享给大家\n原内容没有提供可公开访问的跳转链接",
-      "links": [],
+      "text": "公众号或网页内容：我最近在用的公众号排版 Skill，分享给大家\n让公众号排版只需要动嘴，就可以节省30分钟。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=Mzk4ODU4MjUxNg==&mid=2247484944&idx=1&sn=919f5d25cc70887449f06401c95513ea&chksm=c4ad53ffb9864a52466e697bdcf25c788710e9e1865d0f29a3c59c376403c1daf2c04b768f7c&mpshare=1&scene=1&srcid=0722hAoJMtT97PpEoQncHm1h&sharer_shareinfo=dedbbe4759321a7d4200f8ec647b43bc&sharer_shareinfo_first=dedbbe4759321a7d4200f8ec647b43bc#rd"
+        }
+      ],
       "media": null,
       "redacted": false
     },
@@ -202,7 +207,7 @@
       "avatar": "",
       "side": "left",
       "type": "link",
-      "text": "微信红包\n原内容没有可公开访问的跳转链接",
+      "text": "微信红包\n我给你发了一个红包，赶紧去拆!",
       "links": [],
       "media": null,
       "redacted": false
