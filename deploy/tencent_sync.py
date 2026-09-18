@@ -41,6 +41,7 @@ EXCLUDED_SUFFIXES = (
 FAILPOINT = os.environ.get("SIYUMENGHAI_FAILPOINT", "")
 FORCE = os.environ.get("SIYUMENGHAI_FORCE", "") == "1"
 COMMIT_OVERRIDE = os.environ.get("SIYUMENGHAI_COMMIT", "").strip()
+SEED_DIR = Path(os.environ["SIYUMENGHAI_SEED"]) if os.environ.get("SIYUMENGHAI_SEED") else None
 
 
 def get_bytes(url: str, attempts: int = 3, timeout: int = 120) -> bytes:
@@ -190,6 +191,8 @@ def main() -> None:
         # incremental: unchanged Git blobs are reused from this local copy.
         # A normal copy also works with Linux protected_hardlinks enabled.
         shutil.copytree(active, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
+        if SEED_DIR:
+            shutil.copytree(SEED_DIR, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
         if FAILPOINT == "download_timeout":
             raise RuntimeError("injected GitHub large-file timeout")
 
