@@ -1912,10 +1912,12 @@ function renderCalendar() {
   const firstDay = new Date(year, month, 1);
   const mondayOffset = (firstDay.getDay() + 6) % 7;
   const gridStart = new Date(year, month, 1 - mondayOffset);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cellCount = Math.ceil((mondayOffset + daysInMonth) / 7) * 7;
 
   document.querySelector('[data-month-label]').textContent = `${year} 年 ${month + 1} 月`;
   document.querySelector('[data-today-label]').textContent = `${today.getMonth() + 1} 月 ${today.getDate()} 日`;
-  calendar.innerHTML = Array.from({ length: 42 }, (_, index) => {
+  calendar.innerHTML = Array.from({ length: cellCount }, (_, index) => {
     const date = new Date(gridStart);
     date.setDate(gridStart.getDate() + index);
     const key = dateKey(date);
