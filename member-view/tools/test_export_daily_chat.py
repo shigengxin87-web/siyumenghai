@@ -106,6 +106,21 @@ class ExportDailyChatTests(unittest.TestCase):
         self.assertEqual("./assets/chat/2026-09-16/image.jpg", payload["messages"][0]["media"]["url"])
         self.assertEqual(0, report["missingMediaCount"])
 
+    def test_missing_media_has_a_concrete_local_reason(self):
+        raw = {"messages": [{
+            "time": "2026-09-16 18:44:30", "sender": "石更新", "type": "图片", "content": "[图片]"
+        }]}
+        payload, report = EXPORTER.convert(raw, "2026-09-16", "石更新", {})
+        self.assertIn("本机未保存原始附件", payload["messages"][0]["text"])
+        self.assertEqual(1, report["missingMediaCount"])
+
+    def test_unresolved_link_is_counted(self):
+        raw = {"messages": [{
+            "time": "2026-09-16 21:22:16", "sender": "石更新", "type": "链接/文件", "content": "[文件] 当前微信版本不支持展示该内容，请升级至最新版本。"
+        }]}
+        _, report = EXPORTER.convert(raw, "2026-09-16", "石更新", {})
+        self.assertEqual(1, report["unresolvedLinkCount"])
+
     def test_keeps_plain_file_title(self):
         title, description, links = EXPORTER.parse_link("[文件] 相互影响，一同成长.pdf")
         self.assertEqual("相互影响，一同成长.pdf", title)

@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "date": "2026-08-15",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m002",
+      "time": "2026-08-15 00:52:38",
+      "sender": "生财A梦 (知牧)",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "欢迎楚川老师[庆祝]  [社会社会]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-08-15 14:43:40",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "前天聊到 我在社群网站上搭建出视频号文案提取这个事。 当时那一版准确度和速度都不太好。\n\n因为我个人平时也是用元宝直接去提取比较多，所以我推荐直接用元宝，但是那天我又测试了下，我发现元宝这两天对解析逐字稿变得越来越不好使了，加上有群里的朋友说想接给学员用，我就又研究了一把。\n\n现在我做出了两个版本，一个还在官网网站上，现在准确度高了很多，但是相对慢一点，因为用的免费方案，然后我又额外做了一个独立页面，目前只放了解析文案的功能，这个是又快又准，五分钟以内视频差不多提取整个逐字稿 不到十秒钟吧。\n\n我充了点钱，我发出来大家可以体验一下，觉得效果OK的，想继续个人用的，或者自己商用的，我再结合需求开源出来。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-08-15 14:43:44",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "https://siyumenghai.cn/member-view/video-transcript-tencent-test.html",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-08-15 14:44:33",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "找到任何一个你想要提取的视频，点击转发按钮，往右滑动找到复制链接，把复制链接粘贴进上面的网址",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-08-15 14:44:53",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-08-15 14:44:59",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "你撤回了一条消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-08-15 14:45:15",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-08-15 17:01:19",
+      "sender": "忠仁",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "老师们，有跳企微链路的数据吗？\n\n效果好不",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-08-15 17:31:19",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@Soldier \n\n@宋海滨  在做，你们可以交流下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-08-15 18:07:01",
+      "sender": "忠仁",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "好嘞[嘿哈]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

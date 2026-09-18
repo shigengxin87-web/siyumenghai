@@ -33,10 +33,10 @@ TYPE_MAP = {
     "名片": "contact",
 }
 UNAVAILABLE_LABELS = {
-    "image": "该消息为图片，无法同步到网站",
-    "video": "该消息为视频，无法同步到网站",
-    "voice": "该消息为语音，无法同步到网站",
-    "file": "该消息为文件，无法同步到网站",
+    "image": "该消息为图片，本机未保存原始附件，当前无法展示",
+    "video": "该消息为视频，本机未保存原始附件，当前无法播放",
+    "voice": "该消息为语音，本机未保存原始附件，当前无法播放",
+    "file": "该消息为文件，本机未保存原始附件，当前无法下载",
     "sticker": "该消息为表情，无法同步到网站",
     "location": "该消息为位置信息，无法同步到网站",
     "call": "该消息为通话记录，无法同步到网站",
@@ -137,6 +137,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
     missing_media_count = 0
     unavailable_count = 0
     omitted_sticker_count = 0
+    unresolved_link_count = 0
 
     for index, item in enumerate(raw.get("messages", []), start=1):
         time_value = str(item.get("time", ""))
@@ -213,6 +214,8 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
             cleaned_links.append({"label": label, "url": link["url"]})
             was_redacted = was_redacted or label_redacted
         redacted_count += int(was_redacted)
+        if public_type == "link" and not cleaned_links:
+            unresolved_link_count += 1
 
         messages.append({
             "id": f"m{index:03d}",
@@ -241,6 +244,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
         "omittedStickerCount": omitted_sticker_count,
         "redactedCount": redacted_count,
         "missingMediaCount": missing_media_count,
+        "unresolvedLinkCount": unresolved_link_count,
         "unavailableCount": unavailable_count,
     }
     return payload, report

@@ -1807,7 +1807,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20260917-chat-6';
+const chatDataVersion = '20260918-chat-7';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
@@ -2162,16 +2162,16 @@ function render(historyMode = 'replace') {
   if (state.view === 'members') content.innerHTML = renderMembers();
   else if (state.view === 'weekly') content.innerHTML = renderWeekly();
   else if (state.view === 'topics') content.innerHTML = renderTopics();
+  else if (state.view === 'discussion') content.innerHTML = renderDiscussion();
   else if (!data) content.innerHTML = renderMissingDay();
   else if (state.view === 'actions') content.innerHTML = renderActions();
   else if (state.view === 'resources') content.innerHTML = renderResources();
-  else if (state.view === 'discussion') content.innerHTML = renderDiscussion();
   else content.innerHTML = renderOverview();
   const nextUrl = `${window.location.pathname}#${state.day}/${state.view}`;
   if (historyMode === 'push') history.pushState({ day: state.day, view: state.view }, '', nextUrl);
   else if (historyMode === 'replace') history.replaceState({ day: state.day, view: state.view }, '', nextUrl);
   bindDynamicEvents();
-  if (state.view === 'discussion' && data) loadDiscussion(state.day);
+  if (state.view === 'discussion') loadDiscussion(state.day);
   document.querySelector('.workspace-scroll').scrollTo({ top: 0, behavior: 'smooth' });
 }
 

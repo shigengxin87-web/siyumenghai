@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "date": "2026-08-22",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-08-22 22:42:52",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-08-22 22:42:52",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "mac微信最新版本（windows我还没试），支持侧边栏了，还能吸附住对话框，跟着移动。\n\n微信里的 贴图、公众号、视频号视频、视频号名片、小红书分享到微信的卡片链接等，都可以直接叠加在侧边栏了。\n\n算是一个使用体验优化吧，对这方面有体验要求的算是一个好的更新。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

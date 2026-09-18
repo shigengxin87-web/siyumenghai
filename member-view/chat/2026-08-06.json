@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "date": "2026-08-06",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-08-06 02:01:35",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "青枫刘大同抽中了你的礼物",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-08-06 20:46:57",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-08-06 20:49:44",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "推荐看下这场直播\n\n有两个点\n\n1 蒋晖在直播，值得听\n\n2 晚点我会基于这场直播的模式，分享一下见解",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-08-06 23:34:21",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "刘思毅直播给蒋晖带线索拆解：大IP间合作导流背后的补充\n\nhttps://my.feishu.cn/wiki/MKLiwJ3n2i3Bxak6arVclN8enhe?from=from_copylink",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-08-06 23:35:54",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "昨天定了11点休息，昨天做到了， 但是半夜醒了。\n\n今天时间预测失败，11点没能写好。\n\n[破涕为笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-08-06 23:37:44",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-08-06 23:38:31",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "这个文档里有两大部分内容\n\n上面主要是了解下一些玩法和IP间合作的话该用什么方式、如何结算。\n\n下面和「在做低转高」的有关，因为是如何把低价课的加微率做到95%+的实操讲解，少丢加微=多赚钱。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

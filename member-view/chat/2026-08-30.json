@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "date": "2026-08-30",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-08-30 11:58:27",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "群聊的聊天记录\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-08-30 11:58:59",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@王娘娘!中考语文确定性提分 \n\n把这个skill 安装提示词 发给你的codex 就可以了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-08-30 12:01:13",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "涉及到微信内的所有组件都可以用这个skill。\n\n包括私信、群聊、收藏、朋友圈、公众号。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-08-30 12:01:14",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "video",
+      "text": "该消息为视频，本机未保存原始附件，当前无法播放",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
