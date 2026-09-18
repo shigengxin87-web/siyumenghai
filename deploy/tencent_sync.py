@@ -40,6 +40,7 @@ EXCLUDED_SUFFIXES = (
 )
 FAILPOINT = os.environ.get("SIYUMENGHAI_FAILPOINT", "")
 FORCE = os.environ.get("SIYUMENGHAI_FORCE", "") == "1"
+COMMIT_OVERRIDE = os.environ.get("SIYUMENGHAI_COMMIT", "").strip()
 
 
 def get_bytes(url: str, attempts: int = 3, timeout: int = 120) -> bytes:
@@ -158,7 +159,7 @@ def main() -> None:
     RELEASES.mkdir(parents=True, exist_ok=True)
     # Some mainland routes cache the branch endpoint for hours. A unique query
     # keeps scheduled deployments from mistaking a stale SHA for the latest one.
-    commit = get_json(f"{API}/commits/{BRANCH}?deploy_check={time.time_ns()}")["sha"]
+    commit = COMMIT_OVERRIDE or get_json(f"{API}/commits/{BRANCH}?deploy_check={time.time_ns()}")["sha"]
     active = current_root()
     manifest_path = active / ".deploy-manifest.json"
     try:
