@@ -1807,7 +1807,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20260918-chat-7';
+const chatDataVersion = '20260918-chat-8';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 

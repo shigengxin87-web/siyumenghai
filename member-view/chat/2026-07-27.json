@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "date": "2026-07-27",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-07-27 09:45:27",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "\"生财大眼睛马向文\"邀请\"生财小乐、David\"加入了群聊，并分享了98条聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-07-27 09:49:40",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@王娘娘!中考语文确定性提分 @大眼睛马向文  @小乐、David \n\n欢迎三位朋友加入[爱心]\n\n昨天参加完生财大课本来要回杭州了但是没回成，和没走的一些圈友们吃饭聊天夜话，聊到凌晨一点多，也是这样一个机会，有幸能邀请到三位朋友加入。\n\n有时间了你们可以做个介绍[爱心]方便相互看有没有适配性的机会",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-07-27 09:51:09",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "我稍后去大头老师公司参观拜访，找个时间我把昨天的学习内容以及一些心得和故事好好分享下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-07-27 09:52:40",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "这是一次难得难忘的经历和体验",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-07-27 09:54:59",
+      "sender": "生财小乐、David",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "谢谢更新总",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-07-27 11:08:34",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "一起越来越好[啤酒]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-07-27 18:47:54",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "公众号或网页内容：停下来，是为了更好的开始。\n原内容没有提供可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-07-27 18:51:14",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "刚从上海回来，在路上想着把这几天的收获，感悟，心得总结一下，尽快分享给你们，但是脑子就是转不动！怎么都不转了！\n\n然后在一个群闲聊了一会儿。\n\n群主收了别人一万的服务费，反过来给对方付了五万学习费。\n\n这就是韭菜的自我修养[破涕为笑]\n\n她也是一直处于学习和业务狂奔，她提到她要去休息，要去看大海，她觉得看大海能清空脑子里的垃圾。\n\n我就去算了一下，我这六个月以来，参加各种线下课累计学习三十天，累计花了xx万。\n\n不算往返路程时间，不算交通住宿费用。\n\n突然一下子觉得好累啊，这也确实，线下课就是会身体累，大脑累。\n\n不过，没有白走的路，都是值得的。\n\n这一切的来源都是因为一句话\n\n想做高客单就要体验高客单。\n\n——-\n\n最后听到一个消息:一个同仁去世了，这个消息侧面也是在提醒我们，stop slow\n\n停下来，慢一些\n\n最后，今天剩下的几个小时开始飞行模式，自主宕机。明天复活。\n\n明天整理好给大家做分享[爱心]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-07-27 19:03:03",
+      "sender": "大头",
+      "avatar": "./assets/members/member-14.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "[爱心]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

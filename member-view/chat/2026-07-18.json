@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "date": "2026-07-18",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-07-18 15:27:26",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "公众号或网页内容：腾讯会议，把1万块卖爆了。\n原内容没有提供可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-07-18 15:27:26",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-07-18 15:30:07",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "刘思毅前几天发布了一篇关于用腾讯会议做私域转化的洞察。\n\n我结合这个话题跟大家延伸聊下，底转高的核心点在哪，为什么低转高做不好，甚至做“死”了。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-07-18 15:31:04",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "私域低转高做不起来，伪直播是原罪！！！\n\nhttps://my.feishu.cn/wiki/Oq9cwKvxdiWItok2OEpcCBFXn4b?from=from_copylink\n\n2分钟后同步更新到飞书和ima知识库。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-07-18 15:35:49",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "点击置顶第二条即可到知识库",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-07-18 15:38:46",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-07-18 15:38:47",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "今天搞了个新风格，漫画一览图[憨笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-07-18 15:56:48",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "邀请\"诊断-Howie 陈科豪\"加入了群聊，并分享了99条聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-07-18 16:00:41",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@Howie \n\n欢迎方面陈，陈老师[咖啡][咖啡]\n\n陈老师是40年香港本地人，是港大客座讲师\n\n他主要在帮老板家庭，做香港身份、孩子升学、资产配置还有web3这些\n\n有相关需要的可以找他啊",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-07-18 16:01:01",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-07-18 16:01:15",
+      "sender": "Howie 陈科豪",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "谢谢石老师，看到群里面很多老朋友",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-07-18 16:06:06",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "[憨笑]是的 小范围的朋友圈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-07-18 16:42:32",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "刚学到一句话：美是需求。\n\n每日自查，你的产品或者作品到底有没有满足市场和大众的需求呢？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

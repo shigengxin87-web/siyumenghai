@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "date": "2026-07-23",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-07-23 13:42:34",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-07-23 13:42:39",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-07-23 13:42:50",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "公众号或网页内容：知识付费业务模式已经到了4.0，你目前属于哪个阶段！\n原内容没有提供可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-07-23 13:43:31",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "最近知识付费新闻又挺多的，刘哲涛老师继去年之后又发布了一条关于知识付费的视频，也是传播很广。\n\n八个月前我写过一篇文章，题名为知识付费业务模式已经到了4.0，你目前属于哪个阶段！\n\n我刚重温了下这篇文章，分享给大家，可以看看，我也会就这个文章后面看看有哪些还可以延展的讲一讲写出来",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-07-23 17:13:09",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "乐呵一下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-07-23 17:13:10",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-07-23 18:51:06",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "梁文锋四小时投资人会议实录.pdf\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-07-23 18:56:17",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "梁文锋4小时会议记录在疯传，原文显示内容因违规无法查看，这个文件可以查看\n\n\n他有一句核心的话是：DeepSeek只有一条主线一一通往AGI的路上，克制是一种战略，\n用来换取做成AGI的概率。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

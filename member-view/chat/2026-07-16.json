@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "date": "2026-07-16",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-07-16 12:54:29",
+      "sender": "一月语文",
+      "avatar": "./assets/members/member-05.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "石老师，我想请问一下我现在微信有3个：除了这个大号A，还有一个有很多其他学科合作老师好友的小号B（里面发过几年朋友圈），剩下的就是没好友没发过朋友圈的号C。\n\n请问如果我要用企业微信的话，B还是C变企业微信比较好呢？\n\n我建这个企业微信的目的就是建群让家长不能互相加。然后后续新加的家长加个微和企微双备份。\n\n这种情况是不是还是B变企业微信比较好？这样新加的家长还能看我之前的朋友圈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-07-16 13:27:08",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "用B",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-07-16 13:27:32",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@一月语文",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-07-16 13:37:57",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"一月语文\" 拍了拍 \"石更新(咨询陪跑内训)\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-07-16 22:28:48",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "邀请\"群响\"加入了群聊，并分享了100条聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-07-16 23:54:46",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "终于赶在12点之前，完成了过往15天，群里的内容记录到知识库的迁移。发给大家。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-07-16 23:55:24",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "【飞书问答知识库】\n1️⃣问答知识库的兑换码：https://my.feishu.cn/share/base/query/shrcnfBdf7Edx375UjSlk5b6pGc\n\n2️⃣飞书问答知识库：https://ask.feishu.cn/shared-space/7663 **** **** 3182\n\n先去1️⃣取兑换码，拿着兑换码去2️⃣加入问答知识库。\n\n——\n【ima问答知识库】\n【石董会】一同成长朋友圈 https://ima.qq.com/wiki/?shareId=9ac78c43931491aa0c6bfff1ac1be9de7e4c81bc22cd066d2c2fd2cb2ffe2a79",
+      "links": [],
+      "media": null,
+      "redacted": true
+    },
+    {
+      "id": "m009",
+      "time": "2026-07-16 23:56:17",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "飞书知识库和ima知识库的内容一致，我会保持同步。\n\n大家可以根据自己的使用习惯来用就行。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-07-16 23:57:24",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "你撤回了一条消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-07-16 23:57:37",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "video",
+      "text": "该消息为视频，本机未保存原始附件，当前无法播放",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-07-16 23:57:46",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "另外，我还手搓了一个官网（后面再升级到微信小程序）\n\n先给大家瞅一眼，明天上线",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-07-16 23:59:16",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "你修改群名为“【石董会】一同成长朋友圈”",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
