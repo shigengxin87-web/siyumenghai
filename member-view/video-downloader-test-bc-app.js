@@ -369,7 +369,7 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260821-tencent-transcript-2'
+    ? './video-downloader-app.js?v=20260920-cache-fix-1'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();

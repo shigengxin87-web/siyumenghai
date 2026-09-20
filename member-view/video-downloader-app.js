@@ -487,7 +487,7 @@ function validHttpUrl(value) {
 
 function imageProxyUrl(value) {
   const url = validHttpUrl(value);
-  return url ? `${IMAGE_PROXY_API}${encodeURIComponent(url)}` : '';
+  return url ? `${IMAGE_PROXY_API}${encodeURIComponent(url)}&_v=20260920` : '';
 }
 
 function highResolutionCoverUrl(value) {
@@ -589,11 +589,12 @@ function bestVideoUrl(feedInfo) {
 }
 
 async function queryVideoProfile(shareUrl) {
-  const response = await fetch(`${API_URL}?url=${encodeURIComponent(shareUrl)}`, {
+  const response = await fetch(`${API_URL}?url=${encodeURIComponent(shareUrl)}&_fresh=${Date.now()}`, {
     method: 'GET',
+    cache: 'no-store',
     headers: { Accept: 'application/json' }
   });
-  const result = await response.json().catch(() => ({}));
+  const result = await response.json().catch(() => { throw new Error('解析接口返回异常，请稍后重试'); });
   if (!response.ok || (typeof result?.code === 'number' && result.code !== 0)) {
     throw new Error(result?.msg || result?.errMsg || '解析服务暂时不可用');
   }
