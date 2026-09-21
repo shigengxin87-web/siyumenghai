@@ -70,9 +70,13 @@
       "avatar": "./assets/members/member-01.jpg?v=20260917192332",
       "side": "right",
       "type": "image",
-      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "text": "",
       "links": [],
-      "media": null,
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-09-20/122337.jpg?v=20260921-1",
+        "alt": "石更新分享的聚餐合影"
+      },
       "redacted": false
     },
     {
