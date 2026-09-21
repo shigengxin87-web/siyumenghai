@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "date": "2026-09-17",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-17 07:36:03",
+      "sender": "生财A梦 (知牧)",
+      "avatar": "./assets/members/member-50.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "哇好呢 收到[机智] 3Q",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-17 09:01:17",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"生财A梦 (知牧)\" 会在🐴年事事顺利[庆祝]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-17 09:01:42",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "[社会社会][社会社会]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
