@@ -1,7 +1,7 @@
 {
   "group": "【石董会】一同成长朋友圈",
-  "count": 56,
-  "updatedAt": "2026-09-17T19:23:32+08:00",
+  "count": 57,
+  "updatedAt": "2026-09-21T22:07:39+08:00",
   "members": [
     {
       "name": "石更新（23:00睡觉）",
@@ -226,6 +226,10 @@
     {
       "name": "望晴",
       "avatar": "./assets/members/member-56.jpg?v=20260917192332"
+    },
+    {
+      "name": "飞儿",
+      "avatar": "./assets/members/member-57.jpg?v=20260921220739"
     }
   ]
 }
