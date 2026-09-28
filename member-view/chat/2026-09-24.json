@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "date": "2026-09-24",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-24 21:44:10",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-24 21:44:10",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "你撤回了一条消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-24 21:44:52",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "打脸了，周一时原定在周四起更新Ai主题，写一篇关于用豆包工作把录音做成内容和知识库的一个工作流。\n\n但我这几天回老家后又去北京呆了两天，刚刚又赶回老家，所以时间有些紧了，本想休息会开动的，然后我刷到帝师的一条视频，不小心给看进去了[捂脸]\n\n今天时间也晚了，明天也要中秋了，晚点再发出来也不合适，我也就不扫兴了，等周一一起补上吧。\n\n这条视频我转出来给大家一起看看，最让我有印象的就是这个故事里的大哥，睿智 幽默 憨厚 顾家 念旧 有情有义。\n\n朋友老规矩，有事随时群里找我，私信找我，不分时候，只要你有需要了[抱拳]\n150****6002\n150****1053\n\n明天来给大家送祝福[庆祝][呲牙]",
+      "links": [],
+      "media": null,
+      "redacted": true
+    },
+    {
+      "id": "m004",
+      "time": "2026-09-24 21:45:06",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

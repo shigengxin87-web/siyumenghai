@@ -1666,6 +1666,66 @@ const days = {
       { time: '12:27', title: '红包与转账背后的诚意', text: '大家用红包表达热情，石更新进一步解释推荐回馈不是冷冰冰的转介绍奖金。' },
       { time: '12:37', title: '贵人连接与一起变好', text: '从 Allen、乔伊等人的引荐谈到高质量关系的复利，最终落到“创造美好，成为美好”。' }
     ]
+  },
+  '2026-09-21': {
+    dateLabel: '2026 年 9 月 21 日', weekday: '星期一', messages: 22, themesCount: 2, readTime: '4 分钟',
+    title: '把一整天的讨论完整留下来',
+    summary: '当天共有 22 条有效讨论，包含文字、链接、图片和视频消息。现已按原时间顺序恢复到“原始讨论”，并找回群友分享的一张长截图；视频原文件未在本机缓存中找到，页面如实保留缺失提示。',
+    insights: [{ roles: ['content', 'operations'], tag: '讨论归档', source: '群聊原始记录', time: '21:55', title: '文字和图片共同构成完整语境', text: '长截图承载了单条文字难以替代的上下文，因此与当天讨论一并保留。' }],
+    actions: [{ title: '查看当天原始讨论', text: '按时间顺序回看 22 条记录及已恢复图片。' }],
+    resources: [{ kind: '图片', title: '群友分享的长截图', text: '已从微信本地缓存恢复并与 21:55 的消息对应。' }],
+    themes: [{ time: '21:55', title: '长截图与相关交流', text: '图片和前后文字已按原顺序恢复。' }, { time: '21:59', title: '视频消息', text: '保留消息位置；本机没有可用原文件。' }]
+  },
+  '2026-09-22': {
+    dateLabel: '2026 年 9 月 22 日', weekday: '星期二', messages: 17, themesCount: 1, readTime: '3 分钟',
+    title: '17 条讨论与资料分享已补档',
+    summary: '当天 17 条记录已全部恢复，包含 12 条文字和 5 条链接或文件类消息。原始讨论保留了发送时间、成员身份和可读取内容。',
+    insights: [{ roles: ['content', 'operations'], tag: '资料沉淀', source: '群聊原始记录', time: '全天', title: '讨论与资料链接需要放在同一条时间线上', text: '把文字和资料分享放回原始顺序，才能看见问题、回应与补充材料之间的关系。' }],
+    actions: [{ title: '回看当天资料', text: '在原始讨论中按时间顺序查看 17 条记录。' }], resources: [],
+    themes: [{ time: '全天', title: '文字交流与资料分享', text: '当天可读取内容已完整补档。' }]
+  },
+  '2026-09-24': {
+    dateLabel: '2026 年 9 月 24 日', weekday: '星期四', messages: 4, themesCount: 1, readTime: '1 分钟',
+    title: '短讨论也值得保留原貌',
+    summary: '当天共有 4 条记录，包含文字、系统消息和两条链接或文件类消息。内容已按原始顺序补回官网。',
+    insights: [{ roles: ['operations'], tag: '轻量归档', source: '群聊原始记录', time: '全天', title: '消息不多，也应保持连续档案', text: '没有长篇讨论的日期同样是社群真实节奏的一部分。' }],
+    actions: [{ title: '查看当天原始讨论', text: '回看 4 条已恢复记录。' }], resources: [],
+    themes: [{ time: '全天', title: '简短交流与资料分享', text: '当天可读取记录已全部补档。' }]
+  },
+  '2026-09-25': {
+    dateLabel: '2026 年 9 月 25 日', weekday: '星期五', messages: 89, themesCount: 2, readTime: '10 分钟',
+    title: '线下相聚，让群里的关系有了真实画面',
+    summary: '当天源记录 106 条，去除 17 个仅作装饰的表情后，恢复 89 条有效讨论。群友线下聚餐合影也已从本地缓存找回，放回 21:14 的原始消息位置。',
+    insights: [{ roles: ['private', 'operations'], tag: '线下连接', source: '群友聚餐合影', time: '21:14', title: '一张合影记录了关系从线上走到线下', text: '照片让当天密集交流有了可见的共同记忆，也是这次补档中不可替代的内容。' }],
+    actions: [{ title: '回看当天完整交流', text: '按原顺序查看 89 条文字、资料与图片记录。' }],
+    resources: [{ kind: '图片', title: '群友线下聚餐合影', text: '本机仅保存了 210×157 的可用缩略图，已按现有最高质量恢复。' }],
+    themes: [{ time: '全天', title: '密集交流与成员互动', text: '有效讨论已完整补档。' }, { time: '21:14', title: '线下聚餐合影', text: '群友共同入镜的现场照片已恢复。' }]
+  },
+  '2026-09-26': {
+    dateLabel: '2026 年 9 月 26 日', weekday: '星期六', messages: 10, themesCount: 2, readTime: '3 分钟',
+    title: '把群友当朋友，线上线下都可以来找我',
+    summary: '当天源记录 12 条，去除 2 个装饰表情后恢复 10 条有效讨论。21:39 的文字截图讲清了石董会的非商业社群定位、线下见面方式，以及“把大家真的当朋友去处”的原则，现已恢复原图。',
+    insights: [{ roles: ['private', 'operations'], tag: '社群定位', source: '石更新的文字截图', time: '21:39', title: '朋友式社群的边界，是需要时能够真实找到彼此', text: '线上可以在群里或私信交流，时间地点合适也可以线下单约或小聚；信任来自长期真实相处。' }],
+    actions: [{ title: '有需要就直接提出', text: '能在群里说的就在群里交流，不方便公开的可以私信；条件合适也可线下见面。' }],
+    resources: [{ kind: '图片', title: '社群定位与线下见面说明', text: '1920×2047 原图已恢复。' }],
+    themes: [{ time: '全天', title: '群友交流', text: '当天有效消息已补档。' }, { time: '21:39', title: '朋友式社群与线下见面', text: '石更新再次说明社群风格、边界与相处方式。' }]
+  },
+  '2026-09-27': {
+    dateLabel: '2026 年 9 月 27 日', weekday: '星期日', messages: 27, themesCount: 2, readTime: '5 分钟',
+    title: '六段现场视频留下了当天的连续记录',
+    summary: '当天源记录 29 条，去除 2 个装饰表情后恢复 27 条有效讨论，其中包含 6 段连续视频和 1 条位置消息。微信本机只保留了消息记录，没有下载视频与位置原文件，因此官网保留对应时间和缺失说明，不用其他素材冒充。',
+    insights: [{ roles: ['content', 'operations'], tag: '媒体完整性', source: '连续视频消息', time: '13:23', title: '没有原文件时，宁可明确缺失，也不替换或猜测', text: '六段视频的发送顺序和时间已保留，未来找到原文件后可以原位补回。' }],
+    actions: [{ title: '后续找到原视频即可原位补齐', text: '现有档案已经保留 6 段视频对应的准确时间位置。' }], resources: [],
+    themes: [{ time: '13:23', title: '连续六段视频分享', text: '消息位置已恢复，原文件当前不可用。' }, { time: '全天', title: '文字、资料与位置消息', text: '其余可读取内容已按原顺序补档。' }]
+  },
+  '2026-09-28': {
+    dateLabel: '2026 年 9 月 28 日', weekday: '星期一', messages: 32, themesCount: 2, readTime: '5 分钟',
+    title: '“含金量超高”，是群友对石董会最直接的评价',
+    summary: '截至 15:04，当天源记录 41 条，去除 9 个装饰表情后恢复 32 条有效讨论。14:38 的截图记录了群友对石董会信息密度、AI 新技能学习反馈和社群价值的真实评价，图片已恢复到原消息位置。',
+    insights: [{ roles: ['private', 'content'], tag: '群友评价', source: '评价截图', time: '14:38', title: '高信息密度与快速学习反馈，是群友感受到的核心价值', text: '评价来自真实群聊语境，也记录了社群建立与群友建议之间的关系。' }],
+    actions: [{ title: '查看今天截至当前的讨论', text: '按原始顺序查看 32 条有效记录；今天尚未结束，后续消息不计入本次补档。' }],
+    resources: [{ kind: '图片', title: '群友对石董会社群价值的评价', text: '1394×1072 原图已恢复。' }],
+    themes: [{ time: '全天', title: '今天截至当前的群聊', text: '文字和资料分享已补档。' }, { time: '14:38', title: '群友评价石董会含金量', text: '真实评价截图已恢复并放回原消息位置。' }]
   }
 };
 
@@ -1846,7 +1906,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20260921-chat-11';
+const chatDataVersion = '20260928-chat-12';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 

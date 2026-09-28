@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "date": "2026-09-26",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-09-26 02:38:56",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"子非鱼\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-09-26 21:39:29",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-09-26/213929.jpg",
+        "alt": "关于社群定位和线下见面的文字截图"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-26 21:40:05",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"扶光\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-09-26 21:40:20",
+      "sender": "Joey乔伊",
+      "avatar": "./assets/members/member-16.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "哈哈哈哈哈哈真性情",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-09-26 21:40:29",
+      "sender": "Joey乔伊",
+      "avatar": "./assets/members/member-16.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "又又又又见面了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-09-26 21:42:16",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "这个品性可能是我为数不多的，一点也不谦虚的，把真性情坚持到底[憨笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-09-26 21:43:06",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "应该不会出意外，除非这个大雨下一整天[破涕为笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-09-26 21:45:17",
+      "sender": "Joey乔伊",
+      "avatar": "./assets/members/member-16.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "游泳也要见[旺柴]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-09-26 21:45:41",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "目标不可变更，资源可以协调",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-09-26 21:45:54",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "left",
+      "type": "text",
+      "text": "哈哈，必达",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
