@@ -5,6 +5,7 @@
 - `engine.py`：使用固定 DouK 源码的参数生成模块与 curl-cffi，兼容原 DTK 数据契约；公开作品、作者、评论、分页、合集。
 - `gateway.mjs`：提供公开解析入口，并保留随机下载票据、CDN 域名/DNS 校验、Range 流式代理、512MB 上限、并发上限和分页保护。健康状态实际查询云后端。
 - 合集入口接受电脑端 `/collection/` 网址、手机端 `/share/mix/detail/` 分享链接、合集中的任意作品链接，以及高级用户使用的数字合集 ID；普通用户无需手工查 ID。
+- 博主入口接受电脑端 `/user/` 网址、App 分享得到的 `v.douyin.com` 短链接和包含该短链的整段分享文案。前端在当前浏览器保存最多30条作品查询记录；媒体预览优先调用浏览器文件分享能力，超过100MB的视频改为打开原文件，避免移动浏览器内存不足。
 - 上游：[JoeanAmier/TikTokDownloader](https://github.com/JoeanAmier/TikTokDownloader)，固定 commit `473c90ff70c663cfb69310fff2b8d5192f200661`，GPL-3.0。依赖安装到 `vendor/src`，许可证一并保存。未修改上游源码。
 - 已发现 x-download 当前适配器使用已移除的 `ABogus` 导出和旧参数对象，不能直接适配上述上游。此后端直接使用上游 `DouYinParams`，保留原 x-download 工作区及未提交配置。
 
