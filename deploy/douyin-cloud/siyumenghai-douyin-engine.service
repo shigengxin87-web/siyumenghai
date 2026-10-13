@@ -1,0 +1,28 @@
+[Unit]
+Description=Siyumenghai lightweight DouK cloud engine
+After=network-online.target
+Wants=network-online.target
+[Service]
+User=siyumenghai-douyin
+Group=siyumenghai-douyin
+WorkingDirectory=/opt/siyumenghai-douyin-cloud
+EnvironmentFile=/etc/siyumenghai-douyin/cloud.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/siyumenghai-douyin-cloud/.venv/bin/python -m uvicorn engine:app --host 127.0.0.1 --port 2036 --no-access-log --log-level warning
+Restart=on-failure
+RestartSec=5
+MemoryHigh=240M
+MemoryMax=320M
+CPUQuota=40%
+TasksMax=32
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,27 @@
+[Unit]
+Description=Siyumenghai cloud Douyin download gateway
+After=network-online.target siyumenghai-douyin-engine.service
+Wants=siyumenghai-douyin-engine.service
+[Service]
+User=siyumenghai-douyin
+Group=siyumenghai-douyin
+WorkingDirectory=/opt/siyumenghai-douyin-cloud
+EnvironmentFile=/etc/siyumenghai-douyin/cloud.env
+ExecStart=/opt/siyumenghai-douyin-cloud/runtime/node gateway.mjs
+Restart=on-failure
+RestartSec=5
+MemoryHigh=100M
+MemoryMax=160M
+CPUQuota=20%
+TasksMax=32
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target
