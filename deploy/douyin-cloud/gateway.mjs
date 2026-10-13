@@ -2,14 +2,13 @@ import http from 'node:http';
 import https from 'node:https';
 import dns from 'node:dns/promises';
 import net from 'node:net';
-import { timingSafeEqual, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 
 const base = process.env.DTK_URL || 'http://127.0.0.1:8000';
 const key = process.env.DTK_API_KEY || '';
-const access = process.env.ACCESS_TOKEN || '';
 const tickets = new Map();
 const creatorNextRequest = new Map();
 const CREATOR_GAP_MS = 15000;
@@ -110,11 +109,6 @@ async function body(req) {
   for await (const chunk of req) { buf += chunk; if (Buffer.byteLength(buf) > 16384) throw new Error('输入内容过长'); }
   return JSON.parse(buf || '{}');
 }
-function authorized(req) {
-  const a = Buffer.from(req.headers.authorization || '');
-  const b = Buffer.from(`Bearer ${access}`);
-  return access.length >= 24 && a.length === b.length && timingSafeEqual(a,b);
-}
 export const server = http.createServer(async (req,res) => {
   res.setHeader('X-Content-Type-Options','nosniff');
   res.setHeader('Referrer-Policy','no-referrer');
@@ -123,7 +117,7 @@ export const server = http.createServer(async (req,res) => {
     if (u.pathname === '/api/douyin/health' && req.method === 'GET') {
       try {
         const h = await engine('/api/v1/health');
-        return send(res,200,{ configured: Boolean(key && access.length >= 24), verified: Boolean(h.last_success), backend: h.engine, mac_required: false, last_success: h.last_success, cooldown_seconds: h.cooldown_seconds });
+        return send(res,200,{ configured: Boolean(key), verified: Boolean(h.last_success), backend: h.engine, mac_required: false, last_success: h.last_success, cooldown_seconds: h.cooldown_seconds });
       } catch { return send(res,503,{configured:false,verified:false,backend:'douk-cloud',mac_required:false,error:'解析服务暂不可用'}); }
     }
     if (u.pathname.startsWith('/api/douyin/media/') && req.method === 'GET') {
@@ -149,7 +143,6 @@ export const server = http.createServer(async (req,res) => {
       return;
     }
     if (u.pathname.startsWith('/api/douyin/')) {
-      if (!authorized(req)) return send(res,401,{error:'请输入有效访问码'});
       if (req.method !== 'POST') return send(res,405,{error:'不支持的请求方法'});
       if (!['/api/douyin/parse','/api/douyin/posts','/api/douyin/profile','/api/douyin/comments','/api/douyin/mix'].includes(u.pathname)) return send(res,404,{error:'接口不存在'});
       if (active >= 4) return send(res,429,{error:'当前任务较多，请稍后重试'});

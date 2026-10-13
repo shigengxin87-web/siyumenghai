@@ -5,7 +5,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function status(text) { $('status').textContent = text; }
 function setBusy(value) { busy = value; document.querySelectorAll('form button, #more, #all, [role=tab]').forEach(b=>b.disabled=value); $('stop').hidden=!value; }
 async function api(path,body) {
-  const response = await fetch(`/api/douyin/${path}`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${$('access').value}`},body:JSON.stringify(body),signal:AbortSignal.timeout(120000)});
+  const response = await fetch(`/api/douyin/${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(120000)});
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || '请求失败');
   return result;
