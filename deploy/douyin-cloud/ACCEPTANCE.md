@@ -1,6 +1,6 @@
 # 思域梦海抖音云端部署验收｜2026-10-13
 
-结论：已正式切换为腾讯云独立解析与下载，运行链路不依赖 Mac。保留原访问码与页面。采用 DouK 参数生成模块 + curl-cffi 的轻量 Python 后端及既有 Node 下载网关，未部署完整 DTK 五容器。
+结论：已正式切换为腾讯云独立解析与下载，运行链路不依赖 Mac。2026-10-13 后续按用户要求取消公网访问码，页面与 `/api/douyin/*` 均可直接使用；内部云解析密钥继续保留。采用 DouK 参数生成模块 + curl-cffi 的轻量 Python 后端及既有 Node 下载网关，未部署完整 DTK 五容器。
 
 线上入口：https://siyumenghai.cn/member-view/douyin-downloader.html
 健康入口：https://siyumenghai.cn/api/douyin/health
@@ -15,7 +15,7 @@
 4. 真实图集7616399587141737704：返回2张图片，公网下载分别421856、345194字节，均为image/webp。封面image/jpeg成功。
 5. 云端直接向上游发起10次独立请求，覆盖3条真实作品，10/10成功；不是缓存重复请求。请求最小间隔3秒。
 6. 公网作者资料HTTP200、评论5条HTTP200；同一作者连续两页各5条作品，游标推进、两页无重复；真实合集HTTP200、7条作品、has_more=false。
-7. 原生Chrome网页提交真实短链接，显示“成功1/1条”及真实作品卡片、“下载无水印视频”入口。浏览器CDP连接出现超时，最终通过原生辅助功能完成网页验收。未据此宣称控制台错误为0。
+7. 原生浏览器网页提交真实作品链接，显示“成功1/1条”及真实作品卡片、“下载无水印视频”入口。取消访问码后复测确认页面不存在访问码输入，公网请求未携带 Authorization 也能解析成功。
 8. 视频号公网真实样本https://weixin.qq.com/sph/AKlMnWudWP 返回HTTP200、code=0、有效data。视频号Nginx location与切换前备份逐字相同；未修改视频号页面与源码。
 9. 原网关8项契约检查通过，新云后端6项测试通过；Node语法、Python编译、shell语法、git diff检查通过。云端engine.py / gateway.mjs SHA256与Git源码一致。
 
@@ -25,7 +25,7 @@
 - systemd：siyumenghai-douyin-engine、siyumenghai-douyin-gateway，均active/enabled，Restart=on-failure。已真实重启并重新解析。
 - 后端:2036、网关:2037，只监听127.0.0.1；Nginx /api/douyin/已切换到:2037。
 - 两个进程启动后合计约60MB，下载验收后约80MB；内存总上限480MB，分别限制CPU。无浏览器、数据库或Docker驻留，下载流式传输，不在云端落盘。
-- 专用非登录用户、系统目录只读、禁止提权。凭据在/etc/siyumenghai-douyin，目录0750、文件0640，未进入Git或前端；原访问码保持有效。
+- 专用非登录用户、系统目录只读、禁止提权。凭据在/etc/siyumenghai-douyin，目录0750、文件0640，未进入Git或前端；公网访问码已取消，内部解析接口仍要求私密 `DTK_API_KEY`。
 - 解析上游403/429暂停5分钟，不自动重试；缓存最多100条、5分钟；Nginx解析限流30次/分钟，媒体流及健康检查不计入。
 - 未购买或升级服务器，未停止其他生产服务。
 
