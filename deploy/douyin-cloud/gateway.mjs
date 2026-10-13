@@ -156,7 +156,7 @@ export const server = http.createServer(async (req,res) => {
         if (u.pathname.endsWith('/profile')) {
           const target = String(b.target || '').trim();
           const p = new URLSearchParams();
-          if (target.startsWith('http')) p.set('url',extractUrl(target));
+          if (/https?:\/\//.test(target)) p.set('url',extractUrl(target));
           else if (/^MS4wLjAB[A-Za-z0-9_-]{10,250}$/.test(target)) p.set('sec_user_id',target);
           else throw new Error('请提供有效的抖音博主主页链接或 sec_uid');
           const result = await operation(`/api/v1/douyin/user?${p}`);
@@ -185,7 +185,7 @@ export const server = http.createServer(async (req,res) => {
         if (!Number.isInteger(count) || count < 1 || count > 50) throw new Error('每页作品数须为 1 至 50');
         const p = new URLSearchParams({count:String(count)});
         const target = String(b.target || '').trim();
-        if (target.startsWith('http')) p.set('url',extractUrl(target));
+        if (/https?:\/\//.test(target)) p.set('url',extractUrl(target));
         else if (/^MS4wLjAB[A-Za-z0-9_-]{10,250}$/.test(target)) p.set('sec_user_id',target);
         else throw new Error('请提供抖音主页链接或 sec_uid，暂不支持昵称搜索');
         if (b.cursor) { if (typeof b.cursor !== 'string' || b.cursor.length > 512) throw new Error('分页参数无效'); p.set('cursor',b.cursor); }
