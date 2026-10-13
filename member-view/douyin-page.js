@@ -1,6 +1,8 @@
 const $ = id => document.getElementById(id);
 let posts = [], cursor = null, target = '', stopped = false, busy = false;
 const CREATOR_PAGE_GAP_MS = 15000;
+const HISTORY_KEY = 'siyumenghai-douyin-history-v1';
+let previewFile = null, previewUrl = '', previewKind = '', previewName = '';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function status(text) { $('status').textContent = text; }
 function setBusy(value) { busy = value; document.querySelectorAll('form button, #more, #all, [role=tab]').forEach(b=>b.disabled=value); $('stop').hidden=!value; }
@@ -12,6 +14,15 @@ async function api(path,body) {
 }
 function node(tag,text,cls) { const el=document.createElement(tag); if(text != null) el.textContent=text; if(cls) el.className=cls; return el; }
 function link(text,url,download=false) { const a=node('a',text); a.href=url+(download?'?download=1':''); if(download) a.download=''; else {a.target='_blank';a.rel='noopener noreferrer';} return a; }
+function button(text,action,cls='') { const b=node('button',text,cls);b.type='button';b.onclick=action;return b; }
+function historyItems(){try{const data=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(data)?data:[];}catch{return[];}}
+function remember(post){const item={id:post.id,author:post.author||'',description:post.description||'',created_at:post.created_at||'',web_url:post.web_url,checked_at:Date.now()};const items=[item,...historyItems().filter(x=>x.id!==item.id)].slice(0,30);localStorage.setItem(HISTORY_KEY,JSON.stringify(items));renderHistory();}
+function renderHistory(){const box=$('historyList');if(!box)return;box.replaceChildren();const items=historyItems();if(!items.length){box.append(node('p','暂无查询记录，解析成功后会自动保存在这里。','history-empty'));return;}for(const item of items){const card=node('article',null,'history-item');card.append(node('div','抖音','history-cover history-cover-fallback'));const content=node('div',null,'history-content');content.append(node('span',item.author||'未提供作者','history-author'),node('p',item.description||'未提供文案','history-title'),node('small',new Date(item.checked_at).toLocaleString('zh-CN'),'history-time'));const actions=node('div',null,'history-actions');const again=button('再次解析',async()=>{again.disabled=true;reset();setBusy(true);status('正在重新解析历史作品…');try{add(await api('parse',{url:item.web_url}));status('历史作品已重新解析');}catch(e){status(`重新解析失败：${e.message}`);}finally{setBusy(false);again.disabled=false;}});const original=button('查看原作品',()=>window.open(item.web_url,'_blank','noopener'));actions.append(again,original);content.append(actions);card.append(content);box.append(card);}}
+function makePreviewable(element,url,kind,name){element.tabIndex=0;element.setAttribute('role','button');element.setAttribute('aria-label',`预览并保存${kind==='video'?'视频':'图片'}`);element.onclick=()=>openPreview(url,kind,name);element.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPreview(url,kind,name);}};}
+async function openPreview(url,kind,name){previewFile=null;previewUrl=url;previewKind=kind;previewName=name;$('previewTitle').textContent=kind==='video'?'视频预览与保存':'图片预览与保存';$('previewHint').textContent='正在检查当前浏览器的保存能力…';$('previewSave').disabled=true;$('previewSave').textContent='正在准备…';$('previewOpen').href=url;$('previewImage').hidden=kind!=='image';$('previewVideo').hidden=kind!=='video';if(kind==='image')$('previewImage').src=url;else{$('previewVideo').src=url;$('previewVideo').load();}$('mediaPreview').hidden=false;document.body.classList.add('preview-open');await preparePreviewFile();}
+function closePreview(){$('mediaPreview').hidden=true;document.body.classList.remove('preview-open');$('previewVideo').pause();$('previewVideo').removeAttribute('src');$('previewImage').removeAttribute('src');previewFile=null;}
+async function preparePreviewFile(){const save=$('previewSave');if(typeof File==='undefined'||!navigator.share||!navigator.canShare){$('previewHint').textContent=previewKind==='image'?'当前浏览器不支持系统保存菜单。可点“打开原文件”后长按图片保存。':'当前浏览器不支持系统保存菜单。请点“打开原文件”，再使用浏览器的分享或存储功能。';save.disabled=false;save.textContent='打开原文件';return;}try{const probe=await fetch(previewUrl,{headers:{Range:'bytes=0-0'}});const range=probe.headers.get('Content-Range')||'';const total=Number(range.split('/')[1]||probe.headers.get('Content-Length')||0);if(previewKind==='video'&&total>100*1024*1024){$('previewHint').textContent='这个视频超过 100MB。为避免手机浏览器内存不足，请打开原文件后使用系统分享或“存储到文件”。';save.disabled=false;save.textContent='打开原文件';return;}const response=await fetch(previewUrl);if(!response.ok)throw new Error('资源读取失败');const blob=await response.blob();const file=new File([blob],previewName,{type:blob.type||(previewKind==='video'?'video/mp4':'image/jpeg')});if(!navigator.canShare({files:[file]}))throw new Error('当前浏览器不支持分享文件');previewFile=file;$('previewHint').textContent='文件已准备好，点击下面按钮打开系统保存菜单。';save.disabled=false;save.textContent='打开系统保存菜单';}catch(e){$('previewHint').textContent=`无法直接调起系统保存：${e.message}。请打开原文件后保存。`;save.disabled=false;save.textContent='打开原文件';}}
+async function savePreview(){if(!previewFile){window.open(previewUrl,'_blank','noopener');return;}try{await navigator.share({files:[previewFile],title:previewName});}catch(e){if(e.name!=='AbortError')$('previewHint').textContent=`系统保存菜单未能打开：${e.message}`;}}
 function add(post) {
   if(posts.some(p=>p.id===post.id))return;
   posts.push(post);
@@ -19,15 +30,16 @@ function add(post) {
   card.append(node('h2',post.description || '未提供文案'));
   card.append(node('p',`${post.author || '未提供作者'} · ${post.created_at ? new Date(post.created_at).toLocaleString('zh-CN') : '未提供发布时间'}`,'meta'));
   const stats=post.stats || {}; card.append(node('p',`点赞 ${stats.digg_count ?? '—'}　评论 ${stats.comment_count ?? '—'}　转发 ${stats.share_count ?? '—'}　收藏 ${stats.collect_count ?? '—'}`,'stats'));
-  if(post.cover){ const img=node('img');img.src=post.cover;img.alt='作品封面';img.loading='lazy';card.append(img,link('保存封面',post.cover,true)); }
-  if(post.video){const v=node('video');v.src=post.video;v.controls=true;v.preload='none';v.setAttribute('playsinline','');card.append(v,link('下载无水印视频',post.video,true));}
-  if(post.images?.length){const gallery=node('div',null,'gallery');post.images.forEach((url,i)=>{const fig=node('figure');const img=node('img');img.src=url;img.alt=`图集第 ${i+1} 张`;img.loading='lazy';fig.append(img,link(`保存图片 ${i+1}`,url,true));gallery.append(fig);});card.append(gallery);}
+  if(post.cover){const img=node('img');img.src=post.cover;img.alt='作品封面，点击预览';img.loading='lazy';makePreviewable(img,post.cover,'image',`${post.id}-cover.jpg`);card.append(img,button('预览并保存封面',()=>openPreview(post.cover,'image',`${post.id}-cover.jpg`)));}
+  if(post.video){const v=node('video');v.src=post.video;v.controls=true;v.preload='none';v.setAttribute('playsinline','');card.append(v,button('手机预览与保存',()=>openPreview(post.video,'video',`${post.id}.mp4`)),link('电脑下载视频',post.video,true));}
+  if(post.images?.length){const gallery=node('div',null,'gallery');post.images.forEach((url,i)=>{const fig=node('figure');const img=node('img');img.src=url;img.alt=`图集第 ${i+1} 张，点击预览`;img.loading='lazy';makePreviewable(img,url,'image',`${post.id}-${i+1}.jpg`);fig.append(img,button(`预览并保存图片 ${i+1}`,()=>openPreview(url,'image',`${post.id}-${i+1}.jpg`)));gallery.append(fig);});card.append(gallery);}
   if(!post.video&&!post.images?.length)card.append(node('p','当前作品未返回可下载资源','error'));
   const commentsButton=node('button','查看前 20 条评论');
   const commentsArea=node('div',null,'comments');
   commentsButton.onclick=async()=>{commentsButton.disabled=true;commentsArea.textContent='正在读取评论…';try{const data=await api('comments',{id:post.id,count:20});commentsArea.replaceChildren();if(!data.items?.length)commentsArea.textContent='暂无可展示评论';for(const c of data.items||[]){const name=c.user?.nickname||c.author?.nickname||'用户';commentsArea.append(node('p',`${name}：${c.text||c.content||''}`));}if(data.has_more)commentsArea.append(node('small','仅展示前 20 条评论'));}catch(e){commentsArea.textContent=`评论暂不可用：${e.message}`;}finally{commentsButton.disabled=false;}};
   card.append(commentsButton,commentsArea,link('查看原作品',post.web_url));$('results').append(card);
   $('actions').hidden=false;
+  remember(post);
 }
 function reset(){posts=[];cursor=null;$('results').replaceChildren();$('actions').hidden=true;}
 function paging(hasMore){$('more').hidden=!hasMore;$('all').hidden=!hasMore;}
@@ -43,4 +55,7 @@ $('all').onclick=async()=>{if(busy||!cursor)return;setBusy(true);stopped=false;t
 $('stop').onclick=()=>{stopped=true;status('将在当前请求结束后停止');};
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify(posts,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=link('导出',url);a.download='抖音作品信息.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('exportCsv').onclick=()=>{const rows=[['作品ID','作者','标题文案','发布时间','点赞','评论','转发','收藏','原作品链接']];for(const p of posts){const s=p.stats||{};rows.push([p.id,p.author,p.description,p.created_at,s.digg_count,s.comment_count,s.share_count,s.collect_count,p.web_url]);}const escape=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv='\uFEFF'+rows.map(row=>row.map(escape).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=link('导出',url);a.download='抖音作品信息.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$('clearHistory').onclick=()=>{localStorage.removeItem(HISTORY_KEY);renderHistory();};
+$('previewClose').onclick=closePreview;$('previewSave').onclick=savePreview;$('mediaPreview').onclick=e=>{if(e.target===$('mediaPreview'))closePreview();};document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('mediaPreview').hidden)closePreview();});
+renderHistory();
 fetch('/api/douyin/health').then(r=>r.json()).then(h=>{if(!h.configured)status('服务尚未配置，暂时无法解析。');}).catch(()=>status('服务暂时无法连接'));

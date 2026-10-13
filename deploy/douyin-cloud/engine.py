@@ -120,12 +120,26 @@ async def parse(request:Request):
     while len(cache)>100:cache.popitem(last=False)
     return ok(post)
 
-def creator(request):
+async def creator(request):
     uid=request.query_params.get('sec_user_id','')
     if not uid:
         raw=valid_url(request.query_params.get('url',''))
-        m=re.fullmatch(r'/user/(MS4wLjAB[\w-]{10,250})/?',urlsplit(raw).path)
-        uid=m[1] if m else ''
+        for _ in range(6):
+            parts=urlsplit(raw)
+            m=re.fullmatch(r'/(?:user|share/user)/(MS4wLjAB[\w-]{10,250})/?',parts.path)
+            if m:
+                uid=m[1]
+                break
+            from urllib.parse import parse_qs
+            shared_uid=parse_qs(parts.query).get('sec_uid',[''])[0]
+            if re.fullmatch(r'MS4wLjAB[\w-]{10,250}',shared_uid):
+                uid=shared_uid
+                break
+            from urllib.parse import urljoin
+            async with AsyncSession(impersonate=IMPERSONATE,timeout=10,verify=True,allow_redirects=False,trust_env=False) as c:
+                response=await c.get(raw,headers={'User-Agent':USERAGENT},allow_redirects=False)
+            if response.status_code not in (301,302,303,307,308) or not response.headers.get('location'):break
+            raw=valid_url(urljoin(raw,response.headers['location']))
     if not re.fullmatch(r'MS4wLjAB[\w-]{10,250}',uid): raise ValueError('博主主页或 sec_uid 无效')
     return uid
 
@@ -138,7 +152,7 @@ def number(request,name,default,maximum):
 
 @app.get('/api/v1/douyin/user')
 async def profile(request:Request):
-    uid=creator(request)
+    uid=await creator(request)
     d=(await fetch_data('/aweme/v1/web/user/profile/other/',{'sec_user_id':uid,'publish_video_strategy_type':'2','personal_center_strategy_type':'1'})).get('user')
     if not d:raise UpstreamError()
     return ok({'nickname':d.get('nickname'),'signature':d.get('signature'),'sec_uid':uid,'verified':bool(d.get('custom_verify')),
@@ -156,7 +170,7 @@ async def comments(request:Request):
 
 @app.get('/api/v1/douyin/user/posts')
 async def posts(request:Request):
-    d=await fetch_data('/aweme/v1/web/aweme/post/',{'sec_user_id':creator(request),'max_cursor':number(request,'cursor',0,10**20),'count':number(request,'count',20,50),'locate_query':'false','need_time_list':'1','publish_video_strategy_type':'2'})
+    d=await fetch_data('/aweme/v1/web/aweme/post/',{'sec_user_id':await creator(request),'max_cursor':number(request,'cursor',0,10**20),'count':number(request,'count',20,50),'locate_query':'false','need_time_list':'1','publish_video_strategy_type':'2'})
     if 'aweme_list' not in d:raise UpstreamError()
     return ok({'items':[shape(x) for x in d.get('aweme_list') or []],'cursor':str(d.get('max_cursor',0)),'has_more':bool(d.get('has_more'))})
 
