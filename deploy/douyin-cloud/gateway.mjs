@@ -173,9 +173,10 @@ export const server = http.createServer(async (req,res) => {
           return send(res,200,{items:result.items||result.comments||[],cursor:result.cursor,has_more:result.has_more});
         }
         if (u.pathname.endsWith('/mix')) {
-          const id = String(b.id || '').trim();
-          if (!/^\d{5,30}$/.test(id)) throw new Error('合集 ID 无效');
-          const p = new URLSearchParams({mix_id:id,count:'20'});
+          const target = String(b.target || b.id || '').trim();
+          const p = new URLSearchParams({count:'20'});
+          if (/^\d{5,30}$/.test(target)) p.set('mix_id',target);
+          else p.set('url',extractUrl(target));
           if(b.cursor){if(typeof b.cursor!=='string'||b.cursor.length>512)throw new Error('分页参数无效');p.set('cursor',b.cursor);}
           const result = await operation(`/api/v1/douyin/mix/posts?${p}`);
           return send(res,200,{items:(result.items||[]).map(shape),cursor:result.cursor,has_more:result.has_more});

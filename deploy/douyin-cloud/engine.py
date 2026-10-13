@@ -163,7 +163,30 @@ async def posts(request:Request):
 @app.get('/api/v1/douyin/mix/posts')
 async def mix(request:Request):
     id=request.query_params.get('mix_id','')
-    if not re.fullmatch(r'\d{5,30}',id):raise ValueError('合集 ID 无效')
+    if not id:
+        raw=valid_url(request.query_params.get('url',''))
+        for _ in range(6):
+            parts=urlsplit(raw)
+            found=re.search(r'/(?:collection|share/mix/detail)/(\d{5,30})(?:/|$)',parts.path)
+            if found:
+                id=found[1]
+                break
+            detail=re.search(r'/(?:video|note|slides)/(\d{10,25})',parts.path)
+            if not detail:
+                from urllib.parse import parse_qs
+                modal=parse_qs(parts.query).get('modal_id',[''])[0]
+                detail=re.fullmatch(r'\d{10,25}',modal)
+            if detail:
+                detail_id_value=detail[1] if hasattr(detail,'lastindex') and detail.lastindex else detail[0]
+                data=await fetch_data('/aweme/v1/web/aweme/detail/',{'aweme_id':detail_id_value,'version_code':'190500','version_name':'19.5.0'})
+                id=str(((data.get('aweme_detail') or {}).get('mix_info') or {}).get('mix_id') or '')
+                break
+            from urllib.parse import urljoin
+            async with AsyncSession(impersonate=IMPERSONATE,timeout=10,verify=True,allow_redirects=False,trust_env=False) as c:
+                response=await c.get(raw,headers={'User-Agent':USERAGENT},allow_redirects=False)
+            if response.status_code not in (301,302,303,307,308) or not response.headers.get('location'):break
+            raw=valid_url(urljoin(raw,response.headers['location']))
+    if not re.fullmatch(r'\d{5,30}',id):raise ValueError('请粘贴合集分享链接、合集网址，或合集中的任意作品链接')
     d=await fetch_data('/aweme/v1/web/mix/aweme/',{'mix_id':id,'cursor':number(request,'cursor',0,10**20),'count':number(request,'count',20,50)})
     if 'aweme_list' not in d:raise UpstreamError()
     return ok({'items':[shape(x) for x in d.get('aweme_list') or []],'cursor':str(d.get('cursor',0)),'has_more':bool(d.get('has_more'))})
