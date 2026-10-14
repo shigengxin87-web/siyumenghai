@@ -30,6 +30,17 @@ class EngineTests(unittest.TestCase):
         url = "https://sns-img-bd.xhscdn.com/202610131234/0123456789abcdef0123456789abcdef/spectrum/1040g0k0abc!nd_dft_wlteh_webp_3"
         self.assertEqual(engine._image_url(url), "https://sns-img-bd.xhscdn.com/spectrum/1040g0k0abc")
 
+    def test_synthetic_a1_has_browser_cookie_shape(self):
+        value = engine._synthetic_a1()
+        self.assertEqual(len(value), 52)
+        self.assertRegex(value, r"^[a-z0-9]+$")
+
+    def test_cookie_header_is_split_into_cookie_jar(self):
+        with engine.httpx.Client() as client:
+            engine._apply_cookie_header(client, "a1=device-value; web_session=session-value")
+            self.assertEqual(client.cookies.get("a1", domain=".xiaohongshu.com"), "device-value")
+            self.assertEqual(client.cookies.get("web_session", domain=".xiaohongshu.com"), "session-value")
+
 
 if __name__ == "__main__":
     unittest.main()

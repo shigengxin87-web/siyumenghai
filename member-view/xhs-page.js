@@ -71,13 +71,14 @@
     const list = urls(input.value);
     if (!list.length) { status.textContent = '没有识别到小红书作品链接。'; return; }
     const button = form.querySelector('button[type="submit"]');
-    button.disabled = true; results = []; render(); let failed = 0;
+    button.disabled = true; results = []; render(); let failed = 0, errors = [];
     for (let i = 0; i < list.length; i++) {
       status.textContent = `正在解析 ${i + 1}/${list.length}…`;
       try { const item = await parse(list[i]); results.push(item); saveHistory(item); render(); }
-      catch (error) { failed++; status.textContent = `第 ${i + 1} 条失败：${error.message}`; }
+      catch (error) { failed++; errors.push(`第 ${i + 1} 条：${error.message}`); }
     }
-    button.disabled = false; status.textContent = `完成：成功 ${results.length} 条，失败 ${failed} 条。`;
+    button.disabled = false;
+    status.textContent = `完成：成功 ${results.length} 条，失败 ${failed} 条。${errors.length ? `\n${errors.join('\n')}` : ''}`;
   });
   resultsNode.addEventListener('click', async event => {
     const preview = event.target.closest('[data-preview]');

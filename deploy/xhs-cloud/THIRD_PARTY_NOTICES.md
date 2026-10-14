@@ -26,3 +26,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Runtime dependencies retain their own licenses: `httpx`, `lxml`, and `yt-dlp`.
+
+The anonymous-session bootstrap and direct server-rendered page request were
+adapted from `tamnd/xiaohongshu-cli`, copyright 2026 Duc-Tam Nguyen, licensed
+under the Apache License 2.0. The upstream license is available at
+https://github.com/tamnd/xiaohongshu-cli/blob/main/LICENSE and
+https://www.apache.org/licenses/LICENSE-2.0.

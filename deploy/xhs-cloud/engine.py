@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import html as html_module
+import hashlib
 import hmac
 import json
 import os
 import re
+import secrets
+import string
 import threading
+import time
+import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -34,6 +39,10 @@ URL_RE = re.compile(r'https://[^\s<>"“”]+', re.I)
 STATE_PREFIX = "window.__INITIAL_STATE__"
 LOCK = threading.Semaphore(2)
 LAST_SUCCESS: str | None = None
+WEB_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+)
 
 
 class ParseError(Exception):
@@ -75,6 +84,56 @@ def _cookie_header() -> str:
     except OSError:
         return ""
     return value if "\n" not in value and "\r" not in value else ""
+
+
+def _synthetic_a1() -> str:
+    """Build the same shaped anonymous device cookie used by XHS web clients."""
+    timestamp = format(int(time.time() * 1000), "x")
+    random_part = "".join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(30))
+    base = f"{timestamp}{random_part}50000"
+    checksum = zlib.crc32(base.encode("utf-8")) & 0xFFFFFFFF
+    return f"{base}{checksum}"[:52]
+
+
+def _apply_cookie_header(client: httpx.Client, value: str) -> None:
+    for part in value.split(";"):
+        name, separator, cookie_value = part.strip().partition("=")
+        if separator and name and cookie_value:
+            client.cookies.set(name, cookie_value, domain=".xiaohongshu.com", path="/")
+
+
+def _cookie_value(client: httpx.Client, name: str) -> str:
+    return next((cookie.value for cookie in client.cookies.jar if cookie.name == name and cookie.value), "")
+
+
+def _page_client() -> httpx.Client:
+    """Create a fresh anonymous web session without inheriting host proxy settings."""
+    client = httpx.Client(
+        follow_redirects=False,
+        timeout=20,
+        trust_env=False,
+        headers={
+            "User-Agent": WEB_USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en,zh-CN;q=0.9,zh;q=0.8",
+            "Accept-Encoding": "gzip",
+        },
+    )
+    configured_cookie = _cookie_header()
+    if configured_cookie:
+        _apply_cookie_header(client, configured_cookie)
+    try:
+        client.get("https://www.xiaohongshu.com/explore")
+    except httpx.HTTPError:
+        pass
+    a1 = _cookie_value(client, "a1")
+    if not a1:
+        a1 = _synthetic_a1()
+        client.cookies.set("a1", a1, domain=".xiaohongshu.com", path="/")
+    if not _cookie_value(client, "webId"):
+        web_id = hashlib.md5(a1.encode("utf-8"), usedforsecurity=False).hexdigest()
+        client.cookies.set("webId", web_id, domain=".xiaohongshu.com", path="/")
+    return client
 
 
 def resolve_url(raw: str) -> str:
@@ -211,16 +270,13 @@ def parse_page(url: str) -> dict[str, Any]:
     note_id = note_id_from_url(url)
     if not note_id:
         raise ParseError("请粘贴具体作品链接，暂不支持主页或搜索页")
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/140 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml",
-        "Referer": "https://www.xiaohongshu.com/",
-    }
-    cookie = _cookie_header()
-    if cookie:
-        headers["Cookie"] = cookie
-    with httpx.Client(follow_redirects=True, timeout=20, headers=headers) as client:
+    # A direct visit returns server-rendered note data. Supplying an in-site
+    # Referer makes Xiaohongshu treat this as SPA navigation and may redirect
+    # anonymous visitors to login, so this request intentionally has none.
+    with _page_client() as client:
         response = client.get(url)
+        if response.is_redirect:
+            raise ParseError("小红书拒绝了当前分享链接，请从 App 重新复制最新链接")
         response.raise_for_status()
     state = load_initial_state(response.text)
     note = _select_note(state or {}, note_id)
