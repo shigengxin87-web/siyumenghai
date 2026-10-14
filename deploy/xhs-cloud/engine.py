@@ -9,6 +9,7 @@ import json
 import os
 import re
 import secrets
+import subprocess
 import string
 import threading
 import time
@@ -137,21 +138,43 @@ def _page_client() -> httpx.Client:
 
 
 def resolve_url(raw: str) -> str:
+    """Resolve XHS shortlinks without contacting unrelated redirect targets."""
     parsed = urlsplit(raw)
-    if parsed.hostname and parsed.hostname.endswith("xiaohongshu.com"):
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_INPUT_HOSTS:
+        raise ParseError("仅支持小红书 HTTPS 作品链接")
+    if parsed.hostname in {"xiaohongshu.com", "www.xiaohongshu.com"}:
         return raw
+
     headers = {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148",
         "Accept": "text/html,application/xhtml+xml",
     }
-    with httpx.Client(follow_redirects=True, timeout=15, headers=headers) as client:
-        response = client.get(raw)
-        response.raise_for_status()
-    final = str(response.url)
-    parsed = urlsplit(final)
-    if parsed.scheme != "https" or parsed.hostname not in {"www.xiaohongshu.com", "xiaohongshu.com"}:
-        raise ParseError("小红书分享链接跳转异常")
-    return final
+    # Follow only platform-owned redirects. Never let public inputs access
+    # arbitrary endpoints through a shortlink resolution service.
+    with httpx.Client(follow_redirects=False, timeout=15, headers=headers, trust_env=False) as client:
+        current = raw
+        for _ in range(6):
+            response = client.get(current)
+            if response.status_code not in (301, 302, 303, 307, 308):
+                raise ParseError("小红书分享链接跳转异常")
+            location = response.headers.get("location", "")
+            if not location:
+                raise ParseError("小红书分享链接跳转异常")
+            from urllib.parse import urljoin
+            target = urljoin(current, location)
+            destination = urlsplit(target)
+            if (
+                destination.scheme != "https"
+                or destination.hostname not in ALLOWED_INPUT_HOSTS
+                or destination.username
+                or destination.password
+                or destination.port not in (None, 443)
+            ):
+                raise ParseError("小红书分享链接跳转异常")
+            if destination.hostname in {"xiaohongshu.com", "www.xiaohongshu.com"}:
+                return target
+            current = target
+    raise ParseError("小红书分享链接跳转次数过多")
 
 
 def _normalize_js(value: str) -> str:
@@ -273,15 +296,22 @@ def parse_page(url: str) -> dict[str, Any]:
     # A direct visit returns server-rendered note data. Supplying an in-site
     # Referer makes Xiaohongshu treat this as SPA navigation and may redirect
     # anonymous visitors to login, so this request intentionally has none.
-    with _page_client() as client:
+    client = _page_client()
+    try:
         response = client.get(url)
         if response.is_redirect:
             raise ParseError("小红书拒绝了当前分享链接，请从 App 重新复制最新链接")
         response.raise_for_status()
+    finally:
+        client.close()
     state = load_initial_state(response.text)
     note = _select_note(state or {}, note_id)
     if not note:
         raise ParseError("页面没有返回作品详情，请重新从小红书 App 复制最新分享链接")
+    return shape_note(url, note_id, note)
+
+
+def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
     author = _record(note.get("user"))
     interact = _record(note.get("interactInfo"))
     images = []
@@ -309,6 +339,31 @@ def parse_page(url: str) -> dict[str, Any]:
         "images": [] if video else images,
         "web_url": url,
     }
+
+
+def parse_browser(url: str) -> dict[str, Any]:
+    """Read the requested public note from the existing loopback-only cloud browser."""
+    note_id = note_id_from_url(url)
+    if not note_id:
+        raise ParseError("请粘贴具体作品链接")
+    node = os.environ.get("XHS_NODE_BIN", "/opt/siyumenghai-xhs-cloud/runtime/node")
+    parser = os.environ.get("XHS_BROWSER_PARSER", "/opt/siyumenghai-xhs-cloud/browser_parser.mjs")
+    try:
+        process = subprocess.run(
+            [node, parser], input=json.dumps({"url": url}),
+            capture_output=True, text=True, timeout=38, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        raise ParseError("云端浏览器暂时无法读取作品") from None
+    if process.returncode != 0 or not process.stdout or len(process.stdout) > 2_000_000:
+        raise ParseError("云端浏览器未返回作品内容")
+    try:
+        note = json.loads(process.stdout)
+    except (ValueError, TypeError):
+        raise ParseError("云端浏览器返回格式异常") from None
+    if not isinstance(note, dict) or str(note.get("noteId", "")).lower() != note_id.lower():
+        raise ParseError("作品标识不匹配")
+    return shape_note(url, note_id, note)
 
 
 def parse_ytdlp(url: str) -> dict[str, Any]:
@@ -354,6 +409,11 @@ def parse_work(raw: Any) -> dict[str, Any]:
         return parse_page(url)
     except Exception as exc:
         page_error = exc
+    try:
+        return parse_browser(url)
+    except Exception:
+        # Do not leak browser errors, cookies, or account details to callers.
+        pass
     try:
         return parse_ytdlp(url)
     except Exception:
