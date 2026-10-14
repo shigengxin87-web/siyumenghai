@@ -22,6 +22,13 @@
 .media-grid .media-button img{max-height:168px;min-height:0}
 @media(max-width:720px){.media-grid .media-button{height:140px}.media-grid .media-button img{max-height:140px}}
 
+/* Gallery arrows + counter */
+.preview-stage{position:relative}
+.gallery-arrow{position:absolute;z-index:2;width:44px;height:44px;display:grid;place-items:center;color:#fff;background:#15171c99;border:0;border-radius:50%;cursor:pointer;font-size:28px;line-height:1}
+#galleryPrev{left:12px;top:50%;transform:translateY(-50%)}
+#galleryNext{right:12px;top:50%;transform:translateY(-50%)}
+.gallery-counter{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);padding:4px 12px;color:#fff;background:#15171c99;border-radius:999px;font-size:12px;font-weight:700}
+
 /* Author profile note grid */
 .author-card{padding:clamp(20px,4vw,32px)}
 .author-card>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}

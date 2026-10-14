@@ -1,9 +1,10 @@
 (() => {
   const $ = id => document.getElementById(id);
   const form = $('parseForm'), input = $('links'), status = $('status'), resultsNode = $('results'), actions = $('actions'), historyList = $('historyList');
+  const previewImageEl = $('previewImage'), previewVideoEl = $('previewVideo');
   const historyKey = 'siyumenghai-xhs-history-v1';
   const isMobile = matchMedia('(max-width: 720px)').matches || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  let results = [], previewUrl = '', previewKind = '';
+  let results = [], previewUrl = '', previewKind = '', previewUrls = [], previewIndex = 0;
   // Device-tuned copy: desktop never mentions phones, mobile never mentions desktops.
   if (isMobile) {
     $('previewHint').textContent = '点“保存”调起系统分享，可选“存储到照片”；也可以打开原文件后长按画面保存。';
@@ -25,17 +26,15 @@
   const metric = (label, value) => value == null || value === '' ? '' : `<span>${label} ${escape(value)}</span>`;
   function mediaButton(item, url, kind, index) {
     const image = kind === 'video' ? item.cover : url;
-    return `<button class="media-button" type="button" data-preview="${escape(url)}" data-kind="${kind}" aria-label="预览${kind === 'video' ? '视频' : `图片 ${index + 1}`}"><img src="${escape(image || '')}" alt="${escape(item.title || item.description || '作品媒体')}">${kind === 'video' ? '<span class="play">▶</span>' : ''}</button>`;
+    return `<button class="media-button" type="button" data-preview="${escape(url)}" data-kind="${kind}" data-gallery-index="${kind === 'image' ? index : ''}" aria-label="预览${kind === 'video' ? '视频' : `图片 ${index + 1}`}"><img src="${escape(image || '')}" alt="${escape(item.title || item.description || '作品媒体')}">${kind === 'video' ? '<span class="play">▶</span>' : ''}</button>`;
   }
   function card(item, index) {
-    const media = item.video ? mediaButton(item, item.video, 'video', 0) : item.images.slice(0, 4).map((url, i) => mediaButton(item, url, 'image', i)).join('');
-    const extra = !item.video && item.images.length > 4 ? `<div class="media-more">另有 ${item.images.length - 4} 张图片，可在卡片内逐张保存</div>` : '';
-    const primary = item.video || item.images[0] || '';
+    const media = item.video ? mediaButton(item, item.video, 'video', 0) : item.images.map((url, i) => mediaButton(item, url, 'image', i)).join('');
     const badge = item.cached ? '<span class="cache-badge">秒开缓存</span>' : '';
     const actions = item.video
       ? `<button class="primary save-direct" type="button" data-save-direct="${escape(item.video)}" data-kind="video">保存视频</button><button type="button" data-preview="${escape(item.video)}" data-kind="video">预览播放</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>`
-      : `<button class="primary" type="button" data-preview="${escape(primary)}" data-kind="image">预览并保存</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>${item.images.length > 1 ? `<button type="button" data-save-all="${index}">逐张保存图集</button>` : ''}`;
-    return `<article class="xhs-card ${item.video ? 'is-video' : ''}" data-index="${index}"><div class="card-body"><div class="media-grid ${item.video ? 'is-single' : ''}">${media}${extra}</div><div class="card-copy"><div class="eyebrow-row">${badge}<span class="card-eyebrow">${item.video ? '视频作品' : `图集 · ${item.images.length} 张`}</span></div><h2>${escape(item.title || item.description || '小红书作品')}</h2><p class="author">${escape(item.author || '作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞', item.stats?.liked)}${metric('收藏', item.stats?.collected)}${metric('评论', item.stats?.commented)}${metric('分享', item.stats?.shared)}</div><div class="card-actions">${actions}</div></div></div></article>`;
+      : `<button class="primary" type="button" data-preview-gallery="${index}" data-start="0">预览图集</button><button type="button" data-save-all="${index}">保存全部 ${item.images.length} 张</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>`;
+    return `<article class="xhs-card ${item.video ? 'is-video' : ''}" data-index="${index}"><div class="card-body"><div class="media-grid ${item.video ? 'is-single' : ''}">${media}</div><div class="card-copy"><div class="eyebrow-row">${badge}<span class="card-eyebrow">${item.video ? '视频作品' : `图集 · ${item.images.length} 张`}</span></div><h2>${escape(item.title || item.description || '小红书作品')}</h2><p class="author">${escape(item.author || '作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞', item.stats?.liked)}${metric('收藏', item.stats?.collected)}${metric('评论', item.stats?.commented)}${metric('分享', item.stats?.shared)}</div><div class="card-actions">${actions}</div></div></div></article>`;
   }
   function authorCard(author) {
     const notes = author.notes || [];
@@ -56,15 +55,58 @@
     const items = getHistory();
     historyList.innerHTML = items.length ? items.map(item => `<div class="history-item"><img src="${escape(item.cover)}" alt=""><div><strong>${escape(item.title)}</strong><small>${item.type === 'video' ? '视频' : '图集'} · ${escape(item.author)} · ${new Date(item.saved_at).toLocaleString('zh-CN')}</small></div><button type="button" data-history-url="${escape(item.web_url)}">再次查询</button></div>`).join('') : '<div class="history-empty">还没有查询记录</div>';
   }
+  function showGalleryImage() {
+    const url = previewUrls[previewIndex];
+    previewImageEl.src = url;
+    previewUrl = url;
+    $('galleryCounter').hidden = previewUrls.length <= 1;
+    $('galleryCounter').textContent = `${previewIndex + 1} / ${previewUrls.length}`;
+    $('galleryPrev').hidden = previewIndex === 0;
+    $('galleryNext').hidden = previewIndex === previewUrls.length - 1;
+  }
   function openPreview(url, kind) {
     if (!url) return;
+    previewUrls = []; previewIndex = 0;
     previewUrl = url; previewKind = kind;
-    $('previewImage').hidden = kind !== 'image'; $('previewVideo').hidden = kind !== 'video';
-    if (kind === 'image') $('previewImage').src = url; else { $('previewVideo').preload = 'metadata'; $('previewVideo').src = url; }
+    previewImageEl.hidden = kind !== 'image'; previewVideoEl.hidden = kind !== 'video';
+    $('galleryPrev').hidden = true; $('galleryNext').hidden = true; $('galleryCounter').hidden = true;
+    if (kind === 'image') previewImageEl.src = url; else { previewVideoEl.preload = 'metadata'; previewVideoEl.src = url; }
     $('previewOpen').href = url; $('preview').hidden = false; document.body.style.overflow = 'hidden';
   }
+  function openGallery(itemIndex, startIndex) {
+    const item = results[itemIndex];
+    if (!item || !item.images?.length) return;
+    previewUrls = item.images; previewIndex = startIndex; previewKind = 'image';
+    previewImageEl.hidden = false; previewVideoEl.hidden = true;
+    showGalleryImage();
+    $('previewOpen').href = previewUrls[previewIndex];
+    $('preview').hidden = false; document.body.style.overflow = 'hidden';
+  }
   function closePreview() {
-    $('preview').hidden = true; $('previewVideo').pause(); $('previewVideo').removeAttribute('src'); $('previewImage').removeAttribute('src'); document.body.style.overflow = '';
+    $('preview').hidden = true; previewVideoEl.pause(); previewVideoEl.removeAttribute('src'); previewImageEl.removeAttribute('src'); previewUrls = []; previewIndex = 0; document.body.style.overflow = '';
+  }
+  async function saveAllImages(urls) {
+    status.textContent = '正在下载全部图片…';
+    try {
+      const files = [];
+      for (let i = 0; i < urls.length; i++) {
+        status.textContent = `正在下载 ${i + 1}/${urls.length}…`;
+        const res = await fetch(`${urls[i]}${urls[i].includes('?') ? '&' : '?'}download=1`);
+        if (!res.ok) continue;
+        const blob = await res.blob();
+        files.push(new File([blob], `xhs-${String(i + 1).padStart(2, '0')}.jpg`, {type: blob.type || 'image/jpeg'}));
+      }
+      if (!files.length) throw new Error('没有图片下载成功');
+      if (navigator.canShare?.({files})) {
+        await navigator.share({files, title:'保存小红书图集'});
+        status.textContent = `已交给系统保存 ${files.length} 张。`;
+      } else {
+        for (const f of files) { const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); }
+        status.textContent = `已开始下载 ${files.length} 张。`;
+      }
+    } catch (error) {
+      if (error?.name !== 'AbortError') status.textContent = `保存失败：${error.message}`;
+    }
   }
   async function saveToPhone(url, kind) {
     status.textContent = '正在准备文件…';
@@ -115,14 +157,22 @@
     if (authorNote) return parseNote(authorNote.dataset.authorNote);
     const direct = event.target.closest('[data-save-direct]');
     if (direct) return saveToPhone(direct.dataset.saveDirect, direct.dataset.kind || 'video');
+    const galleryBtn = event.target.closest('[data-preview-gallery]');
+    if (galleryBtn) return openGallery(Number(galleryBtn.dataset.previewGallery), Number(galleryBtn.dataset.start || 0));
     const preview = event.target.closest('[data-preview]');
-    if (preview) return openPreview(preview.dataset.preview, preview.dataset.kind);
+    if (preview) {
+      const gIdx = preview.dataset.galleryIndex;
+      if (gIdx !== '' && gIdx !== undefined) return openGallery(Number(preview.closest('.xhs-card')?.dataset.index || 0), Number(gIdx));
+      return openPreview(preview.dataset.preview, preview.dataset.kind);
+    }
     const all = event.target.closest('[data-save-all]');
-    if (all) for (const url of results[Number(all.dataset.saveAll)].images) await saveToPhone(url, 'image');
+    if (all) return saveAllImages(results[Number(all.dataset.saveAll)].images);
   });
   historyList.addEventListener('click', event => { const button = event.target.closest('[data-history-url]'); if (!button) return; input.value = button.dataset.historyUrl; form.requestSubmit(); window.scrollTo({top:0,behavior:'smooth'}); });
   $('clearHistory').addEventListener('click', () => { localStorage.removeItem(historyKey); renderHistory(); });
   $('previewClose').addEventListener('click', closePreview);
+  $('galleryPrev').addEventListener('click', () => { if (previewIndex > 0) { previewIndex--; showGalleryImage(); } });
+  $('galleryNext').addEventListener('click', () => { if (previewIndex < previewUrls.length - 1) { previewIndex++; showGalleryImage(); } });
   $('preview').addEventListener('click', event => { if (event.target === $('preview')) closePreview(); });
   $('previewSave').addEventListener('click', () => saveToPhone(previewUrl, previewKind));
   $('exportJson').addEventListener('click', () => download('xiaohongshu-results.json','application/json;charset=utf-8',JSON.stringify(results,null,2)));
