@@ -60,7 +60,7 @@
     if (!url) return;
     previewUrl = url; previewKind = kind;
     $('previewImage').hidden = kind !== 'image'; $('previewVideo').hidden = kind !== 'video';
-    if (kind === 'image') $('previewImage').src = url; else $('previewVideo').src = url;
+    if (kind === 'image') $('previewImage').src = url; else { $('previewVideo').preload = 'metadata'; $('previewVideo').src = url; }
     $('previewOpen').href = url; $('preview').hidden = false; document.body.style.overflow = 'hidden';
   }
   function closePreview() {
