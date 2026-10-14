@@ -87,46 +87,31 @@
   function closePreview() {
     $('preview').hidden = true; previewVideoEl.pause(); previewVideoEl.removeAttribute('src'); previewImageEl.removeAttribute('src'); previewUrls = []; previewIndex = 0; document.body.style.overflow = '';
   }
-  async function saveAllImages(urls) {
-    status.textContent = '正在下载全部图片…';
-    try {
-      const files = [];
-      for (let i = 0; i < urls.length; i++) {
-        status.textContent = `正在下载 ${i + 1}/${urls.length}…`;
-        const res = await fetch(`${urls[i]}${urls[i].includes('?') ? '&' : '?'}download=1`);
-        if (!res.ok) continue;
-        const blob = await res.blob();
-        files.push(new File([blob], `xhs-${String(i + 1).padStart(2, '0')}.jpg`, {type: blob.type || 'image/jpeg'}));
-      }
-      if (!files.length) throw new Error('没有图片下载成功');
-      if (navigator.canShare?.({files})) {
-        await navigator.share({files, title:'保存小红书图集'});
-        status.textContent = `已交给系统保存 ${files.length} 张。`;
-      } else {
-        for (const f of files) { const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name; a.click(); }
-        status.textContent = `已开始下载 ${files.length} 张。`;
-      }
-    } catch (error) {
-      if (error?.name !== 'AbortError') status.textContent = `保存失败：${error.message}`;
-    }
+  function saveAllImages(urls) {
+    status.textContent = `正在下载全部 ${urls.length} 张图片…`;
+    urls.forEach((url, i) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = `${url}${url.includes('?') ? '&' : '?'}download=1`;
+        a.download = `xhs-${String(i + 1).padStart(2, '0')}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }, i * 300);
+    });
+    status.textContent = `已开始下载 ${urls.length} 张图片。`;
   }
-  async function saveToPhone(url, kind) {
-    status.textContent = '正在准备文件…';
-    try {
-      const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}download=1`);
-      if (!response.ok) throw new Error('文件读取失败');
-      const blob = await response.blob();
-      const extension = kind === 'video' ? 'mp4' : ((blob.type.split('/')[1] || 'jpg').replace('jpeg','jpg'));
-      const file = new File([blob], `xiaohongshu-${Date.now()}.${extension}`, {type:blob.type || (kind === 'video' ? 'video/mp4' : 'image/jpeg')});
-      if (navigator.canShare?.({files:[file]})) await navigator.share({files:[file], title:'保存小红书作品'});
-      else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 15000); }
-      status.textContent = '文件已交给系统保存。';
-    } catch (error) {
-      if (error?.name !== 'AbortError') {
-        window.open(url, '_blank', 'noopener');
-        status.textContent = isMobile ? '已打开原文件；长按画面选择“存储到照片”。' : '已打开原文件；在原文件上右键另存为即可。';
-      }
-    }
+  function saveToPhone(url, kind) {
+    status.textContent = '正在开始下载…';
+    const dlUrl = `${url}${url.includes('?') ? '&' : '?'}download=1`;
+    const a = document.createElement('a');
+    a.href = dlUrl;
+    a.download = `xiaohongshu-${Date.now()}.${kind === 'video' ? 'mp4' : 'jpg'}`;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    status.textContent = '已开始下载，可在浏览器下载记录里查看。';
   }
   function download(name, type, content) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], {type})); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 15000);
