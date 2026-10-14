@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff4f5">
+  <title>小红书下载 · 石更新成长朋友圈</title>
+  <meta name="description" content="小红书作品分享链接解析、视频、图集、封面与作品信息保存。">
+  <link rel="icon" href="../comment-cloud/favicon.svg">
+  <link rel="stylesheet" href="./portal.css">
+  <link rel="stylesheet" href="./platform-switch.css?v=20261013-2">
+  <link rel="stylesheet" href="./xhs-page.css?v=20261013-1">
+  <link rel="stylesheet" href="./xhs-fixes.css?v=20261013-1">
+  <script src="./xhs-page.js?v=20261013-1" defer></script>
+</head>
+<body class="platform-xhs">
+  <div class="portal-shell tool-shell">
+    <header class="portal-header">
+      <div class="portal-brand"><span class="portal-mark">红</span><span><strong>小红书下载工作台</strong><small>粘贴分享链接，解析并保存内容</small></span></div>
+      <div class="portal-actions"><span class="usage-note">仅用于本人拥有或已获授权的内容</span></div>
+    </header>
+    <main class="tool-main"><div class="tool-container">
+      <nav class="platform-switch" aria-label="下载平台"><a href="./video-downloader-20260808-17.html">视频号下载</a><a href="./douyin-downloader.html">抖音下载</a><a class="is-active" aria-current="page" href="./xhs-downloader.html">小红书下载</a></nav>
+      <section class="xhs-query-card">
+        <div class="xhs-heading"><p>小红书工具</p><h1>粘贴分享链接，保存作品</h1><span>支持视频、图集和包含链接的分享文案，可一次解析多条。</span></div>
+        <form id="parseForm"><label for="links">作品链接或分享文案</label><textarea id="links" rows="6" placeholder="粘贴小红书 App 复制的作品分享链接，也可每行输入一条" required></textarea><div class="submit-row"><button class="primary" type="submit">解析作品</button><small>单次最多 20 条；请使用最新复制的作品分享链接。</small></div></form>
+        <p id="status" role="status" aria-live="polite"></p>
+      </section>
+      <div id="actions" class="result-actions" hidden><button type="button" id="exportJson">导出 JSON</button><button type="button" id="exportCsv">导出表格（CSV）</button></div>
+      <section id="results" class="xhs-results" aria-label="作品结果"></section>
+      <section class="xhs-history" aria-label="小红书查询记录"><header><div><strong>查询记录</strong><small>解析成功后自动保存在当前浏览器</small></div><button type="button" id="clearHistory">清空记录</button></header><div id="historyList" class="history-list"></div></section>
+      <section class="tool-steps" aria-label="操作步骤"><article><span>01</span><div><strong>复制链接</strong><small>在小红书作品分享菜单复制链接</small></div></article><article><span>02</span><div><strong>解析作品</strong><small>查看视频、图片、作者和数据</small></div></article><article><span>03</span><div><strong>预览保存</strong><small>点击媒体后按提示保存到手机</small></div></article></section>
+    </div></main>
+  </div>
+  <div id="preview" class="preview-modal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-sheet"><header><strong id="previewTitle">媒体预览与保存</strong><button type="button" id="previewClose" aria-label="关闭预览">×</button></header><div class="preview-stage"><img id="previewImage" alt="图片预览" hidden><video id="previewVideo" controls playsinline hidden></video></div><p>iPhone 可点“保存到手机”后在系统分享菜单选择“存储到照片”；也可以打开原文件后长按保存。</p><div class="preview-actions"><button type="button" id="previewSave">保存到手机</button><a id="previewOpen" target="_blank" rel="noopener noreferrer">打开原文件</a></div></div></div>
+</body>
+</html>

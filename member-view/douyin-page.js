@@ -1,3 +1,7 @@
+document.body.classList.add('platform-douyin');
+document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="./douyin-theme.css?v=20261013-1">');
+const platformSwitch = document.querySelector('.platform-switch');
+if (platformSwitch && !platformSwitch.querySelector('[href="./xhs-downloader.html"]')) platformSwitch.insertAdjacentHTML('beforeend', '<a href="./xhs-downloader.html">小红书下载</a>');
 const $ = id => document.getElementById(id);
 let posts = [], cursor = null, target = '', stopped = false, busy = false;
 const CREATOR_PAGE_GAP_MS = 15000;

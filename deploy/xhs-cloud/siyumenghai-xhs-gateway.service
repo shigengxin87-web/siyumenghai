@@ -1,0 +1,27 @@
+[Unit]
+Description=Siyumenghai Xiaohongshu media gateway
+After=network-online.target siyumenghai-xhs-engine.service
+Wants=siyumenghai-xhs-engine.service
+[Service]
+User=siyumenghai-xhs
+Group=siyumenghai-xhs
+WorkingDirectory=/opt/siyumenghai-xhs-cloud
+EnvironmentFile=/etc/siyumenghai-xhs/cloud.env
+ExecStart=/opt/siyumenghai-xhs-cloud/runtime/node gateway.mjs
+Restart=on-failure
+RestartSec=5
+MemoryHigh=100M
+MemoryMax=160M
+CPUQuota=20%
+TasksMax=32
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target

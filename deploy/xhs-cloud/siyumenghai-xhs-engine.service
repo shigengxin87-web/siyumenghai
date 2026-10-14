@@ -1,0 +1,28 @@
+[Unit]
+Description=Siyumenghai Xiaohongshu cloud parser
+After=network-online.target
+Wants=network-online.target
+[Service]
+User=siyumenghai-xhs
+Group=siyumenghai-xhs
+WorkingDirectory=/opt/siyumenghai-xhs-cloud
+EnvironmentFile=/etc/siyumenghai-xhs/cloud.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/siyumenghai-xhs-cloud/.venv/bin/python engine.py
+Restart=on-failure
+RestartSec=5
+MemoryHigh=260M
+MemoryMax=360M
+CPUQuota=50%
+TasksMax=40
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target

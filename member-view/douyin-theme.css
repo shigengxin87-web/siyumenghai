@@ -1,0 +1,4 @@
+.platform-douyin{--green:#15171c;--green-bright:#00f2ea;--green-soft:#f2f8f8;--green-line:#d9e8e8;background:linear-gradient(135deg,#effdfc 0,#fff 48%,#fff1f4 100%)}
+.platform-douyin .portal-mark{background:linear-gradient(145deg,#15171c,#343840);box-shadow:-5px 5px 0 #ff2c55,5px -5px 0 #25f4ee}
+.platform-douyin .tool-heading p,.platform-douyin #status,.platform-douyin .card a{color:#101318}
+.platform-douyin .tool-query-card button.primary{background:linear-gradient(120deg,#101318 0 78%,#ff2c55)}
