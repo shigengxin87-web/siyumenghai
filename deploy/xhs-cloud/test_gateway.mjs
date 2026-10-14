@@ -26,3 +26,25 @@ test('shape issues only same-origin tickets and keeps metadata', () => {
   assert.match(result.video, /^\/api\/xhs\/media\/[a-f0-9]{48}$/);
   assert.equal(result.title, '测试');
 });
+
+test('shape forwards cache hit flag and duration', () => {
+  const result = shape({platform:'xiaohongshu',id:'67abcdef0123456789abcdef',title:'缓存命中',cached:true,duration:'52',cover:'',images:[],web_url:'https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef'});
+  assert.equal(result.cached, true);
+  assert.equal(result.duration, '52');
+});
+
+test('shape routes author payload into note list with ticketed covers', () => {
+  const result = shape({
+    platform:'xiaohongshu', kind:'author', cached:true,
+    author:{id:'user1', nickname:'海边日记', web_url:'https://www.xiaohongshu.com/user/profile/user1'},
+    notes:[
+      {id:'67abcdef0123456789abcdef', type:'video', title:'日落', cover:'https://sns-img-bd.xhscdn.com/cover.jpg', time:1, web_url:'https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef'},
+      {id:'', type:'image', title:'应过滤', cover:'', time:null, web_url:''},
+    ],
+  });
+  assert.equal(result.kind, 'author');
+  assert.equal(result.author.nickname, '海边日记');
+  assert.equal(result.notes.length, 1);
+  assert.equal(result.notes[0].type, 'video');
+  assert.match(result.notes[0].cover, /^\/api\/xhs\/media\/[a-f0-9]{48}$/);
+});

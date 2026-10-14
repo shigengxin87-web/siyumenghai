@@ -1,1 +1,34 @@
 .result-actions[hidden]{display:none}
+
+/* Cache hit badge */
+.eyebrow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cache-badge{padding:3px 9px;color:#0a7b3d;background:#e6f7ec;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.05em}
+
+/* Video card: prominent save action */
+.card-actions .save-direct{min-height:48px;padding:12px 22px;font-size:14px}
+.xhs-card.is-video .media-button{border-radius:15px}
+.xhs-card.is-video .media-button .play{width:68px;height:68px;font-size:26px}
+
+/* Mobile: video cover goes tall so cover + save button land on one screen */
+@media(max-width:720px){
+  .xhs-card.is-video .media-button{min-height:200px}
+  .xhs-card.is-video .media-button img{max-height:62vh;min-height:200px}
+  .xhs-card.is-video .card-actions .save-direct{width:100%}
+}
+
+/* Gallery thumbnails: compact 2x2 tiles, not huge posters driven by source aspect ratio */
+.media-grid .media-button{height:168px;min-height:168px}
+.media-grid .media-button img{max-height:168px;min-height:0}
+@media(max-width:720px){.media-grid .media-button{height:140px}.media-grid .media-button img{max-height:140px}}
+
+/* Author profile note grid */
+.author-card{padding:clamp(20px,4vw,32px)}
+.author-card>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.author-card>header strong{color:#171920;font-size:clamp(18px,3vw,24px)}
+.author-card>header small{color:#888c95;font-size:12px}
+.author-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.author-note{position:relative;display:flex;flex-direction:column;overflow:hidden;padding:0;background:#fff;border:1px solid #f1e2e4;border-radius:14px;cursor:pointer;text-align:left}
+.author-note img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#f5e9eb}
+.author-note-type{position:absolute;top:8px;left:8px;padding:2px 8px;color:#fff;background:#15171c99;border-radius:999px;font-size:10px;font-weight:800}
+.author-note-title{display:-webkit-box;overflow:hidden;padding:8px 10px;color:#25272e;font-size:12px;line-height:1.4;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+@media(max-width:720px){.author-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

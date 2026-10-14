@@ -62,16 +62,42 @@ function safeName(id, index, suffix) {
   return `xiaohongshu-${String(id).replace(/[^a-z0-9_-]/gi,'').slice(0,40)}${index ? `-${index}` : ''}.${suffix}`;
 }
 
+function shapeAuthor(post) {
+  const author = post.author || {};
+  return {
+    kind: 'author',
+    cached: Boolean(post.cached),
+    author: {
+      id: String(author.id || ''),
+      nickname: author.nickname || '',
+      web_url: author.web_url || '',
+    },
+    notes: (post.notes || []).map(note => ({
+      id: String(note.id || ''),
+      type: note.type === 'video' ? 'video' : 'image',
+      title: note.title || '',
+      cover: issue(note.cover, 'image', safeName(String(note.id || 'x'), 'cover', 'jpg')),
+      time: note.time || null,
+      web_url: note.web_url || '',
+    })).filter(note => note.id),
+  };
+}
+
 export function shape(post) {
-  if (!post || post.platform !== 'xiaohongshu' || !post.id) throw new Error('解析服务未返回有效小红书作品');
+  if (!post || post.platform !== 'xiaohongshu') throw new Error('解析服务未返回有效小红书内容');
+  if (post.kind === 'author') return shapeAuthor(post);
+  if (!post.id) throw new Error('解析服务未返回有效小红书作品');
   const id = String(post.id);
   return {
+    kind: 'note',
     id,
     type: post.video ? 'video' : 'image',
     title: post.title || '',
     description: post.description || '',
     author: post.author || '',
     created_at: post.created_at || null,
+    duration: post.duration || null,
+    cached: Boolean(post.cached),
     stats: post.stats || {},
     cover: issue(post.cover, 'image', safeName(id, 'cover', 'jpg')),
     video: issue(post.video, 'video', safeName(id, '', 'mp4')),

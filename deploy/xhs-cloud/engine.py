@@ -9,6 +9,7 @@ import json
 import os
 import re
 import secrets
+import sqlite3
 import subprocess
 import string
 import threading
@@ -44,6 +45,68 @@ WEB_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
 )
+# Parse cache: hit path skips page/browser/ytdlp entirely. The DB lives under a
+# directory the systemd unit mounts read-write; every cache operation is
+# best-effort and must never break a live parse.
+CACHE_DB = os.environ.get("XHS_CACHE_DB", "/var/lib/siyumenghai-xhs-engine/parse_cache.db")
+CACHE_TTL = int(os.environ.get("XHS_CACHE_TTL_SECONDS", str(7 * 24 * 3600)))
+_CACHE_LOCK = threading.Lock()
+
+
+def _cache_connect() -> sqlite3.Connection:
+    connection = sqlite3.connect(CACHE_DB, timeout=5)
+    connection.execute("PRAGMA journal_mode=WAL")
+    connection.execute("PRAGMA busy_timeout=5000")
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS xhs_parse_records (
+            note_id TEXT PRIMARY KEY,
+            original_url TEXT NOT NULL,
+            data TEXT NOT NULL,
+            parsed_at REAL NOT NULL,
+            expire_at REAL NOT NULL
+        )
+        """
+    )
+    return connection
+
+
+def cache_lookup(note_id: str) -> dict[str, Any] | None:
+    """Return the cached shaped result for a note, or None on miss/expiry/error."""
+    if not note_id or CACHE_TTL <= 0:
+        return None
+    now = time.time()
+    try:
+        with _CACHE_LOCK, _cache_connect() as db:
+            row = db.execute(
+                "SELECT data, expire_at FROM xhs_parse_records WHERE note_id = ?",
+                (note_id,),
+            ).fetchone()
+            if not row:
+                return None
+            if float(row[1]) < now:
+                db.execute("DELETE FROM xhs_parse_records WHERE note_id = ?", (note_id,))
+                return None
+            result = json.loads(row[0])
+            return result if isinstance(result, dict) else None
+    except (sqlite3.Error, ValueError, TypeError, OSError):
+        return None
+
+
+def cache_store(note_id: str, original_url: str, result: dict[str, Any]) -> None:
+    if not note_id or CACHE_TTL <= 0:
+        return
+    now = time.time()
+    try:
+        with _CACHE_LOCK, _cache_connect() as db:
+            db.execute("DELETE FROM xhs_parse_records WHERE expire_at < ?", (now,))
+            db.execute(
+                "INSERT OR REPLACE INTO xhs_parse_records "
+                "(note_id, original_url, data, parsed_at, expire_at) VALUES (?, ?, ?, ?, ?)",
+                (note_id, original_url, json.dumps(result, ensure_ascii=False), now, now + CACHE_TTL),
+            )
+    except (sqlite3.Error, ValueError, TypeError, OSError):
+        return
 
 
 class ParseError(Exception):
@@ -76,6 +139,12 @@ def extract_url(value: Any) -> str:
 def note_id_from_url(value: str) -> str:
     path = urlsplit(value).path
     match = re.search(r"/(?:explore|discovery/item)/([0-9a-f]{20,32})(?:/|$)", path, re.I)
+    return match.group(1) if match else ""
+
+
+def user_id_from_url(value: str) -> str:
+    path = urlsplit(value).path
+    match = re.search(r"/user/profile/([0-9a-zA-Z_-]{6,64})(?:/|$)", path)
     return match.group(1) if match else ""
 
 
@@ -336,6 +405,7 @@ def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
         if value:
             images.append(value)
     video = _video_url(note)
+    duration = _deep(note, "video.capa.duration", None)
     return {
         "platform": "xiaohongshu",
         "id": note_id,
@@ -344,6 +414,7 @@ def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
         "description": str(note.get("desc") or "")[:20000],
         "author": str(author.get("nickname") or ""),
         "created_at": note.get("time"),
+        "duration": duration,
         "stats": {
             "liked": interact.get("likedCount"),
             "collected": interact.get("collectedCount"),
@@ -355,6 +426,148 @@ def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
         "images": [] if video else images,
         "web_url": url,
     }
+
+
+def _note_cover(item: dict[str, Any]) -> str:
+    """Extract a proxy-able cover URL from a user-note-list entry."""
+    cover_node = item.get("cover")
+    candidates: list[Any] = []
+    if isinstance(cover_node, dict):
+        candidates = [cover_node.get("urlDefault"), cover_node.get("url"), cover_node.get("urlPre")]
+        info_list = cover_node.get("infoList")
+        if isinstance(info_list, list):
+            candidates += [entry.get("url") for entry in info_list if isinstance(entry, dict)]
+    images = item.get("imageList")
+    if isinstance(images, list) and images:
+        first = images[0] if isinstance(images[0], dict) else {}
+        candidates += [first.get("urlDefault"), first.get("urlPre"), first.get("url")]
+    for candidate in candidates:
+        value = _image_url(candidate)
+        if value:
+            return value
+    return ""
+
+
+def _walk_notes(state: dict[str, Any]) -> list[dict[str, Any]]:
+    """Collect note-like entries from __INITIAL_STATE__, dedup by noteId."""
+    seen: dict[str, dict[str, Any]] = {}
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            note_id = str(node.get("noteId") or "")
+            if re.fullmatch(r"[0-9a-f]{20,32}", note_id, re.I) and (
+                node.get("cover") is not None or node.get("imageList") or node.get("video")
+            ):
+                seen.setdefault(note_id.lower(), node)
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+    walk(state)
+    return list(seen.values())[:30]
+
+
+def shape_author(user_id: str, url: str, state_or_notes: dict[str, Any]) -> dict[str, Any]:
+    if isinstance(state_or_notes, dict) and "noteId" not in state_or_notes:
+        notes_raw = _walk_notes(state_or_notes)
+    else:
+        notes_raw = [state_or_notes]
+    nickname = _deep(state_or_notes, "user.nickname", "") or _deep(state_or_notes, "user.userPageData.user.nickname", "")
+    items = []
+    for item in notes_raw:
+        nid = str(item.get("noteId") or "")
+        if not nid:
+            continue
+        has_video = bool(item.get("video")) or str(item.get("type") or "").lower() == "video"
+        items.append({
+            "id": nid,
+            "type": "video" if has_video else "image",
+            "title": str(item.get("displayTitle") or item.get("title") or "")[:200],
+            "cover": _note_cover(item),
+            "time": item.get("time") or item.get("lastUpdateTime"),
+            "web_url": f"https://www.xiaohongshu.com/explore/{nid}",
+        })
+    return {
+        "platform": "xiaohongshu",
+        "kind": "author",
+        "author": {
+            "id": user_id,
+            "nickname": str(nickname or ""),
+            "web_url": url,
+        },
+        "notes": items,
+    }
+
+
+def parse_author_page(url: str) -> dict[str, Any]:
+    user_id = user_id_from_url(url)
+    if not user_id:
+        raise ParseError("请粘贴博主主页链接")
+    client = _page_client()
+    try:
+        response = client.get(url)
+        if response.is_redirect:
+            raise ParseError("小红书拒绝了当前博主主页链接，请从 App 重新复制")
+        response.raise_for_status()
+    finally:
+        client.close()
+    state = load_initial_state(response.text)
+    notes = _walk_notes(state or {})
+    if not notes:
+        raise ParseError("博主主页没有返回作品列表")
+    return shape_author(user_id, url, state or {})
+
+
+def parse_author_browser(url: str) -> dict[str, Any]:
+    user_id = user_id_from_url(url)
+    if not user_id:
+        raise ParseError("请粘贴博主主页链接")
+    node = os.environ.get("XHS_NODE_BIN", "/opt/siyumenghai-xhs-cloud/runtime/node")
+    parser = os.environ.get("XHS_AUTHOR_PARSER", "/opt/siyumenghai-xhs-cloud/browser_author.mjs")
+    try:
+        process = subprocess.run(
+            [node, parser], input=json.dumps({"url": url}),
+            capture_output=True, text=True, timeout=45, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        raise ParseError("云端浏览器暂时无法读取博主主页") from None
+    if process.returncode != 0 or not process.stdout or len(process.stdout) > 4_000_000:
+        raise ParseError("云端浏览器未返回博主作品内容")
+    try:
+        payload = json.loads(process.stdout)
+    except (ValueError, TypeError):
+        raise ParseError("云端浏览器返回格式异常") from None
+    if not isinstance(payload, dict) or not isinstance(payload.get("notes"), list):
+        raise ParseError("云端浏览器返回格式异常")
+    return shape_author(user_id, url, payload)
+
+
+# Short-lived cache for author lists: notes move slowly, but a re-submit should
+# feel near-instant. Best-effort, in-process.
+AUTHOR_CACHE: dict[str, tuple[float, dict[str, Any]]] = {}
+AUTHOR_TTL = 600
+
+
+def parse_work_author(raw: Any, url: str = "") -> dict[str, Any]:
+    if not url:
+        url = resolve_url(extract_url(raw))
+    user_id = user_id_from_url(url)
+    if not user_id:
+        raise ParseError("请粘贴博主主页链接")
+    cached = AUTHOR_CACHE.get(user_id.lower())
+    if cached and time.time() - cached[0] < AUTHOR_TTL:
+        result = dict(cached[1])
+        result["author"] = {**cached[1]["author"], "web_url": url}
+        result["cached"] = True
+        return result
+    try:
+        result = parse_author_page(url)
+    except Exception:
+        result = parse_author_browser(url)
+    AUTHOR_CACHE[user_id.lower()] = (time.time(), result)
+    if len(AUTHOR_CACHE) > 200:
+        AUTHOR_CACHE.pop(next(iter(AUTHOR_CACHE)))
+    return result
 
 
 def parse_browser(url: str) -> dict[str, Any]:
@@ -420,22 +633,37 @@ def parse_ytdlp(url: str) -> dict[str, Any]:
 
 def parse_work(raw: Any) -> dict[str, Any]:
     url = resolve_url(extract_url(raw))
+    if user_id_from_url(url):
+        return parse_work_author(raw, url)
+    note_id = note_id_from_url(url)
+    cached = cache_lookup(note_id) if note_id else None
+    if cached is not None:
+        # Re-point the web link at the freshly resolved URL so xsec_token stays
+        # valid, while all heavy media metadata comes from the cache.
+        cached["web_url"] = url
+        cached["cached"] = True
+        return cached
     page_error: Exception | None = None
     try:
-        return parse_page(url)
+        result = parse_page(url)
     except Exception as exc:
         page_error = exc
-    try:
-        return parse_browser(url)
-    except Exception:
-        # Do not leak browser errors, cookies, or account details to callers.
-        pass
-    try:
-        return parse_ytdlp(url)
-    except Exception:
-        if isinstance(page_error, ParseError):
-            raise page_error
-        raise ParseError("暂时无法解析该作品，请使用最新的小红书 App 分享链接")
+        result = None
+    if result is None:
+        try:
+            result = parse_browser(url)
+        except Exception:
+            # Do not leak browser errors, cookies, or account details to callers.
+            result = None
+    if result is None:
+        try:
+            result = parse_ytdlp(url)
+        except Exception:
+            if isinstance(page_error, ParseError):
+                raise page_error
+            raise ParseError("暂时无法解析该作品，请使用最新的小红书 App 分享链接")
+    cache_store(note_id, url, result)
+    return result
 
 
 def envelope(success: bool, data: Any = None, message: str = "") -> bytes:

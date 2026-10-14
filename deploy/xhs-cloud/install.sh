@@ -9,7 +9,7 @@ getent passwd siyumenghai-xhs >/dev/null || useradd --system --home /nonexistent
 install -d -m 755 "$ROOT/runtime"
 python3 -m venv "$ROOT/.venv"
 "$ROOT/.venv/bin/python" -m pip install -r requirements.lock
-install -m 644 engine.py gateway.mjs browser_parser.mjs "$ROOT/"
+install -m 644 engine.py gateway.mjs browser_parser.mjs browser_author.mjs "$ROOT/"
 install -m 755 "$NODE_BIN" "$ROOT/runtime/node"
 chown root:siyumenghai-xhs /etc/siyumenghai-xhs/cloud.env
 chmod 640 /etc/siyumenghai-xhs/cloud.env
@@ -22,6 +22,8 @@ systemctl daemon-reload
 # The browser worker shares only its own persistent profile. No Mac relay required.
 [[ -x /usr/bin/google-chrome ]] || { echo "Google Chrome is required for browser fallback"; exit 1; }
 install -d -o siyumenghai-xhs -g siyumenghai-xhs -m 700 /var/lib/siyumenghai-xhs-browser
+# SQLite parse-cache lives here; the engine unit grants ReadWritePaths on it.
+install -d -o siyumenghai-xhs -g siyumenghai-xhs -m 700 /var/lib/siyumenghai-xhs-engine
 systemctl enable --now siyumenghai-xhs-browser
 systemctl enable --now siyumenghai-xhs-engine siyumenghai-xhs-gateway
 # Back up and validate Nginx separately before reload.

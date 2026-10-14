@@ -2,7 +2,13 @@
   const $ = id => document.getElementById(id);
   const form = $('parseForm'), input = $('links'), status = $('status'), resultsNode = $('results'), actions = $('actions'), historyList = $('historyList');
   const historyKey = 'siyumenghai-xhs-history-v1';
+  const isMobile = matchMedia('(max-width: 720px)').matches || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   let results = [], previewUrl = '', previewKind = '';
+  // Device-tuned copy: desktop never mentions phones, mobile never mentions desktops.
+  if (isMobile) {
+    $('previewHint').textContent = '点“保存”调起系统分享，可选“存储到照片”；也可以打开原文件后长按画面保存。';
+    $('previewSave').textContent = '保存';
+  }
   const text = value => value == null ? '' : String(value);
   const escape = value => text(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   function urls(value) {
@@ -25,18 +31,30 @@
     const media = item.video ? mediaButton(item, item.video, 'video', 0) : item.images.slice(0, 4).map((url, i) => mediaButton(item, url, 'image', i)).join('');
     const extra = !item.video && item.images.length > 4 ? `<div class="media-more">另有 ${item.images.length - 4} 张图片，可在卡片内逐张保存</div>` : '';
     const primary = item.video || item.images[0] || '';
-    return `<article class="xhs-card" data-index="${index}"><div class="card-body"><div class="media-grid ${item.video ? 'is-single' : ''}">${media}${extra}</div><div class="card-copy"><span class="card-eyebrow">${item.video ? '视频作品' : `图集 · ${item.images.length} 张`}</span><h2>${escape(item.title || item.description || '小红书作品')}</h2><p class="author">${escape(item.author || '作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞', item.stats?.liked)}${metric('收藏', item.stats?.collected)}${metric('评论', item.stats?.commented)}${metric('分享', item.stats?.shared)}</div><div class="card-actions"><button class="primary" type="button" data-preview="${escape(primary)}" data-kind="${item.video ? 'video' : 'image'}">预览并保存</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>${!item.video && item.images.length > 1 ? `<button type="button" data-save-all="${index}">逐张保存图集</button>` : ''}</div></div></div></article>`;
+    const badge = item.cached ? '<span class="cache-badge">秒开缓存</span>' : '';
+    const actions = item.video
+      ? `<button class="primary save-direct" type="button" data-save-direct="${escape(item.video)}" data-kind="video">保存视频</button><button type="button" data-preview="${escape(item.video)}" data-kind="video">预览播放</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>`
+      : `<button class="primary" type="button" data-preview="${escape(primary)}" data-kind="image">预览并保存</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>${item.images.length > 1 ? `<button type="button" data-save-all="${index}">逐张保存图集</button>` : ''}`;
+    return `<article class="xhs-card ${item.video ? 'is-video' : ''}" data-index="${index}"><div class="card-body"><div class="media-grid ${item.video ? 'is-single' : ''}">${media}${extra}</div><div class="card-copy"><div class="eyebrow-row">${badge}<span class="card-eyebrow">${item.video ? '视频作品' : `图集 · ${item.images.length} 张`}</span></div><h2>${escape(item.title || item.description || '小红书作品')}</h2><p class="author">${escape(item.author || '作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞', item.stats?.liked)}${metric('收藏', item.stats?.collected)}${metric('评论', item.stats?.commented)}${metric('分享', item.stats?.shared)}</div><div class="card-actions">${actions}</div></div></div></article>`;
   }
-  function render() { resultsNode.innerHTML = results.map(card).join(''); actions.hidden = results.length === 0; }
+  function authorCard(author) {
+    const notes = author.notes || [];
+    const grid = notes.map(note => `<button class="author-note" type="button" data-author-note="${escape(note.web_url)}"><img src="${escape(note.cover || '')}" alt=""><span class="author-note-type">${note.type === 'video' ? '视频' : '图'}</span><span class="author-note-title">${escape(note.title || '无标题作品')}</span></button>`).join('');
+    return `<article class="author-card"><header><strong>@${escape(author.author?.nickname || '博主')}</strong><small>${notes.length} 条最新作品${author.cached ? ' · 缓存秒开' : ''}，点击任意一条即可解析下载</small></header><div class="author-grid">${grid || '<p class="history-empty">没有取到作品列表</p>'}</div></article>`;
+  }
+  function render() {
+    resultsNode.innerHTML = results.map((item, index) => item.kind === 'author' ? authorCard(item) : card(item, index)).join('');
+    actions.hidden = !results.some(item => item.kind !== 'author');
+  }
   function getHistory() { try { return JSON.parse(localStorage.getItem(historyKey) || '[]'); } catch { return []; } }
   function saveHistory(item) {
-    const entry = {id:item.id,title:item.title || item.description || '小红书作品',author:item.author || '',cover:item.cover || item.images?.[0] || '',web_url:item.web_url,saved_at:new Date().toISOString()};
+    const entry = {id:item.id,type:item.type || (item.video ? 'video' : 'image'),title:item.title || item.description || '小红书作品',author:item.author || '',cover:item.cover || item.images?.[0] || '',web_url:item.web_url,saved_at:new Date().toISOString()};
     localStorage.setItem(historyKey, JSON.stringify([entry, ...getHistory().filter(old => old.id !== entry.id)].slice(0, 30)));
     renderHistory();
   }
   function renderHistory() {
     const items = getHistory();
-    historyList.innerHTML = items.length ? items.map(item => `<div class="history-item"><img src="${escape(item.cover)}" alt=""><div><strong>${escape(item.title)}</strong><small>${escape(item.author)} · ${new Date(item.saved_at).toLocaleString('zh-CN')}</small></div><button type="button" data-history-url="${escape(item.web_url)}">再次查询</button></div>`).join('') : '<div class="history-empty">还没有查询记录</div>';
+    historyList.innerHTML = items.length ? items.map(item => `<div class="history-item"><img src="${escape(item.cover)}" alt=""><div><strong>${escape(item.title)}</strong><small>${item.type === 'video' ? '视频' : '图集'} · ${escape(item.author)} · ${new Date(item.saved_at).toLocaleString('zh-CN')}</small></div><button type="button" data-history-url="${escape(item.web_url)}">再次查询</button></div>`).join('') : '<div class="history-empty">还没有查询记录</div>';
   }
   function openPreview(url, kind) {
     if (!url) return;
@@ -60,7 +78,10 @@
       else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 15000); }
       status.textContent = '文件已交给系统保存。';
     } catch (error) {
-      if (error?.name !== 'AbortError') { window.open(url, '_blank', 'noopener'); status.textContent = '已打开原文件；手机上可长按或使用系统分享菜单保存。'; }
+      if (error?.name !== 'AbortError') {
+        window.open(url, '_blank', 'noopener');
+        status.textContent = isMobile ? '已打开原文件；长按画面选择“存储到照片”。' : '已打开原文件；在原文件上右键另存为即可。';
+      }
     }
   }
   function download(name, type, content) {
@@ -74,13 +95,26 @@
     button.disabled = true; results = []; render(); let failed = 0, errors = [];
     for (let i = 0; i < list.length; i++) {
       status.textContent = `正在解析 ${i + 1}/${list.length}…`;
-      try { const item = await parse(list[i]); results.push(item); saveHistory(item); render(); }
+      try { const item = await parse(list[i]); results.push(item); if (item.kind !== 'author') saveHistory(item); render(); }
       catch (error) { failed++; errors.push(`第 ${i + 1} 条：${error.message}`); }
     }
     button.disabled = false;
     status.textContent = `完成：成功 ${results.length} 条，失败 ${failed} 条。${errors.length ? `\n${errors.join('\n')}` : ''}`;
   });
+  async function parseNote(noteUrl) {
+    status.textContent = '正在解析该作品…';
+    try {
+      const item = await parse(noteUrl);
+      if (item.kind === 'author') throw new Error('该链接不是单条作品');
+      results.unshift(item); saveHistory(item); render();
+      status.textContent = `已解析：${item.title || '作品'}（${item.cached ? '缓存秒开' : '完成'}）`;
+    } catch (error) { status.textContent = `解析失败：${error.message}`; }
+  }
   resultsNode.addEventListener('click', async event => {
+    const authorNote = event.target.closest('[data-author-note]');
+    if (authorNote) return parseNote(authorNote.dataset.authorNote);
+    const direct = event.target.closest('[data-save-direct]');
+    if (direct) return saveToPhone(direct.dataset.saveDirect, direct.dataset.kind || 'video');
     const preview = event.target.closest('[data-preview]');
     if (preview) return openPreview(preview.dataset.preview, preview.dataset.kind);
     const all = event.target.closest('[data-save-all]');

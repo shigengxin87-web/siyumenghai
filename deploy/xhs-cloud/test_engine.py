@@ -1,5 +1,7 @@
 import json
 import os
+import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -159,6 +161,132 @@ class EngineTests(unittest.TestCase):
             result = engine.parse_page(f"https://www.xiaohongshu.com/explore/{note_id}?xsec_token=test")
         self.assertEqual(result["title"], "测试图文")
         self.assertTrue(client.closed)
+
+
+class ParseCacheTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old_db = engine.CACHE_DB
+        self._old_ttl = engine.CACHE_TTL
+        engine.CACHE_DB = os.path.join(self._tmp.name, "parse_cache.db")
+        engine.CACHE_TTL = 7 * 24 * 3600
+        self.note_id = "67abcdef0123456789abcdef"
+        self.url = f"https://www.xiaohongshu.com/explore/{self.note_id}?xsec_token=old"
+
+    def tearDown(self):
+        engine.CACHE_DB = self._old_db
+        engine.CACHE_TTL = self._old_ttl
+        self._tmp.cleanup()
+
+    def test_cache_hit_skips_live_parsers(self):
+        engine.cache_store(self.note_id, self.url, {"id": self.note_id, "title": "缓存视频"})
+        with patch.object(engine, "resolve_url", return_value=self.url):
+            with patch.object(engine, "parse_page", side_effect=AssertionError("page called")):
+                with patch.object(engine, "parse_browser", side_effect=AssertionError("browser called")):
+                    with patch.object(engine, "parse_ytdlp", side_effect=AssertionError("ytdlp called")):
+                        result = engine.parse_work("https://xhslink.cn/o/test")
+        self.assertTrue(result["cached"])
+        self.assertEqual(result["title"], "缓存视频")
+        # Freshly resolved URL (new xsec_token) replaces the stored one.
+        self.assertEqual(result["web_url"], self.url)
+
+    def test_cache_miss_parses_once_then_serves_from_cache(self):
+        fresh = {"id": self.note_id, "type": "image", "title": "新解析"}
+        share_text = "复制打开小红书 https://xhslink.cn/o/test。"
+        with patch.object(engine, "resolve_url", return_value=self.url):
+            with patch.object(engine, "parse_page", return_value=fresh) as page:
+                first = engine.parse_work(share_text)
+                self.assertEqual(first["title"], "新解析")
+                self.assertNotIn("cached", first)
+                second = engine.parse_work(share_text)
+        self.assertEqual(page.call_count, 1)
+        self.assertTrue(second["cached"])
+        self.assertEqual(second["title"], "新解析")
+
+    def test_expired_cache_entry_is_discarded(self):
+        engine.cache_store(self.note_id, self.url, {"id": self.note_id, "title": "老数据"})
+        with engine._cache_connect() as db:
+            db.execute(
+                "UPDATE xhs_parse_records SET expire_at = ? WHERE note_id = ?",
+                (time.time() - 10, self.note_id),
+            )
+        self.assertIsNone(engine.cache_lookup(self.note_id))
+
+    def test_broken_cache_path_does_not_break_parse(self):
+        engine.CACHE_DB = "/nonexistent-root/siyumenghai-xhs/parse_cache.db"
+        fresh = {"id": self.note_id, "title": "降级成功"}
+        with patch.object(engine, "resolve_url", return_value=self.url):
+            with patch.object(engine, "parse_page", return_value=fresh):
+                result = engine.parse_work("复制打开小红书 https://xhslink.cn/o/test。")
+        self.assertEqual(result["title"], "降级成功")
+
+    def test_zero_ttl_disables_cache(self):
+        engine.CACHE_TTL = 0
+        self.assertIsNone(engine.cache_lookup(self.note_id))
+        engine.cache_store(self.note_id, self.url, {"id": self.note_id})
+        self.assertIsNone(engine.cache_lookup(self.note_id))
+
+    def test_shape_note_includes_duration_when_present(self):
+        note_id = "67abcdef0123456789abcdef"
+        post = engine.shape_note(
+            "https://www.xiaohongshu.com/explore/" + note_id,
+            note_id,
+            {
+                "noteId": note_id,
+                "title": "时长作品",
+                "video": {"capa": {"duration": "52"}, "media": {"stream": {"EF4": [
+                    {"masterUrl": "https://sns-video-bd.xhscdn.com/clip.mp4"}
+                ]}}},
+            },
+        )
+        self.assertEqual(post["duration"], "52")
+
+
+class AuthorTests(unittest.TestCase):
+    def test_extract_user_id_from_profile_url(self):
+        self.assertEqual(
+            engine.user_id_from_url("https://www.xiaohongshu.com/user/profile/5f1a2b3c4d5e6f7a8b9c0d1e?xsec_token=x"),
+            "5f1a2b3c4d5e6f7a8b9c0d1e",
+        )
+        self.assertEqual(engine.user_id_from_url("https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef"), "")
+
+    def test_shape_author_walks_initial_state(self):
+        note_id = "67abcdef0123456789abcdef"
+        state = {
+            "user": {"nickname": "海边日记"},
+            "note": {"userNotes": [
+                {"noteId": note_id, "displayTitle": "日落", "cover": {"urlDefault": "https://sns-img-bd.xhscdn.com/spectrum/cover"}},
+                {"noteId": note_id.upper(), "displayTitle": "重复应去重", "cover": {"urlDefault": "https://sns-img-bd.xhscdn.com/spectrum/dup"}},
+            ]},
+        }
+        result = engine.shape_author("user123", "https://www.xiaohongshu.com/user/profile/user123", state)
+        self.assertEqual(result["kind"], "author")
+        self.assertEqual(result["author"]["nickname"], "海边日记")
+        self.assertEqual(len(result["notes"]), 1)
+        self.assertEqual(result["notes"][0]["id"], note_id)
+        self.assertEqual(result["notes"][0]["title"], "日落")
+        self.assertTrue(result["notes"][0]["cover"].startswith("https://sns-img-bd.xhscdn.com/"))
+
+    def test_parse_work_routes_profile_url_to_author(self):
+        url = "https://www.xiaohongshu.com/user/profile/user123"
+        expected = {"kind": "author", "author": {"nickname": "博主"}}
+        with patch.object(engine, "resolve_url", return_value=url):
+            with patch.object(engine, "parse_work_author", return_value=expected) as author:
+                with patch.object(engine, "parse_page", side_effect=AssertionError("note path called")):
+                    result = engine.parse_work("https://xhslink.cn/o/author")
+        author.assert_called_once()
+        self.assertEqual(result, expected)
+
+    def test_parse_work_keeps_note_path_for_explore_url(self):
+        url = "https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef"
+        fresh = {"id": "67abcdef0123456789abcdef", "title": "单条"}
+        with patch.object(engine, "resolve_url", return_value=url):
+            with patch.object(engine, "parse_work_author", side_effect=AssertionError("author path called")):
+                with patch.object(engine, "cache_lookup", return_value=None):
+                    with patch.object(engine, "parse_page", return_value=fresh) as page:
+                        result = engine.parse_work("https://xhslink.cn/o/note")
+        self.assertEqual(page.call_count, 1)
+        self.assertEqual(result["title"], "单条")
 
 
 if __name__ == "__main__":

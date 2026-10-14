@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="./portal.css">
   <link rel="stylesheet" href="./platform-switch.css?v=20261013-2">
   <link rel="stylesheet" href="./xhs-page.css?v=20261013-1">
-  <link rel="stylesheet" href="./xhs-fixes.css?v=20261013-1">
-  <script src="./xhs-page.js?v=20261013-1" defer></script>
+  <link rel="stylesheet" href="./xhs-fixes.css?v=20261014-3">
+  <script src="./xhs-page.js?v=20261014-3" defer></script>
 </head>
 <body class="platform-xhs">
   <div class="portal-shell tool-shell">
@@ -29,9 +29,9 @@
       <div id="actions" class="result-actions" hidden><button type="button" id="exportJson">导出 JSON</button><button type="button" id="exportCsv">导出表格（CSV）</button></div>
       <section id="results" class="xhs-results" aria-label="作品结果"></section>
       <section class="xhs-history" aria-label="小红书查询记录"><header><div><strong>查询记录</strong><small>解析成功后自动保存在当前浏览器</small></div><button type="button" id="clearHistory">清空记录</button></header><div id="historyList" class="history-list"></div></section>
-      <section class="tool-steps" aria-label="操作步骤"><article><span>01</span><div><strong>复制链接</strong><small>在小红书作品分享菜单复制链接</small></div></article><article><span>02</span><div><strong>解析作品</strong><small>查看视频、图片、作者和数据</small></div></article><article><span>03</span><div><strong>预览保存</strong><small>点击媒体后按提示保存到手机</small></div></article></section>
+      <section class="tool-steps" aria-label="操作步骤"><article><span>01</span><div><strong>复制链接</strong><small>在小红书作品分享菜单复制链接</small></div></article><article><span>02</span><div><strong>解析作品</strong><small>查看视频、图片、作者和数据</small></div></article><article><span>03</span><div><strong>预览保存</strong><small>点击媒体后保存到本地</small></div></article></section>
     </div></main>
   </div>
-  <div id="preview" class="preview-modal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-sheet"><header><strong id="previewTitle">媒体预览与保存</strong><button type="button" id="previewClose" aria-label="关闭预览">×</button></header><div class="preview-stage"><img id="previewImage" alt="图片预览" hidden><video id="previewVideo" controls playsinline hidden></video></div><p>iPhone 可点“保存到手机”后在系统分享菜单选择“存储到照片”；也可以打开原文件后长按保存。</p><div class="preview-actions"><button type="button" id="previewSave">保存到手机</button><a id="previewOpen" target="_blank" rel="noopener noreferrer">打开原文件</a></div></div></div>
+  <div id="preview" class="preview-modal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-sheet"><header><strong id="previewTitle">媒体预览与保存</strong><button type="button" id="previewClose" aria-label="关闭预览">×</button></header><div class="preview-stage"><img id="previewImage" alt="图片预览" hidden><video id="previewVideo" controls playsinline hidden></video></div><p id="previewHint">点击“保存到电脑”下载原文件；也可以打开原文件后右键另存为。</p><div class="preview-actions"><button type="button" id="previewSave">保存到电脑</button><a id="previewOpen" target="_blank" rel="noopener noreferrer">打开原文件</a></div></div></div>
 </body>
 </html>
