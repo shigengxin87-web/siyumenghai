@@ -281,12 +281,28 @@ def _video_url(note: dict[str, Any]) -> str:
     if not streams:
         return ""
     selected = max(streams, key=lambda item: float(item.get("videoBitrate") or item.get("height") or item.get("size") or 0))
-    backups = selected.get("backupUrls")
-    if isinstance(backups, list):
-        first = next((item for item in backups if isinstance(item, str) and item), "")
-        if first:
-            return _decode_url(first)
-    return _decode_url(selected.get("masterUrl"))
+    # XHS publishes http:// CDN URLs even though the same media supports
+    # HTTPS. The public gateway accepts HTTPS only, so normalize media URLs.
+    candidates = selected.get("backupUrls") or []
+    if not isinstance(candidates, list):
+        candidates = []
+    candidates = [*candidates, selected.get("masterUrl")]
+    for candidate in candidates:
+        raw = _decode_url(candidate)
+        if not raw:
+            continue
+        parsed = urlsplit(raw)
+        host = (parsed.hostname or "").lower()
+        if (
+            parsed.scheme in ("http", "https")
+            and (host == "xhscdn.com" or host.endswith(".xhscdn.com"))
+            and not parsed.username
+            and not parsed.password
+            and parsed.port in (None, 80, 443)
+        ):
+            from urllib.parse import urlunsplit
+            return urlunsplit(("https", parsed.hostname, parsed.path, parsed.query, parsed.fragment))
+    return ""
 
 
 def parse_page(url: str) -> dict[str, Any]:

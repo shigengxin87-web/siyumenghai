@@ -66,6 +66,25 @@ class EngineTests(unittest.TestCase):
         with patch.object(engine.httpx, "Client", return_value=FakeClient()):
             self.assertEqual(engine.resolve_url("https://xhslink.cn/example"), target)
 
+    def test_video_http_cdn_is_upgraded_to_https(self):
+        note = {"video": {"media": {"stream": {"EF5": [
+            {
+                "videoBitrate": 3000,
+                "backupUrls": ["http://sns-bak-v1.xhscdn.com/path/video.mp4?sign=abc"],
+                "masterUrl": "http://sns-video-v6.xhscdn.com/path/video.mp4",
+            }
+        ]}}}}
+        self.assertEqual(
+            engine._video_url(note),
+            "https://sns-bak-v1.xhscdn.com/path/video.mp4?sign=abc",
+        )
+
+    def test_video_external_cdn_is_rejected(self):
+        note = {"video": {"media": {"stream": {"EF5": [
+            {"videoBitrate": 3000, "backupUrls": ["http://127.0.0.1/secret"], "masterUrl": "https://evil.example.com/file.mp4"}
+        ]}}}}
+        self.assertEqual(engine._video_url(note), "")
+
     def test_video_shape_from_stream_group(self):
         note_id = "67abcdef0123456789abcdef"
         post = engine.shape_note(
