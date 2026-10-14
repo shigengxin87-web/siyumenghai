@@ -10,6 +10,7 @@
 .xhs-card.is-video .media-button .play{width:68px;height:68px;font-size:26px}
 
 /* Mobile: video cover goes tall so cover + save button land on one screen */
+[hidden]{display:none !important}
 @media(max-width:720px){
   .xhs-card.is-video .media-button{min-height:200px}
   .xhs-card.is-video .media-button img{max-height:62vh;min-height:200px}
