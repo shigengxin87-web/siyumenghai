@@ -2,6 +2,7 @@
   const $ = id => document.getElementById(id);
   const form = $('parseForm'), input = $('links'), status = $('status'), resultsNode = $('results'), actions = $('actions'), historyList = $('historyList');
   const previewImageEl = $('previewImage'), previewVideoEl = $('previewVideo');
+  const galleryPrevEl = $('galleryPrev'), galleryNextEl = $('galleryNext'), galleryCounterEl = $('galleryCounter');
   const historyKey = 'siyumenghai-xhs-history-v1';
   const isMobile = matchMedia('(max-width: 720px)').matches || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   let results = [], previewUrl = '', previewKind = '', previewUrls = [], previewIndex = 0;
@@ -59,17 +60,18 @@
     const url = previewUrls[previewIndex];
     previewImageEl.src = url;
     previewUrl = url;
-    $('galleryCounter').hidden = previewUrls.length <= 1;
-    $('galleryCounter').textContent = `${previewIndex + 1} / ${previewUrls.length}`;
-    $('galleryPrev').hidden = previewIndex === 0;
-    $('galleryNext').hidden = previewIndex === previewUrls.length - 1;
+    if (galleryCounterEl) { galleryCounterEl.hidden = previewUrls.length <= 1; galleryCounterEl.textContent = `${previewIndex + 1} / ${previewUrls.length}`; }
+    if (galleryPrevEl) galleryPrevEl.hidden = previewIndex === 0;
+    if (galleryNextEl) galleryNextEl.hidden = previewIndex === previewUrls.length - 1;
   }
   function openPreview(url, kind) {
     if (!url) return;
     previewUrls = []; previewIndex = 0;
     previewUrl = url; previewKind = kind;
     previewImageEl.hidden = kind !== 'image'; previewVideoEl.hidden = kind !== 'video';
-    $('galleryPrev').hidden = true; $('galleryNext').hidden = true; $('galleryCounter').hidden = true;
+    if (galleryPrevEl) galleryPrevEl.hidden = true;
+    if (galleryNextEl) galleryNextEl.hidden = true;
+    if (galleryCounterEl) galleryCounterEl.hidden = true;
     if (kind === 'image') previewImageEl.src = url; else { previewVideoEl.preload = 'metadata'; previewVideoEl.src = url; }
     $('previewOpen').href = url; $('preview').hidden = false; document.body.style.overflow = 'hidden';
   }
@@ -171,8 +173,8 @@
   historyList.addEventListener('click', event => { const button = event.target.closest('[data-history-url]'); if (!button) return; input.value = button.dataset.historyUrl; form.requestSubmit(); window.scrollTo({top:0,behavior:'smooth'}); });
   $('clearHistory').addEventListener('click', () => { localStorage.removeItem(historyKey); renderHistory(); });
   $('previewClose').addEventListener('click', closePreview);
-  $('galleryPrev').addEventListener('click', () => { if (previewIndex > 0) { previewIndex--; showGalleryImage(); } });
-  $('galleryNext').addEventListener('click', () => { if (previewIndex < previewUrls.length - 1) { previewIndex++; showGalleryImage(); } });
+  if (galleryPrevEl) galleryPrevEl.addEventListener('click', () => { if (previewIndex > 0) { previewIndex--; showGalleryImage(); } });
+  if (galleryNextEl) galleryNextEl.addEventListener('click', () => { if (previewIndex < previewUrls.length - 1) { previewIndex++; showGalleryImage(); } });
   $('preview').addEventListener('click', event => { if (event.target === $('preview')) closePreview(); });
   $('previewSave').addEventListener('click', () => saveToPhone(previewUrl, previewKind));
   $('exportJson').addEventListener('click', () => download('xiaohongshu-results.json','application/json;charset=utf-8',JSON.stringify(results,null,2)));
