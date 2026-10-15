@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="heading">作品保存</view>
+  <view class="tabs"><button size="mini" data-platform="channels" bindtap="switchPlatform" disabled="{{parsing || saving}}" class="{{platform === 'channels' ? 'active' : ''}}">视频号</button><button size="mini" data-platform="douyin" bindtap="switchPlatform" disabled="{{parsing || saving}}" class="{{platform === 'douyin' ? 'active' : ''}}">抖音</button><button size="mini" data-platform="xhs" bindtap="switchPlatform" disabled="{{parsing || saving}}" class="{{platform === 'xhs' ? 'active' : ''}}">小红书</button></view>
+  <view class="card"><text>粘贴{{name}}单条作品的分享链接或文案</text><textarea value="{{input}}" bindinput="input" maxlength="4096" disabled="{{parsing || saving}}" placeholder="在原 App 中复制分享链接，粘贴到这里"/><button class="primary" bindtap="parse" disabled="{{parsing || saving}}" loading="{{parsing}}">{{parsing ? '解析中' : '解析作品'}}</button></view>
+  <view class="message" role="status">{{message}}</view>
+  <button wx:if="{{parsing || saving}}" bindtap="cancel">取消{{parsing ? '解析' : '后续保存'}}</button>
+  <view wx:if="{{post}}" class="card"><text class="title">{{post.title}}</text><text class="muted">{{post.author}}</text><text selectable="true">{{post.description}}</text><view class="stats">点赞 {{post.stats.digg_count === undefined ? '—' : post.stats.digg_count}} · 评论 {{post.stats.comment_count === undefined ? '—' : post.stats.comment_count}} · 转发 {{post.stats.share_count === undefined ? '—' : post.stats.share_count}}</view><button class="primary" bindtap="save" disabled="{{saving || parsing}}">保存全部未成功文件</button></view>
+  <view wx:for="{{items}}" wx:key="key" class="card">
+    <video wx:if="{{item.kind === 'video'}}" src="{{item.url}}" poster="{{post.cover}}" controls="true" autoplay="false" binderror="mediaError"/>
+    <image wx:else src="{{item.url}}" mode="widthFix" lazy-load="true" data-url="{{item.url}}" bindtap="preview" binderror="mediaError"/>
+    <view class="row"><text>{{item.label}}</text><text>{{item.status}}</text></view>
+    <progress wx:if="{{item.state === 'downloading'}}" percent="{{item.progress}}" show-info="true" activeColor="#047857"/>
+    <text wx:if="{{item.state === 'downloading'}}" class="muted">{{item.bytes || 0}} / {{item.totalBytes > 0 ? item.totalBytes : '未知总大小'}} 字节</text>
+    <text wx:if="{{item.error}}" class="error">{{item.error}}</text>
+    <button data-key="{{item.key}}" bindtap="save" disabled="{{saving || parsing || item.state === 'saved'}}">{{item.state === 'saved' ? '已保存到相册' : item.state === 'failed' ? '重试此文件' : '保存到相册'}}</button>
+  </view>
+  <button wx:if="{{post || permissionDenied}}" bindtap="settings" disabled="{{saving}}">相册权限设置</button>
+  <view class="muted foot">仅保存本人拥有或已获授权的作品。下载期间请保持页面打开；取消后已存入相册的文件会保留。<text bindtap="privacy" class="link">隐私保护指引</text></view>
+</view>

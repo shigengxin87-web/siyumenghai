@@ -42,3 +42,13 @@ node miniprogram/tools/sync-from-site.js
 视频号下载页需要在微信公众平台把 `https://siyumenghai.cn` 配置为小程序业务域名；未配置或平台拦截时，页面会提供复制网址的备用入口。IMA 与飞书属于第三方域名，小程序内采用复制入口后在微信或对应 App 打开的方式，避免受到业务域名白名单限制。
 
 后续网站内容更新后，先运行同步脚本，再上传一个新的小程序代码版本即可保持两端一致；如果要做到网站发布后无需重新上传小程序，则需再接入已备案的只读 API 或微信云开发。
+
+## 三平台原生保存（2026-10-15）
+
+社群工具的三个入口均进入 `pages/media/index`。支持分享文案识别平台、单作品原生视频/图集预览、串行保存、下载字节与百分比、取消、未成功项重试及相册权限恢复。相册写入以微信 success 回调为准，完成后删除临时下载文件。离开页面终止下载和解析；已经开始的系统相册写入不能撤回。
+
+接口复用本站：视频号 `/api/video/profile` + `/api/transcripts/media`、抖音 `/api/douyin/parse` + `/api/douyin/media/`、小红书 `/api/xhs/parse` + `/api/xhs/media/?proxy=1`。小红书原生预览及下载均强制同源代理，不沿用网页视频302直达。保留所有网页工具与既有知识库入口。
+
+上线前在该 AppID 的微信公众平台确认 request、downloadFile 合法域名均包含 `https://siyumenghai.cn`，并完成隐私保护指引中相册保存用途配置。保持 `urlCheck=true`，不得以模拟器关闭域名检查作为真机验收。权限恢复通过用户主动点击“相册权限设置”调用 openSetting；只有用户点击保存才申请隐私与相册权限。
+
+验证：`node --test miniprogram/tests/media.test.js`。开发者工具 preview/upload 与真机相册成功是不同验收阶段。测试目录和工具目录不参与小程序打包。分享链接和接口返回媒体地址含临时令牌，不写入日志或版本库。

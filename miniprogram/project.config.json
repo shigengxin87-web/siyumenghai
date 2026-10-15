@@ -1,7 +1,16 @@
 {
   "description": "【石更新】成长朋友圈群友学习版微信小程序",
   "packOptions": {
-    "ignore": []
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "tools"
+      }
+    ]
   },
   "setting": {
     "bundle": false,

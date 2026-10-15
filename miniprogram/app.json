@@ -4,7 +4,8 @@
     "pages/archive/index",
     "pages/members/index",
     "pages/tools/index",
-    "pages/webview/index"
+    "pages/webview/index",
+    "pages/media/index"
   ],
   "window": {
     "navigationBarTitleText": "成长朋友圈",

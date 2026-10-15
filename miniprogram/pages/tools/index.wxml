@@ -2,16 +2,19 @@
   <view class="tools-hero">
     <text class="kicker">COMMUNITY TOOLKIT</text>
     <text class="title">社群工具</text>
-    <text class="desc">日报负责快速浏览，飞书负责完整存档，IMA 负责 AI 问答，视频号工具解决日常素材需求。</text>
+    <text class="desc">日报负责快速浏览，飞书负责完整存档，IMA 负责 AI 问答，三平台工具支持作品预览与保存到相册。</text>
   </view>
 
   <view class="video-card" bindtap="openVideoTool">
     <view class="tool-row">
       <view class="tool-icon is-video">下</view>
-      <view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">视频号下载</text><text class="tool-desc">粘贴视频号分享链接，查询并下载本人拥有或已获授权的视频。</text></view>
+      <view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">视频号保存</text><text class="tool-desc">粘贴视频号分享链接，原生预览作品并保存到手机相册。</text></view>
     </view>
     <button catchtap="openVideoTool">进入工具</button>
   </view>
+
+  <view class="video-card" bindtap="openDouyinTool"><view class="tool-row"><view class="tool-icon is-video">存</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">抖音保存</text><text class="tool-desc">预览视频和图集，逐个或批量保存到相册。</text></view></view><button catchtap="openDouyinTool">进入工具</button></view>
+  <view class="video-card" bindtap="openXhsTool"><view class="tool-row"><view class="tool-icon is-video">存</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">小红书保存</text><text class="tool-desc">预览视频和图集，逐个或批量保存到相册。</text></view></view><button catchtap="openXhsTool">进入工具</button></view>
 
   <view class="section-title"><text>知识沉淀</text><text>选择适合的入口</text></view>
   <view class="knowledge-card" bindtap="openIma">
@@ -32,6 +35,6 @@
   <view class="section-title"><text>更多入口</text></view>
   <view class="plain-cell" bindtap="copyWebsite"><view><text class="tool-title">社群官网</text><text class="tool-desc">电脑大屏浏览与完整网页工具</text></view><text>复制网址 ›</text></view>
 
-  <view class="notice"><text class="notice-title">使用说明</text><text>IMA 会直接进入官方小程序；飞书会先复制知识库链接再尝试打开；视频号工具在站内完成解析和下载。</text></view>
+  <view class="notice"><text class="notice-title">使用说明</text><text>IMA 会直接进入官方小程序；飞书会先复制知识库链接再尝试打开；三平台工具支持原生预览与相册保存，首次保存需允许相册权限。</text></view>
   <view class="safe-bottom"></view>
 </view>

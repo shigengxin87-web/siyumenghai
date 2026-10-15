@@ -29,8 +29,11 @@ Page({
   },
 
   openVideoTool() {
-    this.openWebService(SERVICES.video);
+    wx.navigateTo({ url: '/pages/media/index?platform=channels' });
   },
+
+  openDouyinTool() { wx.navigateTo({ url: '/pages/media/index?platform=douyin' }); },
+  openXhsTool() { wx.navigateTo({ url: '/pages/media/index?platform=xhs' }); },
 
   openIma() {
     const service = SERVICES.ima;
