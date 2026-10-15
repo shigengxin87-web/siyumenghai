@@ -1,0 +1,52 @@
+/* 知识库 */
+.kb-head {
+  padding: 8rpx 8rpx 28rpx;
+}
+
+.kb-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #22301F;
+}
+
+.kb-sub {
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  color: #8A9B8A;
+  line-height: 1.7;
+}
+
+.kb-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding: 30rpx 32rpx;
+}
+
+.kb-icon {
+  font-size: 52rpx;
+  flex-shrink: 0;
+}
+
+.kb-body {
+  flex: 1;
+  margin-left: 26rpx;
+}
+
+.kb-name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #22301F;
+}
+
+.kb-desc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #8A9B8A;
+}
+
+.kb-action {
+  font-size: 26rpx;
+  color: #2E7D32;
+  font-weight: 600;
+}

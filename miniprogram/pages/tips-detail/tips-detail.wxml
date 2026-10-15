@@ -1,0 +1,21 @@
+<view class="page" wx:if="{{detail}}">
+  <!-- 标题区 -->
+  <view class="head">
+    <view class="cat">{{detail.cat}}</view>
+    <view class="title">{{detail.title}}</view>
+  </view>
+
+  <!-- 正文 -->
+  <view class="body card">
+    <view class="para" wx:for="{{detail.body}}" wx:key="*this">{{item}}</view>
+  </view>
+
+  <!-- 延伸阅读 -->
+  <view class="section-title">延伸阅读</view>
+  <view class="card link-card" wx:for="{{detail.links}}" wx:key="url" bindtap="onLinkTap" data-url="{{item.url}}">
+    <view class="link-text">{{item.title}}</view>
+    <view class="link-go">打开 ›</view>
+  </view>
+
+  <view class="footer-tip">石董会 · 一起成长朋友圈</view>
+</view>

@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="kb-head">
+    <view class="kb-title">内容沉淀都在这里</view>
+    <view class="kb-sub">飞书/ima 是外部链接，复制后在浏览器打开；石董会自己的工具可小程序内直接使用</view>
+  </view>
+
+  <view
+    class="kb-card card"
+    wx:for="{{items}}"
+    wx:key="key"
+    bindtap="onTap"
+    data-key="{{item.key}}"
+  >
+    <view class="kb-icon">{{item.icon}}</view>
+    <view class="kb-body">
+      <view class="kb-name">{{item.title}}</view>
+      <view class="kb-desc">{{item.desc}}</view>
+    </view>
+    <view class="kb-action">{{item.mode === 'webview' ? '打开 ›' : '复制 ↗'}}</view>
+  </view>
+
+  <view class="footer-tip">石董会 · 一起成长朋友圈</view>
+</view>

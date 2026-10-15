@@ -23,7 +23,7 @@ Page({
     const url = encodeURIComponent(service.url);
     const title = encodeURIComponent(service.title);
     wx.navigateTo({
-      url: `/pages/webview/index?url=${url}&title=${title}&copyOnError=1`,
+      url: `/pages/webview/webview?url=${url}&title=${title}&copyOnError=1`,
       fail: () => this.copyWithHelp(service),
     });
   },
@@ -34,6 +34,7 @@ Page({
 
   openDouyinTool() { wx.navigateTo({ url: '/pages/media/index?platform=douyin' }); },
   openXhsTool() { wx.navigateTo({ url: '/pages/media/index?platform=xhs' }); },
+  openHistoryTool() { wx.navigateTo({ url: '/pages/media/index?platform=channels' }); },
 
   openIma() {
     const service = SERVICES.ima;

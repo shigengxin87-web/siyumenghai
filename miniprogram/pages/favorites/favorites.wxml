@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="fav-head">
+    <view class="fav-title">我的收藏</view>
+    <view class="fav-sub">技巧与讨论收藏保存在本机，换设备不会同步</view>
+  </view>
+
+  <scroll-view class="types" scroll-x="true" enhanced="true" show-scrollbar="false">
+    <view class="type {{activeType === item ? 'type-active' : ''}}" wx:for="{{types}}" wx:key="*this" bindtap="onTypeTap" data-type="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view class="fav-card card" wx:for="{{shown}}" wx:key="id">
+    <view class="fav-row" bindtap="openItem" data-id="{{item.id}}">
+      <view class="fav-tag">{{item.typeLabel}}</view>
+      <view class="fav-arrow">›</view>
+    </view>
+    <view class="fav-title-text" bindtap="openItem" data-id="{{item.id}}">{{item.title}}</view>
+    <view class="fav-sub-text" wx:if="{{item.summary || item.sub}}">{{item.summary || item.sub}}</view>
+    <view class="fav-actions">
+      <text class="fav-action" catchtap="copy" data-id="{{item.id}}">复制</text>
+      <text class="fav-action fav-remove" catchtap="remove" data-id="{{item.id}}">取消收藏</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!shown.length}}">还没有收藏内容，去技巧库或讨论页点「收藏」</view>
+</view>

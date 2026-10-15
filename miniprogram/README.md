@@ -1,54 +1,16 @@
-# 成长朋友圈微信小程序
+# 石董会｜唯一小程序发布源码
 
-这是 `member-view` 的原生微信小程序版本。日报、名录与主要浏览功能均为原生页面；只有视频号下载工具复用官网服务并通过 `web-view` 打开。
+AppID：wx8518a4f16ab72d70。五栏：首页、技巧、AI问答、讨论、我的。
 
-## 已实现
+用户确认 Downloads/miniprogram-enterprise 是正式 2.0.1 的来源。2026-10-16 已将其与 WorkBuddy 后续改动合并到本目录，替换 GitHub 上旧的“成长朋友圈”界面。多个本地目录是同一 AppID 的历史开发副本，不是多个小程序。
 
-- 与官网同步的 7 月 1 日至最新日期日报
-- 今日概览、行动清单、七日回顾、专题沉淀、资源连接、原始讨论
-- 行动勾选状态本地保存
-- 与官网同步的群友名录、头像与昵称搜索
-- 日报归档支持关键词、日期和月份筛选
-- 社群工具页收纳视频号下载、IMA 知识库、飞书知识库与官网入口
-- 微信好友/微信群小程序卡片分享
-- 日报、名录和头像随小程序打包，主要阅读功能离线可用
+GitHub main 的 miniprogram/ 是版本源；本机 /Users/murphys/Downloads/miniprogram-enterprise 是唯一开发者工具发布目录，与版本源保持一致。其余 xhs-release/miniprogram 及旧项目只作恢复依据，不再从它们预览或上传。本轮预览版本标识 2.1.0，不改变线上版本，未完成真机验收前不提交审核。
 
-## 与官网同步
+保留五栏与石董会现有风格。包括三平台原生保存、近期解析复用、相册权限恢复、收藏与搜索、AI 会话保存和流式回复；补齐日报正文及名录头像。技巧内容从真实社群日报提取，不使用示例条目作为新版本默认内容。
 
-网站更新完成后，在仓库根目录运行：
+运行 node tools/build-miniprogram-content.cjs（仓库根目录）可从网站日报生成 member-view/miniprogram-content.json 与本机离线数据。服务器静态发布后，同结构的技巧及讨论目录可更新，不需要修改页面代码。当前内容日期以生成结果为准。
 
-```bash
-node miniprogram/tools/sync-from-site.js
-```
+验证：node --test miniprogram/tests/*.test.js deploy/agent-proxy/server.test.js。
+云端问答：deploy/agent-proxy/server.js；敏感配置只留服务器 /opt/siyumenghai-agent-proxy/config.json，不进 Git。
 
-脚本会从 `member-view/archive-days.js`、`member-view/app.js` 和 `member-view/members.json` 生成小程序日报与名录，并复制对应头像。这样网站和小程序共用同一份内容来源，不需要手工整理两遍。
-
-## 打开与预览
-
-1. 用微信开发者工具导入本目录。
-2. `project.config.json` 已配置当前开发预览使用的 AppID。
-3. 在开发者工具点击“预览”，管理员扫码即可在手机上测试。
-4. 正式上传前，确认该 AppID 对应的就是要发布“成长朋友圈”的小程序账号。
-
-## 正式发布前
-
-- 在微信公众平台注册并完成小程序备案。
-- 设置符合实际内容的服务类目、名称、图标和简介。
-- 检查群友昵称与头像的展示授权；不适合公开的成员应在提交前移除。
-- 使用真实 AppID 上传代码，然后在公众平台提交审核与发布。
-
-小程序不收集用户信息。行动清单只保存在当前用户本机，不会把勾选状态同步给其他群友。
-
-视频号下载页需要在微信公众平台把 `https://siyumenghai.cn` 配置为小程序业务域名；未配置或平台拦截时，页面会提供复制网址的备用入口。IMA 与飞书属于第三方域名，小程序内采用复制入口后在微信或对应 App 打开的方式，避免受到业务域名白名单限制。
-
-后续网站内容更新后，先运行同步脚本，再上传一个新的小程序代码版本即可保持两端一致；如果要做到网站发布后无需重新上传小程序，则需再接入已备案的只读 API 或微信云开发。
-
-## 三平台原生保存（2026-10-15）
-
-社群工具的三个入口均进入 `pages/media/index`。支持分享文案识别平台、单作品原生视频/图集预览、串行保存、下载字节与百分比、取消、未成功项重试及相册权限恢复。相册写入以微信 success 回调为准，完成后删除临时下载文件。离开页面终止下载和解析；已经开始的系统相册写入不能撤回。
-
-接口复用本站：视频号 `/api/video/profile` + `/api/transcripts/media`、抖音 `/api/douyin/parse` + `/api/douyin/media/`、小红书 `/api/xhs/parse` + `/api/xhs/media/?proxy=1`。小红书原生预览及下载均强制同源代理，不沿用网页视频302直达。保留所有网页工具与既有知识库入口。
-
-上线前在该 AppID 的微信公众平台确认 request、downloadFile 合法域名均包含 `https://siyumenghai.cn`，并完成隐私保护指引中相册保存用途配置。保持 `urlCheck=true`，不得以模拟器关闭域名检查作为真机验收。权限恢复通过用户主动点击“相册权限设置”调用 openSetting；只有用户点击保存才申请隐私与相册权限。
-
-验证：`node --test miniprogram/tests/media.test.js`。开发者工具 preview/upload 与真机相册成功是不同验收阶段。测试目录和工具目录不参与小程序打包。分享链接和接口返回媒体地址含临时令牌，不写入日志或版本库。
+发布前确认微信公众平台 request / downloadFile 合法域名包含 https://siyumenghai.cn，隐私保护指引声明相册写入用途。urlCheck 保持 true。微信扫码、真机声音/拖动/相册落地与域名验证需单独验收，CLI 编译成功不能代替。

@@ -1,0 +1,90 @@
+/* 我的 */
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 40rpx 36rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #1F5E2C, #43A047);
+  color: #FFFFFF;
+  font-size: 52rpx;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-body {
+  margin-left: 28rpx;
+}
+
+.profile-name {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #22301F;
+}
+
+.profile-slogan {
+  margin-top: 10rpx;
+  font-size: 25rpx;
+  color: #8A9B8A;
+}
+
+.fav-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28rpx;
+}
+
+.fav-entry .tool-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #22301F;
+}
+
+.fav-entry .tool-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #8A9B8A;
+}
+
+.fav-entry .arrow {
+  font-size: 40rpx;
+  color: #C0CCC0;
+}
+
+.about {
+  margin-top: 28rpx;
+}
+
+.about-title,
+.benefit-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #22301F;
+}
+
+.about-text {
+  margin-top: 16rpx;
+  font-size: 27rpx;
+  color: #4C6B4C;
+  line-height: 1.8;
+}
+
+.benefit {
+  margin-top: 28rpx;
+}
+
+.benefit-line {
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  color: #4C6B4C;
+}

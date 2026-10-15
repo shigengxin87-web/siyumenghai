@@ -1,35 +1,48 @@
 {
-  "description": "【石更新】成长朋友圈群友学习版微信小程序",
+  "description": "更新石董会 课程介绍与领课",
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "tests"
-      },
-      {
-        "type": "folder",
-        "value": "tools"
+        "value": "tests",
+        "type": "folder"
       }
-    ]
+    ],
+    "include": []
   },
   "setting": {
-    "bundle": false,
-    "userConfirmedBundleSwitch": false,
-    "urlCheck": true,
     "es6": true,
-    "enhance": true,
     "postcss": true,
-    "minified": true,
     "coverView": true,
+    "minified": true,
+    "enhance": true,
     "showShadowRootInWxmlPanel": true,
     "compileHotReLoad": true,
-    "lazyloadPlaceholderEnable": false,
-    "useStaticServer": true,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "urlCheck": true
   },
   "compileType": "miniprogram",
-  "libVersion": "3.17.0",
+  "libVersion": "3.6.6",
   "appid": "wx8518a4f16ab72d70",
-  "projectname": "growth-circle-miniprogram",
-  "condition": {}
+  "projectname": "石董会-唯一发布项目",
+  "simulatorType": "wechat",
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
 }

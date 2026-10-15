@@ -1,0 +1,37 @@
+<view class="page">
+  <!-- 品牌区 -->
+  <view class="hero">
+    <view class="hero-badge">石董会 · 成员服务</view>
+    <view class="hero-title">石董会</view>
+    <view class="hero-slogan">一起成长，一起越来越好</view>
+  </view>
+
+  <!-- 今日一句 -->
+  <view class="quote-card card">
+    <view class="quote-text">“含金量超高”，是群友对石董会最直接的评价</view>
+    <view class="quote-note">—— 来自群友的真实反馈</view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="grid">
+    <view
+      class="grid-item card"
+      wx:for="{{entries}}"
+      wx:key="key"
+      bindtap="onEntry"
+      data-key="{{item.key}}"
+    >
+      <view class="grid-icon">{{item.icon}}</view>
+      <view class="grid-title">{{item.title}}</view>
+      <view class="grid-desc">{{item.desc}}</view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="about card">
+    <view class="about-title">关于石董会</view>
+    <view class="about-text">石董会是「一起成长朋友圈」——这里每天都有高信息密度的运营实战讨论、AI 新技能学习和真实案例拆解。群里聊过的好东西，都会沉淀成你能带走的方法。</view>
+  </view>
+
+  <view class="footer-tip">石董会 · 一起成长朋友圈</view>
+</view>

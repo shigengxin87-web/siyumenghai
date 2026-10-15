@@ -197,7 +197,7 @@ Page({
     const report = this.data.report;
     return {
       title: `${report.dateLabel}｜${report.title}`,
-      path: `/pages/home/index?date=${this.data.selectedKey}`,
+      path: `/pages/report/index?date=${this.data.selectedKey}`,
     };
   },
 

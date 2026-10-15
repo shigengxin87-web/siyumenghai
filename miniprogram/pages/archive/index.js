@@ -57,8 +57,7 @@ Page({
   },
 
   openDay(event) {
-    wx.setStorageSync('growth-pending-date', event.currentTarget.dataset.key);
-    wx.switchTab({ url: '/pages/home/index' });
+    wx.navigateTo({ url: '/pages/report/index?date=' + encodeURIComponent(event.currentTarget.dataset.key) });
   },
 
   onShareAppMessage() {

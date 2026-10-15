@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">加载中…</view>
+  <view class="error" wx:elif="{{error}}">{{error}}</view>
+
+  <block wx:else>
+    <!-- 系统消息 -->
+    <view class="sys" wx:for="{{messages}}" wx:key="id" wx:if="{{item.isSystem}}">
+      <view class="sys-time">{{item.timeShort}}</view>
+      <view class="sys-text">{{item.text}}</view>
+    </view>
+
+    <!-- 普通消息 -->
+    <view class="msg" wx:for="{{messages}}" wx:key="id" wx:if="{{!item.isSystem}}">
+      <view class="msg-meta">{{item.sender}} · {{item.timeShort}}</view>
+      <view class="msg-bubble">
+        <view class="msg-text" wx:if="{{item.text}}">{{item.text}}</view>
+        <image
+          class="msg-img"
+          wx:if="{{item.mediaKind === 'image' && item.mediaUrl}}"
+          src="{{item.mediaUrl}}"
+          mode="widthFix"
+          bindtap="previewImage"
+          data-url="{{item.mediaUrl}}"
+        />
+        <view class="msg-media" wx:elif="{{item.hasMedia}}">📎 含图片/文件（请到官网查看）</view>
+        <view class="msg-links" wx:if="{{item.links.length > 0}}">
+          <view
+            class="msg-link"
+            wx:for="{{item.links}}"
+            wx:for-item="lk"
+            wx:key="url"
+            bindtap="copyLink"
+            data-url="{{lk.url}}"
+          >{{lk.label || lk.url}} ↗</view>
+        </view>
+        <view class="msg-redacted" wx:if="{{item.redacted}}">· 已脱敏</view>
+      </view>
+    </view>
+
+    <view class="footer-tip">{{dateLabel}} · 与官网同步</view>
+  </block>
+</view>

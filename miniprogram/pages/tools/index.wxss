@@ -29,3 +29,5 @@
 .notice { margin-top: 28rpx; padding: 25rpx; border-radius: 21rpx; background: #e9f5f0; color: #60746c; font-size: 22rpx; line-height: 1.65; }
 .notice text { display: block; }
 .notice-title { margin-bottom: 7rpx; color: #08795c; font-weight: 850; }
+
+.video-card { margin-bottom: 24rpx; }

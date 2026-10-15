@@ -1,27 +1,49 @@
+/* 石董会成员服务 · 全局样式 */
 page {
-  background: #f5f8f6;
-  color: #14251f;
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #F6F8F6;
+  color: #22301F;
+  font-family: "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
+  line-height: 1.6;
 }
 
-button {
-  font: inherit;
+.page {
+  min-height: 100vh;
+  padding: 32rpx 32rpx 60rpx;
+  box-sizing: border-box;
 }
 
-button::after {
-  border: 0;
+.card {
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(30, 90, 30, 0.06);
+  padding: 32rpx;
+  box-sizing: border-box;
 }
 
-.page-enter {
-  animation: page-enter .28s ease-out both;
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #22301F;
+  margin: 44rpx 0 20rpx;
 }
 
-@keyframes page-enter {
-  from { opacity: 0; transform: translateY(12rpx); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-primary {
+  background: linear-gradient(90deg, #2E7D32, #43A047);
+  color: #FFFFFF;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
 }
 
-.safe-bottom {
-  height: calc(40rpx + env(safe-area-inset-bottom));
+.btn-primary::after {
+  border: none;
+}
+
+.footer-tip {
+  margin-top: 56rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #A9B8A9;
 }

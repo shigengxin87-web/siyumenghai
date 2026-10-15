@@ -1,0 +1,92 @@
+/* 原始讨论页 */
+.loading,
+.error {
+  padding: 60rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #8A9B8A;
+}
+
+/* 系统消息 */
+.sys {
+  background: #EEF3EE;
+  border-radius: 16rpx;
+  padding: 18rpx 24rpx;
+  margin: 20rpx 0;
+  text-align: center;
+}
+
+.sys-time {
+  font-size: 20rpx;
+  color: #9AAC9A;
+}
+
+.sys-text {
+  margin-top: 6rpx;
+  font-size: 23rpx;
+  color: #6E8A6E;
+  line-height: 1.6;
+}
+
+/* 普通消息 */
+.msg {
+  margin-bottom: 28rpx;
+}
+
+.msg-meta {
+  font-size: 22rpx;
+  color: #8A9B8A;
+  margin-bottom: 10rpx;
+  padding-left: 8rpx;
+}
+
+.msg-bubble {
+  background: #FFFFFF;
+  border-radius: 22rpx;
+  padding: 22rpx 26rpx;
+  box-shadow: 0 6rpx 20rpx rgba(30, 90, 30, 0.05);
+}
+
+.msg-text {
+  font-size: 28rpx;
+  color: #22301F;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msg-img {
+  margin-top: 16rpx;
+  width: 100%;
+  border-radius: 16rpx;
+}
+
+.msg-media {
+  margin-top: 14rpx;
+  font-size: 23rpx;
+  color: #8A9B8A;
+  background: #F2F6F2;
+  border-radius: 12rpx;
+  padding: 12rpx 18rpx;
+}
+
+.msg-links {
+  margin-top: 14rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.msg-link {
+  font-size: 23rpx;
+  color: #2E7D32;
+  background: #E8F5E8;
+  border-radius: 999rpx;
+  padding: 8rpx 22rpx;
+}
+
+.msg-redacted {
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  color: #C0A06A;
+}

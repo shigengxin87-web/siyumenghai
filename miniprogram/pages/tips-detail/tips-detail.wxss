@@ -1,0 +1,58 @@
+/* 技巧详情 */
+.head {
+  padding: 16rpx 8rpx 24rpx;
+}
+
+.cat {
+  display: inline-block;
+  background: #E8F5E8;
+  color: #2E7D32;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+}
+
+.title {
+  margin-top: 20rpx;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #22301F;
+  line-height: 1.4;
+}
+
+.body {
+  padding: 36rpx 32rpx;
+}
+
+.para {
+  font-size: 29rpx;
+  color: #3D5A3D;
+  line-height: 1.85;
+  margin-bottom: 20rpx;
+}
+
+.para:last-child {
+  margin-bottom: 0;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  padding: 28rpx 32rpx;
+}
+
+.link-text {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #2E7D32;
+  flex: 1;
+  padding-right: 20rpx;
+}
+
+.link-go {
+  font-size: 24rpx;
+  color: #8A9B8A;
+}

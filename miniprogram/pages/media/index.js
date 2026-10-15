@@ -1,12 +1,13 @@
 const { parse, detect } = require('../../utils/media-api');
 const { AlbumSaver } = require('../../utils/album-saver');
+const mediaHistory = require('../../utils/media-history');
 const names = { channels: '视频号', douyin: '抖音', xhs: '小红书' };
 const states = { idle: '待保存', queued: '排队中', downloading: '下载中', saving: '正在写入相册', saved: '已保存到相册', failed: '保存失败', cancelled: '已取消' };
 Page({
-  data: { platform: 'channels', name: '视频号', input: '', parsing: false, saving: false, post: null, items: [], message: '', permissionDenied: false },
+  data: { platform: 'channels', name: '视频号', names, input: '', parsing: false, saving: false, post: null, items: [], message: '', permissionDenied: false, history: [] },
   onLoad(options) {
     const platform = names[options.platform] ? options.platform : 'channels';
-    this.setData({ platform, name: names[platform] });
+    this.setData({ platform, name: names[platform], history: mediaHistory.load() });
     this.requestTask = {};
     this.saver = new AlbumSaver(wx, (key, patch) => {
       if (this.closed) return;
@@ -33,9 +34,33 @@ Page({
     try {
       const post = await parse(wx, this.data.platform, this.data.input, this.requestTask);
       if (this.closed || generation !== this.generation) return;
-      this.setData({ post, items: post.items.map(item => ({ ...item, state: 'idle', status: states.idle, progress: 0 })), message: `已找到 ${post.items.length} 个文件` });
+      const history = mediaHistory.save(post, this.data.input, this.data.platform);
+      this.setData({ post, items: post.items.map(item => ({ ...item, state: 'idle', status: states.idle, progress: 0 })), message: `已找到 ${post.items.length} 个文件`, history });
     } catch (e) { if (!this.closed && generation === this.generation) this.setData({ message: e.message }); }
     finally { if (!this.closed && generation === this.generation) this.setData({ parsing: false }); }
+  },
+  useHistory(e) {
+    if (this.data.parsing || this.data.saving) return;
+    const id = e.currentTarget.dataset.id;
+    const item = this.data.history.find(i => i.id === id);
+    if (!item) return;
+    this.setData({ input: item.url, platform: item.platform, name: names[item.platform], post: null, items: [], message: '' });
+    if (item.post && Date.now() - item.createdAt < 20 * 60 * 1000) {
+      this.setData({ post: item.post, items: item.post.items.map(i => ({ ...i, state: 'idle', status: states.idle, progress: 0 })), message: '已读取最近解析，链接失效时可重新解析' });
+    } else this.parse();
+  },
+  clearHistory() {
+    if (this.data.parsing || this.data.saving) return;
+    wx.showModal({
+      title: '清空最近解析',
+      content: '清空后不可恢复，确定吗？',
+      success: (r) => {
+        if (r.confirm) {
+          mediaHistory.clear();
+          this.setData({ history: [] });
+        }
+      }
+    });
   },
   cancel() {
     if (this.data.parsing) { this.generation++; this.requestTask.current.abort(); this.setData({ parsing: false, message: '已取消解析，可重新尝试' }); }

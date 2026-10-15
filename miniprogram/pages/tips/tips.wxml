@@ -1,0 +1,38 @@
+<view class="page">
+  <!-- 搜索 -->
+  <view class="search-bar">
+    <input class="search-input" value="{{keyword}}" bindinput="onSearchInput" placeholder="搜索技巧关键词" confirm-type="search"/>
+    <text class="search-clear" wx:if="{{keyword}}" bindtap="onSearchClear">清除</text>
+  </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view class="cats" scroll-x="true" enhanced="true" show-scrollbar="false">
+    <view
+      class="cat {{activeCat === item ? 'cat-active' : ''}}"
+      wx:for="{{cats}}"
+      wx:key="*this"
+      bindtap="onCatTap"
+      data-cat="{{item}}"
+    >{{item}}</view>
+  </scroll-view>
+
+  <!-- 列表 -->
+  <view
+    class="tip-card card"
+    wx:for="{{filtered}}"
+    wx:key="id"
+    bindtap="goDetail"
+    data-id="{{item.id}}"
+  >
+    <view class="tip-top">
+      <view class="tip-cat">{{item.cat}}</view>
+      <view class="tip-fav {{item.isFav ? 'is-fav' : ''}}" catchtap="toggleFav" data-id="{{item.id}}" hover-class="tip-fav-hover">{{item.isFav ? '★ 已收藏' : '☆ 收藏'}}</view>
+    </view>
+    <view class="tip-title">{{item.title}}</view>
+    <view class="tip-summary">{{item.summary}}</view>
+    <view class="tip-arrow">›</view>
+  </view>
+
+  <view class="empty" wx:if="{{!filtered.length}}">没有匹配的技巧，换个关键词试试</view>
+  <view class="footer-tip">技巧清单持续整理中</view>
+</view>

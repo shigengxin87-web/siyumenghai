@@ -1,0 +1,46 @@
+<view class="chat-page">
+  <!-- 消息流 -->
+  <scroll-view
+    class="chat-scroll"
+    scroll-y="true"
+    scroll-into-view="{{scrollInto}}"
+    scroll-with-animation="true"
+  >
+    <view class="chat-inner">
+      <view class="chat-header">
+        <text class="chat-title">AI 问答</text>
+        <text class="chat-clear" bindtap="clearChat">清空会话</text>
+      </view>
+      <view
+        class="msg {{item.role === 'user' ? 'msg-user' : 'msg-ai'}}"
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{index}}"
+      >
+        <view class="bubble">
+          <text>{{item.text}}</text>
+          <view class="msg-actions" wx:if="{{item.role === 'assistant'}}">
+            <text class="msg-action" catchtap="copyMessage" data-id="{{item.id}}">复制</text>
+            <text class="msg-action msg-action-retry" wx:if="{{item.canRetry}}" catchtap="retryMessage" data-id="{{item.id}}">重试</text>
+          </view>
+        </view>
+      </view>
+      <view class="typing" wx:if="{{sending && !firstToken}}">更新哥正在思考…</view>
+      <view class="chat-tip">回答基于石董会知识库，仅供社群成员参考</view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入栏 -->
+  <view class="input-bar">
+    <input
+      class="input"
+      value="{{input}}"
+      bindinput="onInput"
+      confirm-type="send"
+      bindconfirm="send"
+      placeholder="输入你的运营问题…"
+      disabled="{{sending}}"
+    />
+    <button class="send-btn" bindtap="send" disabled="{{sending || !input}}">发送</button>
+  </view>
+</view>

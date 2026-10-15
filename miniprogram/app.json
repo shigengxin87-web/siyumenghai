@@ -1,44 +1,57 @@
 {
   "pages": [
-    "pages/home/index",
+    "pages/home/home",
+    "pages/tips/tips",
+    "pages/chat/chat",
+    "pages/discuss/discuss",
+    "pages/mine/mine",
+    "pages/tips-detail/tips-detail",
+    "pages/discuss-day/discuss-day",
+    "pages/kb/kb",
+    "pages/webview/webview",
+    "pages/favorites/favorites",
+    "pages/qrcode/index",
     "pages/archive/index",
     "pages/members/index",
     "pages/tools/index",
-    "pages/webview/index",
-    "pages/media/index"
+    "pages/media/index",
+    "pages/report/index"
   ],
-  "window": {
-    "navigationBarTitleText": "成长朋友圈",
-    "navigationBarBackgroundColor": "#ecfdf5",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#f6fbf8",
-    "backgroundTextStyle": "dark"
-  },
   "tabBar": {
-    "color": "#7b8e87",
-    "selectedColor": "#047857",
-    "backgroundColor": "#ffffff",
+    "color": "#8A9B8A",
+    "selectedColor": "#2E7D32",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/home/index",
-        "text": "今日"
+        "pagePath": "pages/home/home",
+        "text": "首页"
       },
       {
-        "pagePath": "pages/archive/index",
-        "text": "日报归档"
+        "pagePath": "pages/tips/tips",
+        "text": "技巧"
       },
       {
-        "pagePath": "pages/members/index",
-        "text": "群友名录"
+        "pagePath": "pages/chat/chat",
+        "text": "AI问答"
       },
       {
-        "pagePath": "pages/tools/index",
-        "text": "社群工具"
+        "pagePath": "pages/discuss/discuss",
+        "text": "讨论"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
       }
     ]
   },
-  "lazyCodeLoading": "requiredComponents",
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "石董会",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F6F8F6"
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

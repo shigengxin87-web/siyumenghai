@@ -1,0 +1,47 @@
+<view class="page">
+  <!-- 头部 -->
+  <view class="d-head">
+    <view class="d-title">每日原始讨论</view>
+    <view class="d-sub">与官网同步 · 按北京时间还原当天群聊，隐私信息自动脱敏</view>
+  </view>
+
+  <!-- 搜索 + 月份筛选 -->
+  <view class="d-tools">
+    <view class="search-bar">
+      <input class="search-input" value="{{keyword}}" bindinput="onSearchInput" placeholder="按标题或日期查找" confirm-type="search"/>
+      <text class="search-clear" wx:if="{{keyword}}" bindtap="onSearchClear">清除</text>
+    </view>
+    <scroll-view class="months" scroll-x="true" enhanced="true" show-scrollbar="false" wx:if="{{months.length}}">
+      <view class="month {{activeMonth === item ? 'month-active' : ''}}" wx:for="{{months}}" wx:key="*this" bindtap="onMonthTap" data-month="{{item}}">{{item}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">加载中…</view>
+
+  <!-- 错误 -->
+  <view class="error" wx:elif="{{error}}">{{error}}</view>
+
+  <!-- 日期列表 -->
+  <view
+    class="day-card card"
+    wx:for="{{shown}}"
+    wx:key="key"
+    bindtap="goDay"
+    data-key="{{item.key}}"
+  >
+    <view class="day-date">
+      <view class="day-num">{{item.key.slice(8)}}</view>
+      <view class="day-month">{{item.key.slice(0, 7)}} · {{item.weekday}}</view>
+    </view>
+    <view class="day-body">
+      <view class="day-title">{{item.title}}</view>
+      <view class="day-meta">{{item.messages}} 条群聊记录</view>
+    </view>
+    <view class="day-fav" catchtap="toggleFav" data-key="{{item.key}}" hover-class="day-fav-hover">☆</view>
+    <view class="day-arrow">›</view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && !error && !shown.length}}">没有匹配的讨论，换个关键词或月份试试</view>
+  <view class="footer-tip">下拉可刷新 · 与官网同步更新</view>
+</view>

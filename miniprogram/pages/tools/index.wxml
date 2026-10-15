@@ -15,6 +15,7 @@
 
   <view class="video-card" bindtap="openDouyinTool"><view class="tool-row"><view class="tool-icon is-video">存</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">抖音保存</text><text class="tool-desc">预览视频和图集，逐个或批量保存到相册。</text></view></view><button catchtap="openDouyinTool">进入工具</button></view>
   <view class="video-card" bindtap="openXhsTool"><view class="tool-row"><view class="tool-icon is-video">存</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">小红书保存</text><text class="tool-desc">预览视频和图集，逐个或批量保存到相册。</text></view></view><button catchtap="openXhsTool">进入工具</button></view>
+  <view class="video-card" bindtap="openHistoryTool"><view class="tool-row"><view class="tool-icon is-video">历</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">保存历史</text><text class="tool-desc">查看最近解析过的作品，链接过期后可一键重新解析保存。</text></view></view><button catchtap="openHistoryTool">进入历史</button></view>
 
   <view class="section-title"><text>知识沉淀</text><text>选择适合的入口</text></view>
   <view class="knowledge-card" bindtap="openIma">
