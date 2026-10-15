@@ -95,7 +95,7 @@ async function asset(id,onProgress) {
   catch(e){if(!e.upstream)throw e;t=await refreshTicket(id,t);return {ticket:t,media:await ensureMedia(t,openMedia,onProgress)};}
 }
 function viewJob(job) {return {id:job.id,state:job.state,done:job.done,total:job.total,bytes:job.bytes,file_bytes:job.file_bytes||0,
-  file_total:job.file_total||0,error:job.error||'',download:job.state==='ready'?`/api/xhs/files/${job.id}`:null,filename:job.filename||'',expires:job.expires};}
+  file_total:job.file_total||0,error:job.error||'',download:job.state==='ready'?`/api/xhs/files/${job.id}`:null,filename:job.filename||'',direct:job.state==='ready'&&job.size<=64*1024*1024?job.direct||null:null,expires:job.expires};}
 async function startJob(ids) {
   const tickets=await Promise.all(ids.map(getTicket));
   const identity=sha(ids.map((id,i)=>id+':'+tickets[i].url).join(',')),existingId=jobKeys.get(identity);const previous=jobs.get(existingId);
@@ -113,7 +113,7 @@ async function startJob(ids) {
         releases.push(retain(item.media.file));files.push(item);job.done++;job.bytes+=item.media.size;
         if(job.bytes>512*1024*1024)throw new Error('图集超过512MB打包限制');
       }
-      if(files.length===1){job.file=files[0].media.file;job.type=files[0].media.type;job.filename=files[0].ticket.filename.replace(/\.jpg$/, ({"image/png":".png","image/webp":".webp","image/avif":".avif"}[files[0].media.type]||".jpg"));}
+      if(files.length===1){job.file=files[0].media.file;job.type=files[0].media.type;job.direct=files[0].ticket.kind==='video'?files[0].ticket.url:null;job.filename=files[0].ticket.filename.replace(/\.jpg$/, ({"image/png":".png","image/webp":".webp","image/avif":".avif"}[files[0].media.type]||".jpg"));}
       else {
         job.file=path.join(root,job.id+'.zip');job.filename=safeName(tickets[0].id,'images','zip');job.type='application/zip';
         const extension=type=>({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/avif':'avif'}[type]||'jpg');
@@ -159,7 +159,11 @@ export const server=http.createServer(async(req,res)=>{
       return await serveFile(req,res,{file:j.file,size:j.size,type:j.type},j.filename,true);
     }
     if(u.pathname.startsWith('/api/xhs/media/')&&['GET','HEAD'].includes(req.method)) {
-      const id=u.pathname.split('/').pop();let ticket=await getTicket(id);const cached=await existingMedia(ticket);
+      const id=u.pathname.split('/').pop();let ticket=await getTicket(id);
+      if(ticket.kind==='video'&&!u.searchParams.has('download')&&!u.searchParams.has('proxy')&&req.method==='GET') {
+        res.writeHead(302,{Location:ticket.url,'Referrer-Policy':'no-referrer','Cache-Control':'private, max-age=30'});res.end();return;
+      }
+      const cached=await existingMedia(ticket);
       if(ticket.kind==='video'&&!cached&&!u.searchParams.has('download')) {
         // A cold preview streams immediately. Full downloads use a separate,
         // resumable preparation task and become reusable local files.

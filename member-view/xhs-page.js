@@ -53,7 +53,13 @@
   function openPreview(item,index=0){returnFocus=document.activeElement;previewKind=item.video?'video':'image';gallery=item.video?[item.video]:(item.images||[]);if(!gallery.length)return;previewSource=item.web_url;galleryIndex=index;$('previewTitle').textContent=item.title||'作品预览';$('previewImage').hidden=previewKind!=='image';$('previewVideo').hidden=previewKind!=='video';$('preview').hidden=false;document.body.style.overflow='hidden';updatePreview();$('previewClose').focus();}
   function closePreview(){$('preview').hidden=true;document.body.style.overflow='';$('previewVideo').pause();$('previewVideo').removeAttribute('src');$('previewVideo').load();$('previewImage').removeAttribute('src');returnFocus?.focus();}
   $('previewImage').addEventListener('load',()=>{$('previewState').textContent='';});$('previewVideo').addEventListener('loadeddata',()=>{$('previewState').textContent='';});
-  for(const id of ['previewImage','previewVideo'])$(id).addEventListener('error',()=>{if(!$('preview').hidden)$('previewState').textContent='预览暂不可用，可以重试或直接保存原文件。';});
+  for(const id of ['previewImage','previewVideo'])$(id).addEventListener('error',()=>{
+    if($('preview').hidden)return;
+    if(id==='previewVideo'&&!$('previewVideo').src.includes('proxy=1')){
+      $('previewVideo').src=gallery[galleryIndex]+'?proxy=1';$('previewState').textContent='正在重新加载视频…';return;
+    }
+    $('previewState').textContent='预览暂不可用，可以重试或直接保存原文件。';
+  });
   $('galleryPrev').onclick=()=>{if(galleryIndex>0){galleryIndex--;updatePreview();}};$('galleryNext').onclick=()=>{if(galleryIndex<gallery.length-1){galleryIndex++;updatePreview();}};
   $('previewClose').onclick=closePreview;$('preview').onclick=e=>{if(e.target===$('preview'))closePreview();};
   document.addEventListener('keydown',e=>{if($('preview').hidden)return;if(e.key==='Escape')closePreview();if(e.key==='ArrowLeft')$('galleryPrev').click();if(e.key==='ArrowRight')$('galleryNext').click();if(e.key==='Tab'){const focus=[...$('preview').querySelectorAll('button:not([hidden]),a')].filter(n=>n.offsetParent!==null),first=focus[0],last=focus.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
@@ -61,10 +67,34 @@
   const mb=n=>(n/1048576).toFixed(1)+' MB';
   function persistJobs(){write(jobsKey,downloads.filter(d=>d.id&&d.state!=='failed').slice(-8).map(({id,title,media,source})=>({id,title,media,source})));}
   function renderDownloads(){
-    $('downloadList').innerHTML=downloads.map((d,i)=>{let label=d.state==='ready'?`文件已就绪 · ${mb(d.bytes)}${d.auto?' · 已发起浏览器下载':''}`:d.state==='failed'?d.error:`正在准备 ${d.done||0}/${d.total||d.media?.length||1} 个文件${d.file_total?` · ${mb(d.file_bytes||0)} / ${mb(d.file_total)}`:''}`;
-      return `<div class="download-row"><div class="download-title">${escape(d.title||'作品文件')}</div><p class="download-state">${escape(label)}</p>${!['ready','failed'].includes(d.state)?`<progress ${d.total?`value="${(d.done||0)+(d.file_total?(d.file_bytes||0)/d.file_total:0)}" max="${d.total}"`:''}></progress>`:''}${d.state==='ready'?`<a class="primary" href="${escape(d.download)}" download="${escape(d.filename)}">${d.auto?'再次下载':'下载文件'}</a>${navigator.share&&navigator.canShare?`<button data-share="${i}">分享 / 存储</button>`:''}`:d.state==='failed'?`<button data-retry="${i}">重新准备</button>`:''}</div>`;}).join('');
+    $('downloadList').innerHTML=downloads.map((d,i)=>{let label=d.saving?`正在读取视频 · ${mb(d.networkBytes||0)} / ${mb(d.bytes)}`:d.state==='ready'?`文件已就绪 · ${mb(d.bytes)}${d.auto?' · 已发起浏览器下载':''}`:d.state==='failed'?d.error:`正在准备 ${d.done||0}/${d.total||d.media?.length||1} 个文件${d.file_total?` · ${mb(d.file_bytes||0)} / ${mb(d.file_total)}`:''}`;
+      return `<div class="download-row"><div class="download-title">${escape(d.title||'作品文件')}</div><p class="download-state">${escape(label)}</p>${!['ready','failed'].includes(d.state)?`<progress ${d.total?`value="${(d.done||0)+(d.file_total?(d.file_bytes||0)/d.file_total:0)}" max="${d.total}"`:''}></progress>`:''}${d.state==='ready'?`<a class="primary" data-download="${i}" href="${escape(d.download)}" download="${escape(d.filename)}">${d.auto?'再次下载':'下载文件'}</a>${navigator.share&&navigator.canShare?`<button data-share="${i}">分享 / 存储</button>`:''}`:d.state==='failed'?`<button data-retry="${i}">重新准备</button>`:''}</div>`;}).join('');
   }
-  function triggerDownload(d){const a=document.createElement('a');a.href=d.download;a.download=d.filename;document.body.append(a);a.click();a.remove();d.auto=true;renderDownloads();}
+  async function triggerDownload(d){
+    if(d.saving)return;
+    let downloadUrl=d.download,objectUrl='';
+    d.saving=true;d.networkBytes=0;renderDownloads();
+    try {
+      if(d.direct&&d.bytes<=64*1048576){
+        const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
+        try {
+          const response=await fetch(d.direct,{mode:'cors',credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});
+          if(!response.ok||!response.body)throw new Error('retry');
+          const length=Number(response.headers.get('Content-Length')||0);if(length>64*1048576)throw new Error('retry');
+          const reader=response.body.getReader(),chunks=[];let bytes=0,last=0;
+          try {while(true){const {done,value}=await reader.read();if(done)break;bytes+=value.length;
+            if(bytes>64*1048576)throw new Error('retry');chunks.push(value);d.networkBytes=bytes;
+            if(Date.now()-last>200){renderDownloads();last=Date.now();}
+          }}finally{reader.releaseLock();}
+          if(bytes!==d.bytes)throw new Error('retry');
+          objectUrl=URL.createObjectURL(new Blob(chunks,{type:'video/mp4'}));downloadUrl=objectUrl;d.fast=true;
+        }catch { /* Standard same-origin download remains available. */ }
+        finally{clearTimeout(timer);controller.abort();}
+      }
+      const a=document.createElement('a');a.href=downloadUrl;a.download=d.filename;document.body.append(a);a.click();a.remove();d.auto=true;
+      if(objectUrl)setTimeout(()=>URL.revokeObjectURL(objectUrl),60000);
+    }finally{d.saving=false;renderDownloads();}
+  }
   async function poll(d,auto=false){try{while(true){const state=await api(`/api/xhs/jobs/${d.id}`);Object.assign(d,state);renderDownloads();persistJobs();if(d.state==='ready'){if(auto)triggerDownload(d);return;}if(d.state==='failed')return;await new Promise(r=>setTimeout(r,1500));}}catch(e){d.state='failed';d.error=e.message;renderDownloads();}}
   async function prepare(media,title,source){
     const existing=downloads.find(d=>d.media?.join()===media.join()&&d.state!=='failed');$('downloads').hidden=false;
@@ -74,6 +104,7 @@
     catch(e){d.state='failed';d.error=e.message;renderDownloads();}
   }
   $('downloadList').onclick=async e=>{
+    const download=e.target.closest('[data-download]');if(download){e.preventDefault();return triggerDownload(downloads[Number(download.dataset.download)]);}
     const retry=e.target.closest('[data-retry]');if(retry){const i=Number(retry.dataset.retry),d=downloads[i];downloads.splice(i,1);try{await parseOne(d.source);await prepare(d.media,d.title,d.source);}catch(err){$('status').textContent=err.message;}return;}
     const share=e.target.closest('[data-share]');if(share){const d=downloads[Number(share.dataset.share)];share.disabled=true;share.textContent='读取文件…';try{
       if((d.file_total||d.bytes)>100*1048576)throw new Error('大文件请使用下载文件，再从文件应用分享');
