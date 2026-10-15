@@ -69,10 +69,11 @@ async function engine(url,refresh=false) {
   });parsing.set(identity,promise);try{return await promise;}finally{parsing.delete(identity);}
 }
 function safeName(id,index,suffix) {return `xiaohongshu-${String(id).replace(/[^a-z0-9_-]/gi,'').slice(0,40)}${index?'-'+index:''}.${suffix}`;}
-function issue(url,kind,id,role,webUrl) {
+function issue(url,kind,id,role,webUrl,audio=null,codec=null) {
   if(!url)return null;const parsed=new URL(url);if(parsed.protocol!=='https:'||!mediaHost(parsed.hostname))return null;
-  const token=ticketId(`${id}:${role}`,key);
-  putTicket(token,{url,kind,id,role,web_url:webUrl,filename:safeName(id,role==='video'?'':role,kind==='video'?'mp4':'jpg')});
+  if(audio){const source=new URL(audio);if(source.protocol!=='https:'||!mediaHost(source.hostname))throw new Error('音轨地址不受支持');}
+  const token=ticketId(`${id}:${role}${audio?':mux-v1':''}`,key);
+  putTicket(token,{url,kind,id,role,audio,codec,web_url:webUrl,filename:safeName(id,role==='video'?'':role,kind==='video'?'mp4':'jpg')});
   return `/api/xhs/media/${token}`;
 }
 export function shape(post) {
@@ -82,7 +83,7 @@ export function shape(post) {
   const id=String(post.id),web=post.web_url;
   return {kind:'note',id,type:post.video?'video':'image',title:post.title||'',description:post.description||'',author:post.author||'',
     created_at:post.created_at||null,duration:post.duration||null,cached:Boolean(post.cached),stats:post.stats||{},
-    cover:issue(post.cover,'image',id,'cover',web),video:issue(post.video,'video',id,'video',web),
+    cover:issue(post.cover,'image',id,'cover',web),video:issue(post.video,'video',id,'video',web,post.audio,post.video_codec),video_height:post.video_height||null,video_width:post.video_width||null,
     images:(post.images||[]).map((u,i)=>issue(u,'image',id,String(i+1),web)).filter(Boolean),web_url:web};
 }
 async function refreshTicket(id,ticket) {
@@ -98,7 +99,7 @@ function viewJob(job) {return {id:job.id,state:job.state,done:job.done,total:job
   file_total:job.file_total||0,error:job.error||'',download:job.state==='ready'?`/api/xhs/files/${job.id}`:null,filename:job.filename||'',direct:job.state==='ready'&&job.size<=64*1024*1024?job.direct||null:null,expires:job.expires};}
 async function startJob(ids) {
   const tickets=await Promise.all(ids.map(getTicket));
-  const identity=sha(ids.map((id,i)=>id+':'+tickets[i].url).join(',')),existingId=jobKeys.get(identity);const previous=jobs.get(existingId);
+  const identity=sha(ids.map((id,i)=>id+':'+tickets[i].url+':'+(tickets[i].audio||'')).join(',')),existingId=jobKeys.get(identity);const previous=jobs.get(existingId);
   if(previous&&previous.expires>Date.now()&&previous.state!=='failed'&&(previous.state!=='ready'||fs.existsSync(previous.file)))return previous;
   if([...jobs.values()].filter(j=>j.state==='preparing').length>=12)throw new Error('下载任务较多，请稍后重试');
   if(ids.length>1&&tickets.some(t=>t.kind!=='image'||t.id!==tickets[0].id))throw new Error('请按作品打包图片');
@@ -113,7 +114,7 @@ async function startJob(ids) {
         releases.push(retain(item.media.file));files.push(item);job.done++;job.bytes+=item.media.size;
         if(job.bytes>512*1024*1024)throw new Error('图集超过512MB打包限制');
       }
-      if(files.length===1){job.file=files[0].media.file;job.type=files[0].media.type;job.direct=files[0].ticket.kind==='video'?files[0].ticket.url:null;job.filename=files[0].ticket.filename.replace(/\.jpg$/, ({"image/png":".png","image/webp":".webp","image/avif":".avif"}[files[0].media.type]||".jpg"));}
+      if(files.length===1){job.file=files[0].media.file;job.type=files[0].media.type;job.direct=files[0].ticket.kind==='video'&&!files[0].ticket.audio?files[0].ticket.url:null;job.filename=files[0].ticket.filename.replace(/\.jpg$/, ({"image/png":".png","image/webp":".webp","image/avif":".avif"}[files[0].media.type]||".jpg"));}
       else {
         job.file=path.join(root,job.id+'.zip');job.filename=safeName(tickets[0].id,'images','zip');job.type='application/zip';
         const extension=type=>({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/avif':'avif'}[type]||'jpg');
@@ -160,11 +161,11 @@ export const server=http.createServer(async(req,res)=>{
     }
     if(u.pathname.startsWith('/api/xhs/media/')&&['GET','HEAD'].includes(req.method)) {
       const id=u.pathname.split('/').pop();let ticket=await getTicket(id);
-      if(ticket.kind==='video'&&!u.searchParams.has('download')&&!u.searchParams.has('proxy')&&req.method==='GET') {
+      if(ticket.kind==='video'&&!ticket.audio&&!u.searchParams.has('download')&&!u.searchParams.has('proxy')&&req.method==='GET') {
         res.writeHead(302,{Location:ticket.url,'Referrer-Policy':'no-referrer','Cache-Control':'private, max-age=30'});res.end();return;
       }
       const cached=await existingMedia(ticket);
-      if(ticket.kind==='video'&&!cached&&!u.searchParams.has('download')) {
+      if(ticket.kind==='video'&&!ticket.audio&&!cached&&!u.searchParams.has('download')) {
         // A cold preview streams immediately. Full downloads use a separate,
         // resumable preparation task and become reusable local files.
         return await streams.run(async()=>{

@@ -2,6 +2,7 @@
 set -euo pipefail
 [[ $(id -u) == 0 ]] || { echo 'Run as root'; exit 1; }
 [[ -r /etc/siyumenghai-xhs/cloud.env ]] || { echo 'Provision /etc/siyumenghai-xhs/cloud.env first'; exit 1; }
+command -v ffmpeg >/dev/null || { echo 'FFmpeg is required for original video + audio delivery'; exit 1; }
 ROOT=/opt/siyumenghai-xhs-cloud
 NODE_BIN=${NODE_BIN:-$(command -v node || true)}
 [[ -n $NODE_BIN && -x $NODE_BIN ]] || { echo 'Set NODE_BIN to an existing Node.js >=22 binary'; exit 1; }

@@ -88,6 +88,27 @@ class EngineTests(unittest.TestCase):
         }}}}
         self.assertEqual(engine._video_url(note), "https://sns-video-bd.xhscdn.com/sound.mp4")
 
+    def test_native_picture_and_audio_preferred_to_watermarked_web_mp4(self):
+        native = {"audio_stream": {"AAC": [{"audio_codec": "aac", "audio_bitrate": 192000,
+                  "audio_duration": 161448, "backup_urls": ["http://sns-bak-v1.xhscdn.com/audio.m4a"]}]}}
+        note = {"video": {"mediaV2": json.dumps(native), "media": {"stream": {
+            "EF4": [{"format": "mp4", "audioCodec": "aac", "height": 720,
+                     "masterUrl": "https://sns-video-v6.xhscdn.com/watermarked.mp4"}],
+            "EF5": [{"format": "fmp4", "height": 1080, "width": 1920, "duration": 161433,
+                     "masterUrl": "https://sns-video-v6.xhscdn.com/picture.m4s"}]
+        }}}}
+        assets = engine._video_assets(note)
+        self.assertEqual(assets["video"], "https://sns-video-v6.xhscdn.com/picture.m4s")
+        self.assertEqual(assets["audio"], "https://sns-bak-v1.xhscdn.com/audio.m4a")
+        self.assertTrue(assets["video_requires_mux"])
+        self.assertEqual(assets["video_codec"], "hevc")
+        self.assertEqual(assets["video_height"], 1080)
+        native["audio_stream"]["AAC"][0]["audio_duration"] = 10000
+        note["video"]["mediaV2"] = json.dumps(native)
+        self.assertFalse(engine._video_assets(note)["video_requires_mux"])
+        note["video"]["mediaV2"] = "not json"
+        self.assertEqual(engine._video_assets(note)["video"], "https://sns-video-v6.xhscdn.com/watermarked.mp4")
+
     def test_video_external_cdn_is_rejected(self):
         note = {"video": {"media": {"stream": {"EF5": [
             {"videoBitrate": 3000, "backupUrls": ["http://127.0.0.1/secret"], "masterUrl": "https://evil.example.com/file.mp4"}
@@ -218,6 +239,14 @@ class ParseCacheTests(unittest.TestCase):
         self.assertEqual(page.call_count, 1)
         self.assertTrue(second["cached"])
         self.assertEqual(second["title"], "新解析")
+
+    def test_legacy_video_cache_does_not_keep_watermarked_selection(self):
+        engine.cache_store(self.note_id, self.url, {"id": self.note_id, "video": "https://sns-video-v6.xhscdn.com/old.mp4"})
+        with engine._cache_connect() as db:
+            row = db.execute("SELECT data FROM xhs_parse_records WHERE note_id = ?", (self.note_id,)).fetchone()
+            data = json.loads(row[0]); data["_cache_schema"] = 2
+            db.execute("UPDATE xhs_parse_records SET data = ? WHERE note_id = ?", (json.dumps(data), self.note_id))
+        self.assertIsNone(engine.cache_lookup(self.note_id))
 
     def test_refresh_bypasses_existing_metadata(self):
         engine.cache_store(self.note_id, self.url, {"id": self.note_id, "title": "老数据"})

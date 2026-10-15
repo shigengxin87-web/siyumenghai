@@ -22,7 +22,7 @@ export const root=process.env.XHS_MEDIA_CACHE_DIR || '/var/lib/siyumenghai-xhs-m
 const maxFile=512*1024*1024;
 const cacheBudget=Number(process.env.XHS_MEDIA_CACHE_BYTES || 1536*1024*1024);
 const ttl=7*86400*1000;
-const imageQueue=new Queue(3), videoQueue=new Queue(1), thumbQueue=new Queue(1);
+const imageQueue=new Queue(3), videoQueue=new Queue(1), thumbQueue=new Queue(1), muxQueue=new Queue(1);
 const transfers=new Map(), thumbs=new Map();
 export function initStore() { fs.mkdirSync(root,{recursive:true,mode:0o700}); }
 export function ticketId(identity,key) { return createHmac('sha256',key).update(identity).digest('hex').slice(0,48); }
@@ -38,7 +38,8 @@ export async function getTicket(id) {
   try { const t=JSON.parse(await fsp.readFile(path.join(root,id+'.ticket'),'utf8')); if(t.expires<Date.now()) throw new Error(); return t; }
   catch { const e=new Error('作品链接需要更新，请重新解析'); e.status=410; throw e; }
 }
-export function mediaPath(ticket) { return path.join(root,sha(ticket.url)+'.media'); }
+export function mediaIdentity(ticket) {return sha(ticket.url+(ticket.audio?'\n'+ticket.audio+':mux-v1':''));}
+export function mediaPath(ticket) { return path.join(root,mediaIdentity(ticket)+'.media'); }
 export async function existingMedia(ticket) {
   const file=mediaPath(ticket);
   try {
@@ -53,7 +54,7 @@ export async function sniffType(file,kind) {
   if(b[0]===0xff&&b[1]===0xd8) return 'image/jpeg';
   if(b.subarray(1,4).toString()==='PNG') return 'image/png';
   if(b.subarray(8,12).toString()==='WEBP') return 'image/webp';
-  if(b.subarray(4,8).toString()==='ftyp') return kind==='video'?'video/mp4':'image/avif';
+  if(b.subarray(4,8).toString()==='ftyp') return kind==='video'?'video/mp4':kind==='audio'?'audio/mp4':'image/avif';
   return kind==='video'?'video/mp4':'application/octet-stream';
 }
 let cleaning;
@@ -62,7 +63,7 @@ export async function cleanup() {
   cleaning=(async()=>{
     let size=0; const entries=[]; const now=Date.now();
     for(const name of await fsp.readdir(root)) {
-      const file=path.join(root,name); const stat=await fsp.stat(file).catch(()=>null); if(!stat?.isFile())continue;
+      const file=path.join(root,name); const stat=await fsp.stat(file).catch(()=>null); if(!stat?.isFile()||protectedFiles.has(file))continue;
       if(now-stat.mtimeMs>ttl || (/\.tmp$/.test(name)&&now-stat.mtimeMs>3600000)) {await fsp.unlink(file).catch(()=>{});continue;}
       if(/\.(media|zip|jpg)$/.test(name)) {size+=stat.size; entries.push({file,size:stat.size,time:stat.mtimeMs});}
     }
@@ -78,9 +79,9 @@ export const protectedFiles=new Map();
 export function retain(file) {protectedFiles.set(file,(protectedFiles.get(file)||0)+1);return ()=>{const n=protectedFiles.get(file)-1;if(n)protectedFiles.set(file,n);else protectedFiles.delete(file);};}
 export async function ensureMedia(ticket,openMedia,onProgress=()=>{}) {
   const cached=await existingMedia(ticket);if(cached)return cached;
-  const id=sha(ticket.url);
+  const id=mediaIdentity(ticket);
   if(transfers.has(id)) return transfers.get(id);
-  const promise=(ticket.kind==='video'?videoQueue:imageQueue).run(async()=>{
+  const promise=ticket.audio?muxQueue.run(()=>combineMedia(ticket,openMedia,onProgress)):(ticket.kind==='video'?videoQueue:imageQueue).run(async()=>{
     const again=await existingMedia(ticket);if(again)return again;
     initStore();const file=mediaPath(ticket),temp=file+'.'+randomBytes(4).toString('hex')+'.tmp';
     let last;
@@ -88,7 +89,7 @@ export async function ensureMedia(ticket,openMedia,onProgress=()=>{}) {
       try {
         const upstream=await openMedia(ticket.url);
         const type=String(upstream.headers['content-type']||'');
-        if(upstream.statusCode!==200 || !/^(image\/|video\/|application\/octet-stream)/i.test(type)) {upstream.destroy();const e=new Error('原文件暂不可用');e.upstream=true;throw e;}
+        if(upstream.statusCode!==200 || !/^(image\/|video\/|audio\/|application\/octet-stream)/i.test(type)) {upstream.destroy();const e=new Error('原文件暂不可用');e.upstream=true;throw e;}
         const total=Number(upstream.headers['content-length']||0);
         if(total>maxFile){upstream.destroy();throw new Error('文件超过512MB限制');}
         let bytes=0;
@@ -103,6 +104,38 @@ export async function ensureMedia(ticket,openMedia,onProgress=()=>{}) {
     throw last;
   });transfers.set(id,promise);try{return await promise;}finally{transfers.delete(id);}
 }
+async function combineMedia(ticket,openMedia,onProgress) {
+  const cached=await existingMedia(ticket);if(cached)return cached;
+  const state=[{bytes:0,total:0},{bytes:0,total:0}];
+  const update=i=>(bytes,total)=>{state[i]={bytes,total};onProgress(state[0].bytes+state[1].bytes,state[0].total+state[1].total);};
+  // allSettled keeps successfully fetched inputs protected even if one source fails.
+  const releases=[];
+  const protect=promise=>promise.then(media=>{releases.push(retain(media.file));return media;});
+  const results=await Promise.allSettled([
+    protect(ensureMedia({...ticket,audio:null},openMedia,update(0))),
+    protect(ensureMedia({url:ticket.audio,kind:'audio'},openMedia,update(1)))
+  ]);
+  const file=mediaPath(ticket),temp=file+'.'+randomBytes(4).toString('hex')+'.tmp';
+  try {
+    const failed=results.find(r=>r.status==='rejected');if(failed)throw failed.reason;
+    const [picture,audio]=results.map(r=>r.value);
+    if(picture.size+audio.size>maxFile)throw new Error('合并文件超过512MB限制');
+    onProgress(picture.size+audio.size,picture.size+audio.size);
+    const args=['-nostdin','-y','-v','error','-threads','1','-i',picture.file,'-i',audio.file,'-map','0:v:0','-map','1:a:0','-c','copy'];
+    if(ticket.codec==='hevc')args.push('-tag:v','hvc1');
+    args.push('-movflags','+faststart','-f','mp4',temp);
+    await new Promise((resolve,reject)=>{
+      const child=spawn(process.env.XHS_FFMPEG_BIN||'/usr/bin/ffmpeg',args,{stdio:'ignore'});
+      const timer=setTimeout(()=>{child.kill('SIGKILL');reject(new Error('视频准备超时，请重试'));},120000);
+      child.once('error',()=>{clearTimeout(timer);reject(new Error('视频合并服务暂不可用'));});
+      child.once('exit',code=>{clearTimeout(timer);code===0?resolve():reject(new Error('画面与声音合并失败，请重试'));});
+    });
+    const stat=await fsp.stat(temp);if(!stat.size||stat.size>maxFile)throw new Error('合并文件无效或过大');
+    await fsp.rename(temp,file);return {file,size:stat.size,type:'video/mp4'};
+  } catch(e){await fsp.unlink(temp).catch(()=>{});throw e;}
+  finally {releases.forEach(release=>release());}
+}
+
 export async function thumbnail(media) {
   const file=media.file+'.jpg';
   if(fs.existsSync(file))return {file,size:(await fsp.stat(file)).size,type:'image/jpeg'};

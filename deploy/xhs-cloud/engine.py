@@ -88,7 +88,10 @@ def cache_lookup(note_id: str) -> dict[str, Any] | None:
                 db.execute("DELETE FROM xhs_parse_records WHERE note_id = ?", (note_id,))
                 return None
             result = json.loads(row[0])
-            return result if isinstance(result, dict) and result.pop("_cache_schema", None) == 2 else None
+            if not isinstance(result, dict):
+                return None
+            schema = result.pop("_cache_schema", None)
+            return result if schema == (3 if result.get("video") else 2) else None
     except (sqlite3.Error, ValueError, TypeError, OSError):
         return None
 
@@ -103,7 +106,7 @@ def cache_store(note_id: str, original_url: str, result: dict[str, Any]) -> None
             db.execute(
                 "INSERT OR REPLACE INTO xhs_parse_records "
                 "(note_id, original_url, data, parsed_at, expire_at) VALUES (?, ?, ?, ?, ?)",
-                (note_id, original_url, json.dumps({**result, "_cache_schema": 2}, ensure_ascii=False), now, now + CACHE_TTL),
+                (note_id, original_url, json.dumps({**result, "_cache_schema": 3 if result.get("video") else 2}, ensure_ascii=False), now, now + CACHE_TTL),
             )
     except (sqlite3.Error, ValueError, TypeError, OSError):
         return
@@ -379,6 +382,64 @@ def _video_url(note: dict[str, Any]) -> str:
     return ""
 
 
+def _stream_source(stream: dict[str, Any]) -> str:
+    backups = stream.get("backupUrls") or stream.get("backup_urls") or []
+    if not isinstance(backups, list):
+        backups = []
+    for raw in [*backups, stream.get("masterUrl"), stream.get("master_url")]:
+        if not raw:
+            continue
+        try:
+            parsed = urlsplit(_decode_url(raw))
+            host = (parsed.hostname or "").lower()
+            if (parsed.scheme in {"http", "https"}
+                    and (host == "xhscdn.com" or host.endswith(".xhscdn.com"))
+                    and not parsed.username and not parsed.password
+                    and parsed.port in (None, 80, 443)):
+                from urllib.parse import urlunsplit
+                return urlunsplit(("https", host, parsed.path, parsed.query, ""))
+        except (ValueError, TypeError):
+            continue
+    return ""
+
+
+def _video_assets(note: dict[str, Any]) -> dict[str, Any]:
+    """Prefer native adaptive picture + audio; never publish silent picture alone.
+
+    These streams avoid the platform's watermarked WEB_259 rendition in the
+    verified sample. An uploader's own burned-in marks are not altered.
+    """
+    video = _record(note.get("video"))
+    native = video.get("mediaV2") or {}
+    if isinstance(native, str):
+        try:
+            native = json.loads(native)
+        except (ValueError, TypeError):
+            native = {}
+    native = _record(native)
+    audio_groups = _record(native.get("audio_stream"))
+    audios = [item for group in audio_groups.values() for item in _list(group)
+              if _stream_source(item) and str(item.get("audio_codec") or item.get("audioCodec") or "").lower() == "aac"]
+    groups = _record(_record(video.get("media")).get("stream")) or _record(native.get("stream"))
+    pictures = [{**item, "_group": group_name} for group_name, group in groups.items() for item in _list(group)
+                if str(item.get("format") or "").lower() == "fmp4"
+                and not (item.get("audioCodec") or item.get("audio_codec") or item.get("audioBitrate") or item.get("audio_bitrate"))
+                and not item.get("watermark") and _stream_source(item)]
+    if pictures and audios:
+        picture = max(pictures, key=lambda item: (float(item.get("height") or 0), float(item.get("width") or 0), float(item.get("videoBitrate") or item.get("video_bitrate") or 0)))
+        audio = max(audios, key=lambda item: float(item.get("audio_bitrate") or item.get("audioBitrate") or 0))
+        # Reject mismatched alternate audio rather than attach a different clip.
+        video_ms = float(picture.get("videoDuration") or picture.get("video_duration") or picture.get("duration") or 0)
+        audio_ms = float(audio.get("audio_duration") or audio.get("audioDuration") or 0)
+        if video_ms and audio_ms and abs(video_ms - audio_ms) <= 2000:
+            codec = str(picture.get("videoCodec") or picture.get("video_codec") or picture["_group"]).lower()
+            return {"video": _stream_source(picture), "audio": _stream_source(audio),
+                    "video_codec": {"ef5": "hevc", "ef4": "h264", "ef6": "av1"}.get(codec, codec),
+                    "video_height": picture.get("height"), "video_width": picture.get("width"),
+                    "video_requires_mux": True}
+    return {"video": _video_url(note), "audio": None, "video_requires_mux": False}
+
+
 def parse_page(url: str) -> dict[str, Any]:
     note_id = note_id_from_url(url)
     if not note_id:
@@ -409,7 +470,8 @@ def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
         value = _image_url(item.get("urlDefault") or item.get("urlPre") or item.get("url"))
         if value:
             images.append(value)
-    video = _video_url(note)
+    assets = _video_assets(note)
+    video = assets["video"]
     duration = _deep(note, "video.capa.duration", None)
     return {
         "platform": "xiaohongshu",
@@ -427,7 +489,7 @@ def shape_note(url: str, note_id: str, note: dict[str, Any]) -> dict[str, Any]:
             "shared": interact.get("shareCount"),
         },
         "cover": images[0] if images else "",
-        "video": video,
+        **assets,
         "images": [] if video else images,
         "web_url": url,
     }
