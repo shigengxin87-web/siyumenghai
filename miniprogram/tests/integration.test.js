@@ -7,7 +7,7 @@ function page(file,api={}) {
 }
 test('registered navigation paths and tab actions match one app',()=>{
  const a=JSON.parse(fs.readFileSync(path.join(root,'app.json')));const pages=new Set(a.pages);const tabs=new Set(a.tabBar.list.map(t=>t.pagePath));
- assert.deepEqual(a.tabBar.list.map(t=>t.text),['首页','技巧','AI问答','讨论','我的']);
+ assert.deepEqual(a.tabBar.list.map(t=>t.text),['首页','技巧','AI问答','讨论']);
  function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,entry.name);if(entry.isDirectory())walk(f);else if(entry.name.endsWith('.js')){const text=fs.readFileSync(f,'utf8');for(const m of text.matchAll(/\/pages\/([\w/-]+)(?:[?'"`])/g))assert.ok(pages.has('pages/'+m[1]),f+' references '+m[1]);for(const m of text.matchAll(/switchTab\(\{\s*url:\s*['"]\/([^?'"`]+)/g))assert.ok(tabs.has(m[1]),f+' switchTab mismatch');}}}
  walk(path.join(root,'pages'));for(const p of pages)for(const ext of ['js','json','wxml','wxss'])assert.ok(fs.existsSync(path.join(root,p+'.'+ext)),p+'.'+ext);
 });

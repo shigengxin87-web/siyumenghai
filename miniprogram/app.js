@@ -2,7 +2,7 @@
 App({
   globalData: {
     brandName: '石董会',
-    slogan: '一起成长，一起越来越好',
+    slogan: '一起成长，一起好',
     links: {
       // member-view 网站上的三个资源入口
       feishu: 'https://my.feishu.cn/wiki/space/7663061611179003182?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home',

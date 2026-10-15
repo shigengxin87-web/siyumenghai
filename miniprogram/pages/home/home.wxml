@@ -3,7 +3,7 @@
   <view class="hero">
     <view class="hero-badge">石董会 · 成员服务</view>
     <view class="hero-title">石董会</view>
-    <view class="hero-slogan">一起成长，一起越来越好</view>
+    <view class="hero-slogan">一起成长，一起好</view>
   </view>
 
   <!-- 今日一句 -->
@@ -27,11 +27,5 @@
     </view>
   </view>
 
-  <!-- 关于 -->
-  <view class="about card">
-    <view class="about-title">关于石董会</view>
-    <view class="about-text">石董会是「一起成长朋友圈」——这里每天都有高信息密度的运营实战讨论、AI 新技能学习和真实案例拆解。群里聊过的好东西，都会沉淀成你能带走的方法。</view>
-  </view>
-
-  <view class="footer-tip">石董会 · 一起成长朋友圈</view>
+  <view class="footer-tip">石董会 · 一起成长，一起好</view>
 </view>
