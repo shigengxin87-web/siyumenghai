@@ -49,7 +49,7 @@ WEB_USER_AGENT = (
 # directory the systemd unit mounts read-write; every cache operation is
 # best-effort and must never break a live parse.
 CACHE_DB = os.environ.get("XHS_CACHE_DB", "/var/lib/siyumenghai-xhs-engine/parse_cache.db")
-CACHE_TTL = int(os.environ.get("XHS_CACHE_TTL_SECONDS", str(7 * 24 * 3600)))
+CACHE_TTL = int(os.environ.get("XHS_CACHE_TTL_SECONDS", str(6 * 3600)))
 _CACHE_LOCK = threading.Lock()
 
 
@@ -79,16 +79,16 @@ def cache_lookup(note_id: str) -> dict[str, Any] | None:
     try:
         with _CACHE_LOCK, _cache_connect() as db:
             row = db.execute(
-                "SELECT data, expire_at FROM xhs_parse_records WHERE note_id = ?",
+                "SELECT data, expire_at, parsed_at FROM xhs_parse_records WHERE note_id = ?",
                 (note_id,),
             ).fetchone()
             if not row:
                 return None
-            if float(row[1]) < now:
+            if float(row[1]) < now or float(row[2]) + CACHE_TTL < now:
                 db.execute("DELETE FROM xhs_parse_records WHERE note_id = ?", (note_id,))
                 return None
             result = json.loads(row[0])
-            return result if isinstance(result, dict) else None
+            return result if isinstance(result, dict) and result.pop("_cache_schema", None) == 2 else None
     except (sqlite3.Error, ValueError, TypeError, OSError):
         return None
 
@@ -103,7 +103,7 @@ def cache_store(note_id: str, original_url: str, result: dict[str, Any]) -> None
             db.execute(
                 "INSERT OR REPLACE INTO xhs_parse_records "
                 "(note_id, original_url, data, parsed_at, expire_at) VALUES (?, ?, ?, ?, ?)",
-                (note_id, original_url, json.dumps(result, ensure_ascii=False), now, now + CACHE_TTL),
+                (note_id, original_url, json.dumps({**result, "_cache_schema": 2}, ensure_ascii=False), now, now + CACHE_TTL),
             )
     except (sqlite3.Error, ValueError, TypeError, OSError):
         return
@@ -343,13 +343,18 @@ def _select_note(state: dict[str, Any], note_id: str) -> dict[str, Any]:
 
 def _video_url(note: dict[str, Any]) -> str:
     origin = _deep(note, "video.consumer.originVideoKey")
-    if origin:
-        return f"https://sns-video-bd.xhscdn.com/{origin}"
     stream_groups = _deep(note, "video.media.stream", {})
-    streams = [item for group in stream_groups.values() for item in _list(group)] if isinstance(stream_groups, dict) else []
+    streams = [{**item, "_group": name} for name, group in stream_groups.items() for item in _list(group)] if isinstance(stream_groups, dict) else []
     if not streams:
-        return ""
-    selected = max(streams, key=lambda item: float(item.get("videoBitrate") or item.get("height") or item.get("size") or 0))
+        return f"https://sns-video-bd.xhscdn.com/{origin}" if origin else ""
+    # A higher-bitrate HEVC rendition may be video-only. Preserve sound first,
+    # then prefer widely playable AVC and the best resolution in that group.
+    def score(item):
+        codec = str(item.get("videoCodec") or item.get("_group") or "").lower()
+        audio = bool(item.get("audioCodec") or float(item.get("audioBitrate") or 0) > 0)
+        compatible = codec in {"ef4", "h264", "avc", "avc1"}
+        return (audio, compatible, float(item.get("height") or 0), float(item.get("videoBitrate") or 0))
+    selected = max(streams, key=score)
     # XHS publishes http:// CDN URLs even though the same media supports
     # HTTPS. The public gateway accepts HTTPS only, so normalize media URLs.
     candidates = selected.get("backupUrls") or []
@@ -631,37 +636,38 @@ def parse_ytdlp(url: str) -> dict[str, Any]:
     }
 
 
-def parse_work(raw: Any) -> dict[str, Any]:
+def parse_work(raw: Any, refresh: bool = False) -> dict[str, Any]:
     url = resolve_url(extract_url(raw))
     if user_id_from_url(url):
         return parse_work_author(raw, url)
     note_id = note_id_from_url(url)
-    cached = cache_lookup(note_id) if note_id else None
+    cached = cache_lookup(note_id) if note_id and not refresh else None
     if cached is not None:
         # Re-point the web link at the freshly resolved URL so xsec_token stays
         # valid, while all heavy media metadata comes from the cache.
         cached["web_url"] = url
         cached["cached"] = True
         return cached
-    page_error: Exception | None = None
-    try:
-        result = parse_page(url)
-    except Exception as exc:
-        page_error = exc
-        result = None
-    if result is None:
+    # Browser is the working fast path on this deployment. HTTP is a fallback,
+    # not a failed request paid for on every cache miss.
+    stages = [("browser", parse_browser), ("http", parse_page)]
+    if os.environ.get("XHS_PARSE_PRIMARY") == "http":
+        stages.reverse()
+    if os.environ.get("XHS_YTDLP_FALLBACK") == "1":
+        stages.append(("ytdlp", parse_ytdlp))
+    result = None
+    for stage_name, stage in stages:
+        started = time.monotonic()
         try:
-            result = parse_browser(url)
+            result = stage(url)
+            print(json.dumps({"stage": stage_name, "ok": True,
+                              "seconds": round(time.monotonic() - started, 3)}), flush=True)
+            break
         except Exception:
-            # Do not leak browser errors, cookies, or account details to callers.
-            result = None
+            print(json.dumps({"stage": stage_name, "ok": False,
+                              "seconds": round(time.monotonic() - started, 3)}), flush=True)
     if result is None:
-        try:
-            result = parse_ytdlp(url)
-        except Exception:
-            if isinstance(page_error, ParseError):
-                raise page_error
-            raise ParseError("暂时无法解析该作品，请使用最新的小红书 App 分享链接")
+        raise ParseError("暂时无法读取作品，请重新复制最新分享链接后重试")
     cache_store(note_id, url, result)
     return result
 
@@ -711,7 +717,7 @@ class Handler(BaseHTTPRequestHandler):
             if not LOCK.acquire(blocking=False):
                 return self._send(429, envelope(False, message="当前解析任务较多，请稍后重试"))
             try:
-                result = parse_work(body.get("url"))
+                result = parse_work(body.get("url"), refresh=body.get("refresh") is True)
             finally:
                 LOCK.release()
             from datetime import datetime, timezone

@@ -1,10 +1,22 @@
-# 小红书云端解析
+# 小红书云端作品收集
 
-此目录提供独立于 Mac 的小红书作品解析与下载服务。解析器和网关只监听 `127.0.0.1`，公开请求由 Nginx 转发至网关。媒体源地址通过 30 分钟临时票据隐藏。
+独立云端服务，不依赖 Mac。Python 解析器和 Node 媒体网关只监听 loopback，Nginx 提供 HTTPS 入口。不得公开 DevTools、Cookie 或 API 密钥。
 
-支持作品分享链接和包含链接的分享文案，返回视频或图集、封面、作者和互动数据。主页搜索、关注、点赞、评论和发布仍由本地 `xhs-skill` 承担，不放入公开网站。
+## 2026-10-15 v2
 
-部署前创建 `/etc/siyumenghai-xhs/cloud.env`：
+- 解析队列与媒体队列独立；同作品/同媒体的并发请求合并。
+- 云端浏览器按目标作品状态轮询，无固定 5 秒等待；失败后再尝试 HTTP 页面。`XHS_PARSE_PRIMARY=http` 可切回 HTTP 优先；默认不再使用与页面同源的 yt-dlp 兜底，显式 `XHS_YTDLP_FALLBACK=1` 才启用。
+- 选视频时优先带音轨、兼容的 AVC 版本，避免最高码率的视频只有画面没有声音。
+- 元数据默认缓存 6 小时；旧缓存结构自动失效。`POST /api/xhs/parse` 支持 `refresh:true`。
+- 媒体使用持久化资源记录，7 天有效；服务重启不会让已发放资源立即失效。上游媒体不可用时重新解析刷新。
+- 原文件按需缓存到磁盘；同一资源不会重复拉取。缩略图由 Pillow 生成，前端首屏只展示封面和最多 4 张缩略图。
+- 视频冷预览可直接 Range 流式转发；完整下载先准备到缓存，后续下载支持本地 Range。
+- 图集打包 ZIP；单图、视频可单独下载。准备任务有逐文件/字节进度，失败可重试，已完成任务可跨网关重启恢复。
+- 前端支持两条并行解析、作品信息/CSV 导出、旧历史记录迁移、图集键盘浏览、手机布局。
+
+## 安装
+
+创建 `/etc/siyumenghai-xhs/cloud.env`（不提交到 Git）：
 
 ```text
 XHS_API_KEY=随机长密钥
@@ -14,50 +26,61 @@ XHS_ENGINE_URL=http://127.0.0.1:2038
 XHS_GATEWAY_PORT=2039
 ```
 
-可选缓存配置（默认已开启，无需填写）：
+可选环境变量：
 
 ```text
-# SQLite 缓存位置，默认 /var/lib/siyumenghai-xhs-engine/parse_cache.db
-# XHS_CACHE_DB=/var/lib/siyumenghai-xhs-engine/parse_cache.db
-# 缓存有效期秒数，默认 7 天；设为 0 关闭缓存
-# XHS_CACHE_TTL_SECONDS=604800
+XHS_CACHE_TTL_SECONDS=21600
+XHS_MEDIA_CACHE_DIR=/var/lib/siyumenghai-xhs-media
+XHS_MEDIA_CACHE_BYTES=1610612736
 ```
 
-可选的 `/etc/siyumenghai-xhs/cookie.txt` 仅保存一行 Cookie 请求头内容，权限必须为 `0640 root:siyumenghai-xhs`。不要提交到 Git。
+Cookie 单独放 `/etc/siyumenghai-xhs/cookie.txt`，权限 `0640 root:siyumenghai-xhs`。需 Google Chrome 及 Node >=22。运行 `install.sh`，升级后需重启 engine/gateway，已存在的 service 不会因 `enable --now` 自动重新加载新代码。
 
-Nginx HTTPS server 中加入：
+媒体目录须由服务用户写入，网关 unit 的 `ReadWritePaths` 与自定义目录保持一致。默认缓存预算约 1.5GiB，每 10 分钟及准备任务完成后清理，原文件与缓存保留最多 7 天；单文件、单个 ZIP 上限 512MiB。并发传输可能有暂时超额，需监控磁盘空间。待处理任务有界，当前处理中的任务在重启时可重新提交，已完成任务文件默认可下载 24 小时。
+
+## Nginx
+
+媒体、下载文件与 GET 任务状态不能计入提交解析的速率限制。生产配置需同时更新 map 与 location：
 
 ```nginx
-location /api/xhs/ {
+map $uri $xhs_cloud_limit_key {
+    default $binary_remote_addr;
+    ~^/api/xhs/media/ "";
+    ~^/api/xhs/jobs/ "";
+    ~^/api/xhs/files/ "";
+    /api/xhs/health "";
+}
+limit_req_zone $xhs_cloud_limit_key zone=xhs_cloud_api:1m rate=60r/m;
+location ^~ /api/xhs/ {
+    limit_req zone=xhs_cloud_api burst=24 nodelay;
+    limit_req_status 429;
+    client_max_body_size 16k;
     proxy_pass http://127.0.0.1:2039;
     proxy_http_version 1.1;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
     proxy_read_timeout 90s;
     proxy_buffering off;
+    # Cache-Control 由网关设置，勿统一覆盖为 no-store。
 }
 ```
 
-每次修改先备份配置，执行 `nginx -t`，确认通过后再 reload。
+配置更新前备份，`nginx -t` 通过后 reload；不改其他平台路由。
 
+## 接口
 
+- `POST /api/xhs/parse`：`{url, refresh?}`，返回真实作品或博主列表、同源媒体地址、耗时。
+- `GET /api/xhs/media/{id}?thumb=1`：小尺寸预览；不带 thumb 返回原文件；支持 Range。
+- `POST /api/xhs/jobs`：`{media:["/api/xhs/media/..."]}`，返回准备任务。多文件仅允许同作品图片。
+- `GET /api/xhs/jobs/{id}`：`preparing/ready/failed`，包含 done/total、当前文件 bytes、download。
+- `GET /api/xhs/files/{id}`：准备完成的原文件或 ZIP，attachment、支持 Range。
 
-## 2026-10-14 云端浏览器解析回退与验收
+移动端文件分享仅在浏览器支持时提供，文件读取后再次点击由用户唤起系统分享。不承诺任何浏览器都能直接写入手机相册。
 
-现有云端引擎先尝试 HTTP 页面状态读取；如网页返回空状态或跳转登录，则在同一台腾讯云服务器上通过 loopback Chrome DevTools（127.0.0.1:9223）读取目标公开笔记。Chrome 由 `siyumenghai-xhs-browser.service` 自启动与重启；不得把 DevTools 端口开放公网。只有对应目标笔记的最小必要作品字段返回给引擎，不输出整个用户浏览器状态或 Cookie。浏览器 Profile 存储在 /var/lib/siyumenghai-xhs-browser/profile。原有 Cookie 文件仍只能由受限服务用户读取。服务限流策略保持不变。
+## 验证
 
-安装时包含 browser_parser.mjs、独立 Chrome systemd unit、Python 引擎及 Node 网关；升级前备份已有运行文件，停服变更后立即验证 /api/xhs/health 并使用真实分享链接测 /api/xhs/parse 与 /api/xhs/media/...。若登录状态失效或平台不允许访问，返回失败，不伪造作品。图文和视频分别使用有效样本验收。
+```sh
+XHS_API_KEY=test-key uv run --with httpx==0.28.1 --with lxml==6.1.1 --with yt-dlp==2026.8.19 python -m unittest discover -s deploy/xhs-cloud -p test_engine.py
+XHS_API_KEY=test-key XHS_MEDIA_CACHE_DIR=/tmp/xhs-unit-media node --test deploy/xhs-cloud/test_gateway.mjs
+node --test deploy/xhs-cloud/test_media.mjs
+```
 
-2026-10-14 已上线验收记录：用户提供的 https://xhslink.cn/o/8363BYYnLwB 是图文笔记，不是视频，云端成功返回 6 张图片；6 张图片的在线媒体代理均通过 HTTP 206 Range 测试。iPhone 390px 视口线上粘贴解析、预览图片和界面无脚本报错测试通过。视频作品仍需要单独的有效分享链接完成完整 MP4 验收，不能将图文测试当作视频测试。
-
-## 解析缓存与历史记录
-
-引擎按 note_id 缓存解析结果（SQLite，表 `xhs_parse_records`）：短链解析出 note_id 后先查缓存，命中直接返回，不再触发 HTTP / 浏览器 / yt-dlp 三级解析，重复解析目标 <500ms；未命中才走原有回退链路并在成功后写回。缓存记录里的 web_url 每次刷新为最新 resolve 地址（xsec_token 保持新鲜），媒体地址仍由网关按请求现签 30 分钟临时票据，因此 7 天 TTL 内票据层永不过期。缓存读写全部 best-effort，DB 不可写时自动降级为实时解析，不影响线上可用性。
-
-用户侧历史记录保存在浏览器 localStorage（最近 30 条，含封面/标题/作者/类型/时间），"再次查询"命中服务端缓存后秒回，可直接播放或保存。视频作品卡片主按钮为"保存视频"，次按钮为"预览播放"；缓存命中时卡片展示"秒开缓存"徽章。
-
-升级时需确保 `/var/lib/siyumenghai-xhs-engine` 存在且属主为 siyumenghai-xhs（install.sh 已自动创建，systemd unit 已加 `ReadWritePaths`）。回滚时停服、换回旧 engine.py、重启即可，缓存 DB 可保留不影响旧版运行。
-
-## 博主主页作品列表
-
-`/parse` 自动识别输入链接：resolve 后路径为 `/user/profile/{id}` 时走博主分支，返回 `kind=author` 结构（博主昵称 + 最新最多 30 条作品的封面/标题/类型），前端渲染作品网格，用户点任意一条再走单条解析下载。HTTP 直读失败时由 `browser_author.mjs` 通过 loopback Chrome 打开博主 profile 页提取笔记列表。博主结果进程内缓存 10 分钟（`AUTHOR_TTL`），重复粘贴同一博主链接秒回。不做服务端定时轮询/推送，保持与抖音云端同款"手动拉最新"模式。
+自动化回归覆盖队列不丢请求、同文件去重、持久化资源、13 图同时请求、Range、ZIP CRC 和逐文件内容、下载任务。上线仍需真实作品、完整带声音视频、图集实际下载、播放/拖动、手机宽度与公网内容 hash 验收。少量样本不等于长期平台可用性保证。

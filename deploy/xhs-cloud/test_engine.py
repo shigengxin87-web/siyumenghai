@@ -81,6 +81,13 @@ class EngineTests(unittest.TestCase):
             "https://sns-bak-v1.xhscdn.com/path/video.mp4?sign=abc",
         )
 
+    def test_audio_and_compatible_video_preferred_over_silent_high_bitrate(self):
+        note = {"video": {"media": {"stream": {
+            "EF4": [{"audioCodec": "aac", "videoBitrate": 350, "height": 960, "masterUrl": "https://sns-video-bd.xhscdn.com/sound.mp4"}],
+            "EF5": [{"videoBitrate": 500, "height": 1440, "masterUrl": "https://sns-video-bd.xhscdn.com/silent.mp4"}]
+        }}}}
+        self.assertEqual(engine._video_url(note), "https://sns-video-bd.xhscdn.com/sound.mp4")
+
     def test_video_external_cdn_is_rejected(self):
         note = {"video": {"media": {"stream": {"EF5": [
             {"videoBitrate": 3000, "backupUrls": ["http://127.0.0.1/secret"], "masterUrl": "https://evil.example.com/file.mp4"}
@@ -125,14 +132,23 @@ class EngineTests(unittest.TestCase):
             with self.assertRaisesRegex(engine.ParseError, "标识不匹配"):
                 engine.parse_browser("https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef")
 
-    def test_falls_back_to_browser_after_page_refusal(self):
+    def test_browser_fast_path_skips_http_when_successful(self):
         requested = "https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef"
         expected = {"id": "67abcdef0123456789abcdef", "type": "image"}
         with patch.object(engine, "parse_page", side_effect=engine.ParseError("blocked")) as page:
             with patch.object(engine, "parse_browser", return_value=expected) as browser:
                 self.assertEqual(engine.parse_work(requested), expected)
-        page.assert_called_once()
+        page.assert_not_called()
         browser.assert_called_once()
+
+    def test_http_fallback_runs_when_browser_fails(self):
+        requested = "https://www.xiaohongshu.com/explore/67abcdef0123456789abcdef"
+        expected = {"id": "67abcdef0123456789abcdef", "type": "image"}
+        with patch.object(engine, "parse_browser", side_effect=engine.ParseError("blocked")) as browser:
+            with patch.object(engine, "parse_page", return_value=expected) as page:
+                self.assertEqual(engine.parse_work(requested, refresh=True), expected)
+        browser.assert_called_once()
+        page.assert_called_once()
 
     def test_parse_page_reuses_bootstrapped_client_and_closes_it(self):
         note_id = "67abcdef0123456789abcdef"
@@ -202,6 +218,14 @@ class ParseCacheTests(unittest.TestCase):
         self.assertEqual(page.call_count, 1)
         self.assertTrue(second["cached"])
         self.assertEqual(second["title"], "新解析")
+
+    def test_refresh_bypasses_existing_metadata(self):
+        engine.cache_store(self.note_id, self.url, {"id": self.note_id, "title": "老数据"})
+        with patch.object(engine, "resolve_url", return_value=self.url):
+            with patch.object(engine, "parse_browser", return_value={"id": self.note_id, "title": "新数据"}) as browser:
+                result = engine.parse_work(self.url, refresh=True)
+        browser.assert_called_once()
+        self.assertEqual(result["title"], "新数据")
 
     def test_expired_cache_entry_is_discarded(self):
         engine.cache_store(self.note_id, self.url, {"id": self.note_id, "title": "老数据"})

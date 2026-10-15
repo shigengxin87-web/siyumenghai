@@ -1,37 +1,24 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#fff4f5">
-  <title>小红书下载 · 石更新成长朋友圈</title>
-  <meta name="description" content="小红书作品分享链接解析、视频、图集、封面与作品信息保存。">
-  <link rel="icon" href="../comment-cloud/favicon.svg">
-  <link rel="stylesheet" href="./portal.css">
-  <link rel="stylesheet" href="./platform-switch.css?v=20261013-2">
-  <link rel="stylesheet" href="./xhs-page.css?v=20261013-1">
-  <link rel="stylesheet" href="./xhs-fixes.css?v=20261015-2">
-  <script src="./xhs-page.js?v=20261015-4" defer></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#faf8f5"><meta name="description" content="粘贴小红书分享链接，查看作品信息、预览图片视频，一键保存原文件。">
+<title>小红书作品收集 · 石更新成长朋友圈</title>
+<link rel="icon" href="../comment-cloud/favicon.svg">
+<link rel="stylesheet" href="./xhs-page.css?v=20261015-10">
+<script src="./xhs-page.js?v=20261015-10" defer></script>
 </head>
-<body class="platform-xhs">
-  <div class="portal-shell tool-shell">
-    <header class="portal-header">
-      <div class="portal-brand"><span class="portal-mark">红</span><span><strong>小红书下载工作台</strong><small>粘贴分享链接，解析并保存内容</small></span></div>
-      <div class="portal-actions"><span class="usage-note">仅用于本人拥有或已获授权的内容</span></div>
-    </header>
-    <main class="tool-main"><div class="tool-container">
-      <nav class="platform-switch" aria-label="下载平台"><a href="./video-downloader-20260808-17.html">视频号下载</a><a href="./douyin-downloader.html">抖音下载</a><a class="is-active" aria-current="page" href="./xhs-downloader.html">小红书下载</a></nav>
-      <section class="xhs-query-card">
-        <div class="xhs-heading"><p>小红书工具</p><h1>粘贴分享链接，保存作品</h1><span>支持视频、图集和包含链接的分享文案，可一次解析多条。</span></div>
-        <form id="parseForm"><label for="links">作品链接或分享文案</label><textarea id="links" rows="6" placeholder="粘贴小红书 App 复制的作品分享链接，也可每行输入一条" required></textarea><div class="submit-row"><button class="primary" type="submit">解析作品</button><small>单次最多 20 条；请使用最新复制的作品分享链接。</small></div></form>
-        <p id="status" role="status" aria-live="polite"></p>
-      </section>
-      <div id="actions" class="result-actions" hidden><button type="button" id="exportJson">导出 JSON</button><button type="button" id="exportCsv">导出表格（CSV）</button></div>
-      <section id="results" class="xhs-results" aria-label="作品结果"></section>
-      <section class="xhs-history" aria-label="小红书查询记录"><header><div><strong>查询记录</strong><small>解析成功后自动保存在当前浏览器</small></div><button type="button" id="clearHistory">清空记录</button></header><div id="historyList" class="history-list"></div></section>
-      <section class="tool-steps" aria-label="操作步骤"><article><span>01</span><div><strong>复制链接</strong><small>在小红书作品分享菜单复制链接</small></div></article><article><span>02</span><div><strong>解析作品</strong><small>查看视频、图片、作者和数据</small></div></article><article><span>03</span><div><strong>预览保存</strong><small>点击媒体后保存到本地</small></div></article></section>
-    </div></main>
-  </div>
-  <div id="preview" class="preview-modal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-sheet"><header><strong id="previewTitle">媒体预览与保存</strong><button type="button" id="previewClose" aria-label="关闭预览">×</button></header><div class="preview-stage"><button type="button" id="galleryPrev" class="gallery-arrow" aria-label="上一张">‹</button><img id="previewImage" alt="图片预览" hidden><video id="previewVideo" controls playsinline hidden></video><button type="button" id="galleryNext" class="gallery-arrow" aria-label="下一张">›</button><span id="galleryCounter" class="gallery-counter" hidden></span></div><p id="previewHint">点击"保存到电脑"下载原文件；也可以打开原文件后右键另存为。</p><div class="preview-actions"><button type="button" id="previewSave">保存到电脑</button><a id="previewOpen" target="_blank" rel="noopener noreferrer">打开原文件</a></div></div></div>
-</body>
-</html>
+<body>
+<header class="topbar"><a class="brand" href="./"><span class="mark">红</span><span>作品收集<small>石更新成长朋友圈</small></span></a><nav aria-label="下载平台"><a href="./video-downloader-20260808-17.html">视频号</a><a href="./douyin-downloader.html">抖音</a><a href="./xhs-downloader.html" aria-current="page">小红书</a></nav></header>
+<main>
+<section class="query"><p class="eyebrow">COLLECT · PREVIEW · SAVE</p><h1>好作品，随手收好。</h1><p class="lead">粘贴小红书分享链接，查看内容、收集数据，一键保存图片和视频。</p>
+<form id="parseForm"><label class="sr-only" for="links">小红书分享链接或分享文案</label><textarea id="links" placeholder="把链接或分享文案放这里，也可以一次粘贴多条。" rows="3" required></textarea><div class="submit-row"><small>视频与图集均支持 · 每次最多 20 条</small><button class="primary" type="submit">解析作品 <span aria-hidden="true">↗</span></button></div></form>
+<p id="status" role="status" aria-live="polite"></p></section>
+<section id="results" class="results" aria-label="作品结果"></section>
+<div id="actions" class="export-actions" hidden><span>作品信息</span><button id="exportJson" type="button">导出 JSON</button><button id="exportCsv" type="button">导出表格 CSV</button></div>
+<section class="history"><header><h2>最近收集</h2><button id="clearHistory" type="button" class="quiet">清空记录</button></header><div id="historyList"></div></section>
+<footer>仅保存本人拥有或已获授权的作品。记录保存在当前浏览器。</footer>
+</main>
+<div id="preview" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-sheet"><header><div><strong id="previewTitle">作品预览</strong><small id="galleryCounter"></small></div><button id="previewClose" type="button" aria-label="关闭预览">✕</button></header><div class="stage"><button id="galleryPrev" class="arrow prev" aria-label="上一张">‹</button><img id="previewImage" alt="作品图片" hidden><video id="previewVideo" controls playsinline preload="metadata" hidden></video><button id="galleryNext" class="arrow next" aria-label="下一张">›</button><p id="previewState" role="status"></p></div><div class="preview-actions"><span id="previewHint">原文件保留清晰度</span><button id="previewSave" class="primary" type="button">保存这一张</button><a id="previewOpen" target="_blank" rel="noopener noreferrer">打开原文件</a></div></div></div>
+<aside id="downloads" class="downloads" hidden aria-label="保存进度"><header><strong>文件准备</strong><button id="downloadClose" class="quiet" type="button">收起</button></header><div id="downloadList" aria-live="polite"></div></aside>
+</body></html>

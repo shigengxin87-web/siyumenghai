@@ -1,0 +1,18 @@
+map $uri $xhs_cloud_limit_key {
+    default $binary_remote_addr;
+    ~^/api/xhs/media/ "";
+    ~^/api/xhs/jobs/ "";
+    ~^/api/xhs/files/ "";
+    /api/xhs/health "";
+}
+limit_req_zone $xhs_cloud_limit_key zone=xhs_cloud_api:1m rate=60r/m;
+location ^~ /api/xhs/ {
+    limit_req zone=xhs_cloud_api burst=24 nodelay;
+    limit_req_status 429;
+    client_max_body_size 16k;
+    proxy_pass http://127.0.0.1:2039;
+    proxy_http_version 1.1;
+    proxy_read_timeout 90s;
+    proxy_buffering off;
+    # Cache-Control 由网关设置，勿统一覆盖为 no-store。
+}

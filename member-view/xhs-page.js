@@ -1,172 +1,98 @@
 (() => {
-  const $ = id => document.getElementById(id);
-  const form = $('parseForm'), input = $('links'), status = $('status'), resultsNode = $('results'), actions = $('actions'), historyList = $('historyList');
-  const previewImageEl = $('previewImage'), previewVideoEl = $('previewVideo');
-  const galleryPrevEl = $('galleryPrev'), galleryNextEl = $('galleryNext'), galleryCounterEl = $('galleryCounter');
-  const historyKey = 'siyumenghai-xhs-history-v1';
-  const isMobile = matchMedia('(max-width: 720px)').matches || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  let results = [], previewUrl = '', previewKind = '', previewUrls = [], previewIndex = 0;
-  // Device-tuned copy: desktop never mentions phones, mobile never mentions desktops.
-  if (isMobile) {
-    $('previewHint').textContent = '点“保存”调起系统分享，可选“存储到照片”；也可以打开原文件后长按画面保存。';
-    $('previewSave').textContent = '保存';
+  const $=id=>document.getElementById(id);
+  const text=v=>v==null?'':String(v),escape=v=>text(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const results=[],downloads=[];const historyKey='siyumenghai-xhs-history-v2',jobsKey='siyumenghai-xhs-jobs-v2';
+  let gallery=[],galleryIndex=0,previewKind='',returnFocus,previewSource='';
+  const thumb=url=>url?`${url}?thumb=1`:'';
+  const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};
+  const write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));}catch{}};
+  async function api(url,body,timeout=30000) {
+    const response=await fetch(url,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(timeout)});
+    let data;try{data=await response.json();}catch{throw new Error('服务暂时没有响应，请重试');}
+    if(!response.ok){const e=new Error(data.error||'暂时无法完成，请重试');e.status=response.status;throw e;}return data;
   }
-  const text = value => value == null ? '' : String(value);
-  const escape = value => text(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  function urls(value) {
-    const found = text(value).match(/https:\/\/[^\s<>"“”]+/gu) || [];
-    return [...new Set(found.map(item => item.replace(/[，。！？；：、,.!?;:）)\]}]+$/u, '')).filter(item => /(?:xiaohongshu\.com|xhslink\.(?:com|cn))/i.test(item)))].slice(0, 20);
+  function extract(value){return [...new Set((value.match(/https:\/\/[^\s<>"“”]+/gu)||[]).map(u=>u.replace(/[，。！？；：、,.!?;:）)\]}]+$/u,'')).filter(u=>{try{return ['xiaohongshu.com','www.xiaohongshu.com','xhslink.com','www.xhslink.com','xhslink.cn','www.xhslink.cn'].includes(new URL(u).hostname);}catch{return false;}}))].slice(0,20);}
+  const metric=(label,value)=>value==null||value===''?'':`<span>${label}<b>${escape(value)}</b></span>`;
+  function card(item,i) {
+    if(item.kind==='author')return `<article class="author-card"><h2>${escape(item.author?.nickname||'博主')}的最新作品</h2><div class="author-grid">${(item.notes||[]).map(n=>`<button class="author-note" data-note="${escape(n.web_url)}"><img src="${escape(thumb(n.cover))}" loading="lazy" alt=""><span>${escape(n.title||'查看作品')}</span></button>`).join('')}</div></article>`;
+    const video=Boolean(item.video),images=item.images||[],cover=video?item.cover:images[0];
+    return `<article class="card" data-index="${i}"><div class="visual ${video?'video':'image'}"><button class="cover" data-preview="${i}" data-start="0" aria-label="${video?'播放视频':'预览图片 1'}"><img src="${escape(thumb(cover))}" alt="${escape(item.title)}" decoding="async">${video?'<span class="play" aria-hidden="true">▶</span>':''}<span class="count">${video?'视频':`${images.length} 张图片`}</span></button>${!video&&images.length>1?`<div class="thumbnails">${images.slice(1,5).map((url,n)=>`<button data-preview="${i}" data-start="${n+1}" aria-label="预览图片 ${n+2}"><img src="${escape(thumb(url))}" loading="lazy" alt="第 ${n+2} 张">${n===3&&images.length>5?`<span>+${images.length-4}</span>`:''}</button>`).join('')}</div>`:''}</div><div class="copy"><span class="card-type">${video?'视频作品':'图文作品'}${item.cached?' · 已收录':''}</span><h2>${escape(item.title||'小红书作品')}</h2><p class="author">${escape(item.author||'作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞',item.stats?.liked)}${metric('收藏',item.stats?.collected)}${metric('评论',item.stats?.commented)}${metric('分享',item.stats?.shared)}</div><div class="card-actions"><button class="primary" data-save="${i}">${video?'下载视频':`下载图集 · ${images.length} 张`}</button><button data-preview="${i}" data-start="0">${video?'播放预览':'浏览图集'}</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">原作品 ↗</a></div><p class="media-note">${video?'保存作品视频，支持断点续传':'图集打包为一个 ZIP，也可在预览中逐张保存'}</p></div></article>`;
   }
-  async function parse(url) {
-    const response = await fetch('/api/xhs/parse', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({url})});
-    let body;
-    try { body = await response.json(); } catch { throw new Error('解析服务响应异常'); }
-    if (!response.ok) throw new Error(body.error || '解析失败');
-    return body;
+  function addResult(item) {
+    const index=results.length;results.push(item);$('results').insertAdjacentHTML('beforeend',card(item,index));
+    $('actions').hidden=!results.some(i=>i.kind!=='author');
+    if(item.kind!=='author')saveHistory(item);
   }
-  const metric = (label, value) => value == null || value === '' ? '' : `<span>${label} ${escape(value)}</span>`;
-  function mediaButton(item, url, kind, index) {
-    const image = kind === 'video' ? item.cover : url;
-    return `<button class="media-button" type="button" data-preview="${escape(url)}" data-kind="${kind}" data-gallery-index="${kind === 'image' ? index : ''}" aria-label="预览${kind === 'video' ? '视频' : `图片 ${index + 1}`}"><img src="${escape(image || '')}" alt="${escape(item.title || item.description || '作品媒体')}">${kind === 'video' ? '<span class="play">▶</span>' : ''}</button>`;
-  }
-  function card(item, index) {
-    const media = item.video ? mediaButton(item, item.video, 'video', 0) : item.images.map((url, i) => mediaButton(item, url, 'image', i)).join('');
-    const badge = item.cached ? '<span class="cache-badge">秒开缓存</span>' : '';
-    const actions = item.video
-      ? `<button class="primary save-direct" type="button" data-save-direct="${escape(item.video)}" data-kind="video">保存视频</button><button type="button" data-preview="${escape(item.video)}" data-kind="video">预览播放</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>`
-      : `<button class="primary" type="button" data-preview-gallery="${index}" data-start="0">预览图集</button><button type="button" data-save-all="${index}">保存全部 ${item.images.length} 张</button><a href="${escape(item.web_url)}" target="_blank" rel="noopener noreferrer">查看原作品</a>`;
-    return `<article class="xhs-card ${item.video ? 'is-video' : ''}" data-index="${index}"><div class="card-body"><div class="media-grid ${item.video ? 'is-single' : ''}">${media}</div><div class="card-copy"><div class="eyebrow-row">${badge}<span class="card-eyebrow">${item.video ? '视频作品' : `图集 · ${item.images.length} 张`}</span></div><h2>${escape(item.title || item.description || '小红书作品')}</h2><p class="author">${escape(item.author || '作者信息未公开')}</p><p class="description">${escape(item.description)}</p><div class="stats">${metric('点赞', item.stats?.liked)}${metric('收藏', item.stats?.collected)}${metric('评论', item.stats?.commented)}${metric('分享', item.stats?.shared)}</div><div class="card-actions">${actions}</div></div></div></article>`;
-  }
-  function authorCard(author) {
-    const notes = author.notes || [];
-    const grid = notes.map(note => `<button class="author-note" type="button" data-author-note="${escape(note.web_url)}"><img src="${escape(note.cover || '')}" alt=""><span class="author-note-type">${note.type === 'video' ? '视频' : '图'}</span><span class="author-note-title">${escape(note.title || '无标题作品')}</span></button>`).join('');
-    return `<article class="author-card"><header><strong>@${escape(author.author?.nickname || '博主')}</strong><small>${notes.length} 条最新作品${author.cached ? ' · 缓存秒开' : ''}，点击任意一条即可解析下载</small></header><div class="author-grid">${grid || '<p class="history-empty">没有取到作品列表</p>'}</div></article>`;
-  }
-  function render() {
-    resultsNode.innerHTML = results.map((item, index) => item.kind === 'author' ? authorCard(item) : card(item, index)).join('');
-    actions.hidden = !results.some(item => item.kind !== 'author');
-  }
-  function getHistory() { try { return JSON.parse(localStorage.getItem(historyKey) || '[]'); } catch { return []; } }
   function saveHistory(item) {
-    const entry = {id:item.id,type:item.type || (item.video ? 'video' : 'image'),title:item.title || item.description || '小红书作品',author:item.author || '',cover:item.cover || item.images?.[0] || '',web_url:item.web_url,saved_at:new Date().toISOString()};
-    localStorage.setItem(historyKey, JSON.stringify([entry, ...getHistory().filter(old => old.id !== entry.id)].slice(0, 30)));
-    renderHistory();
+    const entry={id:item.id,type:item.video?'video':'image',title:item.title||'小红书作品',author:item.author||'',web_url:item.web_url,saved_at:Date.now()};
+    write(historyKey,[entry,...read(historyKey,[]).filter(i=>i.id!==entry.id)].slice(0,30));renderHistory();
   }
-  function renderHistory() {
-    const items = getHistory();
-    historyList.innerHTML = items.length ? items.map(item => `<div class="history-item"><img src="${escape(item.cover)}" alt=""><div><strong>${escape(item.title)}</strong><small>${item.type === 'video' ? '视频' : '图集'} · ${escape(item.author)} · ${new Date(item.saved_at).toLocaleString('zh-CN')}</small></div><button type="button" data-history-url="${escape(item.web_url)}">再次查询</button></div>`).join('') : '<div class="history-empty">还没有查询记录</div>';
-  }
-  function showGalleryImage() {
-    const url = previewUrls[previewIndex];
-    previewImageEl.src = url;
-    previewUrl = url;
-    if (galleryCounterEl) { galleryCounterEl.hidden = previewUrls.length <= 1; galleryCounterEl.textContent = `${previewIndex + 1} / ${previewUrls.length}`; }
-    if (galleryPrevEl) galleryPrevEl.hidden = previewIndex === 0;
-    if (galleryNextEl) galleryNextEl.hidden = previewIndex === previewUrls.length - 1;
-  }
-  function openPreview(url, kind) {
-    if (!url) return;
-    previewUrls = []; previewIndex = 0;
-    previewUrl = url; previewKind = kind;
-    previewImageEl.hidden = kind !== 'image'; previewVideoEl.hidden = kind !== 'video';
-    if (galleryPrevEl) galleryPrevEl.hidden = true;
-    if (galleryNextEl) galleryNextEl.hidden = true;
-    if (galleryCounterEl) galleryCounterEl.hidden = true;
-    if (kind === 'image') previewImageEl.src = url; else { previewVideoEl.preload = 'metadata'; previewVideoEl.src = url; }
-    $('previewOpen').href = url; $('preview').hidden = false; document.body.style.overflow = 'hidden';
-  }
-  function openGallery(itemIndex, startIndex) {
-    const item = results[itemIndex];
-    if (!item || !item.images?.length) return;
-    previewUrls = item.images; previewIndex = startIndex; previewKind = 'image';
-    previewImageEl.hidden = false; previewVideoEl.hidden = true;
-    showGalleryImage();
-    $('previewOpen').href = previewUrls[previewIndex];
-    $('preview').hidden = false; document.body.style.overflow = 'hidden';
-  }
-  function closePreview() {
-    $('preview').hidden = true; previewVideoEl.pause(); previewVideoEl.removeAttribute('src'); previewImageEl.removeAttribute('src'); previewUrls = []; previewIndex = 0; document.body.style.overflow = '';
-  }
-  function saveAllImages(urls) {
-    status.textContent = `正在下载全部 ${urls.length} 张图片…`;
-    urls.forEach((url, i) => {
-      setTimeout(() => {
-        const a = document.createElement('a');
-        a.href = `${url}${url.includes('?') ? '&' : '?'}download=1`;
-        a.download = `xhs-${String(i + 1).padStart(2, '0')}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      }, i * 300);
-    });
-    status.textContent = `已开始下载 ${urls.length} 张图片。`;
-  }
-  function saveToPhone(url, kind) {
-    status.textContent = '正在开始下载…';
-    const dlUrl = `${url}${url.includes('?') ? '&' : '?'}download=1`;
-    const a = document.createElement('a');
-    a.href = dlUrl;
-    a.download = `xiaohongshu-${Date.now()}.${kind === 'video' ? 'mp4' : 'jpg'}`;
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    status.textContent = '已开始下载，可在浏览器下载记录里查看。';
-  }
-  function download(name, type, content) {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], {type})); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 15000);
-  }
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    const list = urls(input.value);
-    if (!list.length) { status.textContent = '没有识别到小红书作品链接。'; return; }
-    const button = form.querySelector('button[type="submit"]');
-    button.disabled = true; results = []; render(); let failed = 0, errors = [];
-    for (let i = 0; i < list.length; i++) {
-      status.textContent = `正在解析 ${i + 1}/${list.length}…`;
-      try { const item = await parse(list[i]); results.push(item); if (item.kind !== 'author') saveHistory(item); render(); }
-      catch (error) { failed++; errors.push(`第 ${i + 1} 条：${error.message}`); }
-    }
-    button.disabled = false;
-    status.textContent = `完成：成功 ${results.length} 条，失败 ${failed} 条。${errors.length ? `\n${errors.join('\n')}` : ''}`;
+  function renderHistory(){const history=read(historyKey,[]);$('historyList').innerHTML=history.length?history.map(i=>`<div class="history-row"><div><strong>${escape(i.title)}</strong><small>${i.type==='video'?'视频':'图集'} · ${escape(i.author)} · ${new Date(i.saved_at).toLocaleDateString('zh-CN')}</small></div><button data-history="${escape(i.web_url)}">打开</button></div>`).join(''):'<p class="empty">收集过的作品会出现在这里，随时回来继续保存。</p>';}
+  async function parseOne(url,refresh=false){return api('/api/xhs/parse',{url,refresh},70000);}
+  $('parseForm').addEventListener('submit',async e=>{
+    e.preventDefault();const list=extract($('links').value);if(!list.length){$('status').textContent='没有识别到小红书链接，请粘贴完整的分享链接。';return;}
+    const button=e.currentTarget.querySelector('button');button.disabled=true;button.textContent='正在读取…';
+    results.length=0;$('results').replaceChildren();$('actions').hidden=true;
+    const loading=document.createElement('div');loading.className='skeleton';loading.setAttribute('aria-label','正在读取作品');$('results').append(loading);
+    let done=0,failed=0,cursor=0;
+    async function worker(){while(cursor<list.length){const i=cursor++;$('status').textContent=`正在收集作品 ${done+failed+1}/${list.length}…`;
+      try{const item=await parseOne(list[i]);loading.remove();addResult(item);done++;}
+      catch(error){failed++;$('results').insertAdjacentHTML('beforeend',`<div class="parse-error">第 ${i+1} 条：${escape(error.name==='TimeoutError'?'读取超时，请稍后重试':error.message)} <button data-note="${escape(list[i])}">重试</button></div>`);}
+      $('status').textContent=`已收集 ${done}/${list.length} 条${failed?`，${failed} 条需要重试`:''}。${done?'点击作品可预览，点击下载可保存原文件。':''}`;
+    }}
+    try{await Promise.all(Array.from({length:Math.min(2,list.length)},worker));}finally{loading.remove();button.disabled=false;button.innerHTML='解析作品 <span aria-hidden="true">↗</span>';}
   });
-  async function parseNote(noteUrl) {
-    status.textContent = '正在解析该作品…';
-    try {
-      const item = await parse(noteUrl);
-      if (item.kind === 'author') throw new Error('该链接不是单条作品');
-      results.unshift(item); saveHistory(item); render();
-      status.textContent = `已解析：${item.title || '作品'}（${item.cached ? '缓存秒开' : '完成'}）`;
-    } catch (error) { status.textContent = `解析失败：${error.message}`; }
+  async function openNote(url,button){if(button)button.disabled=true;$('status').textContent='正在读取作品…';try{const item=await parseOne(url);addResult(item);$('status').textContent='已收集，可以预览和保存。';$('results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){$('status').textContent=e.message;}finally{if(button)button.disabled=false;}}
+  $('results').addEventListener('error',e=>{if(e.target.tagName==='IMG'){e.target.hidden=true;const parent=e.target.closest('button');if(parent&&!parent.querySelector('.image-error'))parent.insertAdjacentHTML('beforeend','<span class="image-error">点击重新查看</span>');}},true);
+  $('results').addEventListener('click',e=>{
+    const note=e.target.closest('[data-note]');if(note)return openNote(note.dataset.note,note);
+    const preview=e.target.closest('[data-preview]');if(preview)return openPreview(results[Number(preview.dataset.preview)],Number(preview.dataset.start||0));
+    const save=e.target.closest('[data-save]');if(save){const i=results[Number(save.dataset.save)];return prepare(i.video?[i.video]:i.images,i.title,i.web_url);}
+  });
+  function updatePreview(){const url=gallery[galleryIndex];$('galleryCounter').textContent=previewKind==='image'?`${galleryIndex+1} / ${gallery.length}`:'视频';$('galleryPrev').hidden=previewKind!=='image'||galleryIndex===0;$('galleryNext').hidden=previewKind!=='image'||galleryIndex===gallery.length-1;$('previewState').textContent='正在加载…';$('previewOpen').href=url;$('previewSave').textContent=previewKind==='video'?'下载视频':'保存这一张';if(previewKind==='image')$('previewImage').src=url;else $('previewVideo').src=url;}
+  function openPreview(item,index=0){returnFocus=document.activeElement;previewKind=item.video?'video':'image';gallery=item.video?[item.video]:(item.images||[]);if(!gallery.length)return;previewSource=item.web_url;galleryIndex=index;$('previewTitle').textContent=item.title||'作品预览';$('previewImage').hidden=previewKind!=='image';$('previewVideo').hidden=previewKind!=='video';$('preview').hidden=false;document.body.style.overflow='hidden';updatePreview();$('previewClose').focus();}
+  function closePreview(){$('preview').hidden=true;document.body.style.overflow='';$('previewVideo').pause();$('previewVideo').removeAttribute('src');$('previewVideo').load();$('previewImage').removeAttribute('src');returnFocus?.focus();}
+  $('previewImage').addEventListener('load',()=>{$('previewState').textContent='';});$('previewVideo').addEventListener('loadeddata',()=>{$('previewState').textContent='';});
+  for(const id of ['previewImage','previewVideo'])$(id).addEventListener('error',()=>{if(!$('preview').hidden)$('previewState').textContent='预览暂不可用，可以重试或直接保存原文件。';});
+  $('galleryPrev').onclick=()=>{if(galleryIndex>0){galleryIndex--;updatePreview();}};$('galleryNext').onclick=()=>{if(galleryIndex<gallery.length-1){galleryIndex++;updatePreview();}};
+  $('previewClose').onclick=closePreview;$('preview').onclick=e=>{if(e.target===$('preview'))closePreview();};
+  document.addEventListener('keydown',e=>{if($('preview').hidden)return;if(e.key==='Escape')closePreview();if(e.key==='ArrowLeft')$('galleryPrev').click();if(e.key==='ArrowRight')$('galleryNext').click();if(e.key==='Tab'){const focus=[...$('preview').querySelectorAll('button:not([hidden]),a')].filter(n=>n.offsetParent!==null),first=focus[0],last=focus.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+  $('previewSave').onclick=()=>prepare([gallery[galleryIndex]],$('previewTitle').textContent,previewSource);
+  const mb=n=>(n/1048576).toFixed(1)+' MB';
+  function persistJobs(){write(jobsKey,downloads.filter(d=>d.id&&d.state!=='failed').slice(-8).map(({id,title,media,source})=>({id,title,media,source})));}
+  function renderDownloads(){
+    $('downloadList').innerHTML=downloads.map((d,i)=>{let label=d.state==='ready'?`文件已就绪 · ${mb(d.bytes)}${d.auto?' · 已发起浏览器下载':''}`:d.state==='failed'?d.error:`正在准备 ${d.done||0}/${d.total||d.media?.length||1} 个文件${d.file_total?` · ${mb(d.file_bytes||0)} / ${mb(d.file_total)}`:''}`;
+      return `<div class="download-row"><div class="download-title">${escape(d.title||'作品文件')}</div><p class="download-state">${escape(label)}</p>${!['ready','failed'].includes(d.state)?`<progress ${d.total?`value="${(d.done||0)+(d.file_total?(d.file_bytes||0)/d.file_total:0)}" max="${d.total}"`:''}></progress>`:''}${d.state==='ready'?`<a class="primary" href="${escape(d.download)}" download="${escape(d.filename)}">${d.auto?'再次下载':'下载文件'}</a>${navigator.share&&navigator.canShare?`<button data-share="${i}">分享 / 存储</button>`:''}`:d.state==='failed'?`<button data-retry="${i}">重新准备</button>`:''}</div>`;}).join('');
   }
-  resultsNode.addEventListener('click', async event => {
-    const authorNote = event.target.closest('[data-author-note]');
-    if (authorNote) return parseNote(authorNote.dataset.authorNote);
-    const direct = event.target.closest('[data-save-direct]');
-    if (direct) return saveToPhone(direct.dataset.saveDirect, direct.dataset.kind || 'video');
-    const galleryBtn = event.target.closest('[data-preview-gallery]');
-    if (galleryBtn) return openGallery(Number(galleryBtn.dataset.previewGallery), Number(galleryBtn.dataset.start || 0));
-    const preview = event.target.closest('[data-preview]');
-    if (preview) {
-      const gIdx = preview.dataset.galleryIndex;
-      if (gIdx !== '' && gIdx !== undefined) return openGallery(Number(preview.closest('.xhs-card')?.dataset.index || 0), Number(gIdx));
-      return openPreview(preview.dataset.preview, preview.dataset.kind);
-    }
-    const all = event.target.closest('[data-save-all]');
-    if (all) return saveAllImages(results[Number(all.dataset.saveAll)].images);
-  });
-  historyList.addEventListener('click', event => { const button = event.target.closest('[data-history-url]'); if (!button) return; input.value = button.dataset.historyUrl; form.requestSubmit(); window.scrollTo({top:0,behavior:'smooth'}); });
-  $('clearHistory').addEventListener('click', () => { localStorage.removeItem(historyKey); renderHistory(); });
-  $('previewClose').addEventListener('click', closePreview);
-  if (galleryPrevEl) galleryPrevEl.addEventListener('click', () => { if (previewIndex > 0) { previewIndex--; showGalleryImage(); } });
-  if (galleryNextEl) galleryNextEl.addEventListener('click', () => { if (previewIndex < previewUrls.length - 1) { previewIndex++; showGalleryImage(); } });
-  $('preview').addEventListener('click', event => { if (event.target === $('preview')) closePreview(); });
-  $('previewSave').addEventListener('click', () => saveToPhone(previewUrl, previewKind));
-  $('exportJson').addEventListener('click', () => download('xiaohongshu-results.json','application/json;charset=utf-8',JSON.stringify(results,null,2)));
-  $('exportCsv').addEventListener('click', () => {
-    const quote = value => `"${text(value).replace(/"/g,'""')}"`;
-    const rows = [['作品ID','类型','标题','作者','点赞','收藏','评论','作品链接'], ...results.map(item => [item.id,item.type,item.title,item.author,item.stats?.liked,item.stats?.collected,item.stats?.commented,item.web_url])];
-    download('xiaohongshu-results.csv','text/csv;charset=utf-8','\ufeff'+rows.map(row => row.map(quote).join(',')).join('\n'));
-  });
+  function triggerDownload(d){const a=document.createElement('a');a.href=d.download;a.download=d.filename;document.body.append(a);a.click();a.remove();d.auto=true;renderDownloads();}
+  async function poll(d,auto=false){try{while(true){const state=await api(`/api/xhs/jobs/${d.id}`);Object.assign(d,state);renderDownloads();persistJobs();if(d.state==='ready'){if(auto)triggerDownload(d);return;}if(d.state==='failed')return;await new Promise(r=>setTimeout(r,1500));}}catch(e){d.state='failed';d.error=e.message;renderDownloads();}}
+  async function prepare(media,title,source){
+    const existing=downloads.find(d=>d.media?.join()===media.join()&&d.state!=='failed');$('downloads').hidden=false;
+    if(existing){if(existing.state==='ready')triggerDownload(existing);return;}
+    const d={title,media,source,state:'preparing',done:0,total:media.length};downloads.push(d);renderDownloads();
+    try{Object.assign(d,await api('/api/xhs/jobs',{media}));persistJobs();renderDownloads();if(d.state==='ready')triggerDownload(d);else await poll(d,true);}
+    catch(e){d.state='failed';d.error=e.message;renderDownloads();}
+  }
+  $('downloadList').onclick=async e=>{
+    const retry=e.target.closest('[data-retry]');if(retry){const i=Number(retry.dataset.retry),d=downloads[i];downloads.splice(i,1);try{await parseOne(d.source);await prepare(d.media,d.title,d.source);}catch(err){$('status').textContent=err.message;}return;}
+    const share=e.target.closest('[data-share]');if(share){const d=downloads[Number(share.dataset.share)];share.disabled=true;share.textContent='读取文件…';try{
+      if((d.file_total||d.bytes)>100*1048576)throw new Error('大文件请使用下载文件，再从文件应用分享');
+      const r=await fetch(d.download);if(!r.ok)throw new Error('文件已过期，请重新准备');const file=new File([await r.blob()],d.filename,{type:r.headers.get('Content-Type')||'application/octet-stream'});
+      if(!navigator.canShare({files:[file]}))throw new Error('当前浏览器不支持分享此文件，请使用下载文件');
+      // A second real tap preserves user activation even after a large fetch.
+      share.disabled=false;share.textContent='点击选择存储位置';share.onclick=async ev=>{ev.stopPropagation();try{await navigator.share({files:[file],title:d.title});}catch(err){if(err.name!=='AbortError')$('status').textContent='请使用下载文件保存。';}};
+    }catch(err){$('status').textContent=err.message;share.textContent='分享 / 存储';share.disabled=false;}}
+  };
+  $('downloadClose').onclick=()=>{$('downloads').hidden=true;};
+  $('historyList').onclick=e=>{const b=e.target.closest('[data-history]');if(b){$('links').value=b.dataset.history;openNote(b.dataset.history,b);}};
+  $('clearHistory').onclick=()=>{write(historyKey,[]);renderHistory();};
+  function exportFile(name,type,value){const url=URL.createObjectURL(new Blob([value],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
+  $('exportJson').onclick=()=>exportFile('小红书作品.json','application/json;charset=utf-8',JSON.stringify(results,null,2));
+  $('exportCsv').onclick=()=>{const q=v=>`"${text(v).replace(/"/g,'""')}"`;const safe=v=>/^[=+\-@\t\r]/.test(text(v))?'\''+text(v):v;const rows=[['作品ID','标题','作者','类型','点赞','收藏','评论','分享','作品链接'],...results.filter(i=>i.kind!=='author').map(i=>[i.id,i.title,i.author,i.type,i.stats?.liked,i.stats?.collected,i.stats?.commented,i.stats?.shared,i.web_url])];exportFile('小红书作品.csv','text/csv;charset=utf-8','\ufeff'+rows.map(r=>r.map(v=>q(safe(v))).join(',')).join('\r\n'));};
+  if(!localStorage.getItem(historyKey)){
+    const old=read('siyumenghai-xhs-history-v1',[]);
+    write(historyKey,old.filter(i=>i.id&&i.web_url).map(({id,type,title,author,web_url,saved_at})=>({id,type,title,author,web_url,saved_at})));
+  }
   renderHistory();
+  for(const d of read(jobsKey,[]).slice(-8)){downloads.push({...d,state:'preparing'});void poll(downloads.at(-1));}
 })();

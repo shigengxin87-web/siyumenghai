@@ -43,31 +43,18 @@ function parseCookies(value) {
   });
 }
 
-// The browser page is asynchronous. Wait for the specific note instead of
-// dumping the entire logged-in account's reactive state or recommendation feed.
-const expression = [
-  '(async () => {',
-  '  const until = Date.now() + 16000;',
-  '  while (Date.now() < until) {',
-  '    const id = location.pathname.split("/").filter(Boolean).at(-1) || "";',
-  '    const wrapper = window.__INITIAL_STATE__?.note?.noteDetailMap?.[id];',
-  '    const note = wrapper?.note;',
-  '    if (/^[0-9a-f]{20,32}$/i.test(id) && note && String(note.noteId).toLowerCase() === id.toLowerCase()) {',
-  '      return JSON.stringify({',
-  '        noteId: String(note.noteId), title: String(note.title || "").slice(0,500),',
-  '        desc: String(note.desc || "").slice(0,20000),',
-  '        user: {nickname: String(note.user?.nickname || "")},',
-  '        time: note.time || null,',
-  '        interactInfo: {likedCount:note.interactInfo?.likedCount, collectedCount:note.interactInfo?.collectedCount, commentCount:note.interactInfo?.commentCount, shareCount:note.interactInfo?.shareCount},',
-  '        imageList: (note.imageList || []).slice(0,100).map(image => ({urlDefault:image.urlDefault, urlPre:image.urlPre, url:image.url})),',
-  '        video: note.video || null',
-  '      });',
-  '    }',
-  '    await new Promise(resolve => setTimeout(resolve,400));',
-  '  }',
-  '  return null;',
-  '})()'
-].join(' ');
+// Read immediately and poll only until this specific note is ready. Navigation
+// may replace the JS context; callers retry that transient condition.
+const expression = `(() => {
+  const id = location.pathname.split("/").filter(Boolean).at(-1) || "";
+  const note = window.__INITIAL_STATE__?.note?.noteDetailMap?.[id]?.note;
+  if (!note || String(note.noteId).toLowerCase() !== id.toLowerCase()) return null;
+  return JSON.stringify({noteId:String(note.noteId),title:String(note.title||"").slice(0,500),
+    desc:String(note.desc||"").slice(0,20000),user:{nickname:String(note.user?.nickname||"")},
+    time:note.time||null,interactInfo:note.interactInfo||{},
+    imageList:(note.imageList||[]).slice(0,100).map(i=>({urlDefault:i.urlDefault,urlPre:i.urlPre,url:i.url})),
+    video:note.video||null});
+})()`;
 
 async function main() {
   const input = JSON.parse(await new Promise(resolve => {
@@ -92,9 +79,16 @@ async function main() {
     await cdp.send('Page.enable', {}, sessionId);
     await cdp.send('Network.setCookies', {cookies:parseCookies(await fs.readFile(cookieFile, 'utf8'))}, sessionId);
     await cdp.send('Page.navigate', {url:input.url}, sessionId);
-    await new Promise(resolve => setTimeout(resolve,5000));
-    const result = await cdp.send('Runtime.evaluate', {expression, returnByValue:true, awaitPromise:true}, sessionId);
-    const value = result.result?.value;
+    let value;
+    const deadline = Date.now() + 20000;
+    while (Date.now() < deadline) {
+      try {
+        const result = await cdp.send('Runtime.evaluate', {expression, returnByValue:true}, sessionId);
+        value = result.result?.value;
+        if (value && value !== 'null') break;
+      } catch { /* navigation replaces execution contexts */ }
+      await new Promise(resolve => setTimeout(resolve,250));
+    }
     if (!value || value === 'null') throw new Error('Note unavailable in browser session');
     JSON.parse(value);
     process.stdout.write(value);
