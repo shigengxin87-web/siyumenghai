@@ -1,4 +1,5 @@
 <view class="chat-page">
+  <view class="ai-notice">本页回答由人工智能生成（AI生成），请结合实际核实。</view>
   <!-- 消息流 -->
   <scroll-view
     class="chat-scroll"
@@ -18,6 +19,7 @@
         id="msg-{{index}}"
       >
         <view class="bubble">
+          <view class="ai-label" wx:if="{{item.role === 'assistant'}}">AI生成</view>
           <text>{{item.text}}</text>
           <view class="msg-actions" wx:if="{{item.role === 'assistant'}}">
             <text class="msg-action" catchtap="copyMessage" data-id="{{item.id}}">复制</text>

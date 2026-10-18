@@ -142,3 +142,28 @@
 .msg-action-retry {
   color: #2E7D32;
 }
+
+/* 常驻生成说明及逐条回复标识 */
+.ai-notice {
+  flex-shrink: 0;
+  padding: 20rpx 32rpx;
+  background: #E8F3E8;
+  color: #244D29;
+  font-size: 26rpx;
+  font-weight: 600;
+  line-height: 1.6;
+  border-bottom: 2rpx solid #C5DDC5;
+}
+
+.ai-label {
+  display: inline-block;
+  margin-bottom: 12rpx;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  background: #E8F3E8;
+  color: #244D29;
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: normal;
+}
