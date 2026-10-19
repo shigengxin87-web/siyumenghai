@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "date": "2026-10-12",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-12 20:23:19",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "每周一刻，这一刻——《他明明需要，为什么不下单？》\n\nhttps://my.feishu.cn/wiki/YMDUwUynhizWKqk79a3cW34ynhb?from=from_copylink\n\n国庆的时候，我把梁宁老师的《真需求》读了一遍，里面有很多思想和工具蛮受用的，我觉得这里面的几个思想对《他明明需要，为什么不下单？》做了一个拆解，我觉得在红利消退、转化困难的情况下，多思考思考改善的本质和方向有利于动作执行的效率效果[加油]\n\n文档里最后，我有剖析写出这篇内容的创作手法和不同之处，以及如何复制这种创作手法去产出内容和课程，用于获客和转化[爱心]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-12 20:23:29",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-12 20:23:43",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "真需求 (梁宁)(1).pdf\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-12 20:23:58",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "人设拆解表.pdf\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

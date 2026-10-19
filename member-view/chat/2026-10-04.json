@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "date": "2026-10-04",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-04 17:19:41",
+      "sender": "杨光老师",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "哈喽兄弟，我刚开始用WORKBUDDY，我想请教一下，你一般都用他做什么，哈哈，刚开始用有点迷茫",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-04 18:08:13",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "我目前对于 Workbuddy，主要用的是两大板块，左上角导航栏里面的“专家技能连接器”和“资料库” “专家、技能、连接器”那个板块里面： • 专家：各种场景的垂直智能体 • 技能：各种各样的 skill • 连接器：就是 MCP 实际上都是用来解决具体场景问题的，比如公众号优化、短视频文案优化、内容创作等。 专家里面还有“专家团”，相当于围绕一个项目展开不同的角色，集中多个子智能体来共同解决这一\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-04 18:10:56",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "@阳光的快乐生活 \n\n杨老师，我目前用的就是专家技能那部分和资料库部分。\n\n来生产内容和辅助解决工作问题",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-04 18:11:22",
+      "sender": "杨光老师",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "好的，感谢",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-04 18:11:56",
+      "sender": "杨光老师",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "我对那个专家团还挺感兴趣的，我先玩一玩，回头再请教[抱拳][抱拳]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-04 18:12:55",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "两个思路\n\n一个是你有没有固定的初始需求，我来给你看看哪些是workbuddy可以做的\n\n另一个思路是围绕导航栏各个功能用一用体验下，这个过程就会发现要常用的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-10-04 18:13:31",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "👌，是的 那个价值还是很大的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-10-04 18:15:28",
+      "sender": "杨光老师",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "好的，按第二个思路我先体验一下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-10-04 19:52:44",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "👌 妥",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "date": "2026-09-29",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m002",
+      "time": "2026-09-29 14:13:11",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "https://my.feishu.cn/wiki/MPUTw7wVIiNG87ktyzCcM7SNngb?from=from_copylink\n\n有在用飞书录音的可以直接用起来。\n\n直接把skill压缩包上传到飞书里面的豆包工作就可以了。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-09-29 14:13:16",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "妙记内容工坊-安装包.zip\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-09-29 17:15:37",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "几个你可能不知道的关于「个微」和「企微」的基础操作技巧\nhttps://my.feishu.cn/wiki/WKciwunmXi9GKUkBDQtc6vBcn3b?from=from_copylink\n\n关于最近比较火的「视频号简介可以放微信号」这件事，我怎么看\nhttps://my.feishu.cn/wiki/HuvVwSht9izIqCkZdZgcqEk6nPg?from=from_copylink\n\n如何解决从装梯子到用上Codex整个链路问题\nhttps://my.feishu.cn/wiki/D92jwZJ6ciwHAIks9SncswrMntd?from=from_copylink",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-09-29 17:16:38",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "这三个问题是近期有遇到的，我详细写了下来，有对应需求的对号入座直接去看",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-09-29 18:03:16",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-09-29 18:03:16",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"黄昶\" [炸弹][炸弹][炸弹]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-09-29 18:03:46",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "这个话题比较敏感，被限制分享了。我直接发下pdf版的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-09-29 18:03:56",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "如何解决从装梯子到用上Codex整个链路问题.pdf\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-09-29 18:03:56",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "link",
+      "text": "国内自行注册美区 Apple ID 完整教程.pdf\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-15 21:46:04",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-15 21:46:47",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "用豆包工作刚刚上的画板功能，「10分钟」做完一套课程上架物料\n\nhttps://my.feishu.cn/wiki/GE8fwBYG9iD978kNnURcjHFgn2d?from=from_copylink\n\n做过两次后，基本10分钟一套没一点毛病。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-15 21:50:03",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "未来人人都是最佳设计师。\n\n基本上常用到的设计需求，都可以直接用 AI 自己指挥生成了。\n\n不管是业务上的需求，还是自己生活上的需求。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-15 21:50:27",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-15 21:50:28",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "image",
+      "text": "该消息为图片，本机未保存原始附件，当前无法展示",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-15 21:54:28",
+      "sender": "石更新（23:00睡觉）",
+      "avatar": "./assets/members/member-01.jpg?v=20260917192332",
+      "side": "right",
+      "type": "text",
+      "text": "还没有用上豆包工作的快快用啊，不用下载，有飞书或者豆包就行，如果飞书或者豆包都没有，那确实也应该下载一个。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
