@@ -5,13 +5,18 @@
 <meta name="theme-color" content="#faf8f5"><meta name="description" content="粘贴小红书分享链接，查看作品信息、预览图片视频，一键保存原文件。">
 <title>小红书作品收集 · 石更新成长朋友圈</title>
 <link rel="icon" href="../comment-cloud/favicon.svg">
-<link rel="stylesheet" href="./xhs-page.css?v=20261015-11">
+<link rel="stylesheet" href="./xhs-page.css?v=20261019-1">
 <script src="./xhs-page.js?v=20261015-12" defer></script>
 </head>
 <body>
 <header class="topbar"><a class="brand" href="./"><span class="mark">红</span><span>作品收集<small>石更新成长朋友圈</small></span></a><nav aria-label="下载平台"><a href="./video-downloader-20260808-17.html">视频号</a><a href="./douyin-downloader.html">抖音</a><a href="./xhs-downloader.html" aria-current="page">小红书</a></nav></header>
 <main>
 <section class="query"><p class="eyebrow">COLLECT · PREVIEW · SAVE</p><h1>好作品，随手收好。</h1><p class="lead">粘贴小红书分享链接，查看内容、收集数据，一键保存图片和视频。</p>
+<aside class="recommend-banner" aria-labelledby="recommendTitle">
+  <span class="recommend-badge">更推荐</span>
+  <div class="recommend-copy"><strong id="recommendTitle">优先使用 Ego 浏览器或 hongshuskill</strong><p>当前在线下载功能可作备用。日常采集与分析，更推荐用 Agent 驱动的 Ego 浏览器，或免费的 hongshuskill。</p></div>
+  <a class="recommend-link" href="./xhs-recommended-tools.html">查看介绍与安装包 <span aria-hidden="true">→</span></a>
+</aside>
 <form id="parseForm"><label class="sr-only" for="links">小红书分享链接或分享文案</label><textarea id="links" placeholder="把链接或分享文案放这里，也可以一次粘贴多条。" rows="3" required></textarea><div class="submit-row"><small>视频与图集均支持 · 每次最多 20 条</small><button class="primary" type="submit">解析作品 <span aria-hidden="true">↗</span></button></div></form>
 <p id="status" role="status" aria-live="polite"></p></section>
 <section id="results" class="results" aria-label="作品结果"></section>
