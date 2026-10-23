@@ -44,7 +44,7 @@ PROFILE_API = os.environ.get(
     "TENCENT_TEST_PROFILE_API", "https://siyumenghai.cn/api/video/profile"
 )
 TEST_EXPIRES_EPOCH = int(os.environ.get("TENCENT_TEST_EXPIRES_EPOCH", "0"))
-MAX_VIDEO_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_VIDEO_SECONDS", "600"))
+MAX_VIDEO_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_VIDEO_SECONDS", "900"))
 MAX_BILLED_SECONDS = int(os.environ.get("TENCENT_TEST_MAX_BILLED_SECONDS", "0"))
 MAX_WORKERS = int(os.environ.get("TENCENT_TEST_MAX_WORKERS", "1"))
 POLL_TIMEOUT_SECONDS = int(os.environ.get("TENCENT_TEST_POLL_TIMEOUT_SECONDS", "900"))
@@ -306,7 +306,8 @@ def process(job_id: str) -> None:
         update_job(job_id, video_duration_seconds=round(duration, 3))
         if duration > MAX_VIDEO_SECONDS + 0.05:
             raise PublicError(
-                f"视频时长 {duration / 60:.1f} 分钟，超过10分钟上限；未提交识别，也没有截断。"
+                f"视频时长 {duration / 60:.1f} 分钟，超过{MAX_VIDEO_SECONDS / 60:g}分钟上限；"
+                "未提交识别，也没有截断。"
             )
         if MAX_BILLED_SECONDS > 0 and billed_seconds() > MAX_BILLED_SECONDS:
             raise PublicError("已达到当前设置的累计识别额度，未产生本次识别费用。")
@@ -457,6 +458,7 @@ class Handler(BaseHTTPRequestHandler):
                     "service": SERVICE,
                     "pipeline_version": PIPELINE_VERSION,
                     "active_jobs": active,
+                    "max_video_seconds": MAX_VIDEO_SECONDS,
                     "uptime_seconds": round(time.time() - STARTED_AT),
                     "expires_at_epoch": TEST_EXPIRES_EPOCH,
                     "billed_seconds": round(billed_seconds(), 3),
