@@ -125,7 +125,7 @@ def load_cases():
                 meta[(row.get("case_id") or "").strip()] = row
 
     chunks = []
-    files = sorted(Path(CASES_DIR).glob("*.md"))
+    files = sorted(Path(CASES_DIR).rglob("*.md"))
     for md in files:
         cid = md.stem.split("__")[0]
         m = meta.get(cid, {})
