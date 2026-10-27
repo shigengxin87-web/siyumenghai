@@ -3,7 +3,26 @@ const { Utf8Decoder, EventReader } = require('../../utils/chat-stream')
 const KEY = 'sdh_chat_messages'
 const WELCOME = '你好，我是更新哥的运营实战顾问。\n\n获客、产品、转化、交付、经营、团队……你的运营问题，直接问我，我会从实战案例库里给你找答案。'
 const sessionId = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2)
-function clean(text) { return text.replace(/^#{1,6}\s*/gm, '').replace(/^>\s?/gm, '').replace(/\*\*/g, '').replace(/`/g, '').trim() }
+// 把模型返回的 Markdown 清洗成纯文本：去掉符号、把标题/列表转成换行，便于小程序展示
+function clean(text) {
+  if (!text) return ''
+  let t = String(text)
+  t = t.replace(/!\[[^\]]*\]\([^)]*\)/g, '')            // 图片 ![alt](url) -> 去掉
+  t = t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')         // 链接 [文字](url) -> 文字
+  t = t.replace(/^#{1,6}\s+/gm, '\n')                   // 标题 # 转成前后换行
+  t = t.replace(/^>\s?/gm, '')                          // 引用 > 去掉
+  t = t.replace(/^\s*[-*+]\s+/gm, '\n• ')               // 无序列表 -> 换行+项目符号
+  t = t.replace(/^\s*\d+\.\s+/gm, '\n• ')               // 有序列表 -> 换行+项目符号
+  t = t.replace(/\*\*([^*]+)\*\*/g, '$1')               // 粗体 **x**
+  t = t.replace(/__([^_]+)__/g, '$1')                   // 粗体 __x__
+  t = t.replace(/\*([^*]+)\*/g, '$1')                   // 斜体 *x*
+  t = t.replace(/_([^_]+)_/g, '$1')                     // 斜体 _x_
+  t = t.replace(/`([^`]+)`/g, '$1')                     // 行内代码 `x`
+  t = t.replace(/^\s*([-*])\1{2,}\s*$/gm, '\n')         // 分隔线 --- / *** -> 换行
+  t = t.replace(/【([^】]+)】\([^)]*\)/g, '$1')         // 部分平台链接变体
+  t = t.replace(/\n{3,}/g, '\n\n').trim()               // 折叠多余空行
+  return t
+}
 Page({
   data: { messages: [], input: '', sending: false, firstToken: false, scrollInto: '', seq: 0 },
   onLoad() { this.closed = false; this.generation = 0; this.loadSession() },

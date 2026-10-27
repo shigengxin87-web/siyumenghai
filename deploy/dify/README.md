@@ -61,7 +61,19 @@ ssh -L 8080:127.0.0.1:8080 你的服务器用户@服务器IP
 
 ## 三、接回石董会
 
-编辑服务器上的 `/opt/siyumenghai-agent-proxy/config.json`：
+> 服务器上跑的 agent-proxy 还是旧版（对接 ADP）。先把新版（对接 Dify）换上去，再改配置、重启。
+
+**1. 更新 server.js 到服务器**
+
+若服务器用自动发布系统（从 GitHub `main` 拉取），`git push` 后自动更新，可跳过。否则手动传：
+
+```bash
+scp deploy/agent-proxy/server.js 你的服务器用户@服务器IP:/opt/siyumenghai-agent-proxy/server.js
+```
+
+**2. 改配置**
+
+编辑 `/opt/siyumenghai-agent-proxy/config.json`：
 
 ```json
 {
@@ -70,7 +82,7 @@ ssh -L 8080:127.0.0.1:8080 你的服务器用户@服务器IP
 }
 ```
 
-然后重启代理（改动才能生效）：
+**3. 重启代理**（改动才能生效）
 
 ```bash
 sudo systemctl restart siyumenghai-agent-proxy
