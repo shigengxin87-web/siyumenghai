@@ -18,6 +18,64 @@ async function api(path,body) {
 }
 function node(tag,text,cls) { const el=document.createElement(tag); if(text != null) el.textContent=text; if(cls) el.className=cls; return el; }
 function link(text,url,download=false) { const a=node('a',text); a.href=url+(download?'?download=1':''); if(download) a.download=''; else {a.target='_blank';a.rel='noopener noreferrer';} return a; }
+// 电脑端视频下载：分片 Range 断点续传（会话内）。单次请求只有一小片，
+// 某片失败自动重试；连续失败则保留已下载分片，再次点击从断点继续，不再整文件重来。
+const CHUNK_BYTES = 4 * 1024 * 1024;
+const dlState = { active:false, started:false, url:'', name:'', parts:[], downloaded:0, total:0 };
+function formatBytes(n){ if(!n) return '0 B'; const u=['B','KB','MB','GB']; let i=0; while(n>=1024&&i<u.length-1){n/=1024;i++;} return n.toFixed(n>=100?0:1)+' '+u[i]; }
+async function downloadVideo(url, name, btn) {
+  if (dlState.active) return;
+  dlState.active = true;
+  const paint = (label) => { btn.textContent = label; };
+  try {
+    if (!dlState.started || dlState.url !== url || dlState.downloaded >= dlState.total) {
+      const probe = await fetch(url, { headers: { Range: 'bytes=0-0' } });
+      const range = probe.headers.get('Content-Range') || '';
+      const total = Number(range.split('/')[1] || probe.headers.get('Content-Length') || 0);
+      if (!total) throw new Error('无法获取文件大小，请用“打开原文件”或“手机预览与保存”');
+      dlState.url = url; dlState.name = name; dlState.parts = []; dlState.downloaded = 0; dlState.total = total; dlState.started = true;
+    }
+    btn.disabled = true;
+    paint(`下载中 0%（${formatBytes(dlState.downloaded)}/${formatBytes(dlState.total)}）`);
+    let retries = 0;
+    while (dlState.downloaded < dlState.total) {
+      const start = dlState.downloaded;
+      const end = Math.min(start + CHUNK_BYTES, dlState.total) - 1;
+      try {
+        const res = await fetch(url, { headers: { Range: `bytes=${start}-${end}` } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const buf = await res.arrayBuffer();
+        if (!buf.byteLength) throw new Error('空响应');
+        dlState.parts.push(buf);
+        dlState.downloaded += buf.byteLength;
+        retries = 0;
+        if (dlState.downloaded >= dlState.total) break;
+        paint(`下载中 ${Math.floor(dlState.downloaded / dlState.total * 100)}%（${formatBytes(dlState.downloaded)}/${formatBytes(dlState.total)}）`);
+      } catch (e) {
+        retries++;
+        if (retries > 3) {
+          throw new Error(`下载中断于 ${formatBytes(dlState.downloaded)}/${formatBytes(dlState.total)}；再次点击“电脑下载视频”可从断点继续`);
+        }
+        paint(`下载中（${formatBytes(dlState.downloaded)}/${formatBytes(dlState.total)}，重试第 ${retries} 次）`);
+        await sleep(1200 * retries);
+      }
+    }
+    const blob = new Blob(dlState.parts, { type: 'video/mp4' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    paint('下载完成，已保存');
+    dlState.started = false; dlState.parts = []; dlState.downloaded = 0;
+  } catch (e) {
+    paint(dlState.started && dlState.downloaded > 0 ? `继续下载（${formatBytes(dlState.downloaded)}/${formatBytes(dlState.total)}）` : '电脑下载视频');
+    status(`下载未完成：${e.message}`);
+  } finally {
+    btn.disabled = false;
+    dlState.active = false;
+  }
+}
 function button(text,action,cls='') { const b=node('button',text,cls);b.type='button';b.onclick=action;return b; }
 function historyItems(){try{const data=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(data)?data:[];}catch{return[];}}
 function remember(post){const item={id:post.id,author:post.author||'',description:post.description||'',created_at:post.created_at||'',web_url:post.web_url,checked_at:Date.now()};const items=[item,...historyItems().filter(x=>x.id!==item.id)].slice(0,30);localStorage.setItem(HISTORY_KEY,JSON.stringify(items));renderHistory();}
@@ -35,7 +93,7 @@ function add(post) {
   card.append(node('p',`${post.author || '未提供作者'} · ${post.created_at ? new Date(post.created_at).toLocaleString('zh-CN') : '未提供发布时间'}`,'meta'));
   const stats=post.stats || {}; card.append(node('p',`点赞 ${stats.digg_count ?? '—'}　评论 ${stats.comment_count ?? '—'}　转发 ${stats.share_count ?? '—'}　收藏 ${stats.collect_count ?? '—'}`,'stats'));
   if(post.cover){const img=node('img');img.src=post.cover;img.alt='作品封面，点击预览';img.loading='lazy';makePreviewable(img,post.cover,'image',`${post.id}-cover.jpg`);card.append(img,button('预览并保存封面',()=>openPreview(post.cover,'image',`${post.id}-cover.jpg`)));}
-  if(post.video){const v=node('video');v.src=post.video;v.controls=true;v.preload='none';v.setAttribute('playsinline','');card.append(v,button('手机预览与保存',()=>openPreview(post.video,'video',`${post.id}.mp4`)),link('电脑下载视频',post.video,true));}
+  if(post.video){const v=node('video');v.src=post.video;v.controls=true;v.preload='none';v.setAttribute('playsinline','');const dlBtn=button('电脑下载视频',()=>downloadVideo(post.video,`${post.id}.mp4`,dlBtn));card.append(v,button('手机预览与保存',()=>openPreview(post.video,'video',`${post.id}.mp4`)),dlBtn);}
   if(post.images?.length){const gallery=node('div',null,'gallery');post.images.forEach((url,i)=>{const fig=node('figure');const img=node('img');img.src=url;img.alt=`图集第 ${i+1} 张，点击预览`;img.loading='lazy';makePreviewable(img,url,'image',`${post.id}-${i+1}.jpg`);fig.append(img,button(`预览并保存图片 ${i+1}`,()=>openPreview(url,'image',`${post.id}-${i+1}.jpg`)));gallery.append(fig);});card.append(gallery);}
   if(!post.video&&!post.images?.length)card.append(node('p','当前作品未返回可下载资源','error'));
   const commentsButton=node('button','查看前 20 条评论');

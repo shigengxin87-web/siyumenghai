@@ -93,7 +93,11 @@ async function openMedia(raw, range, depth = 0) {
   if (!records.length || records.some(r => !publicIPv4(r.address))) throw new Error('资源地址无法访问');
   const response = await new Promise((resolve, reject) => {
     const req = https.get(u, { autoSelectFamily: false, family: 4, lookup: (_h, _o, cb) => cb(null, records[0].address, 4), headers: { 'User-Agent': 'Mozilla/5.0', Referer: 'https://www.douyin.com/', ...(range ? { Range: range } : {}) } }, resolve);
+    // 仅对"响应头未到达"设置 20 秒超时；响应头到达（进入流式传输）后取消空闲超时。
+    // 否则客户端下行慢产生背压时，流暂停读取上游，20 秒无 I/O 会被误判为超时销毁，
+    // 导致大文件下载在 80%-90% 处断开重来。
     req.setTimeout(20000, () => req.destroy(new Error('资源读取超时')));
+    req.on('response', () => req.setTimeout(0));
     req.on('error', reject);
   });
   if ([301,302,303,307,308].includes(response.statusCode)) {
@@ -137,8 +141,16 @@ export const server = http.createServer(async (req,res) => {
         const headers = { 'Content-Type': type, 'Cache-Control':'private, no-store', 'Content-Disposition': `${u.searchParams.has('download') ? 'attachment' : 'inline'}; filename="${t.filename}"` };
         for (const h of ['content-length','content-range','accept-ranges']) if (upstream.headers[h]) headers[h] = upstream.headers[h];
         res.writeHead(upstream.statusCode,headers);
-        res.on('close', () => upstream.destroy());
-        await pipeline(upstream,res);
+        res.on('close', () => {
+          if (bytes > 0 && !res.writableFinished) console.log(`[media] 客户端连接中断 已传 ${bytes} 字节 kind=${t.kind} name=${t.filename}`);
+          upstream.destroy();
+        });
+        try {
+          await pipeline(upstream,res);
+        } catch (e) {
+          if (!res.writableFinished) console.log(`[media] 媒体转发失败 已传 ${bytes} 字节 kind=${t.kind} name=${t.filename} err=${e.message}`);
+          throw e;
+        }
       } finally { active--; }
       return;
     }
