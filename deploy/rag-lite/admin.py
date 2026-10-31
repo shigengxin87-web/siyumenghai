@@ -21,8 +21,11 @@ import re
 import csv
 import json
 import hmac
+import time
+import secrets
 import hashlib
 import subprocess
+import urllib.request
 from pathlib import Path
 from datetime import datetime
 
@@ -36,6 +39,9 @@ PROMPT_FILE = Path(os.environ.get("PROMPT_FILE", str(BASE_DIR / "SYSTEM_PROMPT.m
 ENV_FILE = Path(os.environ.get("ENV_FILE", str(BASE_DIR / "env")))
 META_CSV = Path(os.environ.get("META_CSV", str(BASE_DIR / "kb_metadata.csv")))
 
+AUTH_FILE = Path(os.environ.get("AUTH_FILE", str(BASE_DIR / "admin_auth.json")))
+SMS_LOG = Path(os.environ.get("SMS_LOG", str(BASE_DIR / "sms.log")))
+
 RAG_URL = os.environ.get("RAG_URL", "http://127.0.0.1:8080")
 API_KEY = os.environ.get("API_KEY", "")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "")
@@ -43,23 +49,372 @@ SESSION_SECRET = os.environ.get("SESSION_SECRET", "sdh-admin-secret-change-me")
 RAG_SERVICE = os.environ.get("RAG_SERVICE", "siyumenghai-rag-lite")
 COOKIE = "sdh_admin"
 
+CODE_TTL = 300          # 验证码有效期（秒）
+CODE_RESEND = 60        # 同一号码重发间隔（秒）
+CODE_HOURLY_MAX = 10    # 同一号码每小时最多发送次数
+LOGIN_FAIL_MAX = 5      # 密码连续错误次数上限
+LOGIN_LOCK = 300        # 触发上限后的锁定时长（秒）
+
 app = FastAPI(title="石董会 AI 管理后台")
 
 
 # ---------------- 认证 ----------------
+# 凭证存放在 admin_auth.json（0600），密码只存 PBKDF2 哈希，不存明文。
+# 未生成文件时回退到 env 里的 ADMIN_PASSWORD，保证旧部署平滑升级。
+
+def _load_auth() -> dict:
+    try:
+        if AUTH_FILE.exists():
+            return json.loads(AUTH_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+
+def _save_auth(data: dict) -> None:
+    AUTH_FILE.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    try:
+        os.chmod(AUTH_FILE, 0o600)
+    except Exception:
+        pass
+
+
+def _hash_pwd(pwd: str) -> str:
+    iters = 120000
+    salt = os.urandom(16)
+    dk = hashlib.pbkdf2_hmac("sha256", pwd.encode("utf-8"), salt, iters)
+    return f"pbkdf2_sha256${iters}${salt.hex()}${dk.hex()}"
+
+
+def _verify_hash(pwd: str, stored: str) -> bool:
+    try:
+        algo, iters, salt_hex, hash_hex = stored.split("$")
+        if algo != "pbkdf2_sha256":
+            return False
+        dk = hashlib.pbkdf2_hmac(
+            "sha256", pwd.encode("utf-8"), bytes.fromhex(salt_hex), int(iters)
+        )
+        return hmac.compare_digest(dk.hex(), hash_hex)
+    except Exception:
+        return False
+
+
+def verify_password(pwd: str) -> bool:
+    a = _load_auth()
+    if a.get("password_hash"):
+        return _verify_hash(pwd, a["password_hash"])
+    if ADMIN_PASSWORD:
+        return hmac.compare_digest(pwd or "", ADMIN_PASSWORD)
+    return False
+
+
+def _cred() -> str:
+    """凭证指纹：改密码/绑定手机后自动变化，旧会话立即失效。"""
+    a = _load_auth()
+    if a.get("password_hash"):
+        return "h:" + a["password_hash"]
+    if ADMIN_PASSWORD:
+        return "e:" + hashlib.sha256(ADMIN_PASSWORD.encode("utf-8")).hexdigest()
+    return ""
+
+
 def _token() -> str:
-    raw = (ADMIN_PASSWORD or "empty").encode("utf-8")
+    raw = (_cred() or "empty").encode("utf-8")
     return hmac.new(SESSION_SECRET.encode("utf-8"), raw, hashlib.sha256).hexdigest()
 
 
 def authed(req: Request) -> bool:
-    if not ADMIN_PASSWORD:
+    if not _cred():
         return False
     return hmac.compare_digest(req.cookies.get(COOKIE, ""), _token())
 
 
+def _set_session(resp: JSONResponse, req: Request) -> None:
+    secure = req.headers.get("x-forwarded-proto", "") == "https"
+    resp.set_cookie(
+        COOKIE,
+        _token(),
+        httponly=True,
+        samesite="lax",
+        secure=secure,
+        path="/",
+        max_age=60 * 60 * 24 * 30,
+    )
+
+
 def deny():
     return JSONResponse(status_code=401, content={"error": "unauthorized"})
+
+
+# ---- 登录失败节流（同一 IP 5 次错锁 5 分钟）----
+_LOGIN_FAIL: dict = {}
+
+
+def _client_ip(req: Request) -> str:
+    fwd = req.headers.get("x-forwarded-for", "")
+    return (fwd.split(",")[0].strip() if fwd else (req.client.host if req.client else ""))
+
+
+def _login_locked(ip: str) -> int:
+    rec = _LOGIN_FAIL.get(ip)
+    if not rec:
+        return 0
+    left = int(rec.get("until", 0) - time.time())
+    return left if left > 0 else 0
+
+
+def _login_fail(ip: str) -> None:
+    rec = _LOGIN_FAIL.setdefault(ip, {"n": 0, "until": 0})
+    rec["n"] += 1
+    if rec["n"] >= LOGIN_FAIL_MAX:
+        rec["until"] = time.time() + LOGIN_LOCK
+        rec["n"] = 0
+
+
+def _login_ok(ip: str) -> None:
+    _LOGIN_FAIL.pop(ip, None)
+
+
+# ---- 手机号 ----
+def _norm_phone(raw: str) -> str:
+    s = re.sub(r"[^\d]", "", raw or "")
+    if s.startswith("0086"):
+        s = s[4:]
+    if s.startswith("86") and len(s) == 13:
+        s = s[2:]
+    return s
+
+
+def _valid_phone(p: str) -> bool:
+    return bool(re.fullmatch(r"1[3-9]\d{9}", p or ""))
+
+
+def _mask_phone(p: str) -> str:
+    return p[:3] + "****" + p[-4:] if len(p) == 11 else ""
+
+
+# ---- 验证码 ----
+_CODES: dict = {}
+
+
+def _send_code_rate(phone: str) -> tuple:
+    now = time.time()
+    rec = _CODES.get(phone)
+    if rec:
+        gap = now - rec.get("sent_at", 0)
+        if gap < CODE_RESEND:
+            return False, f"请 {int(CODE_RESEND - gap)} 秒后再获取"
+        if now - rec.get("hour_start", 0) > 3600:
+            rec["hour_start"], rec["hour_count"] = now, 0
+        if rec.get("hour_count", 0) >= CODE_HOURLY_MAX:
+            return False, "该号码获取次数过多，请 1 小时后再试"
+    return True, ""
+
+
+def _issue_code(phone: str) -> str:
+    code = f"{secrets.randbelow(1000000):06d}"
+    now = time.time()
+    rec = _CODES.setdefault(phone, {"hour_start": now, "hour_count": 0})
+    if now - rec.get("hour_start", 0) > 3600:
+        rec["hour_start"], rec["hour_count"] = now, 0
+    rec.update(
+        {
+            "hash": hashlib.sha256(code.encode()).hexdigest(),
+            "exp": now + CODE_TTL,
+            "tries": 0,
+            "sent_at": now,
+            "hour_count": rec.get("hour_count", 0) + 1,
+        }
+    )
+    return code
+
+
+def _check_code(phone: str, code: str) -> tuple:
+    rec = _CODES.get(phone)
+    if not rec:
+        return False, "请先获取验证码"
+    if time.time() > rec.get("exp", 0):
+        _CODES.pop(phone, None)
+        return False, "验证码已过期，请重新获取"
+    if rec.get("tries", 0) >= 5:
+        _CODES.pop(phone, None)
+        return False, "验证码错误次数过多，请重新获取"
+    rec["tries"] = rec.get("tries", 0) + 1
+    if not hmac.compare_digest(
+        hashlib.sha256((code or "").strip().encode()).hexdigest(), rec.get("hash", "")
+    ):
+        return False, "验证码不正确"
+    _CODES.pop(phone, None)
+    return True, ""
+
+
+# ---------------- 验证码发送通道 ----------------
+# SMS_PROVIDER: log（写服务器日志，零成本自用）/ webhook（企业微信·飞书·Server酱机器人）
+#               / tencent（腾讯云短信，需填 SecretId/Key/SdkAppId/签名/模板ID）
+SMS_KEYS = [
+    "SMS_PROVIDER",
+    "SMS_WEBHOOK_URL",
+    "SMS_SECRET_ID",
+    "SMS_SECRET_KEY",
+    "SMS_SDK_APP_ID",
+    "SMS_SIGN_NAME",
+    "SMS_TEMPLATE_ID",
+]
+
+
+def _sms_conf() -> dict:
+    env = _read_env()
+    conf = {}
+    for k in SMS_KEYS:
+        conf[k] = (env.get(k) or os.environ.get(k) or "").strip()
+    conf["SMS_PROVIDER"] = (conf["SMS_PROVIDER"] or "log").lower()
+    conf["SMS_SIGN_NAME"] = conf["SMS_SIGN_NAME"] or "石董会"
+    return conf
+
+
+def _send_via_log(phone: str, code: str) -> tuple:
+    line = (
+        f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\t{_mask_phone(phone)}\t{code}\n"
+    )
+    try:
+        with SMS_LOG.open("a", encoding="utf-8") as f:
+            f.write(line)
+        try:
+            os.chmod(SMS_LOG, 0o600)
+        except Exception:
+            pass
+        return True, "log"
+    except Exception as e:
+        return False, f"写日志失败：{e}"
+
+
+def _send_via_webhook(url: str, phone: str, code: str, sign: str) -> tuple:
+    text = f"【{sign}】后台登录验证码 {code}，{CODE_TTL // 60} 分钟内有效。如非本人操作请忽略。"
+    if "sctapi.ftqq.com" in url:  # Server酱
+        payload = {"title": f"{sign} 管理后台验证码", "desp": text}
+    else:  # 企业微信 / 飞书 / 钉钉 群机器人通用文本格式
+        payload = {"msgtype": "text", "text": {"content": text}}
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            body = r.read().decode("utf-8", "ignore")
+        if '"errcode"' in body and '"errcode":0' not in body.replace(" ", ""):
+            return False, f"机器人返回：{body[:160]}"
+        return True, "webhook"
+    except Exception as e:
+        return False, f"推送失败：{e}"
+
+
+def _send_via_tencent(conf: dict, phone: str, code: str) -> tuple:
+    sid = conf.get("SMS_SECRET_ID", "")
+    skey = conf.get("SMS_SECRET_KEY", "")
+    appid = conf.get("SMS_SDK_APP_ID", "")
+    sign = conf.get("SMS_SIGN_NAME", "")
+    tid = conf.get("SMS_TEMPLATE_ID", "")
+    missing = [
+        n
+        for n, v in (
+            ("SecretId", sid),
+            ("SecretKey", skey),
+            ("SdkAppId", appid),
+            ("短信签名", sign),
+            ("模板ID", tid),
+        )
+        if not v
+    ]
+    if missing:
+        return False, "腾讯云短信参数不全：" + "、".join(missing)
+
+    host, service = "sms.tencentcloudapi.com", "sms"
+    action, version = "SendSms", "2021-01-11"
+    payload = json.dumps(
+        {
+            "PhoneNumberSet": ["+86" + phone],
+            "SmsSdkAppId": appid,
+            "SignName": sign,
+            "TemplateId": tid,
+            "TemplateParamSet": [code, str(CODE_TTL // 60)],
+        },
+        separators=(",", ":"),
+        ensure_ascii=False,
+    )
+    ts = int(time.time())
+    date = time.strftime("%Y-%m-%d", time.gmtime(ts))
+    ctype = "application/json; charset=utf-8"
+    signed_headers = "content-type;host;x-tc-action"
+    canonical_headers = (
+        f"content-type:{ctype}\nhost:{host}\nx-tc-action:{action.lower()}\n"
+    )
+    hashed_payload = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    canonical_request = (
+        f"POST\n/\n\n{canonical_headers}\n{signed_headers}\n{hashed_payload}"
+    )
+    scope = f"{date}/{service}/tc3_request"
+    string_to_sign = (
+        f"TC3-HMAC-SHA256\n{ts}\n{scope}\n"
+        + hashlib.sha256(canonical_request.encode("utf-8")).hexdigest()
+    )
+
+    def _hmac(key: bytes, msg: str) -> bytes:
+        return hmac.new(key, msg.encode("utf-8"), hashlib.sha256).digest()
+
+    k_date = _hmac(("TC3" + skey).encode("utf-8"), date)
+    k_service = _hmac(k_date, service)
+    k_signing = _hmac(k_service, "tc3_request")
+    signature = hmac.new(
+        k_signing, string_to_sign.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    authorization = (
+        f"TC3-HMAC-SHA256 Credential={sid}/{scope}, "
+        f"SignedHeaders={signed_headers}, Signature={signature}"
+    )
+    try:
+        req = urllib.request.Request(
+            f"https://{host}",
+            data=payload.encode("utf-8"),
+            method="POST",
+            headers={
+                "Authorization": authorization,
+                "Content-Type": ctype,
+                "Host": host,
+                "X-TC-Action": action,
+                "X-TC-Timestamp": str(ts),
+                "X-TC-Version": version,
+                "X-TC-Region": "",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode("utf-8", "ignore"))
+    except Exception as e:
+        return False, f"请求腾讯云失败：{e}"
+    resp = data.get("Response", {})
+    if resp.get("Error"):
+        err = resp["Error"]
+        return False, f"{err.get('Code')}: {err.get('Message')}"
+    st = (resp.get("SendStatusSet") or [{}])[0]
+    if st.get("Code") == "Ok":
+        return True, "tencent"
+    return False, f"{st.get('Code')}: {st.get('Message')}"
+
+
+def _dispatch_code(phone: str, code: str) -> tuple:
+    conf = _sms_conf()
+    provider = conf["SMS_PROVIDER"]
+    if provider == "webhook":
+        url = conf.get("SMS_WEBHOOK_URL", "")
+        if not url:
+            return False, "未配置机器人 Webhook 地址"
+        return _send_via_webhook(url, phone, code, conf["SMS_SIGN_NAME"])
+    if provider == "tencent":
+        return _send_via_tencent(conf, phone, code)
+    return _send_via_log(phone, code)
 
 
 # ---------------- 工具函数 ----------------
@@ -225,25 +580,230 @@ async def index():
 
 @app.post("/login")
 async def login(req: Request):
+    ip = _client_ip(req)
+    left = _login_locked(ip)
+    if left:
+        return JSONResponse(
+            status_code=429, content={"error": f"密码错误次数过多，请 {left // 60 + 1} 分钟后再试"}
+        )
     try:
         body = await req.json()
     except Exception:
         body = {}
     pwd = (body.get("password") or "").strip()
-    if not ADMIN_PASSWORD or not hmac.compare_digest(pwd, ADMIN_PASSWORD):
+    if not verify_password(pwd):
+        _login_fail(ip)
         return JSONResponse(status_code=401, content={"error": "密码不正确"})
+    _login_ok(ip)
     resp = JSONResponse({"ok": True})
-    secure = req.headers.get("x-forwarded-proto", "") == "https"
-    resp.set_cookie(
-        COOKIE,
-        _token(),
-        httponly=True,
-        samesite="lax",
-        secure=secure,
-        path="/",
-        max_age=60 * 60 * 24 * 30,
-    )
+    _set_session(resp, req)
     return resp
+
+
+# ---------------- 手机验证码登录 ----------------
+@app.get("/api/auth/state")
+async def auth_state(req: Request):
+    """登录页用：是否已绑定手机号、当前验证码通道（不含任何敏感信息）。"""
+    a = _load_auth()
+    return {
+        "phone_bound": bool(a.get("phone")),
+        "phone_masked": _mask_phone(a.get("phone", "")),
+        "provider": _sms_conf()["SMS_PROVIDER"],
+        "logged_in": authed(req),
+    }
+
+
+@app.post("/api/auth/send-code")
+async def auth_send_code(req: Request):
+    try:
+        body = await req.json()
+    except Exception:
+        body = {}
+    phone = _norm_phone(body.get("phone", ""))
+    if not _valid_phone(phone):
+        return JSONResponse(status_code=400, content={"error": "手机号格式不正确"})
+
+    a = _load_auth()
+    bound = a.get("phone", "")
+    is_login = authed(req)
+    # 未登录：只能给已绑定号码发码；已登录：可用于更换绑定号码
+    if not is_login:
+        if not bound:
+            return JSONResponse(
+                status_code=403,
+                content={"error": "尚未绑定手机号，请先用密码登录后在「安全设置」里绑定"},
+            )
+        if phone != bound:
+            return JSONResponse(status_code=403, content={"error": "手机号不匹配"})
+    else:
+        if body.get("purpose") != "bind" and bound and phone != bound:
+            return JSONResponse(status_code=403, content={"error": "手机号与绑定号码不一致"})
+        if bound and bound == phone and body.get("purpose") == "bind":
+            return JSONResponse(status_code=400, content={"error": "该号码已绑定"})
+
+    ok, msg = _send_code_rate(phone)
+    if not ok:
+        return JSONResponse(status_code=429, content={"error": msg})
+    code = _issue_code(phone)
+    sent, info = _dispatch_code(phone, code)
+    if not sent:
+        _CODES.pop(phone, None)
+        return JSONResponse(status_code=502, content={"error": info})
+    out = {"ok": True, "provider": info, "ttl": CODE_TTL, "resend": CODE_RESEND}
+    if info == "log":
+        out["hint"] = "当前为「日志通道」，验证码已写入服务器日志（后台「安全设置」可查看最近一条）"
+    return out
+
+
+@app.post("/api/auth/verify-code")
+async def auth_verify_code(req: Request):
+    try:
+        body = await req.json()
+    except Exception:
+        body = {}
+    phone = _norm_phone(body.get("phone", ""))
+    code = (body.get("code") or "").strip()
+    if not _valid_phone(phone) or not code:
+        return JSONResponse(status_code=400, content={"error": "请填写手机号和验证码"})
+    ok, msg = _check_code(phone, code)
+    if not ok:
+        return JSONResponse(status_code=401, content={"error": msg})
+
+    a = _load_auth()
+    resp = JSONResponse({"ok": True})
+    if authed(req) and body.get("purpose") == "bind":
+        a["phone"] = phone
+        a["phone_bound_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        _save_auth(a)
+        resp = JSONResponse({"ok": True, "bound": True, "phone": _mask_phone(phone)})
+        _set_session(resp, req)
+        return resp
+    if not a.get("phone"):
+        return JSONResponse(
+            status_code=403, content={"error": "该号码尚未绑定，请先用密码登录后绑定"}
+        )
+    if a.get("phone") != phone:
+        return JSONResponse(status_code=403, content={"error": "手机号不匹配"})
+    _set_session(resp, req)
+    return resp
+
+
+# ---------------- 修改密码 / 安全设置 ----------------
+@app.post("/api/change-password")
+async def change_password(req: Request):
+    if not authed(req):
+        return deny()
+    try:
+        body = await req.json()
+    except Exception:
+        body = {}
+    old = (body.get("old") or "").strip()
+    new = (body.get("new") or "").strip()
+    if not verify_password(old):
+        return JSONResponse(status_code=400, content={"error": "当前密码不正确"})
+    if len(new) < 8:
+        return JSONResponse(status_code=400, content={"error": "新密码至少 8 位"})
+    if len(new) > 64:
+        return JSONResponse(status_code=400, content={"error": "新密码过长（最多 64 位）"})
+    if new == old:
+        return JSONResponse(status_code=400, content={"error": "新密码不能与当前密码相同"})
+    if new.isdigit():
+        return JSONResponse(status_code=400, content={"error": "密码不要用纯数字，加字母更安全"})
+
+    a = _load_auth()
+    a["password_hash"] = _hash_pwd(new)
+    a["password_changed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    _save_auth(a)
+    # 同步 env 里的明文（便于对外备份/别的脚本读取），并让会话自动续到新凭证
+    try:
+        _upsert_env({"ADMIN_PASSWORD": new})
+    except Exception:
+        pass
+    resp = JSONResponse({"ok": True})
+    _set_session(resp, req)
+    return resp
+
+
+@app.get("/api/sms-settings")
+async def sms_settings(req: Request):
+    if not authed(req):
+        return deny()
+    conf = _sms_conf()
+    a = _load_auth()
+    last = ""
+    try:
+        if SMS_LOG.exists():
+            lines = [x for x in SMS_LOG.read_text(encoding="utf-8").splitlines() if x.strip()]
+            if lines:
+                last = lines[-1]
+    except Exception:
+        pass
+    return {
+        "provider": conf["SMS_PROVIDER"],
+        "webhook_url": conf.get("SMS_WEBHOOK_URL", ""),
+        "has_secret": bool(conf.get("SMS_SECRET_ID")),
+        "secret_id_masked": (conf.get("SMS_SECRET_ID", "")[:6] + "****")
+        if conf.get("SMS_SECRET_ID")
+        else "",
+        "sdk_app_id": conf.get("SMS_SDK_APP_ID", ""),
+        "sign_name": conf.get("SMS_SIGN_NAME", ""),
+        "template_id": conf.get("SMS_TEMPLATE_ID", ""),
+        "phone_masked": _mask_phone(a.get("phone", "")),
+        "phone_bound": bool(a.get("phone")),
+        "last_code_line": last,
+        "password_changed_at": a.get("password_changed_at", ""),
+    }
+
+
+@app.post("/api/sms-settings")
+async def sms_settings_save(req: Request):
+    if not authed(req):
+        return deny()
+    try:
+        body = await req.json()
+    except Exception:
+        body = {}
+    provider = (body.get("provider") or "log").lower()
+    if provider not in ("log", "webhook", "tencent"):
+        return JSONResponse(status_code=400, content={"error": "未知的通道类型"})
+    updates = {"SMS_PROVIDER": provider}
+    for k in ("SMS_WEBHOOK_URL", "SMS_SDK_APP_ID", "SMS_SIGN_NAME", "SMS_TEMPLATE_ID"):
+        v = (body.get(k.lower()) or "").strip()
+        if v:
+            updates[k] = v
+    # 密钥单独处理：留空表示不修改
+    for k in ("SMS_SECRET_ID", "SMS_SECRET_KEY"):
+        v = (body.get(k.lower()) or "").strip()
+        if v:
+            updates[k] = v
+    _upsert_env(updates)
+    return {"ok": True, "provider": provider}
+
+
+@app.post("/api/sms/test")
+async def sms_test(req: Request):
+    if not authed(req):
+        return deny()
+    try:
+        body = await req.json()
+    except Exception:
+        body = {}
+    a = _load_auth()
+    phone = _norm_phone(body.get("phone") or a.get("phone", ""))
+    if not _valid_phone(phone):
+        return JSONResponse(status_code=400, content={"error": "请先绑定或填写手机号"})
+    ok, msg = _send_code_rate(phone)
+    if not ok:
+        return JSONResponse(status_code=429, content={"error": msg})
+    code = _issue_code(phone)
+    sent, info = _dispatch_code(phone, code)
+    if not sent:
+        _CODES.pop(phone, None)
+        return JSONResponse(status_code=502, content={"error": info})
+    out = {"ok": True, "provider": info, "phone": _mask_phone(phone)}
+    if info == "log":
+        out["debug_code"] = code
+    return out
 
 
 @app.post("/logout")
@@ -485,6 +1045,11 @@ INDEX_HTML = r"""<!DOCTYPE html>
   .login-card p{color:var(--muted);margin:0 0 24px;font-size:13px}
   .brand-dot{display:inline-block;width:10px;height:10px;border-radius:50%;
     background:linear-gradient(135deg,var(--accent),var(--accent2));margin-right:8px}
+  .ltabs{display:flex;gap:4px;background:#f2f3f8;border-radius:10px;padding:4px;margin-bottom:20px}
+  .ltab{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:13px;
+    color:var(--muted);cursor:pointer;transition:.15s}
+  .ltab.active{background:#fff;color:var(--ink);font-weight:600;
+    box-shadow:0 2px 8px rgba(20,20,40,.07)}
   input[type=password],input[type=text],input[type=number],textarea,select{
     width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;
     font-size:14px;font-family:inherit;background:#fbfbfe;color:var(--ink);outline:none}
@@ -593,11 +1158,37 @@ INDEX_HTML = r"""<!DOCTYPE html>
   <div class="login-card">
     <h1><span class="brand-dot"></span>石董会 AI 管理后台</h1>
     <p>管理知识库、人设与模型配置</p>
-    <div class="field">
-      <label>管理密码</label>
-      <input id="pwd" type="password" placeholder="请输入密码" autocomplete="current-password">
+
+    <div class="ltabs">
+      <div class="ltab active" data-lt="pwd">密码登录</div>
+      <div class="ltab" data-lt="sms">手机验证码</div>
     </div>
-    <button class="btn-primary" style="width:100%" id="loginBtn">进入后台</button>
+
+    <div id="lt-pwd">
+      <div class="field">
+        <label>管理密码</label>
+        <input id="pwd" type="password" placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" style="width:100%" id="loginBtn">进入后台</button>
+    </div>
+
+    <div id="lt-sms" class="hide">
+      <div class="field">
+        <label>绑定手机号</label>
+        <input id="lPhone" type="text" inputmode="numeric" maxlength="11"
+               placeholder="11 位手机号" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label>验证码</label>
+        <div class="row" style="flex-wrap:nowrap">
+          <input id="lCode" type="text" inputmode="numeric" maxlength="6" placeholder="6 位验证码">
+          <button class="btn-ghost" id="lSend" style="white-space:nowrap;flex-shrink:0">获取验证码</button>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%" id="smsLoginBtn">登录</button>
+      <div class="hint" id="smsHint" style="margin-top:12px"></div>
+    </div>
+
     <div class="hint" id="loginErr" style="color:var(--bad);margin-top:12px"></div>
   </div>
 </div>
@@ -611,6 +1202,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
     <div class="nav-item" data-tab="prompt">提示词 / 人设</div>
     <div class="nav-item" data-tab="test">测试问答</div>
     <div class="nav-item" data-tab="settings">模型设置</div>
+    <div class="nav-item" data-tab="security">安全设置</div>
     <div class="nav-item" data-tab="logs">运行日志</div>
     <div class="spacer"></div>
     <div class="foot">独立部署 · 无平台费<br>数据全在你自己服务器</div>
@@ -734,6 +1326,97 @@ INDEX_HTML = r"""<!DOCTYPE html>
         </div>
       </section>
 
+      <!-- 安全设置 -->
+      <section id="tab-security" class="hide">
+        <div class="card">
+          <h3>修改密码</h3>
+          <div class="hint" style="margin-bottom:14px">
+            密码只保存加密哈希，不存明文。改完旧会话自动失效，其他设备需重新登录。
+          </div>
+          <div class="grid g2">
+            <div class="field"><label>当前密码</label>
+              <input id="cpOld" type="password" autocomplete="current-password" placeholder="输入现在的密码"></div>
+            <div class="field"><label>新密码（至少 8 位，建议字母+数字）</label>
+              <input id="cpNew" type="password" autocomplete="new-password" placeholder="新密码"></div>
+          </div>
+          <div class="field"><label>再输一次新密码</label>
+            <input id="cpNew2" type="password" autocomplete="new-password" placeholder="确认新密码"></div>
+          <div class="row">
+            <button class="btn-primary btn-sm" id="cpSave">保存新密码</button>
+            <span class="hint" id="cpInfo"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>手机验证码登录</h3>
+          <div class="hint" style="margin-bottom:14px">
+            绑定后可用「手机号 + 验证码」登录，忘密码也能进。手机号仅存于服务器本机（admin_auth.json）。
+          </div>
+          <div class="row" style="margin-bottom:14px">
+            <span class="hint">当前绑定：<b id="bindPhone">未绑定</b></span>
+          </div>
+          <div class="grid g2">
+            <div class="field"><label>手机号</label>
+              <input id="bindInput" type="text" inputmode="numeric" maxlength="11" placeholder="11 位手机号"></div>
+            <div class="field"><label>验证码</label>
+              <div class="row" style="flex-wrap:nowrap">
+                <input id="bindCode" type="text" inputmode="numeric" maxlength="6" placeholder="6 位验证码">
+                <button class="btn-ghost btn-sm" id="bindSend" style="white-space:nowrap;flex-shrink:0">获取验证码</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn-primary btn-sm" id="bindSave">绑定 / 更换号码</button>
+            <span class="hint" id="bindInfo"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>验证码发送通道</h3>
+          <div class="hint" style="margin-bottom:14px">
+            三选一：<b>日志通道</b>免费自用（验证码写进服务器日志）；<b>机器人</b>推到企业微信/飞书群（免费）；
+            <b>腾讯云短信</b>发真短信（需开通短信服务，约 0.04 元/条）。
+          </div>
+          <div class="field"><label>通道</label>
+            <select id="smsProvider">
+              <option value="log">日志通道（免费，验证码写服务器日志）</option>
+              <option value="webhook">群机器人（企业微信 / 飞书 / Server酱）</option>
+              <option value="tencent">腾讯云短信（真短信）</option>
+            </select>
+          </div>
+
+          <div id="pane-webhook" class="hide">
+            <div class="field"><label>机器人 Webhook 地址</label>
+              <input id="smsWebhook" type="text" placeholder="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=..."></div>
+          </div>
+
+          <div id="pane-tencent" class="hide">
+            <div class="grid g2">
+              <div class="field"><label>SecretId</label>
+                <input id="smsSid" type="text" placeholder="AKID..."></div>
+              <div class="field"><label>SecretKey（留空不修改）</label>
+                <input id="smsSkey" type="password" placeholder="当前：—" autocomplete="new-password"></div>
+              <div class="field"><label>SdkAppId</label>
+                <input id="smsApp" type="text" placeholder="1400xxxxxx"></div>
+              <div class="field"><label>短信签名</label>
+                <input id="smsSign" type="text" placeholder="石董会"></div>
+            </div>
+            <div class="field"><label>模板 ID</label>
+              <input id="smsTpl" type="text" placeholder="1234567"></div>
+            <div class="hint" style="margin-bottom:12px">
+              模板内容建议：<code>您的验证码是 {1}，{2} 分钟内有效，请勿泄露。</code>（两个变量分别对应验证码与有效分钟数）
+            </div>
+          </div>
+
+          <div class="row">
+            <button class="btn-primary btn-sm" id="smsSave">保存通道设置</button>
+            <button class="btn-ghost btn-sm" id="smsTest">发一条测试</button>
+            <span class="hint" id="smsInfo"></span>
+          </div>
+          <div class="hint" id="smsLast" style="margin-top:14px"></div>
+        </div>
+      </section>
+
       <!-- 日志 -->
       <section id="tab-logs" class="hide">
         <div class="card">
@@ -787,6 +1470,27 @@ function showLogin(){ $('app').classList.add('hide'); $('login').classList.remov
 function showApp(){ $('login').classList.add('hide'); $('app').classList.remove('hide'); }
 
 /* 登录 */
+function loginTab(which){
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.toggle('active', t.dataset.lt===which));
+  $('lt-pwd').classList.toggle('hide', which!=='pwd');
+  $('lt-sms').classList.toggle('hide', which!=='sms');
+  $('loginErr').textContent = '';
+  if(which==='sms') loadAuthState();
+}
+document.querySelectorAll('.ltab').forEach(t=>{ t.onclick = ()=> loginTab(t.dataset.lt); });
+
+async function loadAuthState(){
+  try{
+    const st = await (await fetch('./api/auth/state')).json();
+    if(st.phone_bound){
+      $('lPhone').placeholder = '已绑定 ' + st.phone_masked;
+      $('smsHint').textContent = '已绑定 ' + st.phone_masked + '，输入该号码后点「获取验证码」';
+    }else{
+      $('smsHint').textContent = '尚未绑定手机号：请先用密码登录，在「安全设置」里绑定。';
+    }
+  }catch(e){}
+}
+
 $('loginBtn').onclick = async ()=>{
   const pwd = $('pwd').value.trim();
   if(!pwd){ $('loginErr').textContent = '请输入密码'; return; }
@@ -794,11 +1498,65 @@ $('loginBtn').onclick = async ()=>{
   try{
     const r = await fetch('./login', {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({password: pwd})});
-    if(!r.ok){ $('loginErr').textContent = '密码不正确'; return; }
-    showApp(); boot();
+    if(!r.ok){
+      const d = await r.json().catch(()=>({}));
+      $('loginErr').textContent = d.error || '密码不正确'; return;
+    }
+    $('pwd').value = '';
+    showApp(); loadStats();
   }catch(e){ $('loginErr').textContent = '登录失败：' + e.message; }
 };
 $('pwd').addEventListener('keydown', e=>{ if(e.key==='Enter') $('loginBtn').click(); });
+
+/* 手机验证码登录 */
+let smsTimer = null;
+function startCountdown(btn, sec){
+  let n = sec; btn.disabled = true;
+  const raw = btn.dataset.raw || btn.textContent;
+  btn.dataset.raw = raw;
+  clearInterval(smsTimer);
+  btn.textContent = n + 's';
+  smsTimer = setInterval(()=>{
+    n--;
+    if(n<=0){ clearInterval(smsTimer); btn.disabled=false; btn.textContent = btn.dataset.raw; }
+    else btn.textContent = n + 's';
+  }, 1000);
+}
+async function requestCode(phone, btn, infoEl, purpose){
+  if(!/^1[3-9]\d{9}$/.test(phone)){ infoEl.textContent = '请输入正确的 11 位手机号'; return false; }
+  infoEl.textContent = '发送中…';
+  try{
+    const r = await fetch('./api/auth/send-code', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone, purpose: purpose||'login'})});
+    const d = await r.json().catch(()=>({}));
+    if(!r.ok){ infoEl.textContent = d.error || '发送失败'; return false; }
+    infoEl.textContent = '已发送' + (d.provider==='log' ? '（通道：服务器日志，可在「安全设置」查看）' : '（通道：' + d.provider + '）');
+    startCountdown(btn, d.resend || 60);
+    return true;
+  }catch(e){ infoEl.textContent = '发送失败：' + e.message; return false; }
+}
+$('lSend').onclick = ()=>{
+  const ph = $('lPhone').value.trim();
+  if(!ph){ $('smsHint').textContent = '请先输入绑定的手机号'; return; }
+  requestCode(ph, $('lSend'), $('smsHint'), 'login');
+};
+$('smsLoginBtn').onclick = async ()=>{
+  const phone = $('lPhone').value.trim(), code = $('lCode').value.trim();
+  if(!phone || !code){ $('smsHint').textContent = '请填写手机号和验证码'; return; }
+  $('smsHint').textContent = '验证中…';
+  try{
+    const r = await fetch('./api/auth/verify-code', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone, code})});
+    const d = await r.json().catch(()=>({}));
+    if(!r.ok){ $('smsHint').textContent = d.error || '登录失败'; return; }
+    $('lCode').value = '';
+    $('smsHint').textContent = '';
+    showApp(); loadStats();
+  }catch(e){ $('smsHint').textContent = '登录失败：' + e.message; }
+};
+$('lCode').addEventListener('keydown', e=>{ if(e.key==='Enter') $('smsLoginBtn').click(); });
 
 $('logoutBtn').onclick = async ()=>{
   await fetch('./logout', {method:'POST'});
@@ -808,13 +1566,14 @@ $('logoutBtn').onclick = async ()=>{
 /* 导航 */
 const TITLES = {overview:['概览','问答服务运行状态'], kb:['知识库','上传与管理知识库资料'],
   prompt:['提示词 / 人设','编辑 AI 人设与约束'], test:['测试问答','页内验证回答效果'],
-  settings:['模型设置','模型与生成参数'], logs:['运行日志','服务最近日志']};
+  settings:['模型设置','模型与生成参数'], security:['安全设置','密码 / 手机验证码 / 发送通道'],
+  logs:['运行日志','服务最近日志']};
 document.querySelectorAll('.nav-item').forEach(el=>{
   el.onclick = ()=>{
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
     el.classList.add('active');
     const tab = el.dataset.tab;
-    ['overview','kb','prompt','test','settings','logs'].forEach(t=>{
+    ['overview','kb','prompt','test','settings','security','logs'].forEach(t=>{
       $('tab-'+t).classList.toggle('hide', t!==tab);
     });
     $('pageTitle').textContent = TITLES[tab][0];
@@ -823,6 +1582,7 @@ document.querySelectorAll('.nav-item').forEach(el=>{
     if(tab==='kb') loadKB();
     if(tab==='prompt') loadPrompt();
     if(tab==='settings') loadSettings();
+    if(tab==='security') loadSecurity();
     if(tab==='logs') loadLogs();
   };
 });
@@ -968,6 +1728,97 @@ $('setSave').onclick = async ()=>{
   try{ await api('/settings', {method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify(body)}); $('setKey').value=''; toast('已保存，服务重启中（约8秒）'); }
   catch(e){ toast(e.message, true); }
+};
+
+/* 安全设置 */
+let secState = {};
+async function loadSecurity(){
+  try{
+    const s = await api('/sms-settings');
+    secState = s;
+    $('cpInfo').textContent = s.password_changed_at ? ('上次修改：' + s.password_changed_at) : '尚未修改过（仍是初始密码，建议立刻改）';
+    $('bindPhone').textContent = s.phone_bound ? s.phone_masked : '未绑定';
+    $('bindInput').placeholder = s.phone_bound ? ('当前 ' + s.phone_masked + '，输入新号可更换') : '11 位手机号';
+    $('smsProvider').value = s.provider || 'log';
+    $('smsWebhook').value = s.webhook_url || '';
+    $('smsSid').value = s.secret_id_masked || '';
+    $('smsApp').value = s.sdk_app_id || '';
+    $('smsSign').value = s.sign_name || '';
+    $('smsTpl').value = s.template_id || '';
+    $('smsSkey').placeholder = s.has_secret ? '已配置（留空不修改）' : '当前：—';
+    $('smsLast').textContent = s.last_code_line
+      ? ('最近一条日志通道验证码：' + s.last_code_line)
+      : '最近一条日志通道验证码：暂无';
+    smsTogglePanes();
+  }catch(e){ toast(e.message, true); }
+}
+function smsTogglePanes(){
+  const v = $('smsProvider').value;
+  $('pane-webhook').classList.toggle('hide', v!=='webhook');
+  $('pane-tencent').classList.toggle('hide', v!=='tencent');
+}
+$('smsProvider').onchange = smsTogglePanes;
+
+$('cpSave').onclick = async ()=>{
+  const oldV = $('cpOld').value, n1 = $('cpNew').value.trim(), n2 = $('cpNew2').value.trim();
+  if(!oldV || !n1){ toast('请填写当前密码和新密码', true); return; }
+  if(n1 !== n2){ toast('两次输入的新密码不一致', true); return; }
+  if(n1.length < 8){ toast('新密码至少 8 位', true); return; }
+  try{
+    await api('/change-password', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({old: oldV, new: n1})});
+    $('cpOld').value = $('cpNew').value = $('cpNew2').value = '';
+    toast('密码已修改，其他设备需重新登录');
+    loadSecurity();
+  }catch(e){ toast(e.message, true); }
+};
+
+$('bindSend').onclick = ()=>{
+  const ph = $('bindInput').value.trim();
+  if(!ph){ $('bindInfo').textContent = '请先输入手机号'; return; }
+  requestCode(ph, $('bindSend'), $('bindInfo'), 'bind');
+};
+$('bindSave').onclick = async ()=>{
+  const phone = $('bindInput').value.trim(), code = $('bindCode').value.trim();
+  if(!phone || !code){ $('bindInfo').textContent = '请填写手机号和验证码'; return; }
+  $('bindInfo').textContent = '验证中…';
+  try{
+    await api('/auth/verify-code', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone, code, purpose:'bind'})});
+    $('bindCode').value = ''; $('bindInfo').textContent = '绑定成功';
+    toast('手机号已绑定，可用验证码登录');
+    loadSecurity();
+  }catch(e){ $('bindInfo').textContent = e.message; }
+};
+
+$('smsSave').onclick = async ()=>{
+  const v = $('smsProvider').value;
+  const body = {provider: v,
+    sms_webhook_url: $('smsWebhook').value.trim(),
+    sms_secret_id: $('smsSid').value.trim(),
+    sms_secret_key: $('smsSkey').value.trim(),
+    sms_sdk_app_id: $('smsApp').value.trim(),
+    sms_sign_name: $('smsSign').value.trim(),
+    sms_template_id: $('smsTpl').value.trim()};
+  try{
+    await api('/sms-settings', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)});
+    $('smsSkey').value = '';
+    $('smsInfo').textContent = '已保存';
+    toast('通道设置已保存');
+    loadSecurity();
+  }catch(e){ toast(e.message, true); }
+};
+
+$('smsTest').onclick = async ()=>{
+  $('smsInfo').textContent = '发送中…';
+  try{
+    const d = await api('/sms/test', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({phone: $('bindInput').value.trim()})});
+    $('smsInfo').textContent = '已通过 ' + d.provider + ' 发送到 ' + d.phone
+      + (d.debug_code ? ('（测试码 ' + d.debug_code + '）') : '');
+    loadSecurity();
+  }catch(e){ $('smsInfo').textContent = e.message; }
 };
 
 /* 日志 */

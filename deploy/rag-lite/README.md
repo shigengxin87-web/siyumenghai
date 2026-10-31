@@ -95,3 +95,19 @@ sudo nginx -t && sudo systemctl reload nginx
 - 密码登录（`ADMIN_PASSWORD` 存于 `/opt/siyumenghai-rag-lite/env`，600 权限）
 - 会话 Cookie `HttpOnly + SameSite=Lax`，HTTPS 下自动 `Secure`
 - 文件操作限制在 `cases/` 目录内，防目录穿越
+
+### 安全设置（密码 / 手机验证码）
+
+| 能力 | 说明 |
+|---|---|
+| 修改密码 | 校验旧密码 → PBKDF2-SHA256 加盐哈希写入 `admin_auth.json`（0600），不存明文；改完旧会话立即失效 |
+| 手机验证码登录 | 绑定手机号后，可用「手机号 + 6 位验证码」登录，忘记密码也能进 |
+| 发送通道 | `log`（写 `sms.log`，零成本自用） / `webhook`（企业微信·飞书·Server酱机器人） / `tencent`（腾讯云短信，真短信约 0.04 元/条） |
+
+**默认配置**：`SMS_PROVIDER=log`。此通道验证码只写服务器日志，**登录页拿不到码**，仅适合登录后在「安全设置」里做连通性测试。要让验证码真正到手，需切到 `webhook` 或 `tencent`。
+
+**防爆破**：密码连续错 5 次锁 5 分钟；验证码 5 分钟过期、错 5 次作废、同号 60 秒一条、每小时最多 10 条。
+
+**环境变量**（存 `env`，600 权限）：`SMS_PROVIDER` `SMS_WEBHOOK_URL` `SMS_SECRET_ID` `SMS_SECRET_KEY` `SMS_SDK_APP_ID` `SMS_SIGN_NAME` `SMS_TEMPLATE_ID`
+
+**腾讯云短信模板**：`您的验证码是 {1}，{2} 分钟内有效，请勿泄露。`（两个变量依次传入验证码与有效分钟数）
