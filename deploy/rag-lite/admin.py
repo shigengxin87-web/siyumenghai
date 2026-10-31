@@ -55,6 +55,51 @@ CODE_HOURLY_MAX = 10    # 同一号码每小时最多发送次数
 LOGIN_FAIL_MAX = 5      # 密码连续错误次数上限
 LOGIN_LOCK = 300        # 触发上限后的锁定时长（秒）
 
+# ---------------- 知识库分类（按内容性质划分） ----------------
+GROUP_LABELS = {
+    "share": "石更新本人分享",
+    "qa": "石更新本人答疑",
+    "course": "石更新课程内容",
+    "peers": "同行案例",
+}
+DIR_GROUP = {
+    "share": "share",
+    "own": "share",
+    "self": "share",
+    "sdh": "share",
+    "qa": "qa",
+    "ask": "qa",
+    "answer": "qa",
+    "course": "course",
+    "courses": "course",
+    "kc": "course",
+    "peers": "peers",
+    "peer": "peers",
+    "cases": "peers",
+}
+QA_HINTS = ("问答", "答疑", "问与答", "Q&A", "Q＆A")
+
+
+def _group_of(p: Path) -> str:
+    """按所在目录推断内容归属；根目录现存资料视为同行案例。"""
+    try:
+        rel = p.relative_to(CASES_DIR)
+    except Exception:
+        return "peers"
+    parts = rel.parts
+    if len(parts) >= 2:
+        d = parts[0].lower()
+        g = DIR_GROUP.get(d, "peers")
+        if d in ("sdh", "own", "self", "share"):
+            stem = p.stem
+            if "__" in stem:
+                cat = re.split(r"[_\s]", stem.split("__", 1)[1], 1)[0]
+                if any(h in cat for h in QA_HINTS):
+                    return "qa"
+        return g
+    return "peers"
+
+
 app = FastAPI(title="石董会 AI 管理后台")
 
 
@@ -419,10 +464,11 @@ def _dispatch_code(phone: str, code: str) -> tuple:
 
 # ---------------- 工具函数 ----------------
 def _safe_path(name: str) -> Path | None:
-    """只允许访问 CASES_DIR 下的 .md 文件，防目录穿越。"""
-    if not name or "/" in name or "\\" in name or not name.endswith(".md"):
+    """只允许访问 CASES_DIR 下的 .md 文件（现支持 share/qa/course/peers 子目录），防目录穿越。"""
+    if not name or "\x00" in name or not name.lower().endswith(".md"):
         return None
-    p = (CASES_DIR / name).resolve()
+    rel = name.replace("\\", "/").lstrip("/")
+    p = (CASES_DIR / rel).resolve()
     try:
         p.relative_to(CASES_DIR.resolve())
     except Exception:
@@ -818,12 +864,18 @@ async def stats(req: Request):
     if not authed(req):
         return deny()
     docs = list(CASES_DIR.rglob("*.md")) if CASES_DIR.exists() else []
+    by_group = {}
+    for p in docs:
+        g = _group_of(p)
+        by_group[g] = by_group.get(g, 0) + 1
     h = _rag_health()
     env = _read_env()
     return {
         "docs": len(docs),
         "chunks": h.get("chunks", 0),
         "cases": h.get("cases", 0),
+        "groups": by_group,
+        "group_labels": GROUP_LABELS,
         "rag_ok": bool(h.get("ok")),
         "service": _service_state(),
         "model": env.get("DEEPSEEK_MODEL", "deepseek-chat"),
@@ -841,6 +893,7 @@ async def kb_list(req: Request):
     if CASES_DIR.exists():
         for p in sorted(CASES_DIR.rglob("*.md")):
             st = p.stat()
+            g = _group_of(p)
             items.append(
                 {
                     "name": str(p.relative_to(CASES_DIR)),
@@ -848,9 +901,11 @@ async def kb_list(req: Request):
                     "mtime": datetime.fromtimestamp(st.st_mtime).strftime(
                         "%Y-%m-%d %H:%M"
                     ),
+                    "group": g,
+                    "group_label": GROUP_LABELS.get(g, g),
                 }
             )
-    return {"items": items}
+    return {"items": items, "group_labels": GROUP_LABELS}
 
 
 @app.get("/api/kb/file")
@@ -894,7 +949,8 @@ async def kb_upload(
     req: Request,
     file: UploadFile = File(...),
     title: str = Form(""),
-    platform: str = Form("用户上传"),
+    platform: str = Form(""),
+    group: str = Form("share"),
 ):
     if not authed(req):
         return deny()
@@ -909,13 +965,22 @@ async def kb_upload(
     if len(text) < 40:
         return JSONResponse(status_code=400, content={"error": "解析出的内容太短"})
 
+    g = group if group in GROUP_LABELS else "share"
     cid = "u" + datetime.now().strftime("%y%m%d%H%M%S")
     name = re.sub(r"[^\w\u4e00-\u9fa5-]+", "_", title or Path(file.filename or "doc").stem)[:40]
-    dest = CASES_DIR / f"{cid}__{name}.md"
+    target_dir = CASES_DIR / g
+    target_dir.mkdir(parents=True, exist_ok=True)
+    dest = target_dir / f"{cid}__{name}.md"
     dest.write_text(text, encoding="utf-8")
-    _append_meta(cid, platform or "用户上传", title)
+    _append_meta(cid, platform, title)
     result = _reload_rag()
-    return {"ok": True, "name": str(dest.relative_to(CASES_DIR)), "reload": result}
+    return {
+        "ok": True,
+        "name": str(dest.relative_to(CASES_DIR)),
+        "group": g,
+        "group_label": GROUP_LABELS[g],
+        "reload": result,
+    }
 
 
 @app.get("/api/prompt")
@@ -1253,7 +1318,15 @@ INDEX_HTML = r"""<!DOCTYPE html>
           <h3>上传资料</h3>
           <div class="row" style="margin-bottom:12px">
             <input id="upTitle" type="text" placeholder="标题（可选）" style="flex:1;min-width:180px">
-            <input id="upPlatform" type="text" placeholder="来源/分类（默认：用户上传）" style="flex:1;min-width:180px">
+            <select id="upGroup" style="flex:1;min-width:180px">
+              <option value="share">石更新本人分享</option>
+              <option value="qa">石更新本人答疑</option>
+              <option value="course">石更新课程内容</option>
+              <option value="peers">同行案例（别人的，仅作佐证）</option>
+            </select>
+          </div>
+          <div class="row" style="margin-bottom:12px">
+            <input id="upPlatform" type="text" placeholder="来源/主题（可选，如：小红书引流）" style="flex:1">
           </div>
           <div class="drop" id="drop">点击选择文件，或把文件拖到这里<br>
             <span class="hint">支持 md / txt / pdf / docx，自动转成知识库文本</span></div>
@@ -1262,11 +1335,20 @@ INDEX_HTML = r"""<!DOCTYPE html>
         <div class="card">
           <div class="row" style="justify-content:space-between;margin-bottom:10px">
             <h3 style="margin:0">知识库文件 <span class="hint" id="kbCount"></span></h3>
-            <button class="btn-ghost btn-sm" id="kbRefresh">刷新</button>
+            <div class="row" style="gap:8px">
+              <select id="kbFilter" style="min-width:160px">
+                <option value="">全部分类</option>
+                <option value="share">石更新本人分享</option>
+                <option value="qa">石更新本人答疑</option>
+                <option value="course">石更新课程内容</option>
+                <option value="peers">同行案例</option>
+              </select>
+              <button class="btn-ghost btn-sm" id="kbRefresh">刷新</button>
+            </div>
           </div>
           <div style="overflow:auto">
             <table>
-              <thead><tr><th>文件</th><th>大小</th><th>修改时间</th><th style="width:150px">操作</th></tr></thead>
+              <thead><tr><th>文件</th><th>分类</th><th>大小</th><th>修改时间</th><th style="width:150px">操作</th></tr></thead>
               <tbody id="kbBody"></tbody>
             </table>
           </div>
@@ -1617,24 +1699,35 @@ async function quickAsk(){
 }
 
 /* 知识库 */
+const GROUP_BADGE = {share:'ok', qa:'ok', course:'ok', peers:''};
 async function loadKB(){
   try{
     const d = await api('/kb');
-    $('kbCount').textContent = '共 ' + d.items.length + ' 个';
-    $('kbBody').innerHTML = d.items.map(it=>`
+    const f = $('kbFilter').value;
+    const list = f ? d.items.filter(it=>it.group===f) : d.items;
+    const cnt = {};
+    d.items.forEach(it=>{ cnt[it.group]=(cnt[it.group]||0)+1; });
+    $('kbCount').innerHTML = '共 ' + d.items.length + ' 个'
+      + ' <span class="hint">（'+ ['share','qa','course','peers'].map(g=>{
+          const lb = (d.group_labels&&d.group_labels[g])||g;
+          return lb+' '+(cnt[g]||0);
+        }).join(' · ') +'）</span>';
+    $('kbBody').innerHTML = list.map(it=>`
       <tr>
         <td class="name">${esc(it.name)}</td>
+        <td><span class="badge ${GROUP_BADGE[it.group]||''}">${esc(it.group_label||it.group)}</span></td>
         <td>${(it.size/1024).toFixed(1)} KB</td>
         <td>${it.mtime}</td>
         <td>
           <button class="btn-ghost btn-sm" onclick="openFile('${esc(it.name)}')">编辑</button>
           <button class="btn-danger btn-sm" onclick="delFile('${esc(it.name)}')">删除</button>
         </td>
-      </tr>`).join('') || '<tr><td colspan="4" class="hint">暂无文件</td></tr>';
+      </tr>`).join('') || '<tr><td colspan="5" class="hint">暂无文件</td></tr>';
   }catch(e){ toast(e.message, true); }
 }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 $('kbRefresh').onclick = loadKB;
+$('kbFilter').onchange = loadKB;
 
 async function openFile(name){
   try{
@@ -1671,7 +1764,8 @@ async function doUpload(file){
   const fd = new FormData();
   fd.append('file', file);
   fd.append('title', $('upTitle').value.trim());
-  fd.append('platform', $('upPlatform').value.trim() || '用户上传');
+  fd.append('group', $('upGroup').value);
+  fd.append('platform', $('upPlatform').value.trim());
   $('drop').textContent = '上传中…';
   try{
     const r = await fetch(API + '/kb/upload', {method:'POST', body: fd});

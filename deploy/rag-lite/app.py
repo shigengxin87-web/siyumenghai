@@ -51,6 +51,58 @@ MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "1500"))
 CHUNK_MAX = int(os.environ.get("CHUNK_MAX", 600))
 HIST_TTL = int(os.environ.get("HIST_TTL", 3600))  # 多轮历史 TTL（秒）
 
+# ---------------- 知识库分类（按「这是什么性质的内容 / 谁说的」划分） ----------------
+# share  = 石更新本人的主题分享（周一分享、AI工具、公域获客、私域转化、线下课复盘…）
+# qa     = 石更新本人的个性化答疑（群内/私信回答成员的具体问题）
+# course = 石更新课程内容（讲义、方法论）
+# peers  = 同行案例（运营研究社等，不是本人经验，只作佐证）
+GROUP_BOOST = float(os.environ.get("GROUP_BOOST", "1.25"))  # 本人内容权重加成
+GROUP_LABELS = {
+    "share": "石更新本人分享",
+    "qa": "石更新本人答疑",
+    "course": "石更新课程内容",
+    "peers": "同行案例（非石更新本人）",
+}
+DIR_GROUP = {
+    "share": "share",
+    "own": "share",
+    "self": "share",
+    "sdh": "share",
+    "qa": "qa",
+    "ask": "qa",
+    "answer": "qa",
+    "course": "course",
+    "courses": "course",
+    "kc": "course",
+    "peers": "peers",
+    "peer": "peers",
+    "cases": "peers",
+}
+QA_HINTS = ("问答", "答疑", "问与答", "Q&A", "Q＆A")
+
+
+def group_of(md: Path) -> str:
+    """按所在目录推断内容归属；根目录现存资料视为同行案例。
+
+    兜底：若仍在旧的 sdh/ 目录里，按文件名类别段判断是不是答疑。
+    """
+    try:
+        rel = md.relative_to(Path(CASES_DIR))
+    except Exception:
+        return "peers"
+    parts = rel.parts
+    if len(parts) >= 2:
+        d = parts[0].lower()
+        g = DIR_GROUP.get(d, "peers")
+        if d in ("sdh", "own", "self", "share"):
+            stem = md.stem
+            if "__" in stem:
+                cat = re.split(r"[_\s]", stem.split("__", 1)[1], 1)[0]
+                if any(h in cat for h in QA_HINTS):
+                    return "qa"
+        return g
+    return "peers"
+
 
 # ---------------- 系统提示词（复用迁移包，剥离 frontmatter） ----------------
 def load_prompt() -> str:
@@ -132,6 +184,7 @@ def load_cases():
         cid = md.stem.split("__")[0]
         m = meta.get(cid, {})
         platform = (m.get("platform") or "").strip()
+        group = group_of(md)
         text = md.read_text(encoding="utf-8")
         text = re.sub(r"\r\n", "\n", text)
         # 按分隔线 --- 切块
@@ -141,7 +194,12 @@ def load_cases():
                 continue
             for sub in split_long(part):
                 chunks.append(
-                    {"case_id": cid, "platform": platform, "text": sub}
+                    {
+                        "case_id": cid,
+                        "platform": platform,
+                        "group": group,
+                        "text": sub,
+                    }
                 )
     log.info(
         "loaded %d chunks from %d case files", len(chunks), len(files)
@@ -186,6 +244,11 @@ reload_all()
 def retrieve(query, n=TOP_K):
     q = list(jieba.cut(query))
     sc = bm25.scores(q)
+    # 分类加权：石更新本人的内容优先（同行案例只作佐证），
+    # 但不做硬性过滤——本人库里没有时，同行案例仍可被召回兜底。
+    for i, c in enumerate(chunks):
+        if sc[i] > 0 and c["group"] != "peers":
+            sc[i] *= GROUP_BOOST
     order = sorted(range(len(sc)), key=lambda i: -sc[i])
     seen = defaultdict(int)
     picked = []
@@ -203,13 +266,14 @@ def retrieve(query, n=TOP_K):
 
 
 def build_context(picked):
+    """所有素材统一按「石更新的经验」呈现，只带主题标签，不标归属、不带编号。"""
     blocks = []
     for _, c in picked:
-        head = f"【案例#{c['case_id']}"
-        if c["platform"]:
-            head += f"｜{c['platform']}"
-        head += "】"
-        blocks.append(head + "\n" + c["text"])
+        topic = (c["platform"] or "").strip()
+        if topic and topic not in ("用户上传", "测试"):
+            blocks.append(f"【{topic}】\n{c['text']}")
+        else:
+            blocks.append(c["text"])
     return "\n\n".join(blocks)
 
 
@@ -373,6 +437,19 @@ async def internal_reload(req: Request):
         "ok": True,
         "chunks": len(chunks),
         "cases": len(set(c["case_id"] for c in chunks)),
+        "groups": _group_stats(),
+    }
+
+
+def _group_stats():
+    out = defaultdict(lambda: {"cases": set(), "chunks": 0})
+    for c in chunks:
+        g = c.get("group", "peers")
+        out[g]["cases"].add(c["case_id"])
+        out[g]["chunks"] += 1
+    return {
+        g: {"cases": len(v["cases"]), "chunks": v["chunks"]}
+        for g, v in out.items()
     }
 
 
@@ -382,6 +459,7 @@ async def health():
         "ok": True,
         "chunks": len(chunks),
         "cases": len(set(c["case_id"] for c in chunks)),
+        "groups": _group_stats(),
     }
 
 
