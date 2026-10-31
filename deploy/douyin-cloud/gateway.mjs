@@ -4,7 +4,6 @@ import dns from 'node:dns/promises';
 import net from 'node:net';
 import { randomBytes } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 
 const base = process.env.DTK_URL || 'http://127.0.0.1:8000';
@@ -107,6 +106,67 @@ async function openMedia(raw, range, depth = 0) {
   }
   return response;
 }
+function mediaBounds(response) {
+  const contentRange = String(response.headers['content-range'] || '');
+  const match = contentRange.match(/^bytes (\d+)-(\d+)\/(\d+)$/i);
+  if (match) return { start:Number(match[1]), end:Number(match[2]), total:Number(match[3]), length:Number(match[2])-Number(match[1])+1 };
+  const length = Number(response.headers['content-length'] || 0);
+  return length > 0 ? { start:0, end:length-1, total:length, length } : null;
+}
+async function writeChunk(res, chunk) {
+  if (res.write(chunk)) return;
+  await new Promise((resolve, reject) => {
+    const done = () => { cleanup(); resolve(); };
+    const closed = () => { cleanup(); reject(new Error('客户端已断开')); };
+    const cleanup = () => { res.off('drain',done); res.off('close',closed); };
+    res.once('drain',done);
+    res.once('close',closed);
+  });
+}
+async function forwardMedia(initial, res, ticket) {
+  const bounds = mediaBounds(initial);
+  if (!bounds) throw new Error('资源长度未知，无法可靠转发');
+  const firstType = String(initial.headers['content-type'] || '');
+  const firstEtag = String(initial.headers.etag || '');
+  let upstream = initial;
+  let bytes = 0;
+  let retries = 0;
+  let clientClosed = false;
+  res.on('close', () => {
+    if (!res.writableFinished) {
+      clientClosed = true;
+      upstream.destroy();
+    }
+  });
+  while (bytes < bounds.length) {
+    try {
+      for await (const chunk of upstream) {
+        if (bytes + chunk.length > bounds.length || bytes + chunk.length > MAX_BYTES) throw new Error('文件过大');
+        await writeChunk(res,chunk);
+        bytes += chunk.length;
+      }
+      if (bytes < bounds.length) throw new Error('上游提前结束');
+    } catch (e) {
+      upstream.destroy();
+      if (clientClosed || res.destroyed || res.writableEnded) throw e;
+      if (retries >= 6) throw new Error(`上游连续中断，已传 ${bytes} 字节`);
+      retries++;
+      const nextStart = bounds.start + bytes;
+      console.log(`[media] 上游中断，自动续拉 ${retries}/6 已传 ${bytes} 字节 kind=${ticket.kind} name=${ticket.filename}`);
+      await new Promise(resolve => setTimeout(resolve,Math.min(250*retries,1000)));
+      upstream = await openMedia(ticket.url,`bytes=${nextStart}-${bounds.end}`);
+      const nextBounds = mediaBounds(upstream);
+      const nextType = String(upstream.headers['content-type'] || '');
+      const nextEtag = String(upstream.headers.etag || '');
+      if (upstream.statusCode !== 206 || !nextBounds || nextBounds.start !== nextStart || nextBounds.end !== bounds.end || nextBounds.total !== bounds.total || nextType !== firstType || (firstEtag && nextEtag && firstEtag !== nextEtag)) {
+        upstream.destroy();
+        throw new Error('续传资源校验失败，请重新解析');
+      }
+    }
+  }
+  res.end();
+  return bytes;
+}
 function send(res, status, data) { res.writeHead(status, { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store' }); res.end(JSON.stringify(data)); }
 async function body(req) {
   let buf = '';
@@ -136,19 +196,13 @@ export const server = http.createServer(async (req,res) => {
         const type = String(upstream.headers['content-type'] || '');
         if (![200,206].includes(upstream.statusCode) || !/^(image\/|video\/|application\/octet-stream)/i.test(type)) { upstream.destroy(); throw new Error('资源不可用，请重新解析'); }
         if (Number(upstream.headers['content-length'] || 0) > MAX_BYTES) { upstream.destroy(); throw new Error('文件超过 512MB 下载限制'); }
-        let bytes = 0;
-        upstream.on('data', c => { bytes += c.length; if (bytes > MAX_BYTES) upstream.destroy(new Error('文件过大')); });
         const headers = { 'Content-Type': type, 'Cache-Control':'private, no-store', 'Content-Disposition': `${u.searchParams.has('download') ? 'attachment' : 'inline'}; filename="${t.filename}"` };
         for (const h of ['content-length','content-range','accept-ranges']) if (upstream.headers[h]) headers[h] = upstream.headers[h];
         res.writeHead(upstream.statusCode,headers);
-        res.on('close', () => {
-          if (bytes > 0 && !res.writableFinished) console.log(`[media] 客户端连接中断 已传 ${bytes} 字节 kind=${t.kind} name=${t.filename}`);
-          upstream.destroy();
-        });
         try {
-          await pipeline(upstream,res);
+          await forwardMedia(upstream,res,t);
         } catch (e) {
-          if (!res.writableFinished) console.log(`[media] 媒体转发失败 已传 ${bytes} 字节 kind=${t.kind} name=${t.filename} err=${e.message}`);
+          if (!res.writableFinished) console.log(`[media] 媒体转发失败 kind=${t.kind} name=${t.filename} err=${e.message}`);
           throw e;
         }
       } finally { active--; }
