@@ -67,14 +67,15 @@ function issue(url, kind, filename) {
   tickets.set(id, { url, kind, filename, expires: now + 30 * 60000 });
   return `/api/douyin/media/${id}`;
 }
-function shape(post) {
+function shape(post, direct = false) {
   if (!post?.content_id || !post.media || post.platform !== 'douyin') throw new Error('解析服务未返回有效抖音作品');
   const id = String(post.content_id);
   const video = post.media.video;
+  const m = (url, kind, filename) => direct ? url : issue(url, kind, filename);
   return { id, description: post.description, created_at: post.created_at, author: post.author?.nickname, stats: post.stats,
-    cover: issue(post.media.covers?.[0]?.url, 'image', `${id}-cover.jpg`),
-    video: video && video.watermark === false ? issue(video.url, 'video', `${id}.mp4`) : null,
-    images: (post.media.images || []).map((im, i) => issue(im.url, 'image', `${id}-${i+1}.jpg`)), web_url: `https://www.douyin.com/video/${id}` };
+    cover: m(post.media.covers?.[0]?.url, 'image', `${id}-cover.jpg`),
+    video: video && video.watermark === false ? m(video.url, 'video', `${id}.mp4`) : null,
+    images: (post.media.images || []).map((im, i) => m(im.url, 'image', `${id}-${i+1}.jpg`)), web_url: `https://www.douyin.com/video/${id}` };
 }
 export function publicIPv4(ip) {
   if (net.isIP(ip) !== 4) return false;
@@ -216,8 +217,9 @@ export const server = http.createServer(async (req,res) => {
       try {
         const b = await body(req);
         if (u.pathname.endsWith('/parse')) {
+          const direct = u.searchParams.get('direct') === '1' || b.direct === true;
           const post = await operation('/api/v1/parse',{ method:'POST', body:JSON.stringify({url:extractUrl(b.url)}) });
-          return send(res,200,shape(post));
+          return send(res,200,shape(post, direct));
         }
         if (u.pathname.endsWith('/profile')) {
           const target = String(b.target || '').trim();
