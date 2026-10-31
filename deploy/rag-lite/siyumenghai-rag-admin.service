@@ -1,0 +1,16 @@
+[Unit]
+Description=Siyumenghai RAG-Lite Admin Console
+After=network.target siyumenghai-rag-lite.service
+Wants=siyumenghai-rag-lite.service
+
+[Service]
+Type=simple
+ExecStart=/opt/siyumenghai-rag-lite/venv/bin/python -m uvicorn admin:app --host 127.0.0.1 --port 8090 --workers 1
+WorkingDirectory=/opt/siyumenghai-rag-lite
+EnvironmentFile=/opt/siyumenghai-rag-lite/env
+Restart=always
+RestartSec=3
+User=root
+
+[Install]
+WantedBy=multi-user.target

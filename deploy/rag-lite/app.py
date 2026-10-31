@@ -46,6 +46,8 @@ DEEPSEEK_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 TOP_K = int(os.environ.get("TOP_K", 6))
+TEMPERATURE = float(os.environ.get("TEMPERATURE", "0.3"))
+MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "1500"))
 CHUNK_MAX = int(os.environ.get("CHUNK_MAX", 600))
 HIST_TTL = int(os.environ.get("HIST_TTL", 3600))  # 多轮历史 TTL（秒）
 
@@ -73,7 +75,7 @@ def load_prompt() -> str:
     return "\n".join(out).strip()
 
 
-SYSTEM_PROMPT = load_prompt()
+SYSTEM_PROMPT = ""  # 由下文 reload_all() 在索引构建后填充
 
 
 # ---------------- BM25（Okapi，纯算法，零依赖） ----------------
@@ -163,9 +165,22 @@ def split_long(text, maxlen=CHUNK_MAX):
     return out
 
 
-chunks = load_cases()
-doc_tokens = [list(jieba.cut(c["text"])) for c in chunks]
-bm25 = BM25(doc_tokens)
+chunks = []
+doc_tokens = []
+bm25 = None
+
+
+def reload_all():
+    """重新加载提示词 + 知识库并重建 BM25 索引（管理台热更新用，无需重启进程）。"""
+    global SYSTEM_PROMPT, chunks, doc_tokens, bm25
+    SYSTEM_PROMPT = load_prompt()
+    chunks = load_cases()
+    doc_tokens = [list(jieba.cut(c["text"])) for c in chunks]
+    bm25 = BM25(doc_tokens)
+    log.info("reload done: %d chunks", len(chunks))
+
+
+reload_all()
 
 
 def retrieve(query, n=TOP_K):
@@ -233,8 +248,8 @@ async def stream_deepseek(messages):
                 "model": MODEL,
                 "messages": messages,
                 "stream": True,
-                "max_tokens": 1500,
-                "temperature": 0.3,
+                "max_tokens": MAX_TOKENS,
+                "temperature": TEMPERATURE,
             },
         ) as r:
             if r.status_code != 200:
@@ -341,6 +356,24 @@ async def chat_messages(req: Request):
         media_type="text/event-stream",
         headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"},
     )
+
+
+@app.post("/internal/reload")
+async def internal_reload(req: Request):
+    """管理台调用：热重载提示词与知识库，无需重启进程。"""
+    auth = req.headers.get("Authorization", "")
+    if API_KEY and not auth.endswith(API_KEY):
+        return json_error(401, "invalid api key")
+    try:
+        reload_all()
+    except Exception as e:
+        log.exception("reload failed")
+        return json_error(500, str(e))
+    return {
+        "ok": True,
+        "chunks": len(chunks),
+        "cases": len(set(c["case_id"] for c in chunks)),
+    }
 
 
 @app.get("/health")

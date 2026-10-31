@@ -61,3 +61,37 @@ curl -N -X POST http://127.0.0.1:8080/v1/chat-messages \
   -d '{"query":"小红书怎么做引流","response_mode":"streaming","conversation_id":"test1","user":"u1"}'
 ```
 应看到 `event:message` 增量流与结尾 `event:message_end`。
+
+---
+
+## 管理后台（自研，替代 Dify/Coze 控制台）
+
+访问：`https://siyumenghai.cn/ai-admin/`（密码登录，独立部署，无平台费）
+
+| 能力 | 说明 |
+|---|---|
+| 概览 | 文档数 / 切片数 / 模型 / 服务状态 |
+| 知识库 | 列表、上传（md/txt/pdf/docx 自动转文本）、在线编辑、删除 |
+| 提示词 / 人设 | 在线编辑 `SYSTEM_PROMPT.md`，保存即热更新 |
+| 测试问答 | 页内直接提问，验证改动效果 |
+| 模型设置 | 模型名 / 温度 / 最大长度 / 召回条数（保存后重启生效） |
+| 运行日志 | 最近 150 行服务日志 |
+
+### 架构
+- `admin.py`：FastAPI 管理台，监听 `127.0.0.1:8090`，由 systemd 托管
+- `siyumenghai-rag-admin.service`：管理台服务单元
+- nginx `location /ai-admin/` 反代到 8090，走 HTTPS
+- 热更新：管理台写文件后调用 rag-lite 的 `POST /internal/reload`（无需重启进程）
+
+### 部署
+```bash
+sudo bash deploy_admin.sh          # 装依赖 + 写配置 + 起服务
+sudo python3 patch_nginx_admin.py  # 挂 /ai-admin/（幂等）
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+### 安全
+- 管理台只监听 127.0.0.1，公网仅经 nginx HTTPS 暴露
+- 密码登录（`ADMIN_PASSWORD` 存于 `/opt/siyumenghai-rag-lite/env`，600 权限）
+- 会话 Cookie `HttpOnly + SameSite=Lax`，HTTPS 下自动 `Secure`
+- 文件操作限制在 `cases/` 目录内，防目录穿越
