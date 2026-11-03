@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="点击添加老师，报名分班咨询">
+<title>添加老师 - 报名分班咨询</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 60%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+  .page { width: 100%; max-width: 480px; padding: 40px 24px 48px; text-align: center; }
+  .badge {
+    display: inline-block; padding: 6px 16px; border-radius: 20px;
+    background: #ff7d2e; color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 2px;
+  }
+  h1 { margin-top: 24px; font-size: 28px; color: #1a2b4d; font-weight: 700; }
+  .sub { margin-top: 10px; font-size: 16px; color: #5a6b8c; line-height: 1.6; }
+  .btn {
+    display: block; margin: 32px auto 0; padding: 18px 0; width: 100%;
+    background: #2f6bff; color: #fff; font-size: 19px; font-weight: 700; letter-spacing: 4px;
+    text-decoration: none; border-radius: 14px; box-shadow: 0 8px 20px rgba(47,107,255,.35);
+    transition: transform .1s;
+  }
+  .btn:active { transform: scale(.97); }
+  .tip { margin-top: 14px; font-size: 13px; color: #8a97b5; line-height: 1.7; }
+  .copy-row { margin-top: 24px; display: flex; gap: 8px; }
+  .copy-row input {
+    flex: 1; padding: 0 12px; border: 1px solid #d8e0f0; border-radius: 10px;
+    font-size: 12px; color: #5a6b8c; background: #fff; min-width: 0;
+  }
+  .copy-row button {
+    padding: 0 18px; border: 1px solid #2f6bff; border-radius: 10px;
+    background: #fff; color: #2f6bff; font-size: 14px; font-weight: 600; white-space: nowrap;
+  }
+  .copy-row button:active { background: #eef4ff; }
+  .qr-box { margin-top: 32px; padding: 20px 0 8px; border-top: 1px dashed #d8e0f0; }
+  .qr-box img { width: 180px; height: 180px; border-radius: 10px; box-shadow: 0 4px 14px rgba(26,43,77,.12); }
+  .qr-box p { margin-top: 12px; font-size: 13px; color: #8a97b5; line-height: 1.6; }
+  .foot { margin-top: 28px; font-size: 12px; color: #b3bdd4; }
+  #toast {
+    position: fixed; left: 50%; bottom: 60px; transform: translateX(-50%);
+    background: rgba(26,43,77,.88); color: #fff; font-size: 14px;
+    padding: 10px 22px; border-radius: 20px; opacity: 0; pointer-events: none;
+    transition: opacity .25s;
+  }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="badge">免米课</div>
+    <h1>报名分班 · 添加老师</h1>
+    <p class="sub">点击下方按钮，一键添加老师微信<br>报名咨询 · 分班安排</p>
+
+    <a class="btn" href="https://work.weixin.qq.com/ca/cawcded8c63b1e1ab5" id="jumpBtn">点击添加老师</a>
+    <p class="tip">如未自动跳转：请点击右上角「···」选择「浏览器打开」，<br>或复制下方链接在微信中打开</p>
+
+    <div class="copy-row">
+      <input id="linkInput" type="text" readonly value="https://work.weixin.qq.com/ca/cawcded8c63b1e1ab5">
+      <button onclick="copyLink()">复制链接</button>
+    </div>
+
+    <div class="qr-box">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAewAAAHsAQAAAAA4UaPNAAAC7klEQVR4nO2dXW6sMAyFj6/6HnbQ/S9rdpCswPchduwwrfpHGdI5UVXRkE8B6WAOjqGi+EFr/35CA8SJEydOnDhx4sSJEz8Al9E2oIn9wLZ72w87bnbixB+AF+0t7zNtFwWgqn17HnaNgydO/Fv4iN6yoW9ohVbIBq0QEa3TsGNnJ078LPzlzV4FpKgAUhS+/QuzEyd+FVxE9CYR52/SN86ZnTjx38QjzoeVLxVtE0AAKRU9zhfdDztgduLEH4en5AwAeVUURZkfabf9sKscPHHiX2gW53cVCPZnEwUU0Ca9865QYelzJ/6cOCz3OEJ6z0ZW31thAb/cjVHVuvS5E39OHJFv9zz80Hm+FqwzXQXUPPE18dB8KLyY7EPeFR7ZNS4Nap74knjyNq7tiPCzzwFwZ4GWPnfiz4mnOF8n997VHrcAeOTvIxnnia+KT97GZA/kJ9bdFRH6p+aJL4lPRn0Sv7rbGWqvgIufcZ74svi+3kYBKVWKom1RdQMg/R5rso8+eOLEv4/HCuwGAHqTvm1VNzplLFPtzSUOnjjxL7XJz89Zmiz1YfWH4ae3Ib4mPq1J5RRlGPhh+PPKFP088VVx7PQ8Qn22NEhqzxQ1T3xBfFqTmqoLEIuwUWCTXRA1T3xJfO9tRipyeJjIyffxlfU2xJfG5zg/OqsXmyEMPJLhYZwn/jfwEee7zmWLHvvWx6uiSbo6LnTwxIl/ssUibI2evAIbN4LekrdnnCe+IJ4eSMdT6izvGOo5TPp54ivj6Rm2N0/UIL8k5bsit8M4T3x13B0Lumkf662IFVjrbFaWcOTsxImfh0eNmQAoFbBXv8VDuvjb39KsJifdFZY+d+LEp6Y3+6yHqvZ0zUhU8hutxP8aXlREYhG2SS+z7P25lv6KB0+c+Aftje+YKYBSrVre7Y09unoV/UGzEyd+Pu6ab6FlM/BtA6D+WaexW2GG/4jZiRM/Hxf9eMz7jf9DjThx4sSJEydOnDjxR+L/ATHLz18qBmtmAAAAAElFTkSuQmCC" alt="老师微信二维码">
+      <p>也可长按保存图片，用微信「扫一扫」识别添加</p>
+    </div>
+
+    <p class="foot">本页面仅用于添加老师，请放心点击</p>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(function () { t.classList.remove('show'); }, 2000);
+    }
+    function copyLink() {
+      var val = document.getElementById('linkInput').value;
+      var done = function () { showToast('链接已复制，粘贴到微信打开即可'); };
+      var fail = function () {
+        var input = document.getElementById('linkInput');
+        input.select();
+        input.setSelectionRange(0, val.length);
+        try {
+          if (document.execCommand('copy')) { done(); return; }
+        } catch (e) {}
+        showToast('复制失败，请长按链接手动复制');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done, fail);
+      } else {
+        fail();
+      }
+    }
+    document.getElementById('linkInput').addEventListener('click', function () { this.select(); });
+  </script>
+</body>
+</html>
