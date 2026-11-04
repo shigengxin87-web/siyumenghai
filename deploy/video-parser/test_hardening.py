@@ -147,6 +147,33 @@ class MonitorTests(unittest.TestCase):
             self.assertIn("自动恢复", messages[0])
             self.assertIn("手动", messages[0])
 
+    def test_short_incident_sends_separate_failure_and_recovery_notices(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_file = Path(directory) / "state.json"
+            state_file.write_text(json.dumps({"alerted": False}), encoding="utf-8")
+            messages: list[str] = []
+
+            def notify(_recipient, message, _key):
+                messages.append(message)
+                return {"ok": True, "sequence": len(messages)}
+
+            server_state = {
+                "healthy": True,
+                "last_incident_at": "2026-11-05T03:10:00+08:00",
+                "last_recovery_at": "2026-11-05T03:10:17+08:00",
+            }
+            with mock.patch.object(monitor, "check_public", return_value=([], {})), mock.patch.object(
+                monitor, "check_server_parser_state", return_value=server_state
+            ), mock.patch.object(monitor, "notify", side_effect=notify):
+                self.assertEqual(monitor.run(self.args(state_file)), 0)
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            self.assertEqual(len(messages), 2)
+            self.assertIn("解析异常", messages[0])
+            self.assertIn("自动恢复", messages[1])
+            self.assertIn("手动", messages[1])
+            self.assertEqual(state["last_server_incident_at"], server_state["last_incident_at"])
+            self.assertEqual(state["last_server_recovery_at"], server_state["last_recovery_at"])
+
 
 if __name__ == "__main__":
     unittest.main()

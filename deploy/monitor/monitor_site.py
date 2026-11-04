@@ -271,19 +271,42 @@ def run(args: argparse.Namespace) -> int:
     previous_count = int(previous.get("consecutive_failures", 0))
     alerted = bool(previous.get("alerted", False))
     notification: dict | None = None
+    event_notifications: list[dict] = []
     notification_error = ""
     server_parser = details.get("server_parser") or {}
+    server_incident_at = str(server_parser.get("last_incident_at") or "")
     server_recovery_at = str(server_parser.get("last_recovery_at") or "")
+    previous_server_incident_at = str(previous.get("last_server_incident_at") or "")
     previous_server_recovery_at = str(previous.get("last_server_recovery_at") or "")
+    new_server_incident = bool(server_incident_at and server_incident_at != previous_server_incident_at)
     new_server_recovery = bool(server_recovery_at and server_recovery_at != previous_server_recovery_at)
+    incident_marker_delivered = not new_server_incident or not args.recipient_id
+
+    if new_server_incident and args.recipient_id and not args.no_notify:
+        try:
+            receipt = notify(
+                args.recipient_id,
+                f"【视频号解析异常】{stamp}\n服务器于 {server_incident_at} 检测到解析服务异常，已进入自动修复流程。",
+                f"parser-incident-{hashlib.sha256(server_incident_at.encode()).hexdigest()[:20]}",
+            )
+            event_notifications.append(receipt)
+            notification = receipt
+            incident_marker_delivered = True
+        except Exception as exc:  # noqa: BLE001
+            notification_error = f"{type(exc).__name__}: {exc}"
+
     if failures:
         count = previous_count + 1
         last_alert_epoch = int(previous.get("last_alert_epoch", 0))
+        if incident_marker_delivered and new_server_incident:
+            alerted = True
+            last_alert_epoch = int(time.time())
         should_alert = count >= 2 and (not alerted or time.time() - last_alert_epoch >= 7200)
         if should_alert and args.recipient_id and not args.no_notify:
             message = f"【石董会官网告警】{stamp}\n连续 {count} 次巡检失败：" + "；".join(failures[:6])
             try:
                 notification = notify(args.recipient_id, message, f"site-down-{int(time.time()) // 300}")
+                event_notifications.append(notification)
                 alerted = True
                 last_alert_epoch = int(time.time())
             except Exception as exc:  # noqa: BLE001
@@ -297,10 +320,17 @@ def run(args: argparse.Namespace) -> int:
             "failures": failures,
             "details": details,
             "notification": notification,
+            "event_notifications": event_notifications,
             "notification_error": notification_error,
+            "last_server_incident_at": (
+                server_incident_at
+                if incident_marker_delivered and server_incident_at
+                else previous_server_incident_at
+            ),
             "last_server_recovery_at": previous_server_recovery_at,
         }
     else:
+        recovery_marker_delivered = not new_server_recovery or not args.recipient_id
         if alerted and args.recipient_id and not args.no_notify:
             try:
                 notification = notify(
@@ -308,19 +338,23 @@ def run(args: argparse.Namespace) -> int:
                     f"【石董会官网恢复】{stamp}\n公网和视频号解析固定样本已经恢复正常。请你打开社群官网，手动粘贴一条视频号链接再测试一次。",
                     f"site-recovered-{int(time.time()) // 300}",
                 )
+                event_notifications.append(notification)
                 alerted = False
             except Exception as exc:  # noqa: BLE001
                 notification_error = f"{type(exc).__name__}: {exc}"
-        elif new_server_recovery and args.recipient_id and not args.no_notify:
+        if new_server_recovery and args.recipient_id and not args.no_notify:
             try:
-                notification = notify(
+                receipt = notify(
                     args.recipient_id,
                     f"【视频号解析自动恢复】{stamp}\n服务器记录到解析服务曾发生异常，并已于 {server_recovery_at} 自动恢复。请你打开社群官网，手动粘贴一条视频号链接再测试一次。",
                     f"parser-auto-recovered-{hashlib.sha256(server_recovery_at.encode()).hexdigest()[:20]}",
                 )
+                event_notifications.append(receipt)
+                notification = receipt
+                recovery_marker_delivered = True
             except Exception as exc:  # noqa: BLE001
-                notification_error = f"{type(exc).__name__}: {exc}"
-        recovery_marker_delivered = not new_server_recovery or bool(notification) or not args.recipient_id
+                suffix = f"{type(exc).__name__}: {exc}"
+                notification_error = f"{notification_error}；{suffix}".strip("；")
         state = {
             "status": "healthy",
             "checked_at": stamp,
@@ -328,7 +362,13 @@ def run(args: argparse.Namespace) -> int:
             "alerted": alerted,
             "details": details,
             "notification": notification,
+            "event_notifications": event_notifications,
             "notification_error": notification_error,
+            "last_server_incident_at": (
+                server_incident_at
+                if incident_marker_delivered and server_incident_at
+                else previous_server_incident_at
+            ),
             "last_server_recovery_at": (
                 server_recovery_at if recovery_marker_delivered and server_recovery_at else previous_server_recovery_at
             ),
