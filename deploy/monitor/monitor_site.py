@@ -156,6 +156,9 @@ def check_local_comments() -> tuple[list[str], dict[str, object]]:
 
 
 def check_server_parser_state() -> dict[str, object]:
+    local_state = os.environ.get("SIYUMENGHAI_PARSER_STATE_FILE", "")
+    if local_state:
+        return json.loads(Path(local_state).read_text(encoding="utf-8"))
     if not PARSER_SSH_HOST or not PARSER_SSH_KEY:
         return {}
     command = [
@@ -224,6 +227,23 @@ def resolve_recipient(recipient: str) -> str:
 
 
 def notify(recipient: str, message: str, key: str) -> dict:
+    webhook = os.environ.get("SIYUMENGHAI_FEISHU_WEBHOOK", "")
+    if webhook:
+        request = urllib.request.Request(
+            webhook,
+            data=json.dumps({"msg_type": "text", "content": {"text": message}}).encode(),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                payload = json.load(response)
+        except Exception as exc:
+            # Never include the secret URL in logs or state.
+            raise RuntimeError(f"Webhook transport failed: {type(exc).__name__}") from None
+        if payload.get("code") != 0:
+            raise RuntimeError(f"Webhook rejected: code={payload.get('code')}")
+        return {"ok": True, "transport": "webhook"}
     recipient = resolve_recipient(recipient)
     command = [
         LARK,

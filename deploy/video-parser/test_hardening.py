@@ -80,6 +80,31 @@ class HealthcheckTests(unittest.TestCase):
 
 
 class MonitorTests(unittest.TestCase):
+    def test_webhook_requires_business_success_and_avoids_cli(self):
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = b'{"code":0}'
+        with mock.patch.dict(monitor.os.environ, {"SIYUMENGHAI_FEISHU_WEBHOOK": "https://example.com/secret"}), mock.patch.object(
+            monitor.urllib.request, "urlopen", return_value=response
+        ), mock.patch.object(monitor, "resolve_recipient") as resolve:
+            self.assertTrue(monitor.notify("webhook", "test", "key")["ok"])
+            resolve.assert_not_called()
+
+    def test_webhook_transport_error_hides_secret(self):
+        with mock.patch.dict(monitor.os.environ, {"SIYUMENGHAI_FEISHU_WEBHOOK": "https://example.com/secret"}), mock.patch.object(
+            monitor.urllib.request, "urlopen", side_effect=RuntimeError("https://example.com/secret")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "^Webhook transport failed: RuntimeError$"):
+                monitor.notify("webhook", "test", "key")
+
+    def test_webhook_business_rejection_is_failure(self):
+        response = mock.MagicMock()
+        response.__enter__.return_value.read.return_value = b'{"code":19022}'
+        with mock.patch.dict(monitor.os.environ, {"SIYUMENGHAI_FEISHU_WEBHOOK": "https://example.com/secret"}), mock.patch.object(
+            monitor.urllib.request, "urlopen", return_value=response
+        ):
+            with self.assertRaisesRegex(RuntimeError, "Webhook rejected: code=19022"):
+                monitor.notify("webhook", "test", "key")
+
     def args(self, state_file: Path):
         return SimpleNamespace(
             state_file=state_file,

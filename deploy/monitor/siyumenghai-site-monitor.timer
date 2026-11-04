@@ -1,0 +1,11 @@
+[Unit]
+Description=Check Siyumenghai public site every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=5min
+Persistent=true
+Unit=siyumenghai-site-monitor.service
+
+[Install]
+WantedBy=timers.target

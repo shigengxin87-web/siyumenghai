@@ -1,0 +1,19 @@
+[Unit]
+Description=Siyumenghai public semantic monitor and Feishu webhook alerts
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=/etc/siyumenghai-site-monitor.env
+Environment=SIYUMENGHAI_PARSER_STATE_FILE=/var/lib/siyumenghai-video-parser/health.json
+ExecStart=/usr/bin/python3 /usr/local/lib/siyumenghai-site-monitor.py --recipient-id webhook --state-file /var/lib/siyumenghai-site-monitor/state.json
+StateDirectory=siyumenghai-site-monitor
+TimeoutStartSec=240
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/siyumenghai-site-monitor
+
