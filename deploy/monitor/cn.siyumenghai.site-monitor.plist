@@ -10,7 +10,6 @@
     <string>/Users/murphys/Library/Application Support/Siyumenghai Monitor/monitor_site.py</string>
     <string>--recipient-id</string>
     <string>self</string>
-    <string>--check-local-comments</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
