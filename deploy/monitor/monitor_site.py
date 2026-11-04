@@ -331,6 +331,7 @@ def run(args: argparse.Namespace) -> int:
         }
     else:
         recovery_marker_delivered = not new_server_recovery or not args.recipient_id
+        site_recovery_sent = False
         if alerted and args.recipient_id and not args.no_notify:
             try:
                 notification = notify(
@@ -340,9 +341,11 @@ def run(args: argparse.Namespace) -> int:
                 )
                 event_notifications.append(notification)
                 alerted = False
+                site_recovery_sent = True
+                recovery_marker_delivered = True
             except Exception as exc:  # noqa: BLE001
                 notification_error = f"{type(exc).__name__}: {exc}"
-        if new_server_recovery and args.recipient_id and not args.no_notify:
+        if new_server_recovery and not site_recovery_sent and args.recipient_id and not args.no_notify:
             try:
                 receipt = notify(
                     args.recipient_id,

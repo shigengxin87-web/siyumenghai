@@ -174,6 +174,31 @@ class MonitorTests(unittest.TestCase):
             self.assertEqual(state["last_server_incident_at"], server_state["last_incident_at"])
             self.assertEqual(state["last_server_recovery_at"], server_state["last_recovery_at"])
 
+    def test_site_recovery_notice_also_consumes_server_recovery_marker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_file = Path(directory) / "state.json"
+            state_file.write_text(json.dumps({"alerted": True, "consecutive_failures": 2}), encoding="utf-8")
+            messages: list[str] = []
+
+            def notify(_recipient, message, _key):
+                messages.append(message)
+                return {"ok": True}
+
+            server_state = {
+                "healthy": True,
+                "last_incident_at": "2026-11-05T03:20:00+08:00",
+                "last_recovery_at": "2026-11-05T03:20:17+08:00",
+            }
+            with mock.patch.object(monitor, "check_public", return_value=([], {})), mock.patch.object(
+                monitor, "check_server_parser_state", return_value=server_state
+            ), mock.patch.object(monitor, "notify", side_effect=notify):
+                self.assertEqual(monitor.run(self.args(state_file)), 0)
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            self.assertEqual(len(messages), 2)
+            self.assertIn("解析异常", messages[0])
+            self.assertIn("官网恢复", messages[1])
+            self.assertEqual(state["last_server_recovery_at"], server_state["last_recovery_at"])
+
 
 if __name__ == "__main__":
     unittest.main()
