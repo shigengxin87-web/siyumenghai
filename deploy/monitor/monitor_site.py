@@ -18,7 +18,7 @@ import urllib.request
 BASE = os.environ.get("SIYUMENGHAI_MONITOR_BASE", "https://siyumenghai.cn").rstrip("/")
 REPO = "shigengxin87-web/siyumenghai"
 API = f"https://api.github.com/repos/{REPO}"
-CDN = f"https://cdn.jsdelivr.net/gh/{REPO}"
+RAW = f"https://raw.githubusercontent.com/{REPO}"
 CANARY = "https://weixin.qq.com/sph/AKlMnWudWP"
 EXPECTED_AUTHOR = "车车导演爱提问"
 DEFAULT_STATE = Path.home() / "Library/Application Support/Siyumenghai Monitor/state.json"
@@ -69,7 +69,7 @@ def check_public() -> tuple[list[str], dict[str, object]]:
         cache = f"monitor={int(time.time())}-{os.getpid()}"
         public_url = f"{BASE}/{path}?{cache}"
         status, body, final_url, actual_type = fetch(public_url)
-        source_status, source, _, _ = fetch(f"{CDN}@{commit}/{path}")
+        source_status, source, _, _ = fetch(f"{RAW}/{commit}/{path}")
         public_hash = sha256(body)
         source_hash = sha256(source)
         details[path] = {
