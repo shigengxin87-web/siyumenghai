@@ -9,7 +9,7 @@
     <string>/usr/bin/python3</string>
     <string>/Users/murphys/Library/Application Support/Siyumenghai Monitor/monitor_site.py</string>
     <string>--recipient-id</string>
-    <string>ou_70a1d9ac9caf8e8c8d1607a3cae44ab3</string>
+    <string>self</string>
     <string>--check-local-comments</string>
   </array>
   <key>RunAtLoad</key>

@@ -167,7 +167,32 @@ def save_state(path: Path, state: dict) -> None:
     os.replace(temporary, path)
 
 
+def resolve_recipient(recipient: str) -> str:
+    if recipient != "self":
+        return recipient
+    environment = os.environ.copy()
+    environment["LARKSUITE_CLI_NO_UPDATE_NOTIFIER"] = "1"
+    environment["LARKSUITE_CLI_NO_SKILLS_NOTIFIER"] = "1"
+    result = subprocess.run(
+        [LARK, "auth", "status", "--json", "--verify"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+        env=environment,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "飞书身份解析失败")
+    payload = json.loads(result.stdout)
+    user = ((payload.get("identities") or {}).get("user") or {})
+    open_id = str(user.get("openId") or "").strip()
+    if not payload.get("verified") or user.get("status") != "ready" or not open_id:
+        raise RuntimeError("当前飞书用户身份不可用")
+    return open_id
+
+
 def notify(recipient: str, message: str, key: str) -> dict:
+    recipient = resolve_recipient(recipient)
     command = [
         LARK,
         "im",

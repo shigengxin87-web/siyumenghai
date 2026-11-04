@@ -86,6 +86,15 @@ class MonitorTests(unittest.TestCase):
             self.assertFalse(state["alerted"])
             self.assertIn("node unavailable", state["notification_error"])
 
+    def test_self_recipient_uses_current_verified_identity(self):
+        payload = {
+            "verified": True,
+            "identities": {"user": {"status": "ready", "openId": "current-open-id"}},
+        }
+        completed = mock.Mock(returncode=0, stdout=json.dumps(payload), stderr="")
+        with mock.patch.object(monitor.subprocess, "run", return_value=completed):
+            self.assertEqual(monitor.resolve_recipient("self"), "current-open-id")
+
     def test_recovery_notice_requests_manual_test(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"
