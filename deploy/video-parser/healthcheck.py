@@ -122,7 +122,9 @@ def main() -> int:
                 "restart_history": restart_history,
                 "restart_suppressed": restart_suppressed,
                 "recovered_from_incident": not previous_healthy,
-                "manual_test_recommended": not previous_healthy,
+                "manual_test_recommended": not previous_healthy or bool(previous.get("manual_test_recommended")),
+                "last_incident_at": previous.get("last_incident_at") or previous.get("incident_started_at"),
+                "last_recovery_at": checked_at if not previous_healthy else previous.get("last_recovery_at"),
             }
             write_state(state)
             print(json.dumps(state, ensure_ascii=False))
@@ -153,6 +155,8 @@ def main() -> int:
                     "restart_suppressed": False,
                     "recovered_from_incident": True,
                     "manual_test_recommended": True,
+                    "last_incident_at": previous.get("incident_started_at") or checked_at,
+                    "last_recovery_at": checked_at,
                 }
                 write_state(state)
                 print(json.dumps(state, ensure_ascii=False))
@@ -172,6 +176,8 @@ def main() -> int:
         "restart_suppressed": restart_suppressed,
         "incident_started_at": previous.get("incident_started_at") or checked_at,
         "manual_test_recommended": False,
+        "last_incident_at": previous.get("last_incident_at") or previous.get("incident_started_at") or checked_at,
+        "last_recovery_at": previous.get("last_recovery_at"),
     }
     write_state(state)
     print(json.dumps(state, ensure_ascii=False))

@@ -113,6 +113,26 @@ class MonitorTests(unittest.TestCase):
             self.assertFalse(state["alerted"])
             self.assertIn("手动", messages[0])
 
+    def test_short_auto_recovery_event_is_not_lost(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_file = Path(directory) / "state.json"
+            state_file.write_text(json.dumps({"alerted": False}), encoding="utf-8")
+            messages: list[str] = []
+
+            def notify(_recipient, message, _key):
+                messages.append(message)
+                return {"ok": True}
+
+            server_state = {"healthy": True, "last_recovery_at": "2026-11-05T02:52:52+08:00"}
+            with mock.patch.object(monitor, "check_public", return_value=([], {})), mock.patch.object(
+                monitor, "check_server_parser_state", return_value=server_state
+            ), mock.patch.object(monitor, "notify", side_effect=notify):
+                self.assertEqual(monitor.run(self.args(state_file)), 0)
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            self.assertEqual(state["last_server_recovery_at"], server_state["last_recovery_at"])
+            self.assertIn("自动恢复", messages[0])
+            self.assertIn("手动", messages[0])
+
 
 if __name__ == "__main__":
     unittest.main()

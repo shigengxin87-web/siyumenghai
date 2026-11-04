@@ -23,6 +23,8 @@ CANARY = "https://weixin.qq.com/sph/AKlMnWudWP"
 EXPECTED_AUTHOR = "车车导演爱提问"
 DEFAULT_STATE = Path.home() / "Library/Application Support/Siyumenghai Monitor/state.json"
 LARK = "/Users/murphys/.npm-global/bin/lark-cli"
+PARSER_SSH_HOST = os.environ.get("SIYUMENGHAI_MONITOR_SSH_HOST", "")
+PARSER_SSH_KEY = os.environ.get("SIYUMENGHAI_MONITOR_SSH_KEY", "")
 CRITICAL = {
     "index.html": ("text/html", 1_000),
     "member-view/index.html": ("text/html", 5_000),
@@ -153,6 +155,36 @@ def check_local_comments() -> tuple[list[str], dict[str, object]]:
     return failures, details
 
 
+def check_server_parser_state() -> dict[str, object]:
+    if not PARSER_SSH_HOST or not PARSER_SSH_KEY:
+        return {}
+    command = [
+        "/usr/bin/ssh",
+        "-i",
+        PARSER_SSH_KEY,
+        "-o",
+        "IdentitiesOnly=yes",
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "ConnectTimeout=8",
+        PARSER_SSH_HOST,
+        "sudo -n cat /var/lib/siyumenghai-video-parser/health.json",
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, timeout=15, check=False)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or "服务器健康状态读取失败")
+    payload = json.loads(result.stdout)
+    return {
+        "healthy": bool(payload.get("healthy")),
+        "checked_at": payload.get("checked_at"),
+        "last_incident_at": payload.get("last_incident_at") or payload.get("incident_started_at"),
+        "last_recovery_at": payload.get("last_recovery_at"),
+        "repaired": bool(payload.get("repaired")),
+        "manual_test_recommended": bool(payload.get("manual_test_recommended")),
+    }
+
+
 def load_state(path: Path) -> dict:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -228,6 +260,10 @@ def run(args: argparse.Namespace) -> int:
         comment_failures, comment_details = check_local_comments()
         failures.extend(comment_failures)
         details["comments"] = comment_details
+    try:
+        details["server_parser"] = check_server_parser_state()
+    except Exception as exc:  # noqa: BLE001
+        details["server_parser"] = {"monitoring_error": f"{type(exc).__name__}: {exc}"}
     details["elapsed_seconds"] = round(time.monotonic() - started, 2)
 
     stamp = now().strftime("%Y-%m-%d %H:%M:%S")
@@ -236,6 +272,10 @@ def run(args: argparse.Namespace) -> int:
     alerted = bool(previous.get("alerted", False))
     notification: dict | None = None
     notification_error = ""
+    server_parser = details.get("server_parser") or {}
+    server_recovery_at = str(server_parser.get("last_recovery_at") or "")
+    previous_server_recovery_at = str(previous.get("last_server_recovery_at") or "")
+    new_server_recovery = bool(server_recovery_at and server_recovery_at != previous_server_recovery_at)
     if failures:
         count = previous_count + 1
         last_alert_epoch = int(previous.get("last_alert_epoch", 0))
@@ -258,6 +298,7 @@ def run(args: argparse.Namespace) -> int:
             "details": details,
             "notification": notification,
             "notification_error": notification_error,
+            "last_server_recovery_at": previous_server_recovery_at,
         }
     else:
         if alerted and args.recipient_id and not args.no_notify:
@@ -270,6 +311,16 @@ def run(args: argparse.Namespace) -> int:
                 alerted = False
             except Exception as exc:  # noqa: BLE001
                 notification_error = f"{type(exc).__name__}: {exc}"
+        elif new_server_recovery and args.recipient_id and not args.no_notify:
+            try:
+                notification = notify(
+                    args.recipient_id,
+                    f"【视频号解析自动恢复】{stamp}\n服务器记录到解析服务曾发生异常，并已于 {server_recovery_at} 自动恢复。请你打开社群官网，手动粘贴一条视频号链接再测试一次。",
+                    f"parser-auto-recovered-{hashlib.sha256(server_recovery_at.encode()).hexdigest()[:20]}",
+                )
+            except Exception as exc:  # noqa: BLE001
+                notification_error = f"{type(exc).__name__}: {exc}"
+        recovery_marker_delivered = not new_server_recovery or bool(notification) or not args.recipient_id
         state = {
             "status": "healthy",
             "checked_at": stamp,
@@ -278,6 +329,9 @@ def run(args: argparse.Namespace) -> int:
             "details": details,
             "notification": notification,
             "notification_error": notification_error,
+            "last_server_recovery_at": (
+                server_recovery_at if recovery_marker_delivered and server_recovery_at else previous_server_recovery_at
+            ),
         }
     save_state(args.state_file, state)
     print(json.dumps(state, ensure_ascii=False))

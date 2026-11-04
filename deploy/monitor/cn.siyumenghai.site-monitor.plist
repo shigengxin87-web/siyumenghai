@@ -21,6 +21,10 @@
   <dict>
     <key>PATH</key>
     <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>SIYUMENGHAI_MONITOR_SSH_HOST</key>
+    <string>ubuntu@49.234.179.204</string>
+    <key>SIYUMENGHAI_MONITOR_SSH_KEY</key>
+    <string>/Users/murphys/.ssh/siyumenghai_key</string>
   </dict>
   <key>StandardOutPath</key>
   <string>/Users/murphys/Library/Logs/siyumenghai-site-monitor.log</string>
