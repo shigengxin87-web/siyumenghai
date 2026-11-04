@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh Siyumenghai video parser session daily
+
+[Timer]
+OnCalendar=*-*-* 04:15:00 Asia/Shanghai
+RandomizedDelaySec=15min
+AccuracySec=1min
+Persistent=true
+Unit=siyumenghai-video-parser-session-refresh.service
+
+[Install]
+WantedBy=timers.target

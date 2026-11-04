@@ -14,20 +14,39 @@ import urllib.request
 
 
 ENDPOINT = "http://127.0.0.1:2027/api/channels/parse_sph"
-CANARY_URL = "https://weixin.qq.com/sph/AKlMnWudWP"
+CANARY_URLS = (
+    "https://weixin.qq.com/sph/AKlMnWudWP",
+    "https://weixin.qq.com/sph/A4JRXiahvr",
+)
 STATE_FILE = Path("/var/lib/siyumenghai-video-parser/health.json")
 SERVICE = "siyumenghai-video-parser.service"
 RESTART_WINDOW_SECONDS = 1800
-MAX_RESTARTS = 3
+MAX_RESTARTS = 2
+PROBE_ATTEMPTS = 3
+PROBE_DELAY_SECONDS = 5
 
 
-def probe() -> dict[str, object]:
-    url = ENDPOINT + "?" + urllib.parse.urlencode({"url": CANARY_URL, "health": int(time.time())})
+class ProbeFailure(RuntimeError):
+    """A redacted, classifiable semantic probe failure."""
+
+
+def safe_message(payload: dict, result: dict) -> str:
+    value = payload.get("msg") or payload.get("errMsg") or result.get("msg") or result.get("errMsg") or ""
+    return " ".join(str(value).split())[:160]
+
+
+def probe_one(canary_url: str, index: int) -> dict[str, object]:
+    url = ENDPOINT + "?" + urllib.parse.urlencode({"url": canary_url, "health": int(time.time())})
     request = urllib.request.Request(url, headers={"Accept": "application/json", "Cache-Control": "no-cache"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        if response.status != 200:
-            raise RuntimeError(f"HTTP {response.status}")
-        payload = json.load(response)
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            if response.status != 200:
+                raise ProbeFailure(f"transport: HTTP {response.status}")
+            payload = json.load(response)
+    except ProbeFailure:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise ProbeFailure(f"transport: {type(exc).__name__}: {exc}") from exc
 
     result = payload.get("data") or {}
     parsed = result.get("data") or {}
@@ -40,14 +59,27 @@ def probe() -> dict[str, object]:
         (feed.get("h265VideoInfo") or {}).get("videoUrl"),
     ]
     if payload.get("code") != 0 or result.get("errCode") != 0 or not any(urls):
-        raise RuntimeError(
-            f"semantic failure: code={payload.get('code')} errCode={result.get('errCode')} videoUrl=false"
+        message = safe_message(payload, result)
+        raise ProbeFailure(
+            f"semantic: canary={index} code={payload.get('code')} errCode={result.get('errCode')} "
+            f"videoUrl={bool(any(urls))} message={message or '-'}"
         )
     return {
+        "canary": index,
         "author": author.get("nickname") or "",
         "description_length": len(feed.get("description") or ""),
         "has_video_url": True,
     }
+
+
+def probe() -> dict[str, object]:
+    failures: list[str] = []
+    for index, canary_url in enumerate(CANARY_URLS, start=1):
+        try:
+            return probe_one(canary_url, index)
+        except ProbeFailure as exc:
+            failures.append(str(exc))
+    raise ProbeFailure("all canaries failed: " + " | ".join(failures))
 
 
 def write_state(state: dict[str, object]) -> None:
@@ -75,41 +107,71 @@ def main() -> int:
         if now_epoch - int(value) < RESTART_WINDOW_SECONDS
     ]
     restart_suppressed = False
+    previous_healthy = bool(previous.get("healthy", True))
 
-    for index in range(3):
+    for index in range(PROBE_ATTEMPTS):
         try:
             details = probe()
             state = {
                 "healthy": True,
                 "checked_at": checked_at,
-                "repaired": index > 0,
+                "repaired": False,
                 "attempts": attempts,
                 "details": details,
                 "consecutive_failures": 0,
                 "restart_history": restart_history,
                 "restart_suppressed": restart_suppressed,
+                "recovered_from_incident": not previous_healthy,
+                "manual_test_recommended": not previous_healthy,
             }
             write_state(state)
             print(json.dumps(state, ensure_ascii=False))
             return 0
         except Exception as exc:  # noqa: BLE001
             attempts.append({"attempt": index + 1, "error": f"{type(exc).__name__}: {exc}"})
-            if index == 0:
-                if len(restart_history) < MAX_RESTARTS:
-                    subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=30)
-                    restart_history.append(now_epoch)
-                else:
-                    restart_suppressed = True
-            time.sleep(3)
+            if index + 1 < PROBE_ATTEMPTS:
+                time.sleep(PROBE_DELAY_SECONDS)
+
+    repaired = False
+    if len(restart_history) < MAX_RESTARTS:
+        restart = subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=45)
+        restart_history.append(now_epoch)
+        attempts.append({"action": "restart", "returncode": restart.returncode})
+        if restart.returncode == 0:
+            time.sleep(4)
+            try:
+                details = probe()
+                repaired = True
+                state = {
+                    "healthy": True,
+                    "checked_at": checked_at,
+                    "repaired": True,
+                    "attempts": attempts,
+                    "details": details,
+                    "consecutive_failures": 0,
+                    "restart_history": restart_history,
+                    "restart_suppressed": False,
+                    "recovered_from_incident": True,
+                    "manual_test_recommended": True,
+                }
+                write_state(state)
+                print(json.dumps(state, ensure_ascii=False))
+                return 0
+            except Exception as exc:  # noqa: BLE001
+                attempts.append({"attempt": "post_restart", "error": f"{type(exc).__name__}: {exc}"})
+    else:
+        restart_suppressed = True
 
     state = {
         "healthy": False,
         "checked_at": checked_at,
-        "repaired": False,
+        "repaired": repaired,
         "attempts": attempts,
         "consecutive_failures": int(previous.get("consecutive_failures", 0)) + 1,
         "restart_history": restart_history,
         "restart_suppressed": restart_suppressed,
+        "incident_started_at": previous.get("incident_started_at") or checked_at,
+        "manual_test_recommended": False,
     }
     write_state(state)
     print(json.dumps(state, ensure_ascii=False))

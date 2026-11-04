@@ -38,13 +38,21 @@ def now() -> dt.datetime:
     return dt.datetime.now(dt.timezone(dt.timedelta(hours=8)))
 
 
-def fetch(url: str, timeout: int = 30) -> tuple[int, bytes, str, str]:
-    request = urllib.request.Request(
-        url,
-        headers={"User-Agent": "SiyumenghaiExternalMonitor/2", "Cache-Control": "no-cache"},
-    )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        return response.status, response.read(), response.geturl(), response.headers.get("Content-Type", "")
+def fetch(url: str, timeout: int = 30, attempts: int = 2) -> tuple[int, bytes, str, str]:
+    errors: list[str] = []
+    for attempt in range(attempts):
+        request = urllib.request.Request(
+            url,
+            headers={"User-Agent": "SiyumenghaiExternalMonitor/3", "Cache-Control": "no-cache"},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return response.status, response.read(), response.geturl(), response.headers.get("Content-Type", "")
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{type(exc).__name__}: {exc}")
+            if attempt + 1 < attempts:
+                time.sleep(2**attempt)
+    raise RuntimeError("；".join(errors))
 
 
 def sha256(data: bytes) -> str:
@@ -202,15 +210,19 @@ def run(args: argparse.Namespace) -> int:
     previous_count = int(previous.get("consecutive_failures", 0))
     alerted = bool(previous.get("alerted", False))
     notification: dict | None = None
+    notification_error = ""
     if failures:
         count = previous_count + 1
         last_alert_epoch = int(previous.get("last_alert_epoch", 0))
         should_alert = count >= 2 and (not alerted or time.time() - last_alert_epoch >= 7200)
         if should_alert and args.recipient_id and not args.no_notify:
             message = f"【石董会官网告警】{stamp}\n连续 {count} 次巡检失败：" + "；".join(failures[:6])
-            notification = notify(args.recipient_id, message, f"site-down-{int(time.time()) // 300}")
-            alerted = True
-            last_alert_epoch = int(time.time())
+            try:
+                notification = notify(args.recipient_id, message, f"site-down-{int(time.time()) // 300}")
+                alerted = True
+                last_alert_epoch = int(time.time())
+            except Exception as exc:  # noqa: BLE001
+                notification_error = f"{type(exc).__name__}: {exc}"
         state = {
             "status": "down",
             "checked_at": stamp,
@@ -220,21 +232,27 @@ def run(args: argparse.Namespace) -> int:
             "failures": failures,
             "details": details,
             "notification": notification,
+            "notification_error": notification_error,
         }
     else:
         if alerted and args.recipient_id and not args.no_notify:
-            notification = notify(
-                args.recipient_id,
-                f"【石董会官网恢复】{stamp}\n公网、解析与评论固定样本均已恢复正常。",
-                f"site-recovered-{int(time.time()) // 300}",
-            )
+            try:
+                notification = notify(
+                    args.recipient_id,
+                    f"【石董会官网恢复】{stamp}\n公网和视频号解析固定样本已经恢复正常。请你打开社群官网，手动粘贴一条视频号链接再测试一次。",
+                    f"site-recovered-{int(time.time()) // 300}",
+                )
+                alerted = False
+            except Exception as exc:  # noqa: BLE001
+                notification_error = f"{type(exc).__name__}: {exc}"
         state = {
             "status": "healthy",
             "checked_at": stamp,
             "consecutive_failures": 0,
-            "alerted": False,
+            "alerted": alerted,
             "details": details,
             "notification": notification,
+            "notification_error": notification_error,
         }
     save_state(args.state_file, state)
     print(json.dumps(state, ensure_ascii=False))
@@ -254,7 +272,7 @@ def main() -> int:
             raise SystemExit("test alert requires recipient id")
         receipt = notify(
             args.recipient_id,
-            "【石董会官网监控验收】外部 5 分钟巡检、连续两次告警、去重与恢复通知链路已启用。",
+            "【石董会官网监控验收】外部 5 分钟巡检已启用：连续两次失败会告警，自动或人工恢复后会再次通知，并提醒你手动复测。",
             f"site-monitor-acceptance-{int(time.time()) // 300}",
         )
         print(json.dumps({"test_alert": True, "receipt": receipt}, ensure_ascii=False))

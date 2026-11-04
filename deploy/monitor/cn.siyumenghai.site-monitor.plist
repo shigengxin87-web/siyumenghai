@@ -18,6 +18,11 @@
   <integer>300</integer>
   <key>ThrottleInterval</key>
   <integer>60</integer>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+  </dict>
   <key>StandardOutPath</key>
   <string>/Users/murphys/Library/Logs/siyumenghai-site-monitor.log</string>
   <key>StandardErrorPath</key>
