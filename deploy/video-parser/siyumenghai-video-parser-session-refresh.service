@@ -6,6 +6,7 @@ Wants=network-online.target lighthouse-chromium.service
 [Service]
 Type=oneshot
 User=root
+ExecStart=/bin/systemctl reset-failed siyumenghai-video-parser.service
 ExecStart=/bin/systemctl restart siyumenghai-video-parser.service
 ExecStart=/usr/local/bin/siyumenghai-video-parser-healthcheck
 NoNewPrivileges=true

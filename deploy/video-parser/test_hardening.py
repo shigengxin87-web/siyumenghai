@@ -64,6 +64,20 @@ class HealthcheckTests(unittest.TestCase):
         with mock.patch.object(healthcheck, "probe_one", side_effect=probe_one):
             self.assertEqual(healthcheck.probe()["canary"], 2)
 
+    def test_recovery_clears_systemd_start_limit_before_restart(self):
+        completed = [mock.Mock(returncode=0), mock.Mock(returncode=0)]
+        with mock.patch.object(healthcheck.subprocess, "run", side_effect=completed) as run:
+            self.assertEqual(healthcheck.restart_service(), (0, 0))
+        self.assertEqual(
+            run.call_args_list,
+            [
+                mock.call(
+                    ["systemctl", "reset-failed", healthcheck.SERVICE], check=False, timeout=15
+                ),
+                mock.call(["systemctl", "restart", healthcheck.SERVICE], check=False, timeout=45),
+            ],
+        )
+
 
 class MonitorTests(unittest.TestCase):
     def args(self, state_file: Path):

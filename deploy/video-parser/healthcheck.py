@@ -96,6 +96,13 @@ def load_state() -> dict[str, object]:
         return {}
 
 
+def restart_service() -> tuple[int, int]:
+    """Clear systemd's failed/start-limit state before trying a recovery restart."""
+    reset = subprocess.run(["systemctl", "reset-failed", SERVICE], check=False, timeout=15)
+    restart = subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=45)
+    return reset.returncode, restart.returncode
+
+
 def main() -> int:
     checked_at = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat(timespec="seconds")
     attempts: list[dict[str, object]] = []
@@ -136,10 +143,16 @@ def main() -> int:
 
     repaired = False
     if len(restart_history) < MAX_RESTARTS:
-        restart = subprocess.run(["systemctl", "restart", SERVICE], check=False, timeout=45)
+        reset_returncode, restart_returncode = restart_service()
         restart_history.append(now_epoch)
-        attempts.append({"action": "restart", "returncode": restart.returncode})
-        if restart.returncode == 0:
+        attempts.append(
+            {
+                "action": "restart",
+                "reset_failed_returncode": reset_returncode,
+                "returncode": restart_returncode,
+            }
+        )
+        if restart_returncode == 0:
             time.sleep(4)
             try:
                 details = probe()
