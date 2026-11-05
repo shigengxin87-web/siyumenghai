@@ -207,6 +207,18 @@ class MonitorTests(unittest.TestCase):
             self.assertEqual(state["details"]["integrity_warnings"], ["GitHub raw timeout"])
             notify.assert_not_called()
 
+    def test_github_integrity_stops_after_first_raw_timeout(self):
+        public_details = {path: {"sha256": "abc"} for path in monitor.CRITICAL}
+        api_response = (200, b'{"sha":"commit"}', "https://api.github.com/commit", "application/json")
+        with mock.patch.object(
+            monitor, "fetch", side_effect=[api_response, TimeoutError("raw timeout")]
+        ) as fetch:
+            warnings, details = monitor.check_integrity(public_details)
+        self.assertEqual(fetch.call_count, 2)
+        self.assertEqual(details["status"], "unavailable")
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("GitHub原始文件暂不可用", warnings[0])
+
     def test_short_incident_sends_separate_failure_and_recovery_notices(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"

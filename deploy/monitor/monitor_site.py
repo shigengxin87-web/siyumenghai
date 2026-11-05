@@ -71,7 +71,7 @@ def check_public() -> tuple[list[str], dict[str, object]]:
         cache = f"monitor={int(time.time())}-{os.getpid()}"
         public_url = f"{BASE}/{path}?{cache}"
         try:
-            status, body, final_url, actual_type = fetch(public_url, timeout=15)
+            status, body, final_url, actual_type = fetch(public_url, timeout=10, attempts=1)
         except Exception as exc:  # noqa: BLE001
             failures.append(f"官网文件读取失败({path}: {type(exc).__name__}: {exc})")
             details[path] = {"ok": False, "stage": "public", "error": f"{type(exc).__name__}: {exc}"}
@@ -94,19 +94,25 @@ def check_public() -> tuple[list[str], dict[str, object]]:
         if len(body) < minimum:
             failures.append(f"{path} 长度异常({len(body)})")
 
-    members = json.loads(fetch(f"{BASE}/member-view/members.json?monitor={int(time.time())}")[1])
+    members = json.loads(
+        fetch(
+            f"{BASE}/member-view/members.json?monitor={int(time.time())}", timeout=15, attempts=1
+        )[1]
+    )
     if members.get("count") != len(members.get("members", [])) or not members.get("members"):
         failures.append("群友名录为空或人数不一致")
     details["members"] = len(members.get("members", []))
 
-    homepage = fetch(f"{BASE}/?monitor={int(time.time())}")[1].decode("utf-8", errors="replace")
+    homepage = fetch(
+        f"{BASE}/?monitor={int(time.time())}", timeout=15, attempts=1
+    )[1].decode("utf-8", errors="replace")
     if "网站升级中" not in homepage or "【石董会】" in homepage or "群聊学习情报" in homepage:
         failures.append("根域名不是预留占位页")
 
     parser_url = f"{BASE}/api/video/profile?" + urllib.parse.urlencode(
         {"url": CANARY, "monitor": int(time.time())}
     )
-    status, body, final_url, actual_type = fetch(parser_url, timeout=45)
+    status, body, final_url, actual_type = fetch(parser_url, timeout=45, attempts=1)
     payload = json.loads(body)
     result = payload.get("data") or {}
     parsed = result.get("data") or {}
@@ -141,7 +147,7 @@ def check_integrity(public_details: dict[str, object]) -> tuple[list[str], dict[
         details.update({"status": "skipped", "reason": "public check did not return asset details"})
         return warnings, details
     try:
-        commit = json.loads(fetch(f"{API}/commits/main", timeout=20)[1])["sha"]
+        commit = json.loads(fetch(f"{API}/commits/main", timeout=12, attempts=1)[1])["sha"]
         details["commit"] = commit
     except Exception as exc:  # noqa: BLE001
         warning = f"GitHub版本查询暂不可用(api.github.com: {type(exc).__name__}: {exc})"
@@ -157,7 +163,9 @@ def check_integrity(public_details: dict[str, object]) -> tuple[list[str], dict[
             assets[path] = {"status": "skipped", "reason": "public asset unavailable"}
             continue
         try:
-            source_status, source, _, _ = fetch(f"{RAW}/{commit}/{path}", timeout=20)
+            source_status, source, _, _ = fetch(
+                f"{RAW}/{commit}/{path}", timeout=12, attempts=1
+            )
             source_hash = sha256(source)
             matches = source_status == 200 and public_hash == source_hash
             assets[path] = {
@@ -171,6 +179,9 @@ def check_integrity(public_details: dict[str, object]) -> tuple[list[str], dict[
             warning = f"GitHub原始文件暂不可用({path}: {type(exc).__name__}: {exc})"
             warnings.append(warning)
             assets[path] = {"status": "unavailable", "stage": "github_raw", "error": warning}
+            details["assets"] = assets
+            details["status"] = "unavailable"
+            return warnings, details
     details["assets"] = assets
     if warnings:
         details["status"] = "warning"
