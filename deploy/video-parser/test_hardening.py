@@ -116,7 +116,7 @@ class MonitorTests(unittest.TestCase):
     def test_notification_failure_is_saved_and_does_not_crash(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"
-            state_file.write_text(json.dumps({"consecutive_failures": 1, "alerted": False}), encoding="utf-8")
+            state_file.write_text(json.dumps({"consecutive_failures": 2, "alerted": False}), encoding="utf-8")
             with mock.patch.object(monitor, "check_public", return_value=(["parser down"], {})), mock.patch.object(
                 monitor, "notify", side_effect=RuntimeError("node unavailable")
             ):
@@ -137,7 +137,10 @@ class MonitorTests(unittest.TestCase):
     def test_recovery_notice_requests_manual_test(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"
-            state_file.write_text(json.dumps({"consecutive_failures": 3, "alerted": True}), encoding="utf-8")
+            state_file.write_text(
+                json.dumps({"consecutive_failures": 3, "consecutive_successes": 1, "alerted": True}),
+                encoding="utf-8",
+            )
             messages: list[str] = []
 
             def notify(_recipient, message, _key):
@@ -172,6 +175,38 @@ class MonitorTests(unittest.TestCase):
             self.assertIn("自动恢复", messages[0])
             self.assertIn("手动", messages[0])
 
+    def test_first_healthy_run_waits_before_site_recovery_notice(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_file = Path(directory) / "state.json"
+            state_file.write_text(
+                json.dumps({"consecutive_failures": 3, "alerted": True}), encoding="utf-8"
+            )
+            with mock.patch.object(monitor, "check_public", return_value=([], {})), mock.patch.object(
+                monitor, "notify"
+            ) as notify:
+                self.assertEqual(monitor.run(self.args(state_file)), 0)
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            self.assertEqual(state["status"], "recovering")
+            self.assertTrue(state["alerted"])
+            self.assertEqual(state["consecutive_successes"], 1)
+            notify.assert_not_called()
+
+    def test_github_integrity_warning_does_not_mark_site_down(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state_file = Path(directory) / "state.json"
+            with mock.patch.object(
+                monitor, "check_public", return_value=([], {"index.html": {"sha256": "abc"}})
+            ), mock.patch.object(
+                monitor,
+                "check_integrity",
+                return_value=(["GitHub raw timeout"], {"status": "warning"}),
+            ), mock.patch.object(monitor, "notify") as notify:
+                self.assertEqual(monitor.run(self.args(state_file)), 0)
+            state = json.loads(state_file.read_text(encoding="utf-8"))
+            self.assertEqual(state["status"], "healthy")
+            self.assertEqual(state["details"]["integrity_warnings"], ["GitHub raw timeout"])
+            notify.assert_not_called()
+
     def test_short_incident_sends_separate_failure_and_recovery_notices(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"
@@ -202,7 +237,12 @@ class MonitorTests(unittest.TestCase):
     def test_site_recovery_notice_also_consumes_server_recovery_marker(self):
         with tempfile.TemporaryDirectory() as directory:
             state_file = Path(directory) / "state.json"
-            state_file.write_text(json.dumps({"alerted": True, "consecutive_failures": 2}), encoding="utf-8")
+            state_file.write_text(
+                json.dumps(
+                    {"alerted": True, "consecutive_failures": 3, "consecutive_successes": 1}
+                ),
+                encoding="utf-8",
+            )
             messages: list[str] = []
 
             def notify(_recipient, message, _key):

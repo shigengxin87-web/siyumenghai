@@ -25,6 +25,9 @@ DEFAULT_STATE = Path.home() / "Library/Application Support/Siyumenghai Monitor/s
 LARK = "/Users/murphys/.npm-global/bin/lark-cli"
 PARSER_SSH_HOST = os.environ.get("SIYUMENGHAI_MONITOR_SSH_HOST", "")
 PARSER_SSH_KEY = os.environ.get("SIYUMENGHAI_MONITOR_SSH_KEY", "")
+INTEGRITY_INTERVAL_SECONDS = int(os.environ.get("SIYUMENGHAI_INTEGRITY_INTERVAL_SECONDS", "3600"))
+ALERT_AFTER_FAILURES = int(os.environ.get("SIYUMENGHAI_ALERT_AFTER_FAILURES", "3"))
+RECOVER_AFTER_SUCCESSES = int(os.environ.get("SIYUMENGHAI_RECOVER_AFTER_SUCCESSES", "2"))
 CRITICAL = {
     "index.html": ("text/html", 1_000),
     "member-view/index.html": ("text/html", 5_000),
@@ -64,23 +67,25 @@ def sha256(data: bytes) -> str:
 def check_public() -> tuple[list[str], dict[str, object]]:
     failures: list[str] = []
     details: dict[str, object] = {}
-    commit = json.loads(fetch(f"{API}/commits/main")[1])["sha"]
     for path, (content_type, minimum) in CRITICAL.items():
         cache = f"monitor={int(time.time())}-{os.getpid()}"
         public_url = f"{BASE}/{path}?{cache}"
-        status, body, final_url, actual_type = fetch(public_url)
-        source_status, source, _, _ = fetch(f"{RAW}/{commit}/{path}")
+        try:
+            status, body, final_url, actual_type = fetch(public_url, timeout=15)
+        except Exception as exc:  # noqa: BLE001
+            failures.append(f"官网文件读取失败({path}: {type(exc).__name__}: {exc})")
+            details[path] = {"ok": False, "stage": "public", "error": f"{type(exc).__name__}: {exc}"}
+            continue
         public_hash = sha256(body)
-        source_hash = sha256(source)
         details[path] = {
             "status": status,
             "content_type": actual_type,
             "bytes": len(body),
             "sha256": public_hash,
-            "source_sha256": source_hash,
             "final_url": final_url,
+            "ok": True,
         }
-        if status != 200 or source_status != 200:
+        if status != 200:
             failures.append(f"{path} HTTP异常")
         if not final_url.startswith("https://"):
             failures.append(f"{path} 未保持HTTPS")
@@ -88,8 +93,6 @@ def check_public() -> tuple[list[str], dict[str, object]]:
             failures.append(f"{path} Content-Type错误({actual_type})")
         if len(body) < minimum:
             failures.append(f"{path} 长度异常({len(body)})")
-        if public_hash != source_hash:
-            failures.append(f"{path} SHA-256与GitHub main不一致")
 
     members = json.loads(fetch(f"{BASE}/member-view/members.json?monitor={int(time.time())}")[1])
     if members.get("count") != len(members.get("members", [])) or not members.get("members"):
@@ -128,6 +131,50 @@ def check_public() -> tuple[list[str], dict[str, object]]:
     if not parser_ok:
         failures.append("固定样本解析未返回预期作者和视频地址")
     return failures, details
+
+
+def check_integrity(public_details: dict[str, object]) -> tuple[list[str], dict[str, object]]:
+    """Compare public assets with GitHub without affecting availability status."""
+    warnings: list[str] = []
+    details: dict[str, object] = {"status": "ok", "checked_at": now().isoformat()}
+    if not public_details:
+        details.update({"status": "skipped", "reason": "public check did not return asset details"})
+        return warnings, details
+    try:
+        commit = json.loads(fetch(f"{API}/commits/main", timeout=20)[1])["sha"]
+        details["commit"] = commit
+    except Exception as exc:  # noqa: BLE001
+        warning = f"GitHub版本查询暂不可用(api.github.com: {type(exc).__name__}: {exc})"
+        warnings.append(warning)
+        details.update({"status": "unavailable", "stage": "github_api", "error": warning})
+        return warnings, details
+
+    assets: dict[str, object] = {}
+    for path in CRITICAL:
+        public = public_details.get(path) or {}
+        public_hash = str(public.get("sha256") or "") if isinstance(public, dict) else ""
+        if not public_hash:
+            assets[path] = {"status": "skipped", "reason": "public asset unavailable"}
+            continue
+        try:
+            source_status, source, _, _ = fetch(f"{RAW}/{commit}/{path}", timeout=20)
+            source_hash = sha256(source)
+            matches = source_status == 200 and public_hash == source_hash
+            assets[path] = {
+                "status": source_status,
+                "source_sha256": source_hash,
+                "matches_public": matches,
+            }
+            if not matches:
+                warnings.append(f"版本不一致({path})")
+        except Exception as exc:  # noqa: BLE001
+            warning = f"GitHub原始文件暂不可用({path}: {type(exc).__name__}: {exc})"
+            warnings.append(warning)
+            assets[path] = {"status": "unavailable", "stage": "github_raw", "error": warning}
+    details["assets"] = assets
+    if warnings:
+        details["status"] = "warning"
+    return warnings, details
 
 
 def check_local_comments() -> tuple[list[str], dict[str, object]]:
@@ -270,12 +317,29 @@ def run(args: argparse.Namespace) -> int:
     started = time.monotonic()
     failures: list[str] = []
     details: dict[str, object] = {}
+    previous = load_state(args.state_file)
+    current_epoch = int(time.time())
+    last_integrity_check_epoch = int(previous.get("last_integrity_check_epoch", 0))
     try:
         public_failures, public_details = check_public()
         failures.extend(public_failures)
         details["public"] = public_details
     except Exception as exc:  # noqa: BLE001
         failures.append(f"公网巡检失败({type(exc).__name__}: {exc})")
+        public_details = {}
+    integrity_due = current_epoch - last_integrity_check_epoch >= INTEGRITY_INTERVAL_SECONDS
+    if integrity_due:
+        integrity_warnings, integrity_details = check_integrity(public_details)
+        details["integrity"] = integrity_details
+        details["integrity_warnings"] = integrity_warnings
+        last_integrity_check_epoch = current_epoch
+    else:
+        details["integrity"] = {
+            "status": "deferred",
+            "next_check_in_seconds": max(
+                0, INTEGRITY_INTERVAL_SECONDS - (current_epoch - last_integrity_check_epoch)
+            ),
+        }
     if args.check_local_comments:
         comment_failures, comment_details = check_local_comments()
         failures.extend(comment_failures)
@@ -287,8 +351,8 @@ def run(args: argparse.Namespace) -> int:
     details["elapsed_seconds"] = round(time.monotonic() - started, 2)
 
     stamp = now().strftime("%Y-%m-%d %H:%M:%S")
-    previous = load_state(args.state_file)
     previous_count = int(previous.get("consecutive_failures", 0))
+    previous_success_count = int(previous.get("consecutive_successes", 0))
     alerted = bool(previous.get("alerted", False))
     notification: dict | None = None
     event_notifications: list[dict] = []
@@ -321,7 +385,9 @@ def run(args: argparse.Namespace) -> int:
         if incident_marker_delivered and new_server_incident:
             alerted = True
             last_alert_epoch = int(time.time())
-        should_alert = count >= 2 and (not alerted or time.time() - last_alert_epoch >= 7200)
+        should_alert = count >= ALERT_AFTER_FAILURES and (
+            not alerted or time.time() - last_alert_epoch >= 7200
+        )
         if should_alert and args.recipient_id and not args.no_notify:
             message = f"【石董会官网告警】{stamp}\n连续 {count} 次巡检失败：" + "；".join(failures[:6])
             try:
@@ -335,6 +401,7 @@ def run(args: argparse.Namespace) -> int:
             "status": "down",
             "checked_at": stamp,
             "consecutive_failures": count,
+            "consecutive_successes": 0,
             "alerted": alerted,
             "last_alert_epoch": last_alert_epoch,
             "failures": failures,
@@ -348,11 +415,14 @@ def run(args: argparse.Namespace) -> int:
                 else previous_server_incident_at
             ),
             "last_server_recovery_at": previous_server_recovery_at,
+            "last_integrity_check_epoch": last_integrity_check_epoch,
         }
     else:
+        success_count = previous_success_count + 1
         recovery_marker_delivered = not new_server_recovery or not args.recipient_id
         site_recovery_sent = False
-        if alerted and args.recipient_id and not args.no_notify:
+        recovery_confirmed = success_count >= RECOVER_AFTER_SUCCESSES
+        if alerted and recovery_confirmed and args.recipient_id and not args.no_notify:
             try:
                 notification = notify(
                     args.recipient_id,
@@ -379,9 +449,10 @@ def run(args: argparse.Namespace) -> int:
                 suffix = f"{type(exc).__name__}: {exc}"
                 notification_error = f"{notification_error}；{suffix}".strip("；")
         state = {
-            "status": "healthy",
+            "status": "healthy" if not alerted else "recovering",
             "checked_at": stamp,
             "consecutive_failures": 0,
+            "consecutive_successes": success_count,
             "alerted": alerted,
             "details": details,
             "notification": notification,
@@ -395,6 +466,7 @@ def run(args: argparse.Namespace) -> int:
             "last_server_recovery_at": (
                 server_recovery_at if recovery_marker_delivered and server_recovery_at else previous_server_recovery_at
             ),
+            "last_integrity_check_epoch": last_integrity_check_epoch,
         }
     save_state(args.state_file, state)
     print(json.dumps(state, ensure_ascii=False))
@@ -414,7 +486,7 @@ def main() -> int:
             raise SystemExit("test alert requires recipient id")
         receipt = notify(
             args.recipient_id,
-            "【石董会官网监控验收】外部 5 分钟巡检已启用：连续两次失败会告警，自动或人工恢复后会再次通知，并提醒你手动复测。",
+            "【石董会官网监控验收】外部 5 分钟可用性巡检已启用：连续三次失败才会告警，连续两次健康后再通知恢复。GitHub 版本一致性独立按小时检查，不再触发官网宕机告警。",
             f"site-monitor-acceptance-{int(time.time()) // 300}",
         )
         print(json.dumps({"test_alert": True, "receipt": receipt}, ensure_ascii=False))
