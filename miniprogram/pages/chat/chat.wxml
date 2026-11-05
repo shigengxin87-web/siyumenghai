@@ -32,6 +32,18 @@
         </view>
       </view>
       <view class="typing" wx:if="{{sending && !firstToken}}">更新哥正在思考…</view>
+      <!-- 首次引导：不打断对话，只在没填过档案时出现一次 -->
+      <view class="guide-card" wx:if="{{showGuide}}">
+        <view class="guide-head">
+          <text class="guide-title">花 30 秒说一下你的情况</text>
+          <text class="guide-close" catchtap="hideGuide">×</text>
+        </view>
+        <text class="guide-desc">做什么行业、卖什么、多大规模——填过我直接给方案，不再问你第二遍。</text>
+        <view class="guide-actions">
+          <text class="guide-btn" catchtap="goProfile">去填写</text>
+          <text class="guide-later" catchtap="hideGuide">以后再说</text>
+        </view>
+      </view>
       <view class="chat-tip">回答基于石董会知识库，仅供社群成员参考</view>
     </view>
   </scroll-view>

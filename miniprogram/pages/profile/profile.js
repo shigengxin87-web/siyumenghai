@@ -85,6 +85,7 @@ Page({
       success: (res) => {
         this.setData({ saving: false })
         if (res.statusCode === 200 && res.data && res.data.ok) {
+          try { wx.setStorageSync('sdh_profile_hint', 'off') } catch (_) {}
           wx.showToast({ title: '已保存', icon: 'success' })
           setTimeout(() => wx.navigateBack(), 600)
         } else {

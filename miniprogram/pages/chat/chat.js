@@ -1,6 +1,9 @@
 const app = getApp()
 const { Utf8Decoder, EventReader } = require('../../utils/chat-stream')
+const { uid } = require('../../utils/uid')
 const KEY = 'sdh_chat_messages'
+// 档案引导只出现一次；用户关闭过（或已填过）就不再打扰
+const PROFILE_HINT = 'sdh_profile_hint'
 const WELCOME = '你好，我是更新哥的运营实战顾问。\n\n获客、产品、转化、交付、经营、团队……你的运营问题，直接问我，我会从实战案例库里给你找答案。'
 const sessionId = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2)
 // 把模型返回的 Markdown 清洗成纯文本：去掉符号、把标题/列表转成换行，便于小程序展示
@@ -24,11 +27,34 @@ function clean(text) {
   return t
 }
 Page({
-  data: { messages: [], input: '', sending: false, firstToken: false, scrollTop: 0, seq: 0 },
+  data: { messages: [], input: '', sending: false, firstToken: false, scrollTop: 0, seq: 0, showGuide: false },
   onLoad() { this.closed = false; this.generation = 0; this.loadSession() },
+  onShow() { this.checkProfileHint() },
   onUnload() { this.closed = true; this.generation++; if (this.task) this.task.abort(); this.saveSession() },
   onInput(e) { this.setData({ input: e.detail.value }) },
-  goProfile() { wx.navigateTo({ url: '/pages/profile/profile' }) },
+  goProfile() { this.hideGuide(); wx.navigateTo({ url: '/pages/profile/profile' }) },
+  // 首次进来、还没聊过、也没填过档案时，给一条可关闭的引导卡片
+  checkProfileHint() {
+    let flag = ''
+    try { flag = wx.getStorageSync(PROFILE_HINT) } catch (_) {}
+    if (flag === 'off') return
+    if (this.data.messages.length > 1) return       // 已经在聊了就别打扰
+    if (!this.data.showGuide) this.setData({ showGuide: true })
+    if (this._hintChecked) return                   // 每次进页面只核对一次
+    this._hintChecked = true
+    wx.request({
+      url: app.globalData.agent.profileApi + '?user_id=' + encodeURIComponent(uid()),
+      method: 'GET',
+      success: (res) => {
+        const d = res.data && res.data.data
+        if (d && d.filled) this.hideGuide()          // 别的设备填过了，不用再提示
+      }
+    })
+  },
+  hideGuide() {
+    try { wx.setStorageSync(PROFILE_HINT, 'off') } catch (_) {}
+    if (this.data.showGuide) this.setData({ showGuide: false })
+  },
   loadSession() {
     let stored; try { stored = wx.getStorageSync(KEY) } catch (_) {}
     this.conversation = stored && stored.conversation || sessionId()

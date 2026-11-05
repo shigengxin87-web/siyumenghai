@@ -181,3 +181,62 @@
   line-height: 1.6;
   white-space: normal;
 }
+
+/* 首次进入的档案引导卡片 */
+.guide-card {
+  margin: 8rpx 0 28rpx;
+  padding: 24rpx 26rpx 20rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #DCE8DC;
+  border-radius: 20rpx;
+}
+
+.guide-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.guide-title {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #22301F;
+  line-height: 1.5;
+}
+
+.guide-close {
+  flex-shrink: 0;
+  margin: -6rpx 0 0 16rpx;
+  padding: 0 4rpx;
+  font-size: 34rpx;
+  line-height: 1;
+  color: #A9B8A9;
+}
+
+.guide-desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.65;
+  color: #6B8177;
+}
+
+.guide-actions {
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+  margin-top: 18rpx;
+}
+
+.guide-btn {
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #2E7D32;
+  padding: 6rpx 0;
+}
+
+.guide-later {
+  font-size: 25rpx;
+  color: #A9B8A9;
+  padding: 6rpx 0;
+}
