@@ -1,17 +1,21 @@
 <view class="chat-page">
   <view class="ai-notice">由 AI 分身生成，若未解决问题联系石更新真人解答。</view>
+  <!-- 标题与入口常驻，不随消息滚走 -->
+  <view class="chat-header">
+    <text class="chat-title">AI 问答</text>
+    <view class="chat-header-actions">
+      <text class="chat-profile" bindtap="goProfile">我的情况</text>
+      <text class="chat-clear" bindtap="clearChat">清空会话</text>
+    </view>
+  </view>
   <!-- 消息流 -->
   <scroll-view
     class="chat-scroll"
     scroll-y="true"
-    scroll-into-view="{{scrollInto}}"
-    scroll-with-animation="true"
+    scroll-top="{{scrollTop}}"
+    bindscroll="onScroll"
   >
     <view class="chat-inner">
-      <view class="chat-header">
-        <text class="chat-title">AI 问答</text>
-        <text class="chat-clear" bindtap="clearChat">清空会话</text>
-      </view>
       <view
         class="msg {{item.role === 'user' ? 'msg-user' : 'msg-ai'}}"
         wx:for="{{messages}}"

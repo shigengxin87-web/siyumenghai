@@ -1,0 +1,31 @@
+<view class="pf-page">
+  <view class="pf-head">
+    <text class="pf-title">告诉我你的情况</text>
+    <text class="pf-desc">填一次就行。之后每次提问会自动带上，不用重复说。随时可以改。</text>
+  </view>
+
+  <view class="pf-row" wx:for="{{fields}}" wx:key="key" wx:for-item="f">
+    <view class="pf-label">{{f.label}}</view>
+    <view class="pf-options">
+      <view
+        class="pf-opt {{profile[f.key] === o ? 'on' : ''}}"
+        wx:for="{{f.options}}"
+        wx:key="*this"
+        wx:for-item="o"
+        data-key="{{f.key}}"
+        data-val="{{o}}"
+        bindtap="pick"
+      >{{o}}</view>
+    </view>
+  </view>
+
+  <view class="pf-empty" wx:if="{{!fields.length}}">正在加载…</view>
+
+  <view class="pf-actions">
+    <button class="pf-save" bindtap="save" disabled="{{saving}}">{{saving ? '保存中…' : '保存'}}</button>
+    <view class="pf-foot">
+      <text class="pf-skip" bindtap="back">先不填</text>
+      <text class="pf-clear" wx:if="{{hasProfile}}" bindtap="clear">清空我的情况</text>
+    </view>
+  </view>
+</view>

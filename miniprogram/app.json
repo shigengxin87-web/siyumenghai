@@ -3,6 +3,7 @@
     "pages/home/home",
     "pages/tips/tips",
     "pages/chat/chat",
+    "pages/profile/profile",
     "pages/discuss/discuss",
     "pages/tips-detail/tips-detail",
     "pages/discuss-day/discuss-day",

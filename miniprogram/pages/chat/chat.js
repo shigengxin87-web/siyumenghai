@@ -24,10 +24,11 @@ function clean(text) {
   return t
 }
 Page({
-  data: { messages: [], input: '', sending: false, firstToken: false, scrollInto: '', seq: 0 },
+  data: { messages: [], input: '', sending: false, firstToken: false, scrollTop: 0, seq: 0 },
   onLoad() { this.closed = false; this.generation = 0; this.loadSession() },
   onUnload() { this.closed = true; this.generation++; if (this.task) this.task.abort(); this.saveSession() },
   onInput(e) { this.setData({ input: e.detail.value }) },
+  goProfile() { wx.navigateTo({ url: '/pages/profile/profile' }) },
   loadSession() {
     let stored; try { stored = wx.getStorageSync(KEY) } catch (_) {}
     this.conversation = stored && stored.conversation || sessionId()
@@ -36,7 +37,7 @@ Page({
       return { ...m, status: failed ? 'failed' : 'done', canRetry: m.role === 'assistant' && failed, text: m.text || (failed ? '上次回复未完成，请重试。' : '') }
     }) : []
     this.setData({ messages: messages.length ? messages : [{ role: 'assistant', text: WELCOME, id: 'm1', status: 'done' }], seq: Math.max(Number(stored && stored.seq) || 0, 1) })
-    this.scrollToBottom()
+    this.scrollToBottom(true)
   },
   saveSession() { try { wx.setStorageSync(KEY, { messages: this.data.messages.slice(-100), seq: this.data.seq, conversation: this.conversation }) } catch (_) {} },
   clearChat() {
@@ -54,10 +55,19 @@ Page({
     const history = this.data.messages.filter(m => m.role === 'user' || (m.status === 'done' && !m.canRetry)).map(m => ({ role: m.role, content: [{ type: 'text', text: m.text }] }))
     const first = history.findIndex(m => m.role === 'user'); const messages = (first < 0 ? [] : history.slice(first)).concat([{ role: 'user', content: [{ type: 'text', text }] }])
     this.setData({ messages: this.data.messages.concat([{ role: 'user', text, id: 'm' + (this.data.seq+1), status: 'done' }, { role: 'assistant', text: '', id: replyId, status: 'pending', canRetry: false }]), seq: this.data.seq+2, input: '', sending: true, firstToken: false })
-    this.saveSession(); this.scrollToBottom()
+    this.saveSession(); this._nearBottom = true; this.scrollToBottom(true)
     const update = patch => {
       if (!alive()) return
-      this.setData({ messages: this.data.messages.map(m => m.id === replyId ? { ...m, ...patch } : m) })
+      const idx = this.data.messages.findIndex(m => m.id === replyId)
+      if (idx < 0) return
+      const keys = Object.keys(patch)
+      if (keys.length === 1 && keys[0] === 'text') {
+        // 流式只改文本：走路径更新，避免整个消息数组重传
+        this.data.messages[idx].text = patch.text
+        this.setData({ ['messages[' + idx + '].text']: patch.text })
+      } else {
+        this.setData({ ['messages[' + idx + ']']: { ...this.data.messages[idx], ...patch } })
+      }
       this.scrollToBottom()
     }
     let responseText = '', completed = false, failed = false, status = 0, received = false
@@ -109,6 +119,20 @@ Page({
   },
   copyMessage(e) { const m = this.data.messages.find(m => m.id === e.currentTarget.dataset.id); if (m && m.text) wx.setClipboardData({ data: m.text }) },
   uid() { let id = wx.getStorageSync('sdh_uid'); if (!id) { id = 'u' + Date.now() + Math.floor(Math.random()*10000); wx.setStorageSync('sdh_uid',id) } return id },
-  scrollToBottom() { if (this.data.messages.length) this.setData({ scrollInto: 'msg-' + (this.data.messages.length-1) }) },
+  // 用户往上翻看历史时不再强制拉到底，回到接近底部才恢复自动跟随
+  onScroll(e) {
+    const d = e.detail || {}
+    if (typeof d.scrollHeight !== 'number') return
+    this._nearBottom = d.scrollHeight - d.scrollTop - d.viewHeight < 160
+  },
+  scrollToBottom(force) {
+    if (!force && this._nearBottom === false) return
+    clearTimeout(this._scrollTimer)
+    this._scrollTimer = setTimeout(() => {
+      const tick = (this._scrollTick || 0) + 1
+      this._scrollTick = tick
+      this.setData({ scrollTop: 1000000 + tick })
+    }, 40)
+  },
   onShareAppMessage() { return { title: '石董会 · AI问答', path: '/pages/chat/chat' } }
 })

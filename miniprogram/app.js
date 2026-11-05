@@ -12,6 +12,9 @@ App({
     agent: {
       // 元器问答代理：服务端转发，避免 appkey 暴露在小程序前端
       apiUrl: 'https://siyumenghai.cn/api/agent/chat',
+      // 用户档案（行业/客单价等背景，存服务端，跟人走不跟引擎走）
+      profileApi: 'https://siyumenghai.cn/api/profile',
+      profileSchemaUrl: 'https://siyumenghai.cn/api/profile/schema',
       assistantId: '2101324897978088512'
     },
     // 官网数据源（讨论板块同步用）
