@@ -2,7 +2,7 @@
 .pf-page {
   min-height: 100vh;
   box-sizing: border-box;
-  padding: 28rpx 28rpx calc(200rpx + env(safe-area-inset-bottom));
+  padding: 28rpx 28rpx calc(260rpx + env(safe-area-inset-bottom));
   background: #F6F8F6;
 }
 
