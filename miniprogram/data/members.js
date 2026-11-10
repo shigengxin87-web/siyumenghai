@@ -359,6 +359,12 @@ const members = [
     "order": 60,
     "number": "60",
     "avatar": "/assets/members/member-60.jpg"
+  },
+  {
+    "name": "AMY 宋【定制旅行&团建会议】",
+    "order": 61,
+    "number": "61",
+    "avatar": "/assets/members/member-61.jpg"
   }
 ];
 
