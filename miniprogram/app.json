@@ -51,5 +51,6 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
+  "navigateToMiniProgramAppIdList": ["wx4c6401744b734596"],
   "__usePrivacyCheck__": true
 }
