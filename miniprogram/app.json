@@ -15,7 +15,8 @@
     "pages/members/index",
     "pages/tools/index",
     "pages/media/index",
-    "pages/report/index"
+    "pages/report/index",
+    "pages/daily/daily"
   ],
   "tabBar": {
     "color": "#8A9B8A",
@@ -28,16 +29,16 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/tips/tips",
-        "text": "技巧"
+        "pagePath": "pages/kb/kb",
+        "text": "知识库"
       },
       {
         "pagePath": "pages/chat/chat",
         "text": "AI问答"
       },
       {
-        "pagePath": "pages/discuss/discuss",
-        "text": "讨论"
+        "pagePath": "pages/daily/daily",
+        "text": "每日内容"
       }
     ]
   },

@@ -2,8 +2,10 @@
   <view class="tools-hero">
     <text class="kicker">COMMUNITY TOOLKIT</text>
     <text class="title">社群工具</text>
-    <text class="desc">日报负责快速浏览，飞书负责完整存档，IMA 负责 AI 问答，三平台工具支持作品预览与保存到相册。</text>
+    <text class="desc">抖音、视频号、小红书三平台作品（抖视红）一键预览并保存到相册；飞书负责完整存档，IMA 负责 AI 问答。</text>
   </view>
+
+  <view class="section-title"><text>抖视红视频下载</text><text>抖音 · 视频号 · 小红书</text></view>
 
   <view class="video-card" bindtap="openVideoTool">
     <view class="tool-row">

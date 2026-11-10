@@ -50,16 +50,31 @@
 }
 
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
   margin-top: 28rpx;
 }
 
 .grid-item {
-  width: 48%;
-  margin-bottom: 24rpx;
   padding: 34rpx 28rpx;
+}
+
+/* 电脑端（窗口较宽）：多列并排，避免卡片被拉得过长 */
+@media (min-width: 600px) {
+  .page {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .grid-icon {

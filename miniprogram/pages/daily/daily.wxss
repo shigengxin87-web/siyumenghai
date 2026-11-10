@@ -1,0 +1,135 @@
+.daily-page {
+  padding: 28rpx 28rpx 0;
+  background: #F6F8F6;
+  min-height: 100vh;
+}
+
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cal-title {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #22301F;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+}
+
+.cal-arrow {
+  font-size: 44rpx;
+  color: #2E7D32;
+  padding: 0 24rpx;
+}
+
+.cal-today {
+  font-size: 26rpx;
+  color: #2E7D32;
+  border: 2rpx solid #CDE5CF;
+  border-radius: 999rpx;
+  padding: 6rpx 22rpx;
+}
+
+.cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 28rpx;
+}
+
+.cal-wd {
+  text-align: center;
+  font-size: 24rpx;
+  color: #8A9B8A;
+  padding: 12rpx 0;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10rpx;
+  margin-top: 8rpx;
+}
+
+.cal-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+  background: #FFFFFF;
+  box-shadow: 0 2rpx 10rpx rgba(40, 80, 40, 0.04);
+}
+
+.cal-cell.out {
+  opacity: 0.35;
+}
+
+.cal-cell.has {
+  background: #EAF5EC;
+  box-shadow: 0 2rpx 10rpx rgba(46, 125, 50, 0.12);
+}
+
+.cal-cell.today {
+  outline: 3rpx solid #2E7D32;
+  outline-offset: -3rpx;
+}
+
+.cal-day {
+  font-size: 30rpx;
+  color: #22301F;
+}
+
+.cal-dot {
+  position: absolute;
+  bottom: 8rpx;
+  font-size: 14rpx;
+  color: #2E7D32;
+  line-height: 1;
+}
+
+.cal-hint {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  color: #8A9B8A;
+}
+
+.recent {
+  margin-top: 36rpx;
+}
+
+.recent-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #22301F;
+  margin-bottom: 16rpx;
+}
+
+.recent-item {
+  background: #FFFFFF;
+  border-radius: 18rpx;
+  padding: 24rpx 26rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 10rpx rgba(40, 80, 40, 0.04);
+}
+
+.recent-date {
+  font-size: 23rpx;
+  color: #8A9B8A;
+}
+
+.recent-name {
+  margin-top: 8rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #22301F;
+}
+
+.safe-bottom {
+  height: 40rpx;
+}

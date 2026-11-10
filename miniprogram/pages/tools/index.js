@@ -1,6 +1,6 @@
 const SERVICES = {
   video: {
-    title: '视频号下载',
+    title: '抖视红视频下载',
     url: 'https://siyumenghai.cn/member-view/video-downloader-20260808-17.html',
   },
   ima: {

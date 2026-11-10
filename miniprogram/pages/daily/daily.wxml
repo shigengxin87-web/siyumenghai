@@ -1,0 +1,45 @@
+<view class="daily-page">
+  <view class="cal-head">
+    <view class="cal-title">{{title}}</view>
+    <view class="cal-nav">
+      <text class="cal-arrow" bindtap="prevMonth">‹</text>
+      <text class="cal-today" bindtap="goToday">今天</text>
+      <text class="cal-arrow" bindtap="nextMonth">›</text>
+    </view>
+  </view>
+
+  <view class="cal-week">
+    <text wx:for="{{weekdays}}" wx:key="*this" class="cal-wd">{{item}}</text>
+  </view>
+
+  <view class="cal-grid">
+    <view
+      wx:for="{{cells}}"
+      wx:key="key"
+      class="cal-cell {{item.inMonth ? '' : 'out'}} {{item.has ? 'has' : ''}} {{item.isToday ? 'today' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onDayTap"
+    >
+      <text class="cal-day">{{item.day}}</text>
+      <text wx:if="{{item.has}}" class="cal-dot">●</text>
+    </view>
+  </view>
+
+  <view class="cal-hint">● 标记日期有当日内容，点击查看当天完整日报</view>
+
+  <view class="recent">
+    <view class="recent-title">最近更新</view>
+    <view
+      wx:for="{{recent}}"
+      wx:key="key"
+      class="recent-item"
+      data-key="{{item.key}}"
+      bindtap="onDayTap"
+    >
+      <view class="recent-date">{{item.dateLabel}} · {{item.weekday}}</view>
+      <view class="recent-name">{{item.title}}</view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
