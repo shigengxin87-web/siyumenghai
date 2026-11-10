@@ -1,15 +1,15 @@
-/* 原始讨论页 */
+/* 原始讨论页 · 国风 */
 .loading,
 .error {
   padding: 60rpx 0;
   text-align: center;
   font-size: 26rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 /* 系统消息 */
 .sys {
-  background: #EEF3EE;
+  background: #16332F;
   border-radius: 16rpx;
   padding: 18rpx 24rpx;
   margin: 20rpx 0;
@@ -18,13 +18,13 @@
 
 .sys-time {
   font-size: 20rpx;
-  color: #9AAC9A;
+  color: #9DB0AB;
 }
 
 .sys-text {
   margin-top: 6rpx;
   font-size: 23rpx;
-  color: #6E8A6E;
+  color: #CFD9D2;
   line-height: 1.6;
 }
 
@@ -35,21 +35,22 @@
 
 .msg-meta {
   font-size: 22rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   margin-bottom: 10rpx;
   padding-left: 8rpx;
 }
 
 .msg-bubble {
-  background: #FFFFFF;
+  background: linear-gradient(160deg, #163330, #102725);
+  border: 1rpx solid rgba(201, 168, 106, 0.18);
   border-radius: 22rpx;
   padding: 22rpx 26rpx;
-  box-shadow: 0 6rpx 20rpx rgba(30, 90, 30, 0.05);
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.3);
 }
 
 .msg-text {
   font-size: 28rpx;
-  color: #22301F;
+  color: #EFE7D4;
   line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
@@ -64,8 +65,8 @@
 .msg-media {
   margin-top: 14rpx;
   font-size: 23rpx;
-  color: #8A9B8A;
-  background: #F2F6F2;
+  color: #9DB0AB;
+  background: #16332F;
   border-radius: 12rpx;
   padding: 12rpx 18rpx;
 }
@@ -79,8 +80,8 @@
 
 .msg-link {
   font-size: 23rpx;
-  color: #2E7D32;
-  background: #E8F5E8;
+  color: #E3C98E;
+  background: rgba(201, 168, 106, 0.12);
   border-radius: 999rpx;
   padding: 8rpx 22rpx;
 }
@@ -88,5 +89,5 @@
 .msg-redacted {
   margin-top: 10rpx;
   font-size: 20rpx;
-  color: #C0A06A;
+  color: #C9A86A;
 }

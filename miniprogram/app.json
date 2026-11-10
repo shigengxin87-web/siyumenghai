@@ -19,10 +19,10 @@
     "pages/daily/daily"
   ],
   "tabBar": {
-    "color": "#8A9B8A",
-    "selectedColor": "#2E7D32",
-    "backgroundColor": "#FFFFFF",
-    "borderStyle": "white",
+    "color": "#9DB0AB",
+    "selectedColor": "#C9A86A",
+    "backgroundColor": "#0E2422",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/home/home",
@@ -43,11 +43,11 @@
     ]
   },
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0E2422",
     "navigationBarTitleText": "石董会",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#F6F8F6"
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0E2422"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

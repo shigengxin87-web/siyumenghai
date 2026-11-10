@@ -1,18 +1,19 @@
-.members-page { min-height: 100vh; padding: 28rpx; box-sizing: border-box; }
+/* 群友名录 · 国风 */
+.members-page { min-height: 100vh; padding: 28rpx; box-sizing: border-box; background: #0E2422; }
 .members-hero { position: relative; padding: 29rpx 7rpx 27rpx; }
-.kicker { display: block; color: #09815f; font-size: 20rpx; font-weight: 850; letter-spacing: 2rpx; }
-.title { display: block; margin-top: 8rpx; font-size: 48rpx; font-weight: 950; }
-.member-total { position: absolute; top: 30rpx; right: 6rpx; display: flex; flex-direction: column; align-items: flex-end; color: #71857d; font-size: 19rpx; }
-.member-total text:first-child { color: #08795c; font-size: 40rpx; font-weight: 900; }
-.desc { display: block; margin-top: 13rpx; padding-right: 120rpx; color: #65776f; font-size: 23rpx; line-height: 1.65; }
-.search-wrap { position: sticky; top: 0; z-index: 6; margin: 0 -28rpx; padding: 13rpx 28rpx 18rpx; background: rgba(245,248,246,.96); }
-.search-box { display: flex; align-items: center; gap: 12rpx; height: 82rpx; padding: 0 24rpx; border: 1rpx solid #dce7e2; border-radius: 23rpx; background: #fff; }
-.search-box > text { color: #7d9088; font-size: 30rpx; }
-.search-box input { flex: 1; font-size: 24rpx; }
-.result-count { display: flex; justify-content: space-between; padding: 13rpx 4rpx 19rpx; color: #81918b; font-size: 21rpx; }
+.kicker { display: block; color: #C9A86A; font-size: 20rpx; font-weight: 850; letter-spacing: 2rpx; }
+.title { display: block; margin-top: 8rpx; font-size: 48rpx; font-weight: 950; color: #EFE7D4; }
+.member-total { position: absolute; top: 30rpx; right: 6rpx; display: flex; flex-direction: column; align-items: flex-end; color: #9DB0AB; font-size: 19rpx; }
+.member-total text:first-child { color: #C9A86A; font-size: 40rpx; font-weight: 900; }
+.desc { display: block; margin-top: 13rpx; padding-right: 120rpx; color: #9DB0AB; font-size: 23rpx; line-height: 1.65; }
+.search-wrap { position: sticky; top: 0; z-index: 6; margin: 0 -28rpx; padding: 13rpx 28rpx 18rpx; background: rgba(14,36,34,.96); }
+.search-box { display: flex; align-items: center; gap: 12rpx; height: 82rpx; padding: 0 24rpx; border: 1rpx solid rgba(201,168,106,0.28); border-radius: 23rpx; background: #16332F; }
+.search-box > text { color: #9DB0AB; font-size: 30rpx; }
+.search-box input { flex: 1; font-size: 24rpx; color: #EFE7D4; }
+.result-count { display: flex; justify-content: space-between; padding: 13rpx 4rpx 19rpx; color: #9DB0AB; font-size: 21rpx; }
 .member-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13rpx; }
-.member-card { position: relative; min-height: 218rpx; padding: 24rpx 9rpx 18rpx; box-sizing: border-box; border: 1rpx solid #dfeae5; border-radius: 23rpx; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8rpx 22rpx rgba(30,75,61,.045); }
-.member-card .number { position: absolute; top: 11rpx; left: 13rpx; color: #63a793; font-size: 17rpx; font-weight: 850; }
-.member-card image { width: 94rpx; height: 94rpx; border: 5rpx solid #edf9f4; border-radius: 50%; background: #e7efeb; }
-.member-card .name { display: -webkit-box; overflow: hidden; width: 100%; margin-top: 13rpx; color: #21342d; font-size: 21rpx; line-height: 1.35; text-align: center; word-break: break-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-.empty { padding: 80rpx 20rpx; color: #7b9088; text-align: center; }
+.member-card { position: relative; min-height: 218rpx; padding: 24rpx 9rpx 18rpx; box-sizing: border-box; border: 1rpx solid rgba(201,168,106,0.22); border-radius: 23rpx; background: linear-gradient(160deg,#163330,#102725); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.member-card .number { position: absolute; top: 11rpx; left: 13rpx; color: #C9A86A; font-size: 17rpx; font-weight: 850; }
+.member-card image { width: 94rpx; height: 94rpx; border: 5rpx solid rgba(201,168,106,0.25); border-radius: 50%; background: #16332F; }
+.member-card .name { display: -webkit-box; overflow: hidden; width: 100%; margin-top: 13rpx; color: #EFE7D4; font-size: 21rpx; line-height: 1.35; text-align: center; word-break: break-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.empty { padding: 80rpx 20rpx; color: #9DB0AB; text-align: center; }

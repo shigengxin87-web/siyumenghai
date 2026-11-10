@@ -1,9 +1,9 @@
-/* 技巧列表 */
+/* 技巧列表 · 国风 */
 .search-bar {
   display: flex;
   align-items: center;
-  background: #FFFFFF;
-  border: 2rpx solid #E3EBE3;
+  background: #16332F;
+  border: 2rpx solid rgba(201, 168, 106, 0.25);
   border-radius: 999rpx;
   padding: 0 24rpx;
   margin: 8rpx 0 24rpx;
@@ -13,11 +13,12 @@
   flex: 1;
   height: 72rpx;
   font-size: 26rpx;
+  color: #EFE7D4;
 }
 
 .search-clear {
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   padding: 8rpx 0 8rpx 16rpx;
 }
 
@@ -25,7 +26,7 @@
   padding: 60rpx 0;
   text-align: center;
   font-size: 26rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .cats {
@@ -37,17 +38,17 @@
   display: inline-block;
   padding: 12rpx 30rpx;
   margin-right: 18rpx;
-  background: #FFFFFF;
-  border: 2rpx solid #E3EBE3;
+  background: #16332F;
+  border: 2rpx solid rgba(201, 168, 106, 0.25);
   border-radius: 999rpx;
   font-size: 26rpx;
-  color: #4C6B4C;
+  color: #CFD9D2;
 }
 
 .cat-active {
-  background: #2E7D32;
-  border-color: #2E7D32;
-  color: #FFFFFF;
+  background: linear-gradient(90deg, #C9A86A, #E3C98E);
+  border-color: #C9A86A;
+  color: #0E2422;
   font-weight: 600;
 }
 
@@ -65,8 +66,8 @@
 
 .tip-cat {
   display: inline-block;
-  background: #E8F5E8;
-  color: #2E7D32;
+  background: rgba(201, 168, 106, 0.16);
+  color: #E3C98E;
   font-size: 22rpx;
   font-weight: 600;
   padding: 6rpx 18rpx;
@@ -75,39 +76,39 @@
 
 .tip-note {
   font-size: 20rpx;
-  color: #C0CCC0;
+  color: #9DB0AB;
 }
 
 .tip-fav {
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   padding: 6rpx 16rpx;
-  border: 2rpx solid #E3EBE3;
+  border: 2rpx solid rgba(201, 168, 106, 0.25);
   border-radius: 999rpx;
 }
 
 .tip-fav.is-fav {
-  color: #2E7D32;
-  border-color: #B9DCBB;
-  background: #F2FAF2;
+  color: #E3C98E;
+  border-color: rgba(201, 168, 106, 0.5);
+  background: rgba(201, 168, 106, 0.12);
 }
 
 .tip-fav-hover {
-  background: #E8F5E8;
+  background: rgba(201, 168, 106, 0.12);
 }
 
 .tip-title {
   margin-top: 18rpx;
   font-size: 32rpx;
   font-weight: 700;
-  color: #22301F;
+  color: #EFE7D4;
   line-height: 1.45;
 }
 
 .tip-summary {
   margin-top: 10rpx;
   font-size: 25rpx;
-  color: #6E8A6E;
+  color: #9DB0AB;
   line-height: 1.7;
 }
 
@@ -117,5 +118,5 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 40rpx;
-  color: #C0CCC0;
+  color: #9DB0AB;
 }

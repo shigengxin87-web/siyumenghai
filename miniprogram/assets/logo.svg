@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0E0B8"/>
+      <stop offset="0.45" stop-color="#C9A86A"/>
+      <stop offset="1" stop-color="#9C7E48"/>
+    </linearGradient>
+  </defs>
+  <!-- 金线圆环：顶部缺口（致敬品牌 logo 断口设计） -->
+  <path d="M 222 92 A 102 102 0 1 1 78 92" fill="none" stroke="url(#gold)" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- 断口光点 -->
+  <circle cx="150" cy="34" r="3.6" fill="url(#gold)"/>
+  <!-- 山峦剪影（水墨意境，金色细线） -->
+  <path d="M 46 214 L 92 172 L 138 202 L 186 150 L 232 196 L 254 176" fill="none" stroke="url(#gold)" stroke-width="1.6" opacity="0.55" stroke-linejoin="round"/>
+  <path d="M 46 236 L 102 198 L 150 224 L 204 182 L 254 218" fill="none" stroke="url(#gold)" stroke-width="1.2" opacity="0.35" stroke-linejoin="round"/>
+  <!-- 主文字：石董会（宋体金色） -->
+  <text x="150" y="140" text-anchor="middle" font-family="'STSong','Songti SC','SimSun',serif" font-size="56" font-weight="700" fill="url(#gold)" letter-spacing="6">石董会</text>
+  <!-- 副标 -->
+  <text x="150" y="174" text-anchor="middle" font-family="'STSong','Songti SC','SimSun',serif" font-size="18" fill="url(#gold)" letter-spacing="4" opacity="0.9">一起越来越好</text>
+</svg>

@@ -1,10 +1,10 @@
-/* AI 问答页 */
+/* AI 问答页 · 国风（深墨绿底 + 香槟金） */
 .chat-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
   box-sizing: border-box;
-  background: #F6F8F6;
+  background: #0E2422;
 }
 
 .chat-scroll {
@@ -23,13 +23,13 @@
   align-items: center;
   flex-shrink: 0;
   padding: 20rpx 32rpx 16rpx;
-  background: #F6F8F6;
+  background: #0E2422;
 }
 
 .chat-title {
   font-size: 34rpx;
   font-weight: 700;
-  color: #22301F;
+  color: #EFE7D4;
 }
 
 .chat-header-actions {
@@ -40,13 +40,13 @@
 
 .chat-profile {
   font-size: 24rpx;
-  color: #2E7D32;
+  color: #C9A86A;
   padding: 8rpx 0;
 }
 
 .chat-clear {
   font-size: 24rpx;
-  color: #6B8177;
+  color: #9DB0AB;
   padding: 8rpx 0;
 }
 
@@ -74,21 +74,22 @@
 }
 
 .msg-ai .bubble {
-  background: #FFFFFF;
-  color: #22301F;
+  background: linear-gradient(160deg, #163330, #102725);
+  color: #EFE7D4;
   border-top-left-radius: 6rpx;
-  box-shadow: 0 8rpx 24rpx rgba(30, 90, 30, 0.06);
+  border: 1rpx solid rgba(201, 168, 106, 0.22);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
 }
 
 .msg-user .bubble {
-  background: linear-gradient(90deg, #2E7D32, #43A047);
-  color: #FFFFFF;
+  background: linear-gradient(90deg, #C9A86A, #E3C98E);
+  color: #0E2422;
   border-top-right-radius: 6rpx;
 }
 
 .typing {
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   padding: 8rpx 8rpx 24rpx;
 }
 
@@ -96,7 +97,7 @@
   margin-top: 20rpx;
   text-align: center;
   font-size: 22rpx;
-  color: #A9B8A9;
+  color: #6E857F;
   padding-bottom: 40rpx;
 }
 
@@ -105,17 +106,19 @@
   align-items: center;
   gap: 20rpx;
   padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
-  background: #FFFFFF;
-  border-top: 2rpx solid #EAF0EA;
+  background: #16332F;
+  border-top: 2rpx solid rgba(201, 168, 106, 0.2);
 }
 
 .input {
   flex: 1;
   height: 80rpx;
-  background: #F2F6F2;
+  background: #0E2422;
   border-radius: 44rpx;
   padding: 0 32rpx;
   font-size: 28rpx;
+  color: #EFE7D4;
+  border: 1rpx solid rgba(201, 168, 106, 0.25);
 }
 
 .send-btn {
@@ -123,8 +126,8 @@
   height: 80rpx;
   line-height: 80rpx;
   padding: 0;
-  background: #2E7D32;
-  color: #FFFFFF;
+  background: linear-gradient(90deg, #C9A86A, #E3C98E);
+  color: #0E2422;
   font-size: 28rpx;
   font-weight: 600;
   border-radius: 44rpx;
@@ -135,8 +138,8 @@
 }
 
 .send-btn[disabled] {
-  background: #C5D6C5;
-  color: #FFFFFF;
+  background: #3A4A45;
+  color: #8A9B8A;
 }
 
 .msg-actions {
@@ -144,29 +147,29 @@
   gap: 24rpx;
   margin-top: 16rpx;
   padding-top: 12rpx;
-  border-top: 1rpx solid #EAF0EA;
+  border-top: 1rpx solid rgba(201, 168, 106, 0.18);
 }
 
 .msg-action {
   font-size: 24rpx;
-  color: #6B8177;
+  color: #9DB0AB;
   padding: 4rpx 0;
 }
 
 .msg-action-retry {
-  color: #2E7D32;
+  color: #E3C98E;
 }
 
 /* 常驻生成说明及逐条回复标识 */
 .ai-notice {
   flex-shrink: 0;
   padding: 16rpx 32rpx;
-  background: #F6F8F6;
-  color: #8A9B8A;
+  background: #0E2422;
+  color: #9DB0AB;
   font-size: 22rpx;
   line-height: 1.6;
   text-align: center;
-  border-bottom: 1rpx solid #EAF0EA;
+  border-bottom: 1rpx solid rgba(201, 168, 106, 0.18);
 }
 
 .ai-label {
@@ -174,8 +177,8 @@
   margin-bottom: 12rpx;
   padding: 2rpx 12rpx;
   border-radius: 8rpx;
-  background: #E8F3E8;
-  color: #244D29;
+  background: rgba(201, 168, 106, 0.16);
+  color: #E3C98E;
   font-size: 24rpx;
   font-weight: 600;
   line-height: 1.6;
@@ -186,8 +189,8 @@
 .guide-card {
   margin: 8rpx 0 28rpx;
   padding: 24rpx 26rpx 20rpx;
-  background: #FFFFFF;
-  border: 2rpx solid #DCE8DC;
+  background: linear-gradient(160deg, #163330, #102725);
+  border: 2rpx solid rgba(201, 168, 106, 0.3);
   border-radius: 20rpx;
 }
 
@@ -200,7 +203,7 @@
 .guide-title {
   font-size: 27rpx;
   font-weight: 600;
-  color: #22301F;
+  color: #EFE7D4;
   line-height: 1.5;
 }
 
@@ -210,7 +213,7 @@
   padding: 0 4rpx;
   font-size: 34rpx;
   line-height: 1;
-  color: #A9B8A9;
+  color: #9DB0AB;
 }
 
 .guide-desc {
@@ -218,7 +221,7 @@
   margin-top: 10rpx;
   font-size: 24rpx;
   line-height: 1.65;
-  color: #6B8177;
+  color: #9DB0AB;
 }
 
 .guide-actions {
@@ -231,13 +234,13 @@
 .guide-btn {
   font-size: 25rpx;
   font-weight: 600;
-  color: #2E7D32;
+  color: #E3C98E;
   padding: 6rpx 0;
 }
 
 .guide-later {
   font-size: 25rpx;
-  color: #A9B8A9;
+  color: #9DB0AB;
   padding: 6rpx 0;
 }
 
@@ -252,7 +255,7 @@
 }
 
 .rich-link {
-  color: #2E7D32;
+  color: #E3C98E;
   text-decoration: underline;
   word-break: break-all;
 }
@@ -262,7 +265,7 @@
   width: 100%;
   margin: 12rpx 0;
   border-radius: 16rpx;
-  background: #EEF2EE;
+  background: #16332F;
 }
 
 .rich-video {
@@ -281,8 +284,8 @@
   display: inline-block;
   margin-top: 8rpx;
   padding: 8rpx 24rpx;
-  background: #E8F3E8;
-  color: #244D29;
+  background: rgba(201, 168, 106, 0.16);
+  color: #E3C98E;
   font-size: 24rpx;
   border-radius: 999rpx;
 }

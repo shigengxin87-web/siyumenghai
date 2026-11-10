@@ -1,7 +1,20 @@
-/* 石董会成员服务 · 全局样式 */
+/* 石董会 · 国风视觉系统（深墨绿底 + 香槟金） */
+
+/* —— 设计变量 —— */
 page {
-  background: #F6F8F6;
-  color: #22301F;
+  --sdh-bg: #0E2422;
+  --sdh-bg-2: #102725;
+  --sdh-card: #16332F;
+  --sdh-card-2: #102725;
+  --sdh-gold: #C9A86A;
+  --sdh-gold-light: #E3C98E;
+  --sdh-gold-dark: #9C7E48;
+  --sdh-text: #EFE7D4;
+  --sdh-text-sub: #9DB0AB;
+  --sdh-line: rgba(201, 168, 106, 0.28);
+
+  background: var(--sdh-bg);
+  color: var(--sdh-text);
   font-family: "PingFang SC", "Helvetica Neue", sans-serif;
   font-size: 28rpx;
   line-height: 1.6;
@@ -14,9 +27,10 @@ page {
 }
 
 .card {
-  background: #FFFFFF;
+  background: linear-gradient(160deg, var(--sdh-card) 0%, var(--sdh-card-2) 100%);
+  border: 1rpx solid var(--sdh-line);
   border-radius: 28rpx;
-  box-shadow: 0 8rpx 32rpx rgba(30, 90, 30, 0.06);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.35);
   padding: 32rpx;
   box-sizing: border-box;
 }
@@ -24,13 +38,13 @@ page {
 .section-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #22301F;
+  color: var(--sdh-gold-light);
   margin: 44rpx 0 20rpx;
 }
 
 .btn-primary {
-  background: linear-gradient(90deg, #2E7D32, #43A047);
-  color: #FFFFFF;
+  background: linear-gradient(90deg, var(--sdh-gold) 0%, var(--sdh-gold-light) 100%);
+  color: #0E2422;
   border-radius: 48rpx;
   font-size: 30rpx;
   font-weight: 600;
@@ -45,5 +59,26 @@ page {
   margin-top: 56rpx;
   text-align: center;
   font-size: 22rpx;
-  color: #A9B8A9;
+  color: #6E857F;
+}
+
+/* —— 复用：宋体金色标题 —— */
+.gold-title {
+  font-family: "STSong", "Songti SC", "SimSun", serif;
+  color: var(--sdh-gold-light);
+}
+
+/* —— 复用：金线分隔 —— */
+.gold-rule {
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 106, 0.5), transparent);
+  margin: 24rpx 0;
+}
+
+/* —— 复用：logo 徽章（金线断口圆环 + 山峦 + 石董会） —— */
+.sdh-emblem {
+  display: block;
+  width: 300rpx;
+  height: 300rpx;
+  margin: 0 auto;
 }

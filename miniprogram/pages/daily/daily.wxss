@@ -1,6 +1,7 @@
+/* 每日内容 · 国风 */
 .daily-page {
   padding: 28rpx 28rpx 0;
-  background: #F6F8F6;
+  background: #0E2422;
   min-height: 100vh;
 }
 
@@ -13,7 +14,7 @@
 .cal-title {
   font-size: 36rpx;
   font-weight: 800;
-  color: #22301F;
+  color: #EFE7D4;
 }
 
 .cal-nav {
@@ -23,14 +24,14 @@
 
 .cal-arrow {
   font-size: 44rpx;
-  color: #2E7D32;
+  color: #C9A86A;
   padding: 0 24rpx;
 }
 
 .cal-today {
   font-size: 26rpx;
-  color: #2E7D32;
-  border: 2rpx solid #CDE5CF;
+  color: #C9A86A;
+  border: 2rpx solid rgba(201, 168, 106, 0.5);
   border-radius: 999rpx;
   padding: 6rpx 22rpx;
 }
@@ -44,7 +45,7 @@
 .cal-wd {
   text-align: center;
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   padding: 12rpx 0;
 }
 
@@ -62,8 +63,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 16rpx;
-  background: #FFFFFF;
-  box-shadow: 0 2rpx 10rpx rgba(40, 80, 40, 0.04);
+  background: linear-gradient(160deg, #163330, #102725);
+  border: 1rpx solid rgba(201, 168, 106, 0.18);
 }
 
 .cal-cell.out {
@@ -71,32 +72,32 @@
 }
 
 .cal-cell.has {
-  background: #EAF5EC;
-  box-shadow: 0 2rpx 10rpx rgba(46, 125, 50, 0.12);
+  background: linear-gradient(160deg, #1E4039, #143028);
+  border-color: rgba(201, 168, 106, 0.5);
 }
 
 .cal-cell.today {
-  outline: 3rpx solid #2E7D32;
+  outline: 3rpx solid #C9A86A;
   outline-offset: -3rpx;
 }
 
 .cal-day {
   font-size: 30rpx;
-  color: #22301F;
+  color: #EFE7D4;
 }
 
 .cal-dot {
   position: absolute;
   bottom: 8rpx;
   font-size: 14rpx;
-  color: #2E7D32;
+  color: #C9A86A;
   line-height: 1;
 }
 
 .cal-hint {
   margin-top: 20rpx;
   font-size: 22rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .recent {
@@ -106,28 +107,28 @@
 .recent-title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #22301F;
+  color: #EFE7D4;
   margin-bottom: 16rpx;
 }
 
 .recent-item {
-  background: #FFFFFF;
+  background: linear-gradient(160deg, #163330, #102725);
+  border: 1rpx solid rgba(201, 168, 106, 0.18);
   border-radius: 18rpx;
   padding: 24rpx 26rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 10rpx rgba(40, 80, 40, 0.04);
 }
 
 .recent-date {
   font-size: 23rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .recent-name {
   margin-top: 8rpx;
   font-size: 28rpx;
   font-weight: 600;
-  color: #22301F;
+  color: #EFE7D4;
 }
 
 .safe-bottom {

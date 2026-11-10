@@ -1,4 +1,4 @@
-/* 讨论列表 */
+/* 讨论列表 · 国风 */
 .d-head {
   padding: 8rpx 8rpx 28rpx;
 }
@@ -6,13 +6,13 @@
 .d-title {
   font-size: 40rpx;
   font-weight: 800;
-  color: #22301F;
+  color: #EFE7D4;
 }
 
 .d-sub {
   margin-top: 12rpx;
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   line-height: 1.7;
 }
 
@@ -23,8 +23,8 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: #FFFFFF;
-  border: 2rpx solid #E3EBE3;
+  background: #16332F;
+  border: 2rpx solid rgba(201, 168, 106, 0.25);
   border-radius: 999rpx;
   padding: 0 24rpx;
   margin-bottom: 20rpx;
@@ -34,11 +34,12 @@
   flex: 1;
   height: 72rpx;
   font-size: 26rpx;
+  color: #EFE7D4;
 }
 
 .search-clear {
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
   padding: 8rpx 0 8rpx 16rpx;
 }
 
@@ -51,17 +52,17 @@
   display: inline-block;
   padding: 10rpx 26rpx;
   margin-right: 16rpx;
-  background: #FFFFFF;
-  border: 2rpx solid #E3EBE3;
+  background: #16332F;
+  border: 2rpx solid rgba(201, 168, 106, 0.25);
   border-radius: 999rpx;
   font-size: 24rpx;
-  color: #4C6B4C;
+  color: #CFD9D2;
 }
 
 .month-active {
-  background: #2E7D32;
-  border-color: #2E7D32;
-  color: #FFFFFF;
+  background: linear-gradient(90deg, #C9A86A, #E3C98E);
+  border-color: #C9A86A;
+  color: #0E2422;
   font-weight: 600;
 }
 
@@ -69,26 +70,26 @@
   padding: 60rpx 0;
   text-align: center;
   font-size: 26rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .day-fav {
   font-size: 34rpx;
-  color: #C0CCC0;
+  color: #9DB0AB;
   padding: 0 16rpx 0 0;
   flex-shrink: 0;
 }
 
 .day-fav-hover {
-  color: #2E7D32;
+  color: #E3C98E;
 }
 
 .loading,
 .error {
   padding: 60rpx 0;
   text-align: center;
-  font-size: 26rpx;
-  color: #8A9B8A;
+  font-size:26rpx;
+  color: #9DB0AB;
 }
 
 .day-card {
@@ -107,14 +108,14 @@
 .day-num {
   font-size: 44rpx;
   font-weight: 800;
-  color: #2E7D32;
+  color: #C9A86A;
   line-height: 1.1;
 }
 
 .day-month {
   margin-top: 6rpx;
   font-size: 19rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .day-body {
@@ -126,7 +127,7 @@
 .day-title {
   font-size: 28rpx;
   font-weight: 700;
-  color: #22301F;
+  color: #EFE7D4;
   line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -137,10 +138,10 @@
 .day-meta {
   margin-top: 10rpx;
   font-size: 23rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }
 
 .day-arrow {
   font-size: 40rpx;
-  color: #C0CCC0;
+  color: #9DB0AB;
 }

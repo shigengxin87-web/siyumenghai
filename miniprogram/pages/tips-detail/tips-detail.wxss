@@ -1,12 +1,12 @@
-/* 技巧详情 */
+/* 技巧详情 · 国风 */
 .head {
   padding: 16rpx 8rpx 24rpx;
 }
 
 .cat {
   display: inline-block;
-  background: #E8F5E8;
-  color: #2E7D32;
+  background: rgba(201, 168, 106, 0.16);
+  color: #E3C98E;
   font-size: 22rpx;
   font-weight: 600;
   padding: 6rpx 18rpx;
@@ -17,7 +17,7 @@
   margin-top: 20rpx;
   font-size: 40rpx;
   font-weight: 800;
-  color: #22301F;
+  color: #EFE7D4;
   line-height: 1.4;
 }
 
@@ -27,7 +27,7 @@
 
 .para {
   font-size: 29rpx;
-  color: #3D5A3D;
+  color: #CFD9D2;
   line-height: 1.85;
   margin-bottom: 20rpx;
 }
@@ -47,12 +47,12 @@
 .link-text {
   font-size: 27rpx;
   font-weight: 600;
-  color: #2E7D32;
+  color: #E3C98E;
   flex: 1;
   padding-right: 20rpx;
 }
 
 .link-go {
   font-size: 24rpx;
-  color: #8A9B8A;
+  color: #9DB0AB;
 }

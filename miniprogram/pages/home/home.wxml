@@ -1,8 +1,8 @@
 <view class="page">
   <!-- 品牌区 -->
   <view class="hero">
+    <image class="sdh-emblem" src="/assets/logo.svg" mode="aspectFit"/>
     <view class="hero-badge">石董会 · 成员服务</view>
-    <view class="hero-title">石董会</view>
     <view class="hero-slogan">一起成长，一起好</view>
   </view>
 
