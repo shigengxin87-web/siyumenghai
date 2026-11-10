@@ -293,6 +293,72 @@ const members = [
     "order": 49,
     "number": "49",
     "avatar": "/assets/members/member-49.jpg"
+  },
+  {
+    "name": "A梦 (知牧)",
+    "order": 50,
+    "number": "50",
+    "avatar": "/assets/members/member-50.jpg"
+  },
+  {
+    "name": "楚川",
+    "order": 51,
+    "number": "51",
+    "avatar": "/assets/members/member-51.jpg"
+  },
+  {
+    "name": "张斌",
+    "order": 52,
+    "number": "52",
+    "avatar": "/assets/members/member-52.jpg"
+  },
+  {
+    "name": "子非鱼",
+    "order": 53,
+    "number": "53",
+    "avatar": "/assets/members/member-53.jpg"
+  },
+  {
+    "name": "扶光",
+    "order": 54,
+    "number": "54",
+    "avatar": "/assets/members/member-54.jpg"
+  },
+  {
+    "name": "蒋梦涵",
+    "order": 55,
+    "number": "55",
+    "avatar": "/assets/members/member-55.jpg"
+  },
+  {
+    "name": "望晴",
+    "order": 56,
+    "number": "56",
+    "avatar": "/assets/members/member-56.jpg"
+  },
+  {
+    "name": "飞儿",
+    "order": 57,
+    "number": "57",
+    "avatar": "/assets/members/member-57.jpg"
+  },
+  {
+    "name": "范伟峰",
+    "order": 58,
+    "number": "58",
+    "avatar": "/assets/members/member-58.jpg"
+  },
+  {
+    "name": "闻莉🧡私人形象设计",
+    "order": 59,
+    "number": "59",
+    "avatar": "/assets/members/member-59.jpg"
+  },
+  {
+    "name": "昀",
+    "order": 60,
+    "number": "60",
+    "avatar": "/assets/members/member-60.jpg"
   }
 ];
 

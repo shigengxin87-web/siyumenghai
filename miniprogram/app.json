@@ -29,12 +29,12 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/kb/kb",
-        "text": "知识库"
-      },
-      {
         "pagePath": "pages/chat/chat",
         "text": "AI问答"
+      },
+      {
+        "pagePath": "pages/kb/kb",
+        "text": "知识库"
       },
       {
         "pagePath": "pages/daily/daily",
