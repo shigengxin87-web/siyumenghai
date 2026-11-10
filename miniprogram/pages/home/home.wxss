@@ -8,6 +8,13 @@
   overflow: hidden;
 }
 
+.sdh-emblem {
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.35);
+}
+
 .hero-badge {
   display: inline-block;
   margin-top: 18rpx;
