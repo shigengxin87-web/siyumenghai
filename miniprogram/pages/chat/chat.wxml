@@ -70,6 +70,6 @@
       placeholder="输入你的运营问题…"
       disabled="{{sending}}"
     />
-    <button class="send-btn" bindtap="send" disabled="{{sending || !input}}">发送</button>
+    <view class="send-btn {{(sending || !input) ? 'is-disabled' : ''}}" bindtap="send">发送</view>
   </view>
 </view>

@@ -19,25 +19,9 @@
   <view class="video-card" bindtap="openXhsTool"><view class="tool-row"><view class="tool-icon is-video">存</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">小红书保存</text><text class="tool-desc">预览视频和图集，逐个或批量保存到相册。</text></view></view><button catchtap="openXhsTool">进入工具</button></view>
   <view class="video-card" bindtap="openHistoryTool"><view class="tool-row"><view class="tool-icon is-video">历</view><view class="tool-copy"><text class="tool-label">实用工具</text><text class="tool-title">保存历史</text><text class="tool-desc">查看最近解析过的作品，链接过期后可一键重新解析保存。</text></view></view><button catchtap="openHistoryTool">进入历史</button></view>
 
-  <view class="section-title"><text>知识沉淀</text><text>选择适合的入口</text></view>
-  <view class="knowledge-card" bindtap="openIma">
-    <view class="tool-row">
-      <view class="tool-icon is-ima">知</view>
-      <view class="tool-copy"><text class="tool-label">AI 问答</text><text class="tool-title">IMA 知识库</text><text class="tool-desc">适合在微信里快速提问，调用已经沉淀的社群知识。</text></view>
-    </view>
-    <button catchtap="openIma">打开 IMA</button>
-  </view>
-  <view class="knowledge-card" bindtap="openFeishu">
-    <view class="tool-row">
-      <view class="tool-icon is-feishu">飞</view>
-      <view class="tool-copy"><text class="tool-label">完整存档</text><text class="tool-title">飞书知识库</text><text class="tool-desc">适合查阅完整文档、教程、案例和长期积累的资料。</text></view>
-    </view>
-    <button catchtap="openFeishu">打开飞书</button>
-  </view>
-
   <view class="section-title"><text>更多入口</text></view>
   <view class="plain-cell" bindtap="copyWebsite"><view><text class="tool-title">社群官网</text><text class="tool-desc">电脑大屏浏览与完整网页工具</text></view><text>复制网址 ›</text></view>
 
-  <view class="notice"><text class="notice-title">使用说明</text><text>IMA 会直接进入官方小程序；飞书会先复制知识库链接再尝试打开；三平台工具支持原生预览与相册保存，首次保存需允许相册权限。</text></view>
+  <view class="notice"><text class="notice-title">使用说明</text><text>三平台工具支持原生预览与相册保存，首次保存需允许相册权限；知识库入口已移至底部「知识库」标签。</text></view>
   <view class="safe-bottom"></view>
 </view>

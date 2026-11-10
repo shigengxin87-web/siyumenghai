@@ -27,19 +27,5 @@
 
   <view class="cal-hint">● 标记日期有原始记录，点击还原当天完整群聊</view>
 
-  <view class="recent">
-    <view class="recent-title">最近群聊</view>
-    <view
-      wx:for="{{recent}}"
-      wx:key="key"
-      class="recent-item"
-      data-key="{{item.key}}"
-      bindtap="onDayTap"
-    >
-      <view class="recent-date">{{item.dateLabel}} · {{item.weekday}}<text wx:if="{{item.messages}}" class="recent-count">{{item.messages}} 条</text></view>
-      <view class="recent-name">{{item.title}}</view>
-    </view>
-  </view>
-
   <view class="safe-bottom"></view>
 </view>

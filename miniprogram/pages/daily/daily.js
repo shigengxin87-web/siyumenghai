@@ -17,13 +17,11 @@ Page({
   data: {
     weekdays: WEEKDAYS,
     cells: [],
-    title: '',
-    recent: []
+    title: ''
   },
 
   onLoad() {
     this.contentSet = {}
-    this.recent = []
     this.applyIndex(null)
     this.loadIndex()
     this.openMonth(new Date())
@@ -47,8 +45,6 @@ Page({
     }
     this.contentSet = {}
     list.forEach((d) => { this.contentSet[d.key] = true })
-    this.recent = list.slice(0, 8)
-    this.setData({ recent: this.recent })
     // 若日历已渲染，刷新打点
     if (this.year !== undefined) this.openMonth(new Date(this.year, this.month, 1))
   },

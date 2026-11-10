@@ -122,10 +122,12 @@
 }
 
 .send-btn {
+  flex-shrink: 0;
   width: 104rpx;
   height: 68rpx;
   line-height: 68rpx;
   padding: 0;
+  text-align: center;
   background: linear-gradient(90deg, #C9A86A, #E3C98E);
   color: #0E2422;
   font-size: 26rpx;
@@ -133,11 +135,7 @@
   border-radius: 38rpx;
 }
 
-.send-btn::after {
-  border: none;
-}
-
-.send-btn[disabled] {
+.send-btn.is-disabled {
   background: #3A4A45;
   color: #8A9B8A;
 }
