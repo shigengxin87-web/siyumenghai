@@ -20,6 +20,13 @@ const DIFY_KEY = process.env.DIFY_API_KEY || config.difyApiKey || config.appkey 
 const PORT = Number(process.env.PORT || 2035)
 const UPSTREAM_TIMEOUT = Number(process.env.UPSTREAM_TIMEOUT || 55000)
 
+// ---- 微信接口：仅服务端持有 AppSecret，绝不进 Git ----
+const WX_API_BASE = (process.env.WX_API_BASE || 'https://api.weixin.qq.com').replace(/\/+$/, '')
+const WX_APPID = process.env.WX_APPID || config.wxAppId || 'wx8518a4f16ab72d70'
+const WX_SECRET = process.env.WX_APPSECRET || config.wxAppSecret || ''
+const PHONES_PATH = process.env.PHONES_PATH || '/opt/siyumenghai-agent-proxy/phones.json'
+let tokenCache = { token: '', expire: 0 }
+
 // ---- 会话 ID：沿用旧算法，保证迁移前后同一用户的会话连续 ----
 function conversationId(userId, clientConversation) {
   const base = crypto.createHash('sha256').update('sdh:' + userId).digest('hex')
@@ -35,6 +42,10 @@ function difyUser(userId) {
 }
 
 async function handler(req, res) {
+  // 手机号授权：小程序 getPhoneNumber 的一次性 code 换真实号码，与问答互不影响
+  const path = (req.url || '').split('?')[0]
+  if (path === '/api/phone') return phoneHandler(req, res)
+
   if (req.method !== 'POST') {
     res.writeHead(405, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: { message: 'method not allowed' } }))
@@ -357,6 +368,107 @@ function bad(res, msg) {
   res.end(JSON.stringify({ error: { message: msg } }))
 }
 
+// ---------- 微信工具：手机号授权 ----------
+function wxRequest(method, pathname, body) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(WX_API_BASE + pathname)
+    const lib = url.protocol === 'https:' ? https : http
+    const data = body ? JSON.stringify(body) : ''
+    const req = lib.request(
+      {
+        hostname: url.hostname,
+        port: url.port || 443,
+        path: url.pathname + url.search,
+        method,
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }
+      },
+      (r) => {
+        let text = ''
+        r.setEncoding('utf8')
+        r.on('data', (c) => (text += c))
+        r.on('end', () => { try { resolve(JSON.parse(text || '{}')) } catch (_) { resolve({}) } })
+      }
+    )
+    req.on('error', reject)
+    if (data) req.write(data)
+    req.end()
+  })
+}
+
+async function getAccessToken() {
+  if (tokenCache.token && Date.now() < tokenCache.expire - 60000) return tokenCache.token
+  const r = await wxRequest('GET', `/cgi-bin/token?grant_type=client_credential&appid=${WX_APPID}&secret=${encodeURIComponent(WX_SECRET)}`)
+  if (!r.access_token) throw new Error('wechat token failed: ' + r.errcode)
+  tokenCache = { token: r.access_token, expire: Date.now() + (Number(r.expires_in) || 7200) * 1000 }
+  return r.access_token
+}
+
+async function getPhoneNumber(code) {
+  const token = await getAccessToken()
+  const r = await wxRequest('POST', `/wxa/business/getuserphonenumber?access_token=${token}`, { code })
+  if (r.errcode !== 0) throw new Error('wechat phone failed: ' + r.errcode)
+  const info = r.phone_info || {}
+  return info.purePhoneNumber || info.phoneNumber || ''
+}
+
+function maskPhone(p) {
+  const s = String(p || '')
+  return s.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') || s
+}
+
+// 真实号码只落服务端，避免在小程序端留存明文
+function storePhone(userId, phone) {
+  try {
+    let map = {}
+    try { map = JSON.parse(fs.readFileSync(PHONES_PATH, 'utf8')) } catch (_) {}
+    map[userId] = { phone, updatedAt: Date.now() }
+    fs.writeFileSync(PHONES_PATH, JSON.stringify(map, null, 2))
+  } catch (e) {
+    console.warn('store phone failed', e.message)
+  }
+}
+
+async function phoneHandler(req, res) {
+  if (req.method !== 'POST') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: { message: 'method not allowed' } }))
+    return
+  }
+  let body = ''
+  req.on('data', (c) => {
+    body += c
+    if (body.length > 64 * 1024) req.destroy()
+  })
+  req.on('end', async () => {
+    let payload
+    try {
+      payload = JSON.parse(body)
+    } catch (_) {
+      return bad(res, 'invalid json')
+    }
+    const code = payload.code || ''
+    const userId = String(payload.user_id || 'anonymous').slice(0, 64)
+    if (!code) return bad(res, 'missing code')
+    if (!WX_SECRET) {
+      res.writeHead(500, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: { message: 'server not configured' } }))
+      return
+    }
+    try {
+      const phone = await getPhoneNumber(code)
+      if (!phone) return bad(res, 'empty phone')
+      const masked = maskPhone(phone)
+      storePhone(userId, phone)
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
+      res.end(JSON.stringify({ ok: true, phoneMasked: masked }))
+    } catch (e) {
+      console.error('phone handler error', e.message)
+      res.writeHead(502, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: { message: '获取手机号失败' } }))
+    }
+  })
+}
+
 if (require.main === module) {
   http.createServer(handler).listen(PORT, '127.0.0.1', () => {
     console.log(`石董会 AI 问答代理（Dify 版）监听 127.0.0.1:${PORT}`)
@@ -366,4 +478,4 @@ if (require.main === module) {
   })
 }
 
-module.exports = { handler, cleanMarkdown, collectSseAnswer, conversationId }
+module.exports = { handler, cleanMarkdown, collectSseAnswer, conversationId, phoneHandler, maskPhone, getAccessToken, getPhoneNumber }

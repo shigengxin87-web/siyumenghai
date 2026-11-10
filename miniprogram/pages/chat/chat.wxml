@@ -24,7 +24,18 @@
       >
         <view class="bubble">
           <view class="ai-label" wx:if="{{item.role === 'assistant'}}">AI 分身</view>
-          <text>{{item.text}}</text>
+          <view wx:if="{{item.segments}}" class="bubble-rich">
+            <block wx:for="{{item.segments}}" wx:for-item="seg" wx:key="index">
+              <text wx:if="{{seg.type === 'text'}}" user-select="true" class="rich-text">{{seg.text}}</text>
+              <text wx:elif="{{seg.type === 'link'}}" class="rich-link" data-url="{{seg.url}}" catchtap="onLinkTap">{{seg.display}}</text>
+              <image wx:elif="{{seg.type === 'image'}}" class="rich-image" src="{{seg.url}}" mode="widthFix" data-url="{{seg.url}}" show-menu-by-longpress="{{true}}" bindtap="onImageTap" binderror="onMediaError"></image>
+              <view wx:elif="{{seg.type === 'video'}}" class="rich-video">
+                <video class="rich-video-el" src="{{seg.url}}" controls="{{true}}" show-center-play-btn="{{true}}" object-fit="contain" binderror="onMediaError"></video>
+                <view class="rich-save" data-url="{{seg.url}}" catchtap="onSaveMedia">保存到相册</view>
+              </view>
+            </block>
+          </view>
+          <text wx:else user-select="true">{{item.text}}</text>
           <view class="msg-actions" wx:if="{{item.role === 'assistant'}}">
             <text class="msg-action" catchtap="copyMessage" data-id="{{item.id}}">复制</text>
             <text class="msg-action msg-action-retry" wx:if="{{item.canRetry}}" catchtap="retryMessage" data-id="{{item.id}}">重试</text>

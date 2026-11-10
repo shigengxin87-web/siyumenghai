@@ -9,7 +9,8 @@ Page({
     profile: {},
     saving: false,
     loading: true,
-    hasProfile: false
+    hasProfile: false,
+    phone: ''
   },
 
   onLoad() {
@@ -19,8 +20,67 @@ Page({
     if (cached && Array.isArray(cached.fields) && cached.fields.length) {
       this.setData({ fields: cached.fields })
     }
+    this.loadPhone()
     this.loadSchema()
     this.loadProfile()
+  },
+
+  loadPhone() {
+    try {
+      const p = wx.getStorageSync('sdh_phone')
+      if (p) this.setData({ phone: p })
+    } catch (_) {}
+  },
+
+  // 手机号授权：微信新版返回一次性 code，交由服务端换取真实号码
+  onGetPhone(e) {
+    const d = (e && e.detail) || {}
+    if (d.errMsg !== 'getPhoneNumber:ok') {
+      wx.showToast({ title: '已取消授权', icon: 'none' })
+      return
+    }
+    const run = () => this.sendPhoneCode(d.code)
+    if (wx.requirePrivacyAuthorize) {
+      wx.requirePrivacyAuthorize({ success: run, fail: () => wx.showToast({ title: '请先同意隐私保护指引', icon: 'none' }) })
+    } else {
+      run()
+    }
+  },
+
+  sendPhoneCode(code) {
+    if (!code) return
+    wx.showLoading({ title: '授权中' })
+    wx.request({
+      url: app.globalData.agent.phoneApi,
+      method: 'POST',
+      header: { 'Content-Type': 'application/json' },
+      data: { user_id: uid(), code },
+      success: (res) => {
+        wx.hideLoading()
+        const r = res.data || {}
+        if (res.statusCode === 200 && r.ok) {
+          const masked = r.phoneMasked || (r.phone ? this.maskPhone(r.phone) : '')
+          try { wx.setStorageSync('sdh_phone', masked) } catch (_) {}
+          this.setData({ phone: masked })
+          wx.showToast({ title: '已绑定', icon: 'success' })
+        } else {
+          wx.showToast({ title: r.message || '绑定失败，请重试', icon: 'none' })
+        }
+      },
+      fail: () => {
+        wx.hideLoading()
+        wx.showToast({ title: '网络异常，请重试', icon: 'none' })
+      }
+    })
+  },
+
+  rebind() {
+    this.setData({ phone: '' })
+  },
+
+  maskPhone(p) {
+    const s = String(p || '')
+    return s.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2')
   },
 
   loadSchema() {

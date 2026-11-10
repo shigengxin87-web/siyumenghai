@@ -1,6 +1,8 @@
 const app = getApp()
 const { Utf8Decoder, EventReader } = require('../../utils/chat-stream')
 const { uid } = require('../../utils/uid')
+const { AlbumSaver } = require('../../utils/album-saver')
+const { extractRich, safeRich } = require('../../utils/rich-text')
 const KEY = 'sdh_chat_messages'
 // 档案引导只出现一次；用户关闭过（或已填过）就不再打扰
 const PROFILE_HINT = 'sdh_profile_hint'
@@ -10,8 +12,8 @@ const sessionId = () => 's' + Date.now().toString(36) + Math.random().toString(3
 function clean(text) {
   if (!text) return ''
   let t = String(text)
-  t = t.replace(/!\[[^\]]*\]\([^)]*\)/g, '')            // 图片 ![alt](url) -> 去掉
-  t = t.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')         // 链接 [文字](url) -> 文字
+  t = t.replace(/!\[[^\]]*\]\((https?:\/\/[^)]+)\)/g, '$1 ')   // 图片 ![alt](url) -> 保留链接
+  t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$1 $2 ') // 链接 [文字](url) -> 文字+链接
   t = t.replace(/^#{1,6}\s+/gm, '\n')                   // 标题 # 转成前后换行
   t = t.replace(/^>\s?/gm, '')                          // 引用 > 去掉
   t = t.replace(/^\s*[-*+]\s+/gm, '\n• ')               // 无序列表 -> 换行+项目符号
@@ -60,9 +62,10 @@ Page({
     this.conversation = stored && stored.conversation || sessionId()
     const messages = stored && Array.isArray(stored.messages) ? stored.messages.filter(m => m && typeof m.text === 'string').slice(-100).map(m => {
       const failed = m.status === 'pending' || m.status === 'failed' || m.canRetry === true
-      return { ...m, status: failed ? 'failed' : 'done', canRetry: m.role === 'assistant' && failed, text: m.text || (failed ? '上次回复未完成，请重试。' : '') }
+      const text = m.text || (failed ? '上次回复未完成，请重试。' : '')
+      return { ...m, status: failed ? 'failed' : 'done', canRetry: m.role === 'assistant' && failed, text, segments: m.role === 'assistant' ? safeRich(text) : undefined }
     }) : []
-    this.setData({ messages: messages.length ? messages : [{ role: 'assistant', text: WELCOME, id: 'm1', status: 'done' }], seq: Math.max(Number(stored && stored.seq) || 0, 1) })
+    this.setData({ messages: messages.length ? messages : [{ role: 'assistant', text: WELCOME, id: 'm1', status: 'done', segments: safeRich(WELCOME) }], seq: Math.max(Number(stored && stored.seq) || 0, 1) })
     this.scrollToBottom(true)
   },
   saveSession() { try { wx.setStorageSync(KEY, { messages: this.data.messages.slice(-100), seq: this.data.seq, conversation: this.conversation }) } catch (_) {} },
@@ -97,7 +100,9 @@ Page({
       this.scrollToBottom()
     }
     let responseText = '', completed = false, failed = false, status = 0, received = false
-    const fail = tip => { failed = true; update({ text: (responseText ? clean(responseText) + '\n\n' : '') + tip, status: 'failed', canRetry: true }) }
+    // replyId 在发送期间是稳定的（流式中不会重排），统一用查找解析索引，避免流式回调前 idx 未定义
+    const replyIdx = () => this.data.messages.findIndex(m => m.id === replyId)
+    const fail = tip => { failed = true; const i = replyIdx(); if (i >= 0) this.finalizeMessage(i, (responseText ? clean(responseText) + '\n\n' : '') + tip, { status: 'failed', canRetry: true }) }
     const decoder = new Utf8Decoder()
     const reader = new EventReader(event => {
       if (event.type === 'delta') responseText += event.text || ''
@@ -114,7 +119,7 @@ Page({
         if (status !== 200) { fail(status === 429 ? '当前提问较多，请稍后重试。' : '问答服务暂时不可用，请稍后重试。'); return }
         try { if (!received && typeof res.data === 'string') reader.push(res.data, true); else reader.push('', true) }
         catch (_) { fail('回复读取失败，请稍后重试。'); return }
-        if (!failed && completed && responseText) update({ text: clean(responseText), status: 'done', canRetry: false })
+        if (!failed && completed && responseText) this.finalizeMessage(replyIdx(), clean(responseText), { status: 'done', canRetry: false })
         else if (!failed) fail('回复生成中断，请稍后重试。')
       },
       fail: err => {
@@ -144,6 +149,42 @@ Page({
     this.setData({ messages: this.data.messages.slice(0,user), input: text }); this.send()
   },
   copyMessage(e) { const m = this.data.messages.find(m => m.id === e.currentTarget.dataset.id); if (m && m.text) wx.setClipboardData({ data: m.text }) },
+  // 终态消息：写回正文并解析富媒体片段，让链接/图片/视频可交互
+  finalizeMessage(idx, text, patch) {
+    const msg = this.data.messages[idx]
+    if (!msg) return
+    let segments
+    try { segments = extractRich(text) } catch (_) { segments = undefined }
+    this.setData({ ['messages[' + idx + ']']: { ...msg, text, segments, ...patch } })
+  },
+  onLinkTap(e) {
+    const url = e.currentTarget.dataset.url
+    if (!url) return
+    if (url.startsWith('/pages/')) { wx.navigateTo({ url, fail: () => wx.switchTab({ url }) }); return }
+    wx.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(url) + '&copyOnError=1' })
+  },
+  onImageTap(e) {
+    const url = e.currentTarget.dataset.url
+    if (!url) return
+    wx.previewImage({ current: url, urls: [url] })
+  },
+  onSaveMedia(e) {
+    const url = e.currentTarget.dataset.url
+    if (!url) return
+    const kind = /\.(mp4|mov|webm|m3u8|avi|mkv)$/i.test(url.split('?')[0]) ? 'video' : 'image'
+    const saver = new AlbumSaver(wx, () => {})
+    wx.showLoading({ title: kind === 'video' ? '下载视频中' : '保存中' })
+    saver.run([{ key: 'chat', kind, url, state: 'idle' }]).then((r) => {
+      wx.hideLoading()
+      if (!r || r.cancelled) { wx.showToast({ title: '已取消', icon: 'none' }); return }
+      if (r.saved) wx.showToast({ title: '已保存到相册', icon: 'success' })
+      else wx.showToast({ title: '保存失败，请检查相册权限或网络', icon: 'none' })
+    }).catch((err) => {
+      wx.hideLoading()
+      wx.showToast({ title: (err && err.message) || '保存未完成，请重试', icon: 'none' })
+    })
+  },
+  onMediaError() { wx.showToast({ title: '媒体加载失败，可重试或重新解析', icon: 'none' }) },
   uid() { let id = wx.getStorageSync('sdh_uid'); if (!id) { id = 'u' + Date.now() + Math.floor(Math.random()*10000); wx.setStorageSync('sdh_uid',id) } return id },
   // 用户往上翻看历史时不再强制拉到底，回到接近底部才恢复自动跟随
   onScroll(e) {

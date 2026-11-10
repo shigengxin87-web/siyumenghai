@@ -15,6 +15,8 @@ App({
       // 用户档案（行业/客单价等背景，存服务端，跟人走不跟引擎走）
       profileApi: 'https://siyumenghai.cn/api/profile',
       profileSchemaUrl: 'https://siyumenghai.cn/api/profile/schema',
+      // 手机号授权：前端只拿到脱敏号码，真实号码留存服务端
+      phoneApi: 'https://siyumenghai.cn/api/phone',
       assistantId: '2101324897978088512'
     },
     // 官网数据源（讨论板块同步用）

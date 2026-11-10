@@ -4,6 +4,25 @@
     <text class="pf-desc">填一次就行。之后每次提问会自动带上，不用重复说。随时可以改。</text>
   </view>
 
+  <view class="pf-phone" wx:if="{{phone}}">
+    <view class="pf-phone-row">
+      <view class="pf-phone-info">
+        <text class="pf-phone-label">已绑定手机号</text>
+        <text class="pf-phone-num">{{phone}}</text>
+      </view>
+      <text class="pf-phone-rebind" catchtap="rebind">更换</text>
+    </view>
+  </view>
+  <view class="pf-phone pf-phone-empty" wx:else>
+    <view class="pf-phone-row">
+      <view class="pf-phone-info">
+        <text class="pf-phone-label">绑定手机号</text>
+        <text class="pf-phone-tip">用于会员身份识别与续费提醒，仅你授权后获取。</text>
+      </view>
+      <button class="pf-phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">授权</button>
+    </view>
+  </view>
+
   <view class="pf-row" wx:for="{{fields}}" wx:key="key" wx:for-item="f">
     <view class="pf-label">{{f.label}}</view>
     <view class="pf-options">

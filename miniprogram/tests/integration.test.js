@@ -1,9 +1,11 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('fs'),path=require('path'),vm=require('vm');
 const root=path.resolve(__dirname,'..');const {Utf8Decoder,EventReader}=require('../utils/chat-stream');
+// 小程序真机支持 path 形式的 setData（如 messages[5].text / messages[5]），这里在测试桩里还原该语义
+function applySetData(data,patch){for(const key of Object.keys(patch)){const m=key.match(/^([^[\].]+)\[(\d+)\](?:\.([^[\].]+))?$/);if(m){const arr=data[m[1]],i=Number(m[2]);if(!Array.isArray(arr))continue;if(m[3])arr[i][m[3]]=patch[key];else arr[i]=patch[key];}else data[key]=patch[key];}}
 function page(file,api={}) {
- let definition;const context={getApp:()=>({globalData:{agent:{apiUrl:'https://siyumenghai.cn/api/agent/chat'}}}),Page:p=>definition=p,wx:api,require:p=>require(path.resolve(root,path.dirname(file),p)),console,Uint8Array,Array,Date,Math};
+ let definition;const context={getApp:()=>({globalData:{agent:{apiUrl:'https://siyumenghai.cn/api/agent/chat'}}}),Page:p=>definition=p,wx:api,require:p=>require(path.resolve(root,path.dirname(file),p)),console,Uint8Array,Array,Date,Math,setTimeout,clearTimeout,setInterval,clearInterval};
  vm.runInNewContext(fs.readFileSync(path.join(root,file),'utf8'),context);
- const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};p.setData=patch=>Object.assign(p.data,patch);return p;
+ const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};p.setData=patch=>applySetData(p.data,patch);return p;
 }
 test('registered navigation paths and tab actions match one app',()=>{
  const a=JSON.parse(fs.readFileSync(path.join(root,'app.json')));const pages=new Set(a.pages);const tabs=new Set(a.tabBar.list.map(t=>t.pagePath));

@@ -240,3 +240,49 @@
   color: #A9B8A9;
   padding: 6rpx 0;
 }
+
+/* AI 回答里的链接 / 图片 / 视频：可直接交互 */
+.bubble-rich {
+  display: block;
+  white-space: pre-wrap;
+}
+
+.rich-text {
+  white-space: pre-wrap;
+}
+
+.rich-link {
+  color: #2E7D32;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.rich-image {
+  display: block;
+  width: 100%;
+  margin: 12rpx 0;
+  border-radius: 16rpx;
+  background: #EEF2EE;
+}
+
+.rich-video {
+  width: 100%;
+  margin: 12rpx 0;
+}
+
+.rich-video-el {
+  width: 100%;
+  height: 360rpx;
+  border-radius: 16rpx;
+  background: #000;
+}
+
+.rich-save {
+  display: inline-block;
+  margin-top: 8rpx;
+  padding: 8rpx 24rpx;
+  background: #E8F3E8;
+  color: #244D29;
+  font-size: 24rpx;
+  border-radius: 999rpx;
+}

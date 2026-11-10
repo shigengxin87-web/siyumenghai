@@ -49,5 +49,6 @@
     "backgroundColor": "#F6F8F6"
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "__usePrivacyCheck__": true
 }

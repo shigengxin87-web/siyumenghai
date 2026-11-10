@@ -118,3 +118,70 @@
 .pf-clear {
   color: #B4645A;
 }
+
+/* 手机号授权卡片 */
+.pf-phone {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 18rpx;
+  padding: 24rpx 22rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 6rpx 18rpx rgba(30, 90, 30, 0.05);
+}
+
+.pf-phone-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.pf-phone-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pf-phone-label {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #22301F;
+  margin-bottom: 6rpx;
+}
+
+.pf-phone-num {
+  font-size: 28rpx;
+  color: #1F5B26;
+  letter-spacing: 1rpx;
+}
+
+.pf-phone-tip {
+  font-size: 23rpx;
+  line-height: 1.5;
+  color: #6B8177;
+}
+
+.pf-phone-rebind {
+  flex-shrink: 0;
+  margin-left: 20rpx;
+  font-size: 25rpx;
+  color: #6B8177;
+}
+
+.pf-phone-btn {
+  flex-shrink: 0;
+  margin: 0 0 0 20rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 36rpx;
+  border-radius: 40rpx;
+  background: #2E7D32;
+  color: #FFFFFF;
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.pf-phone-btn::after {
+  border: none;
+}
