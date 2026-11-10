@@ -13,7 +13,7 @@ Page({
   onLoad(options) {
     const id = options.id || ''
     this.setData({ date: id })
-    wx.setNavigationBarTitle({ title: id + ' · 原始讨论' })
+    wx.setNavigationBarTitle({ title: id + ' · 群聊复现' })
     this.loadChat(id)
   },
 

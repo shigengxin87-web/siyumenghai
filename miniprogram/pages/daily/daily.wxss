@@ -124,6 +124,12 @@
   color: #9DB0AB;
 }
 
+.recent-count {
+  margin-left: 12rpx;
+  font-size: 20rpx;
+  color: #9DB0AB;
+}
+
 .recent-name {
   margin-top: 8rpx;
   font-size: 28rpx;
