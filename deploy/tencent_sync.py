@@ -160,7 +160,7 @@ def main() -> None:
     RELEASES.mkdir(parents=True, exist_ok=True)
     # Some mainland routes cache the branch endpoint for hours. A unique query
     # keeps scheduled deployments from mistaking a stale SHA for the latest one.
-    commit = COMMIT_OVERRIDE or get_json(f"{API}/commits/{BRANCH}?deploy_check={time.time_ns()}")["sha"]
+    commit = COMMIT_OVERRIDE or get_json(f"{API}/git/ref/heads/{BRANCH}?deploy_check={time.time_ns()}")["object"]["sha"]
     active = current_root()
     manifest_path = active / ".deploy-manifest.json"
     try:
