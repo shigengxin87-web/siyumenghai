@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-15 22:50:20",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "各位知道视频号如何能看到对方账号有多少粉丝呀",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-15 22:57:49",
+      "sender": "小鹅通净远",
+      "avatar": "./assets/members/sync-20261120-23.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "看不到吧",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

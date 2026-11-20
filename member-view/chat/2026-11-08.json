@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "date": "2026-11-08",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-08 06:35:57",
+      "sender": "张聪（IP线下课变现操盘）",
+      "avatar": "./assets/members/sync-20261120-27.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[强][强][强]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-08 19:51:01",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"张聪（IP线下课变现操盘）\" IP线下课变现专家[庆祝]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-08 19:51:37",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "从下午连着解决了三个问题，这三个问题恰好都是我觉得共性的问题，其他朋友也有需要的问题。\n\n我把这三个问题发出来，有需要的对号入座找我即可。\n\n1 抖音卖课，店铺如何解决？短信如何发送？怎么丝滑承接！\n\n2 微信收款收多了出现风险，微信小店如何开，icp怎么弄？\n\n3 微信小程序ai问答类目的资质申请如何搞，我花钱花时间花人跑过的经验",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

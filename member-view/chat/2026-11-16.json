@@ -1,0 +1,659 @@
+{
+  "version": 1,
+  "date": "2026-11-16",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-16 08:17:26",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "对，正常来说是看不到的。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-16 08:18:32",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "有两种方式能做一定的参考，但有的不准",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-16 08:22:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-16/image-003.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-11-16 08:22:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "第一个-免费方式，微信小店-优选联盟-带货者广场，右上角可以搜索，但不是每个都能搜索出来，出来的结果也不一定完全准",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-16 08:23:24",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "第二个-付费方式，友望数据，就跟抖音的蝉妈妈一样这种工具，不仅收费，不准度也挺高，主要是视频号的数据弄不了，只能预估",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-16 08:24:02",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-16/image-006.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-11-16 08:24:02",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "友望：https://www.youwant.cn/home/#/search/blogger",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://www.youwant.cn/home/#/search/blogger"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-11-16 09:01:25",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "OKOK",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-11-16 09:33:13",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "👌",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-11-16 16:16:47",
+      "sender": "辰犀",
+      "avatar": "./assets/members/sync-20261120-59.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-16/image-010.jpg",
+        "alt": "辰犀分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-11-16 16:17:28",
+      "sender": "辰犀",
+      "avatar": "./assets/members/sync-20261120-59.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "@石更新（23:00睡觉） \n石老师，这个skill文件可以分享嘛？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-11-16 16:21:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "来啦",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-11-16 16:21:21",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "抖音下载工具-v2.4 (1).zip",
+      "links": [
+        {
+          "label": "下载：抖音下载工具-v2.4 (1).zip",
+          "url": "./assets/chat/2026-11-16/file-013.zip"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m014",
+      "time": "2026-11-16 16:36:39",
+      "sender": "辰犀",
+      "avatar": "./assets/members/sync-20261120-59.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[合十]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m015",
+      "time": "2026-11-16 16:36:46",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-16/image-015.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m016",
+      "time": "2026-11-16 16:36:46",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "飞书的知识库不知道是产品问题还是我自己的问题，有好多细节我觉得都比较费劲，比如这个权限，我记得之前我把所有权限都开放了，现在给可阅读的用户开放权限，说让找管理员啥的，但是我自己就是管理员。[捂脸]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m017",
+      "time": "2026-11-16 16:41:08",
+      "sender": "辰犀",
+      "avatar": "./assets/members/sync-20261120-59.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "正在尝试安装这个…\n系统好像一直跑不通",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m018",
+      "time": "2026-11-16 16:45:16",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "应该是机器人写的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m019",
+      "time": "2026-11-16 16:45:45",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "就是agent用的权限是机器人，要把电脑上的权限改成用户级别",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m020",
+      "time": "2026-11-16 17:00:14",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "显示什么呢，你发给我看看哈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m021",
+      "time": "2026-11-16 17:00:42",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "有可能，我会经常让ai帮我去创建知识库，这个好像应该是",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m022",
+      "time": "2026-11-16 17:02:13",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "现在好了，我让豆包工作给我修好了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m023",
+      "time": "2026-11-16 18:06:00",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "这几天病了，本想再坚持坚持，想着到晚上脑子应该会好些，但是奈何我现在睁不开眼了脑子半天不转了，明早还得赶第一班飞机出差，所以我得去睡会了，不知道中途能不能醒。\n\n所以今天的每周一刻可能要失约了，我有一个多年在用的自我管理复盘工具，昨天一个之前的团队小伙伴找我，我跟他又提了这个工具，我觉得对我帮助还是非常大的，我发出来。\n\n简单一句话就是：kiss复盘法。 稍微写了一个文档，稍微补充延伸了一点，没有啥复杂的，就是得用，需要这个自我复盘工具的可以用起来。\n\nKeep：有效，继续做\nImprove：有用但要改，改着做\nStart：该做一直没做，开始做\nStop：不值得了，停掉\n\nhttps://my.feishu.cn/wiki/Y1yYw8o7EiEB1hkw55ycZaXTnqh?from=from_copylink\n\n有问题的留言给我，我醒了或者明天回复[抱拳]",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/Y1yYw8o7EiEB1hkw55ycZaXTnqh?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m024",
+      "time": "2026-11-16 18:06:41",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "system",
+      "text": "微信红包或转账消息，请在微信中查看；网页不提供领取或支付入口",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m025",
+      "time": "2026-11-16 18:07:08",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m026",
+      "time": "2026-11-16 18:07:59",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[OK][OK]好好休息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m028",
+      "time": "2026-11-16 18:09:07",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m029",
+      "time": "2026-11-16 18:09:21",
+      "sender": "AMY 宋【定制旅行&团建会议】",
+      "avatar": "./assets/members/sync-20261120-02.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "好好休息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m030",
+      "time": "2026-11-16 18:09:27",
+      "sender": "AMY 宋【定制旅行&团建会议】",
+      "avatar": "./assets/members/sync-20261120-02.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[拥抱]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m031",
+      "time": "2026-11-16 18:09:38",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m032",
+      "time": "2026-11-16 18:09:46",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m034",
+      "time": "2026-11-16 18:12:01",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m035",
+      "time": "2026-11-16 18:14:21",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m036",
+      "time": "2026-11-16 18:15:27",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m037",
+      "time": "2026-11-16 18:29:55",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "system",
+      "text": "系统消息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m038",
+      "time": "2026-11-16 18:36:08",
+      "sender": "考拉丸子",
+      "avatar": "./assets/members/sync-20261120-52.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "好好休息😴",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m039",
+      "time": "2026-11-16 18:42:06",
+      "sender": "小鹅通净远",
+      "avatar": "./assets/members/sync-20261120-23.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "好好休息哇",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m040",
+      "time": "2026-11-16 19:32:17",
+      "sender": "一月语文",
+      "avatar": "./assets/members/sync-20261120-07.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "石老师身体第一啊，传道授业来日方长[握手]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m041",
+      "time": "2026-11-16 19:42:33",
+      "sender": "大头",
+      "avatar": "./assets/members/sync-20261120-18.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "身体老重要了[爱心]好好休息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m042",
+      "time": "2026-11-16 20:23:10",
+      "sender": "青枫刘大同",
+      "avatar": "./assets/members/sync-20261120-61.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-16/image-042.jpg",
+        "alt": "青枫刘大同分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m043",
+      "time": "2026-11-16 20:24:56",
+      "sender": "青枫刘大同",
+      "avatar": "./assets/members/sync-20261120-61.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "今天看到x里，响马大佬也说健康这个事",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m044",
+      "time": "2026-11-16 21:59:28",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"杨光老师\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m045",
+      "time": "2026-11-16 21:59:30",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"Amy姐聊旅游创业\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m046",
+      "time": "2026-11-16 21:59:34",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"忠仁\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m047",
+      "time": "2026-11-16 21:59:37",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"考拉丸子\" 瞬间少了2斤肉",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m048",
+      "time": "2026-11-16 21:59:38",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"小鹅通净心.\" 就醍醐灌顶",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m049",
+      "time": "2026-11-16 21:59:40",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"一月语文\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m050",
+      "time": "2026-11-16 21:59:42",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"大头\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m051",
+      "time": "2026-11-16 21:59:45",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"青枫刘大同\" [烟花]\n\n花\n\n开\n\n满\n\n愿",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m052",
+      "time": "2026-11-16 22:00:52",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "感谢大家。这几天感冒了，没想到劲有点大，睡了一觉活过来了[呲牙]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m054",
+      "time": "2026-11-16 23:59:32",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "终于在12点之前完成了。\n\n\n今天的话题我觉得是非常有意义的。\n\n主题是：最容易被忽略的「交付环节」，反而更应该被看到！\nhttps://my.feishu.cn/wiki/QJdJw8Z2hiUlbgktA8Dct04cn6d?from=from_copylink\n\n\n这里面我首次把「高途的交付体系」拿出来讲，在前面还举了很多实际的例子。\n\n希望有启发。",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/QJdJw8Z2hiUlbgktA8Dct04cn6d?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

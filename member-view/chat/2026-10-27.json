@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-27 13:38:20",
+      "sender": "大头",
+      "avatar": "./assets/members/sync-20261120-18.jpg",
+      "side": "left",
+      "type": "link",
+      "text": "使用外挂的企微账号，正在被批量“踢下线”\n后面大概率还有更大范围、更大力度的动作。",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MzU3NTU5NDc0NA==&mid=2247610065&idx=1&sn=527ec8414fda6b284b3db6cdc768fc29&chksm=fca3f00567bac09fd1b4f9466a99b29d78ac41d66640ccc07e7d419f77c3837e666c210f9537&mpshare=1&scene=1&srcid=1027nTKgfF3UoRWyNMH83heD&sharer_shareinfo=b5bc7205f6448b33cd51a76cc57d58c1&sharer_shareinfo_first=b5bc7205f6448b33cd51a76cc57d58c1#rd"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-27 15:22:29",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "这波整顿估计得要一阵子了，保险起见，在用第三方工具的可以先停一停了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-27 15:24:17",
+      "sender": "大头",
+      "avatar": "./assets/members/sync-20261120-18.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "大家有用第三方然后被退的么？我看企微官方态度非常硬",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-27 16:39:42",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "这次很多不知道实际情况的人会以为是企业微信的问题，所以也算是给企业微信抹黑了。\n\n上一次严打第三方也过去两三年了。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-27 16:41:14",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "目前我这边和熟悉的还没有被退的，我问了下句子互动的商务，说是确实查的严格现在，但是覆盖率还是没有那么大，也建议说，如果担心的话先下掉养养号",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-27 16:41:30",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-27/image-006.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-10-27 16:42:08",
+      "sender": "大头",
+      "avatar": "./assets/members/sync-20261120-18.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "嗯嗯",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

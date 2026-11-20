@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "date": "2026-10-26",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-26 18:20:15",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "一个播了4年的老IP播不下去了，怎么办？后面获客怎么搞！\n\nhttps://my.feishu.cn/wiki/EDFqwYsUiiDrN6kEqVucWygYnag?from=from_copylink",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/EDFqwYsUiiDrN6kEqVucWygYnag?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-26 18:20:15",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我被做了一场采访，背后藏着很多值得借鉴的宝贵经验！\n\nhttps://my.feishu.cn/wiki/WZ2cw3ocdixZ7RkDrcJcL9cLn7c?from=from_copylink",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/WZ2cw3ocdixZ7RkDrcJcL9cLn7c?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-26 18:21:30",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我就不在群里做引言了，文字比较多。\n\n建议直接点击链接进去看。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-26 22:27:43",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"一月语文\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

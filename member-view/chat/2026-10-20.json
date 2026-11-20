@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "date": "2026-10-20",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-20 13:37:12",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "石哥，群聊总结有什么比较好的提示词吗，现在群聊有点多，又不知道让AI应该总结哪些东西给我，毕竟群聊里面噪音占了99%[破涕为笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-20 14:09:37",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"荣耀元\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-20 16:37:01",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "来啦，我看下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-20 16:43:04",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "1 你想提升什么能力或者补充什么信息\n\n假说说：我想提升决策能力、思考能力，那你要先判断谁、在什么地方（朋友圈还是社群）可以让你参考。\n\n我举个例子，比如我想学习润宇的思考能力，那么我会定点在这个事情上监控读取润宇的朋友圈或者社群。\n\n比如你的业务需要别人的一些成功经验参考，获客方面、转化方面、文案方面、产品方面，列举出来，然后去定点去找这个人，然后监控读取。\n\n类似这个思路。\n\n就是你需要什么，列出来，谁能提供，列出来，提取到对应信息后，怎么处理怎么呈现（这个利用你现有的经验结合你的实际需求跟ai磨一下提示词）",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-20 16:44:12",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "ai读取微信只是一种取料的操作方式。\n\n但是在做之前你一定要先看你需要什么（才能屏蔽那些不需要的干扰你）",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-20 16:52:21",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "恩恩。谢谢石哥，我跟AI讨论一下",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-10-20 17:02:30",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"生财初阳AI\" 的头像",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-10-20 17:08:05",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"生财初阳AI\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

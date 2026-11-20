@@ -7,6 +7,7 @@ import argparse
 import json
 import re
 import unicodedata
+import ipaddress
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
@@ -47,6 +48,14 @@ UNAVAILABLE_LABELS = {
 
 def redact(text: str) -> tuple[str, bool]:
     changed = False
+    public_urls = []
+    def protect_url(match):
+        value = match.group(0)
+        if safe_url(value):
+            public_urls.append(value)
+            return f"PUBLICURLPLACEHOLDER{chr(65 + len(public_urls) - 1)}END"
+        return value
+    text = re.sub(r"https?://[^\s<>，。；]+", protect_url, text)
 
     def replace(pattern: re.Pattern[str], replacement):
         nonlocal text, changed
@@ -58,12 +67,25 @@ def redact(text: str) -> tuple[str, bool]:
     replace(ID_RE, lambda match: f"{match.group(1)}********{match.group(3)}")
     replace(BANK_RE, lambda match: f"{match.group(1)} **** **** {match.group(2)}")
     replace(SENSITIVE_LABEL_RE, lambda match: f"{match.group(1)}{match.group(2)}[已脱敏]")
+    replace(re.compile(r"https?://(?:localhost|127\.0\.0\.1|0\.0\.0\.0)(?::\d+)?[^\s<>，。；]*"), "[本机预览链接，无法从其他设备访问]")
+    replace(re.compile(r"/(?:Users|Volumes|private|var|tmp)/[^\s<>，。；]+"), "[本机路径已隐藏]")
+    replace(re.compile(r"\bwxid_[A-Za-z0-9_]+\b"), "[微信内部标识已隐藏]")
+    for index, url in enumerate(public_urls):
+        text = text.replace(f"PUBLICURLPLACEHOLDER{chr(65 + index)}END", url)
     return text, changed
 
 
 def safe_url(value: str) -> str | None:
     value = (value or "").strip()
     parsed = urlparse(value)
+    host = (parsed.hostname or "").lower()
+    if host in {"localhost", "wxapp.tenpay.com", "support.weixin.qq.com"} or host.endswith(".local"):
+        return None
+    try:
+        if not ipaddress.ip_address(host).is_global:
+            return None
+    except ValueError:
+        pass
     return value if parsed.scheme in {"http", "https"} and parsed.netloc else None
 
 
@@ -89,7 +111,8 @@ def parse_link(content: str) -> tuple[str, str, list[dict[str, str]]]:
     except ET.ParseError:
         return "链接或文件", "", []
 
-    title = find_text(root, ".//appmsg/title") or find_text(root, ".//title") or "链接或文件"
+    title = (find_text(root, ".//appmsg/title") or find_text(root, ".//title")
+             or find_text(root, ".//finderFeed/desc") or "链接或文件")
     description = find_text(root, ".//appmsg/des") or find_text(root, ".//des")
     url = safe_url(find_text(root, ".//appmsg/url") or find_text(root, ".//url"))
     return title, description, ([{"label": "打开原内容", "url": url}] if url else [])
@@ -170,6 +193,8 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
 
     for index, item in enumerate(raw.get("messages", []), start=1):
         time_value = str(item.get("time", ""))
+        media_key = f"{time_value}#{item.get('local_id', '')}"
+        attachment = media_map.get(media_key, media_map.get(time_value, {}))
         if not time_value.startswith(f"{date} "):
             continue
         sender = str(item.get("sender") or "未知群友").strip()
@@ -188,6 +213,10 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
             unavailable_count += 1
         elif public_type == "text":
             text = original_content
+            for value in re.findall(r"https?://[^\s<>，。；]+", text):
+                url = safe_url(value.rstrip('）)、]'))
+                if url:
+                    links.append({"label": "打开分享链接", "url": url})
         elif public_type == "link":
             app_subtype = int(item.get("local_type") or 0) >> 32
             if is_unreadable(original_content):
@@ -195,21 +224,26 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                 unavailable_count += 1
             else:
                 title, description, links = parse_link(original_content)
-                attachment = media_map.get(time_value, {})
                 attachment_url = str(attachment.get("url") or "")
                 if attachment.get("kind") == "file" and attachment_url.startswith("./assets/"):
                     links = [{"label": str(attachment.get("label") or "下载文件"), "url": attachment_url}]
-                if app_subtype == 51 or "当前微信版本不支持展示该内容" in title:
+                if app_subtype in {2000, 2001}:
+                    public_type = "system"
+                    links = []
+                    text = "微信红包或转账消息，请在微信中查看；网页不提供领取或支付入口"
+                elif app_subtype == 51 or "当前微信版本不支持展示该内容" in title:
                     readable_title = "" if "当前微信版本不支持展示该内容" in title else f"：{title}"
                     text = f"视频号内容{readable_title}\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
                 elif app_subtype == 33 and not links:
                     text = f"小程序内容：{title}\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转"
                 elif app_subtype == 5 and not links:
                     text = f"公众号或网页内容：{title}\n原内容没有提供可公开访问的跳转链接"
-                elif app_subtype in {57, 62} and original_content.lstrip().startswith("[") and not links:
+                elif app_subtype in {57, 62} and not links:
                     # WeChat also stores some quoted/replied text as an app message.
                     public_type = "text"
                     text = title
+                elif app_subtype == 6 and not links:
+                    text = f"文件：{title}\n本机未保存该文件附件，当前无法下载"
                 else:
                     text = title if not description else f"{title}\n{description}"
                     if not links:
@@ -217,10 +251,9 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
         elif public_type == "system":
             text = parse_system(original_content)
         elif public_type == "contact":
-            attachment = media_map.get(time_value, {})
             text = str(attachment.get("text") or "微信名片无法从网页直接跳转，请在微信中查看")
-        elif public_type in {"image", "video", "voice", "sticker"} and time_value in media_map:
-            candidate = media_map[time_value]
+        elif public_type in {"image", "video", "voice", "sticker"} and attachment:
+            candidate = attachment
             media_url = str(candidate.get("url") or "")
             if media_url.startswith("./assets/"):
                 media = {
@@ -237,6 +270,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
             missing_media_count += 1
 
         text, was_redacted = redact(text)
+        was_redacted = was_redacted or bool(attachment.get("redacted"))
         cleaned_links = []
         for link in links:
             label, label_redacted = redact(link["label"])

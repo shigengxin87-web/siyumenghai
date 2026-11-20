@@ -1,0 +1,393 @@
+{
+  "version": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-29 09:21:47",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-29/image-001.jpg",
+        "alt": "杨光老师分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-29 09:22:41",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "腾讯牛逼啊，让workbuddy搞这一套，哈哈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-29 18:13:49",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "腾讯搞这些确实很擅长，哈哈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-29 18:13:56",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "消息miss了，才看到。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-29 18:15:14",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "今天腾讯还专门开了个线下大会",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-29 18:16:16",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-29/image-006.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-10-29 18:22:22",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "最近workbuddy动态会比较多，大家登陆workbuddy的时候，左下角一般会提升升级，升级完之后，建议点开导航栏把每一个板块都快速看一遍，有哪些功能是自己需要的。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-10-29 18:23:34",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我最初使用远程控制电脑的时候是用向日葵，后来用todesk，现在用uu远程。\n\n现在workbuddy内部增加了「手机远程控制电脑」的能力。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-10-29 18:24:00",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-29/image-009.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-10-29 18:36:42",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "————————\n\n今天是周四，AI主题。分享如下⬇️",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-10-29 18:36:53",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "1️⃣我把过去我做成的「视频号、抖音、小红书」解析的能力，全部做成了skill，除了我放到官网上之外，你们有需要在本地使用的或者想服务学员的，都可以直接用这套skill，开源给大家。\n\n抖音：https://my.feishu.cn/wiki/WyOMw7BCGiB0UFk4QppcVAeNnbb?from=from_copylink\n\n视频号：https://my.feishu.cn/wiki/Cd9hw5ZQ2iIt92kUKImcag44nyb?from=from_copylink\n\n小红书：https://my.feishu.cn/wiki/LZZhw0D48iP2EokiSqIcZXounpu?from=from_copylink",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/WyOMw7BCGiB0UFk4QppcVAeNnbb?from=from_copylink"
+        },
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/Cd9hw5ZQ2iIt92kUKImcag44nyb?from=from_copylink"
+        },
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/LZZhw0D48iP2EokiSqIcZXounpu?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-10-29 18:37:12",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "2️⃣ 最近我对常见的语音输入法做了调研，我发现目前支持「语音和文字转写存储到本地」的有三个，分别是「typelsee、chatterfly、闪电说」，其他的比如微信、豆包、千问、智谱这些还不支持。要这个功能干嘛用呢？核心两点，一个是几乎拥有你全部的语料，更懂你做什么，更懂你说话风格，另一个是大量的语音用来做声音克隆的话更像你。\n\n具体怎么操作我接下来单独写一篇教程，我是如何做的，用的什么工具、怎么训练的。发一小段音频可以先听听，我觉得还有优化空间，像是像，但是感觉还不够。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-10-29 18:37:22",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "3️⃣ 原本预计本周就把「石董会」小程序开通上「ai问答」类目，但是发现必须要「鲜章」，所以因为邮寄纸质合同耽搁了， 明天就可以拿到了，下周给大家详细写一个教程，关于如何建一个「智能体小程序的全流程」。（现在这个对于很多头部都是一个基础配置了，比如「刘思毅，亦仁、润宇、\n黄有璨、闪光少女斯斯等，其中斯斯可以说几乎是对标着润宇做的）",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m015",
+      "time": "2026-10-29 18:39:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "4️⃣ 「视频创作工作台」目前还在优化，遇到的卡点是，我可能一次性想做的功能太多了，想的太完美了，另外也遇到说，目前「chatcut」和「剪映」有很多功能都重叠了，是否有必要性。所以我需要再梳理一下。当然，需求越精准，也就会越清晰。所以也欢迎大家提应用场景。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m016",
+      "time": "2026-10-29 18:40:24",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "5bd417c4-057e-4ac3-950a-3ba756daf05c.wav",
+      "links": [
+        {
+          "label": "下载：5bd417c4-057e-4ac3-950a-3ba756daf05c.wav",
+          "url": "./assets/chat/2026-10-29/file-016.wav"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m017",
+      "time": "2026-10-29 18:43:14",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "这个效果是用的「免费」的方案，全程没有花一分钱。\n\n付费的我会优选推荐「豆包」和「minimax」。\n\n和知识库一样，音频的核心是为了让声音更像你。\n\n详细的，等后面我尽可能把细节都还原出来。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m018",
+      "time": "2026-10-29 18:47:10",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "——————",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m019",
+      "time": "2026-10-29 18:47:10",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "suno（国外）、melo（国内）、mureka（国内和国外都有）\n\n关于「AI音乐创作」，我不知道大家是否有兴趣，我先简单提几个创作工具，有需要的可以去玩玩。\n\n应用场景有：图书带货（用音乐来代替旁白）、情绪价值（比如给爱人给小孩写首歌）（比如给客户给朋友写首歌）、专业干货口播、或者vlog型口播音乐化（听的更有趣一些）",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m020",
+      "time": "2026-10-29 18:49:53",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "结束✔️\n\n有问题有需求的随时发消息。\n\n说的多，不一定每个都要去看去理解，更多是让大家看到你可能需要但是没想到的那个东西，然后我再协助你推进。\n\n比如小程序智能体问答这个反馈需求就比较多。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m021",
+      "time": "2026-10-29 19:01:35",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "国内的这些大模型哪个最好用呀",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m022",
+      "time": "2026-10-29 19:01:38",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-29/image-022.jpg",
+        "alt": "杨光老师分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m023",
+      "time": "2026-10-29 19:01:40",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-29/image-023.jpg",
+        "alt": "杨光老师分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m024",
+      "time": "2026-10-29 19:07:46",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "Deepseek（逻辑推理，代码）  Kimi（中文能力，前端设计）\n\nGLM也可以，但我现在很少用。\n\n欢迎其他朋友补充。\n\n这个是从workbuddy内置的模型来看的。\n\n\n另外就是要根据形态需求看\n\n文字 DeepSeek kimi glm\n\n图片 即梦\n\n视频 即梦 可灵 minimax\n\n音频 豆包 minimax",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m025",
+      "time": "2026-10-29 19:13:01",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "免费的有内置的hy3 hy4 ，日常使用这个就够了。\n\n有一定要求的时候或者要产出的形态模型不支持的时候，就添加自定义模型\n\n比如视频 音频",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m026",
+      "time": "2026-10-29 19:14:10",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "模型是一方面，另一方面是提示词和skill，比如里面的专家和skill，如果一个需求明确，且这个专家或者skill也做的很好，那么结果就会很好",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m027",
+      "time": "2026-10-29 19:15:04",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "尤其是专家，那个专家很多就相当于是智能问答，要看你给的提示词和对方的知识库质量以及这个问题是否符合这个专家范围",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m028",
+      "time": "2026-10-29 19:44:11",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我漏了阿里的，平时用阿里很少。\n\n文字 理解 千问\n\n视频 万相",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m029",
+      "time": "2026-10-29 20:07:31",
+      "sender": "大头",
+      "avatar": "./assets/members/sync-20261120-18.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "超棒，很有收获，最近让团队伙伴也在搭AI视频工作流",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m031",
+      "time": "2026-10-29 21:10:28",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "有啥问题咱们多交流",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

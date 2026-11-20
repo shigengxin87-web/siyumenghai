@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "date": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-06 18:44:06",
+      "sender": "英语韩老师【工作微信】",
+      "avatar": "./assets/members/sync-20261120-53.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "刚才石老师给我视频投了加热，一会就完事儿了但是涨了30个粉 我也跟着投了，钱没少花然后也没涨几个粉，果然专业就是专业[流泪][流泪][流泪]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-06 19:06:21",
+      "sender": "闻莉🧡私人形象设计",
+      "avatar": "./assets/members/sync-20261120-60.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "图片中的联系信息等隐私已遮挡",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-06/image-002.jpg",
+        "alt": "闻莉🧡私人形象设计分享的图片"
+      },
+      "redacted": true
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-06 19:06:28",
+      "sender": "闻莉🧡私人形象设计",
+      "avatar": "./assets/members/sync-20261120-60.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "石老师您好，想跟您咨询个问题：我这边花5000元投放腾讯广告，到现在大概投了10天，目前只拿到1条客资。想问问这个数据属于正常范围吗？\n另外运营跟我说，广告调优的过程会比较慢、比较煎熬，每天只能调整一个变量，再静待数据反馈，想确认下这个说法是合理的吗？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-11-06 19:06:54",
+      "sender": "闻莉🧡私人形象设计",
+      "avatar": "./assets/members/sync-20261120-60.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "我们有没有什么优化的方向呢？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-06 21:49:50",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "来啦，我来看看哈",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-06 21:51:03",
+      "sender": "姚继伟",
+      "avatar": "./assets/members/sync-20261120-19.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "退了吧",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-11-06 21:51:06",
+      "sender": "姚继伟",
+      "avatar": "./assets/members/sync-20261120-19.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "别浪费钱了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-11-06 21:53:34",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我结合私信的内容一起回复了哈 。\n\n我看你投的智能投放，你是用的微信豆投放平台，我是选择的那个上热门，那个上热门是一个助力，所以跑得快，它主要是浅层的，比如播放关注这些，你看看关注你的那些人点点头像看看准不准。\n\n你那条视频正常来说不需要上投放，我是属于助力，曝光多了一些，顺便增加了关注",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-11-06 21:54:04",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "+1",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-11-06 21:54:35",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "绝对不正常",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-11-06 21:55:28",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "先不说能不能变现，就这线索量就不对，咋也不能只有一条",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-11-06 21:56:31",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "你现在投投微信豆就可以",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m014",
+      "time": "2026-11-06 21:59:12",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我记得你现在有一个成熟编导对吧，你拍一些ip视频，挂个低价线索，或者用蓝v账号挂企业微信都行。\n\n都比这个合适",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m015",
+      "time": "2026-11-06 22:25:14",
+      "sender": "闻莉🧡私人形象设计",
+      "avatar": "./assets/members/sync-20261120-60.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "ok感谢回复[合十][合十]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m016",
+      "time": "2026-11-06 22:27:00",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "[爱心][爱心]你先合计合计，有啥问题再沟通",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m017",
+      "time": "2026-11-06 22:27:09",
+      "sender": "闻莉🧡私人形象设计",
+      "avatar": "./assets/members/sync-20261120-60.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[爱心][爱心][玫瑰]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m018",
+      "time": "2026-11-06 22:31:47",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "今天运营研究社的创始人小贤来杭州啦，晚上我们一起小聚了一下。\n\n三个人围绕业务 Ai Fde 等话题聊了很多，做了整理，分享给大家。\n\nhttps://my.feishu.cn/wiki/TNHqwW1Msi02atkjBhxcXvB8n3d",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/TNHqwW1Msi02atkjBhxcXvB8n3d"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m019",
+      "time": "2026-11-06 22:32:55",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "文档由我录音结束后，Ai自动开始执行工作流产出而来。我简单做了一下审核。\n\n我再把之前写过的教程和skill发一下，用起来[嘿哈]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m020",
+      "time": "2026-11-06 22:33:49",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "「用豆包工作把飞书录音」做成可以持续生产的内容\n\nhttps://my.feishu.cn/wiki/MPUTw7wVIiNG87ktyzCcM7SNngb",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/MPUTw7wVIiNG87ktyzCcM7SNngb"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m021",
+      "time": "2026-11-06 22:34:03",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "文件：妙记内容工坊-安装包.zip\n本机未保存该文件附件，当前无法下载",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m022",
+      "time": "2026-11-06 22:37:06",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-06/image-022.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m023",
+      "time": "2026-11-06 22:37:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-06/image-023.jpg",
+        "alt": "石更新（11.20-11.30闭关）分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m024",
+      "time": "2026-11-06 22:38:44",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我设置了一个自动触发，录音结束后，自动执行解析，然后生成整理文档",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m025",
+      "time": "2026-11-06 22:39:10",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "按照 方法论 案例 选题 金句等分类",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m026",
+      "time": "2026-11-06 22:40:41",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "延伸话题，为了提醒🔔让大家用上。\n\n核心还是上面今天私下交流的话题内容",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

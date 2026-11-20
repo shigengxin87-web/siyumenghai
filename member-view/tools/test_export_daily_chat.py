@@ -10,6 +10,43 @@ SPEC.loader.exec_module(EXPORTER)
 
 
 class ExportDailyChatTests(unittest.TestCase):
+    def test_red_packet_never_exports_claim_credentials(self):
+        xml = '<msg><appmsg><title>微信红包</title><url>https://wxapp.tenpay.com/mmpayhb/wxhb_personalreceive?sendid=private&amp;sign=secret</url></appmsg></msg>'
+        raw = {"messages": [{"time": "2026-11-20 09:00:00", "sender": "群友", "type": "链接/文件", "local_type": (2001 << 32) | 49, "content": xml}]}
+        payload, _ = EXPORTER.convert(raw, "2026-11-20", "石更新", {})
+        self.assertEqual([], payload["messages"][0]["links"])
+        self.assertNotIn("sendid", str(payload))
+        self.assertNotIn("secret", str(payload))
+        self.assertEqual("system", payload["messages"][0]["type"])
+
+    def test_two_images_in_one_second_keep_distinct_media(self):
+        time = "2026-11-20 09:00:00"
+        raw = {"messages": [{"local_id": i, "time": time, "sender": "群友", "type": "图片"} for i in [1, 2]]}
+        media = {f"{time}#{i}": {"url": f"./assets/chat/2026-11-20/{i}.jpg"} for i in [1, 2]}
+        payload, _ = EXPORTER.convert(raw, "2026-11-20", "石更新", {}, media)
+        self.assertNotEqual(payload["messages"][0]["media"]["url"], payload["messages"][1]["media"]["url"])
+
+    def test_public_numeric_url_is_not_mistaken_for_bank_card(self):
+        url = "https://x.com/example/status/2122123456789012345"
+        text, changed = EXPORTER.redact(url)
+        self.assertEqual(url, text)
+        self.assertFalse(changed)
+
+    def test_raw_xml_reply_is_plain_text(self):
+        raw = {"messages": [{"time": "2026-11-20 09:00:00", "sender": "群友", "type": "链接/文件", "local_type": (57 << 32) | 49, "content": "<msg><appmsg><title>这是回复正文</title></appmsg></msg>"}]}
+        payload, report = EXPORTER.convert(raw, "2026-11-20", "石更新", {})
+        self.assertEqual("text", payload["messages"][0]["type"])
+        self.assertEqual("这是回复正文", payload["messages"][0]["text"])
+        self.assertEqual(0, report["unresolvedLinkCount"])
+
+    def test_local_preview_and_inline_path_are_redacted(self):
+        text, changed = EXPORTER.redact("HTML版：http://127.0.0.1:61679/preview.html 路径 /Users/example/private.txt")
+        self.assertTrue(changed)
+        self.assertNotIn("127.0.0.1", text)
+        self.assertNotIn("/Users/", text)
+        self.assertIsNone(EXPORTER.safe_url("http://192.168.1.2/file"))
+        self.assertIsNone(EXPORTER.safe_url("http://localhost/file"))
+
     def test_resolves_historical_prefixed_member_name(self):
         avatars = {"初阳": "./assets/members/member-43.jpg"}
         self.assertEqual(

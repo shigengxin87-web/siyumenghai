@@ -1,251 +1,327 @@
 {
   "group": "【石董会】一同成长朋友圈",
-  "count": 61,
-  "updatedAt": "2026-11-10T12:08:29.319Z",
+  "count": 64,
+  "updatedAt": "2026-11-20T22:03:33+08:00",
   "members": [
     {
-      "name": "石更新（23:00睡觉）",
-      "avatar": "./assets/members/member-01.jpg?v=20260917192332"
-    },
-    {
-      "name": "昶",
-      "avatar": "./assets/members/member-02.jpg?v=20260917192332"
-    },
-    {
-      "name": "英语韩老师【工作微信】",
-      "avatar": "./assets/members/member-03.jpg?v=20260917192332"
-    },
-    {
-      "name": "Walter He",
-      "avatar": "./assets/members/member-04.jpg?v=20260917192332"
-    },
-    {
-      "name": "一月语文",
-      "avatar": "./assets/members/member-05.jpg?v=20260917192332"
-    },
-    {
-      "name": "Allen@群响",
-      "avatar": "./assets/members/member-06.jpg?v=20260917192332"
-    },
-    {
-      "name": "白玉媛·o.",
-      "avatar": "./assets/members/member-07.jpg?v=20260917192332"
-    },
-    {
-      "name": "李鑫",
-      "avatar": "./assets/members/member-08.jpg?v=20260917192332"
-    },
-    {
-      "name": "康老师本人",
-      "avatar": "./assets/members/member-09.jpg?v=20260917192332"
-    },
-    {
-      "name": "梦一世-王sir",
-      "avatar": "./assets/members/member-10.jpg?v=20260917192332"
-    },
-    {
-      "name": "李守洲（11.27成都线下",
-      "avatar": "./assets/members/member-11.jpg?v=20260917192332"
-    },
-    {
-      "name": "黄子妈",
-      "avatar": "./assets/members/member-12.jpg?v=20260917192332"
-    },
-    {
-      "name": "付展鹏",
-      "avatar": "./assets/members/member-13.jpg?v=20260917192332"
-    },
-    {
-      "name": "大头",
-      "avatar": "./assets/members/member-14.jpg?v=20260917192332"
-    },
-    {
-      "name": "辰犀",
-      "avatar": "./assets/members/member-15.jpg?v=20260917192332"
-    },
-    {
-      "name": "Joey乔伊",
-      "avatar": "./assets/members/member-16.jpg?v=20260917192332"
-    },
-    {
-      "name": "姚继伟",
-      "avatar": "./assets/members/member-17.jpg?v=20260917192332"
-    },
-    {
-      "name": "余生姜｜AI落地",
-      "avatar": "./assets/members/member-18.jpg?v=20260917192332"
-    },
-    {
-      "name": "代向前",
-      "avatar": "./assets/members/member-19.jpg?v=20260917192332"
-    },
-    {
-      "name": "Robin 邵震",
-      "avatar": "./assets/members/member-20.jpg?v=20260917192332"
-    },
-    {
-      "name": "聪哥（IP线下课操盘）",
-      "avatar": "./assets/members/member-21.jpg?v=20260917192332"
-    },
-    {
-      "name": "小恒先生",
-      "avatar": "./assets/members/member-22.jpg?v=20260917192332"
-    },
-    {
-      "name": "寒色渐远",
-      "avatar": "./assets/members/member-23.jpg?v=20260917192332"
-    },
-    {
-      "name": "Soldier",
-      "avatar": "./assets/members/member-24.jpg?v=20260917192332"
-    },
-    {
-      "name": "Howie",
-      "avatar": "./assets/members/member-25.jpg?v=20260917192332"
-    },
-    {
-      "name": "溪子",
-      "avatar": "./assets/members/member-26.jpg?v=20260917192332"
-    },
-    {
-      "name": "反正是我",
-      "avatar": "./assets/members/member-27.jpg?v=20260917192332"
-    },
-    {
-      "name": "阳光的快乐生活",
-      "avatar": "./assets/members/member-28.jpg?v=20260917192332"
-    },
-    {
-      "name": "青枫",
-      "avatar": "./assets/members/member-29.jpg?v=20260917192332"
-    },
-    {
-      "name": "宋海滨",
-      "avatar": "./assets/members/member-30.jpg?v=20260917192332"
-    },
-    {
-      "name": "Yao",
-      "avatar": "./assets/members/member-31.jpg?v=20260917192332"
-    },
-    {
-      "name": "胡天真（11 月 13 日线下课）",
-      "avatar": "./assets/members/member-32.jpg?v=20260917192332"
-    },
-    {
-      "name": "Jessie Zhou 卷王留学中介",
-      "avatar": "./assets/members/member-33.jpg?v=20260917192332"
-    },
-    {
-      "name": "纪逐星💓Iris",
-      "avatar": "./assets/members/member-34.jpg?v=20260917192332"
-    },
-    {
-      "name": "王自在(天堂地狱私人号)",
-      "avatar": "./assets/members/member-35.jpg?v=20260917192332"
-    },
-    {
-      "name": "林芳芳＃小怪瘦Leen~",
-      "avatar": "./assets/members/member-36.jpg?v=20260917192332"
-    },
-    {
-      "name": "大眼睛马向文",
-      "avatar": "./assets/members/member-37.jpg?v=20260917192332"
-    },
-    {
-      "name": "王娘娘!中考语文确定性提分",
-      "avatar": "./assets/members/member-38.jpg?v=20260917192332"
-    },
-    {
-      "name": "小乐、David",
-      "avatar": "./assets/members/member-39.jpg?v=20260917192332"
-    },
-    {
-      "name": "沈默",
-      "avatar": "./assets/members/member-40.jpg?v=20260917192332"
-    },
-    {
-      "name": "passion",
-      "avatar": "./assets/members/member-41.jpg?v=20260917192332"
-    },
-    {
-      "name": "Betty",
-      "avatar": "./assets/members/member-42.jpg?v=20260917192332"
-    },
-    {
-      "name": "初阳",
-      "avatar": "./assets/members/member-43.jpg?v=20260917192332"
-    },
-    {
-      "name": "三江尚德易学培训-张程",
-      "avatar": "./assets/members/member-44.jpg?v=20260917192332"
-    },
-    {
-      "name": "净远",
-      "avatar": "./assets/members/member-45.jpg?v=20260917192332"
-    },
-    {
-      "name": "越来越好",
-      "avatar": "./assets/members/member-46.jpg?v=20260917192332"
-    },
-    {
-      "name": "百合",
-      "avatar": "./assets/members/member-47.jpg?v=20260917192332"
-    },
-    {
-      "name": "丸子",
-      "avatar": "./assets/members/member-48.jpg?v=20260917192332"
-    },
-    {
-      "name": "依灵-易学世家传承人",
-      "avatar": "./assets/members/member-49.jpg?v=20260917192332"
-    },
-    {
-      "name": "A梦 (知牧)",
-      "avatar": "./assets/members/member-50.jpg?v=20260917192332"
-    },
-    {
-      "name": "楚川",
-      "avatar": "./assets/members/member-51.jpg?v=20260917192332"
-    },
-    {
-      "name": "张斌",
-      "avatar": "./assets/members/member-52.jpg?v=20260917192332"
-    },
-    {
-      "name": "子非鱼",
-      "avatar": "./assets/members/member-53.jpg?v=20260917192332"
-    },
-    {
-      "name": "扶光",
-      "avatar": "./assets/members/member-54.jpg?v=20260917192332"
-    },
-    {
-      "name": "蒋梦涵",
-      "avatar": "./assets/members/member-55.jpg?v=20260917192332"
-    },
-    {
-      "name": "望晴",
-      "avatar": "./assets/members/member-56.jpg?v=20260917192332"
-    },
-    {
-      "name": "飞儿",
-      "avatar": "./assets/members/member-57.jpg?v=20260921220739"
-    },
-    {
-      "name": "范伟峰",
-      "avatar": "./assets/members/member-58.jpg"
-    },
-    {
-      "name": "闻莉🧡私人形象设计",
-      "avatar": "./assets/members/member-59.jpg"
-    },
-    {
-      "name": "昀",
-      "avatar": "./assets/members/member-60.jpg"
+      "name": "石更新（11.20-11.30闭关）",
+      "order": 1,
+      "avatar": "./assets/members/sync-20261120-01.jpg"
     },
     {
       "name": "AMY 宋【定制旅行&团建会议】",
-      "avatar": "./assets/members/member-61.jpg"
+      "order": 2,
+      "avatar": "./assets/members/sync-20261120-02.jpg"
+    },
+    {
+      "name": "Allen@群响",
+      "order": 3,
+      "avatar": "./assets/members/sync-20261120-03.jpg"
+    },
+    {
+      "name": "Howie 陈科豪",
+      "order": 4,
+      "avatar": "./assets/members/sync-20261120-04.jpg"
+    },
+    {
+      "name": "Joey乔伊",
+      "order": 5,
+      "avatar": "./assets/members/sync-20261120-05.jpg"
+    },
+    {
+      "name": "Sean@iPlayABC 于海淼",
+      "order": 6,
+      "avatar": "./assets/members/sync-20261120-06.jpg"
+    },
+    {
+      "name": "一月语文",
+      "order": 7,
+      "avatar": "./assets/members/sync-20261120-07.jpg"
+    },
+    {
+      "name": "三江尚德易学培训-张程",
+      "order": 8,
+      "avatar": "./assets/members/sync-20261120-08.jpg"
+    },
+    {
+      "name": "付展鹏",
+      "order": 9,
+      "avatar": "./assets/members/sync-20261120-09.jpg"
+    },
+    {
+      "name": "代向前",
+      "order": 10,
+      "avatar": "./assets/members/sync-20261120-10.jpg"
+    },
+    {
+      "name": "何杰",
+      "order": 11,
+      "avatar": "./assets/members/sync-20261120-11.jpg"
+    },
+    {
+      "name": "余生姜｜AI落地",
+      "order": 12,
+      "avatar": "./assets/members/sync-20261120-12.jpg"
+    },
+    {
+      "name": "依灵-易学世家传承人",
+      "order": 13,
+      "avatar": "./assets/members/sync-20261120-13.jpg"
+    },
+    {
+      "name": "冯诗童 coco",
+      "order": 14,
+      "avatar": "./assets/members/sync-20261120-14.jpg"
+    },
+    {
+      "name": "北京-自媒体-王昀",
+      "order": 15,
+      "avatar": "./assets/members/sync-20261120-15.jpg"
+    },
+    {
+      "name": "卡车之家Robin 邵震",
+      "order": 16,
+      "avatar": "./assets/members/sync-20261120-16.jpg"
+    },
+    {
+      "name": "同仁-西安梁老师团队-望晴",
+      "order": 17,
+      "avatar": "./assets/members/sync-20261120-17.jpg"
+    },
+    {
+      "name": "大头",
+      "order": 18,
+      "avatar": "./assets/members/sync-20261120-18.jpg"
+    },
+    {
+      "name": "姚继伟",
+      "order": 19,
+      "avatar": "./assets/members/sync-20261120-19.jpg"
+    },
+    {
+      "name": "子非鱼",
+      "order": 20,
+      "avatar": "./assets/members/sync-20261120-20.jpg"
+    },
+    {
+      "name": "寒色渐远",
+      "order": 21,
+      "avatar": "./assets/members/sync-20261120-21.jpg"
+    },
+    {
+      "name": "小恒先生",
+      "order": 22,
+      "avatar": "./assets/members/sync-20261120-22.jpg"
+    },
+    {
+      "name": "小鹅通净远",
+      "order": 23,
+      "avatar": "./assets/members/sync-20261120-23.jpg"
+    },
+    {
+      "name": "康老师本人",
+      "order": 24,
+      "avatar": "./assets/members/sync-20261120-24.jpg"
+    },
+    {
+      "name": "弗蕾娅",
+      "order": 25,
+      "avatar": "./assets/members/sync-20261120-25.jpg"
+    },
+    {
+      "name": "张斌",
+      "order": 26,
+      "avatar": "./assets/members/sync-20261120-26.jpg"
+    },
+    {
+      "name": "张聪（IP线下课变现操盘）",
+      "order": 27,
+      "avatar": "./assets/members/sync-20261120-27.jpg"
+    },
+    {
+      "name": "张雨晴疗愈",
+      "order": 28,
+      "avatar": "./assets/members/sync-20261120-28.jpg"
+    },
+    {
+      "name": "录播服务商姚魁",
+      "order": 29,
+      "avatar": "./assets/members/sync-20261120-29.jpg"
+    },
+    {
+      "name": "忠仁",
+      "order": 30,
+      "avatar": "./assets/members/sync-20261120-30.jpg"
+    },
+    {
+      "name": "最懂脉法的药师",
+      "order": 31,
+      "avatar": "./assets/members/sync-20261120-31.jpg"
+    },
+    {
+      "name": "李鑫",
+      "order": 32,
+      "avatar": "./assets/members/sync-20261120-32.jpg"
+    },
+    {
+      "name": "杨光老师",
+      "order": 33,
+      "avatar": "./assets/members/sync-20261120-33.jpg"
+    },
+    {
+      "name": "杨玲",
+      "order": 34,
+      "avatar": "./assets/members/sync-20261120-34.svg"
+    },
+    {
+      "name": "梦一世-王sir",
+      "order": 35,
+      "avatar": "./assets/members/sync-20261120-35.svg"
+    },
+    {
+      "name": "溪子",
+      "order": 36,
+      "avatar": "./assets/members/sync-20261120-36.jpg"
+    },
+    {
+      "name": "生财-王自在(天堂地狱私人号)",
+      "order": 37,
+      "avatar": "./assets/members/sync-20261120-37.jpg"
+    },
+    {
+      "name": "生财-百合",
+      "order": 38,
+      "avatar": "./assets/members/sync-20261120-38.jpg"
+    },
+    {
+      "name": "生财A梦 (知牧)",
+      "order": 39,
+      "avatar": "./assets/members/sync-20261120-39.jpg"
+    },
+    {
+      "name": "生财Jessie Zhou 卷王",
+      "order": 40,
+      "avatar": "./assets/members/sync-20261120-40.jpg"
+    },
+    {
+      "name": "生财初阳AI",
+      "order": 41,
+      "avatar": "./assets/members/sync-20261120-41.jpg"
+    },
+    {
+      "name": "生财小乐、David",
+      "order": 42,
+      "avatar": "./assets/members/sync-20261120-42.jpg"
+    },
+    {
+      "name": "生财林芳芳＃小怪瘦Leen~",
+      "order": 43,
+      "avatar": "./assets/members/sync-20261120-43.jpg"
+    },
+    {
+      "name": "生财楚川",
+      "order": 44,
+      "avatar": "./assets/members/sync-20261120-44.jpg"
+    },
+    {
+      "name": "生财王娘娘!",
+      "order": 45,
+      "avatar": "./assets/members/sync-20261120-45.jpg"
+    },
+    {
+      "name": "生财纪逐星💓Iris",
+      "order": 46,
+      "avatar": "./assets/members/sync-20261120-46.jpg"
+    },
+    {
+      "name": "白玉媛·o.",
+      "order": 47,
+      "avatar": "./assets/members/sync-20261120-47.jpg"
+    },
+    {
+      "name": "石董会-扶光",
+      "order": 48,
+      "avatar": "./assets/members/sync-20261120-48.jpg"
+    },
+    {
+      "name": "石董会-李守洲",
+      "order": 49,
+      "avatar": "./assets/members/sync-20261120-49.jpg"
+    },
+    {
+      "name": "石董会-胡天真（10月 10日线下课）",
+      "order": 50,
+      "avatar": "./assets/members/sync-20261120-50.jpg"
+    },
+    {
+      "name": "石董会-黄子妈",
+      "order": 51,
+      "avatar": "./assets/members/sync-20261120-51.jpg"
+    },
+    {
+      "name": "考拉丸子",
+      "order": 52,
+      "avatar": "./assets/members/sync-20261120-52.jpg"
+    },
+    {
+      "name": "英语韩老师【工作微信】",
+      "order": 53,
+      "avatar": "./assets/members/sync-20261120-53.jpg"
+    },
+    {
+      "name": "荣耀元",
+      "order": 54,
+      "avatar": "./assets/members/sync-20261120-54.jpg"
+    },
+    {
+      "name": "越来越好",
+      "order": 55,
+      "avatar": "./assets/members/sync-20261120-55.jpg"
+    },
+    {
+      "name": "跟谁学宋海滨",
+      "order": 56,
+      "avatar": "./assets/members/sync-20261120-56.jpg"
+    },
+    {
+      "name": "跟谁学范伟峰",
+      "order": 57,
+      "avatar": "./assets/members/sync-20261120-57.jpg"
+    },
+    {
+      "name": "跟谁学蒋梦涵",
+      "order": 58,
+      "avatar": "./assets/members/sync-20261120-58.jpg"
+    },
+    {
+      "name": "辰犀",
+      "order": 59,
+      "avatar": "./assets/members/sync-20261120-59.jpg"
+    },
+    {
+      "name": "闻莉🧡私人形象设计",
+      "order": 60,
+      "avatar": "./assets/members/sync-20261120-60.jpg"
+    },
+    {
+      "name": "青枫刘大同",
+      "order": 61,
+      "avatar": "./assets/members/sync-20261120-61.jpg"
+    },
+    {
+      "name": "飞儿（本人）",
+      "order": 62,
+      "avatar": "./assets/members/sync-20261120-62.jpg"
+    },
+    {
+      "name": "马向文",
+      "order": 63,
+      "avatar": "./assets/members/sync-20261120-63.jpg"
+    },
+    {
+      "name": "黄昶",
+      "order": 64,
+      "avatar": "./assets/members/sync-20261120-64.jpg"
     }
   ]
 }

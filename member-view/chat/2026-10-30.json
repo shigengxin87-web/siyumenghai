@@ -1,0 +1,510 @@
+{
+  "version": 1,
+  "date": "2026-10-30",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-30 06:25:06",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[强][强][强]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-30 10:04:52",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-30 10:06:29",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "腾讯汤道生：以开放生态，打造全场景Agent生产力系统",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MjM5MDgwMzc4MA==&mid=2654909800&idx=1&sn=dbe72d696f08f8321116f518ed4a5759&chksm=bcc388e2f716549d9a78b6b0b841b3d3e308dcf386b374f3f714e0ceca85eefb3ddeb4445b52&mpshare=1&scene=1&srcid=1030U51QCxenCGmWGlPMMKpq&sharer_shareinfo=fcdda8cf74206e86956cfb40003258d3&sharer_shareinfo_first=fcdda8cf74206e86956cfb40003258d3#rd"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-30 10:09:48",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我看好几个群都在讨论和转发关于这场大会的图片，但愣是只有一个群有转发直播间，因为这个群的几个朋友去现场看了，所以我看这个也是一个信息差。\n\n转发出来，大家空了或者有感兴趣的可以看看，公众号也有重点总结。\n\n了解一下workbuddy的生态发展还是有必要的，很多人都在说判断workbuddy是qq 微信 之后的第三个时代产品，目前来看也很有机会是这样的。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-30 10:10:31",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"杨光老师\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-10-30 10:10:32",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"同仁-西安梁老师团队-望晴\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-10-30 10:23:45",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我之前强调说 ai agent三件套。\n\nCodex workbuddy 豆包工作\n\nCodex你可以不用，可以用不上，毕竟涉及到外网还是有一定难度的(需要用的跟我说，一个月前写过详细教程)\n\n豆包工作也可以不用，毕竟飞书还是有很多人没在用\n\n但是workbuddy 不得不用，目前来看，没有谁能彻底脱离腾讯家的任何一个产品，微信就离不开，做私域的基本又离不开企业微信，所以当面对眼花缭乱的Ai工具选择的时候，那就只有一个选择。\n\n把workbudddy用透。\n\n熟悉workbuddy 就像熟悉自己家一样，把每一个角落都逛一逛，闭上眼睛脑子里还能浮现出每个界面，每个导航栏有什么功能，直到这种程度。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-10-30 10:53:34",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "workbuddy确实太好用了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-10-30 10:54:38",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "有基础疾病的 尤其是慢性病的 比如我   非常好用  太他妈好用了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-10-30 10:54:47",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-30/image-011.jpg",
+        "alt": "代向前分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-10-30 10:54:52",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "要是它那个技能、有个什么排行榜能减少选择困难就好了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-10-30 10:55:22",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[强][强][强]，哈哈，我现在也是，每餐吃啥都要问 AI",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m014",
+      "time": "2026-10-30 10:56:01",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "让我想到一个广告语\n\n好吃就多吃点[憨笑]\n\n好用就多用点",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m015",
+      "time": "2026-10-30 10:56:22",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "吃饭 运动 体重  吃药  血糖检测  睡眠  等等    喂给它  有规划有建议",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m016",
+      "time": "2026-10-30 10:56:37",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "最近我用workbuddy的时间和次数比codex和豆包工作少了，不行，我接下来得调整一下[破涕为笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m017",
+      "time": "2026-10-30 10:57:04",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-10-30/image-017.jpg",
+        "alt": "杨光老师分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m018",
+      "time": "2026-10-30 10:58:26",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "排行榜的话大概率得用安装量或者访问量来看，代表着一定的好用，但是有些好用的可能推广不高，也就排在后面了，他们做不到深度测评基于能力给出排行榜",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m019",
+      "time": "2026-10-30 10:58:58",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "现在比较缺的是 workbuddy 里面专家、技能、连接器，这几个里面东西太多了，全看一遍都花了好长时间，而且同一个东西，比如昨天搜小红书里的一个东西，搜完以后有七八个，大家能介绍一下你们都用的啥吗？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m020",
+      "time": "2026-10-30 10:59:29",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "而且后面推广和鼓励更多人自行上传技能和专家的话，估计鱼龙混杂就太多了。这一个个的试和体验就太费时间了，这点不太好",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m021",
+      "time": "2026-10-30 10:59:34",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "这个确实挺牛的，上手难度有点高",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m022",
+      "time": "2026-10-30 10:59:46",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "你看  你被限制了吧   你直接问 workbuddy  你的需求是什么 推荐最好用的 专家 技能 连接器",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m023",
+      "time": "2026-10-30 11:00:43",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "你知道自己有啥需求，还好办，迟早能问出来，迟早能找到合适的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m024",
+      "time": "2026-10-30 11:01:32",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "但是很多时候，你不知道自己有啥需求，想不到",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m025",
+      "time": "2026-10-30 11:02:26",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "这个不是ai的问题  你不知道自己啥需求 也可以跟ai聊 让它给你梳理",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m026",
+      "time": "2026-10-30 11:02:26",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "像是 workbuddy，上个月我就看群里更新老提这个",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m027",
+      "time": "2026-10-30 11:02:38",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "下下来玩了玩",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m028",
+      "time": "2026-10-30 11:03:12",
+      "sender": "代向前",
+      "avatar": "./assets/members/sync-20261120-10.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "我已经花了1000多块了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m029",
+      "time": "2026-10-30 11:04:10",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "大家有啥觉得好用的技能专家还有连接器可以分享分享",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m030",
+      "time": "2026-10-30 11:06:55",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "其实你也可以默认没有额外的需求，因为暂时想不出来的大概率就是没有太影响你，因为影响你了需求也就出来了\n\n\n所以这个你也可以交给时间，慢慢来，不用着急。\n\n先把你明确知道的需求先解决了，在这个过程中自然而然也就会迸发出新的需求。\n\n比如你现在的管理决策需求，你的内容获客需求，你的运营策略需求，你的个人家庭生活需求，先解决一部分明确的需求",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m031",
+      "time": "2026-10-30 11:07:35",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[强][强]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m032",
+      "time": "2026-10-30 11:07:58",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "Buddy One正式上线，腾讯要用WorkBuddy打通自己的全家桶了。\n打通微信的Agent你怕不怕",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA==&mid=2647687932&idx=1&sn=771f8b464f04c1f297e5624a600c7933&chksm=f1803011fc409c5a44ab255a9d4b703ee053b6be1a7745b67509976e016018cf4bb277ef2450&mpshare=1&scene=1&srcid=1029F2OkUL02zGiphYRTFX8e&sharer_shareinfo=378e5f24b7793b6ab99630ca8bb11e61&sharer_shareinfo_first=378e5f24b7793b6ab99630ca8bb11e61#rd"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m033",
+      "time": "2026-10-30 11:08:02",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "那用量还蛮大的\n\n你可以关注下那个buddy one",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m034",
+      "time": "2026-10-30 11:10:53",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "一定要推荐的有两个\n\n一个是 卡兹克的，他是被邀请进去的，他的内容也都很好，所以他的那个专家可以用\n\n另一个是零一出品的，在左上角那有一个应用，里面有一个 哪吒",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m035",
+      "time": "2026-10-30 11:12:09",
+      "sender": "杨光老师",
+      "avatar": "./assets/members/sync-20261120-33.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "好的，下下来试试",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m036",
+      "time": "2026-10-30 11:13:49",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "两个思路\n1 在视频号 b站 小红书 抖音上定向搜索workbuddy，专注内容讲workbuddy 的，要么会推荐，要么他自己有些东西会上传到上面\n\n2 就是根据需求在里面搜，然后同时打开多个类似的 发送同一个任务指令，走一两轮，看谁输出的更符合你的需求",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m037",
+      "time": "2026-10-30 11:14:41",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "有条件的，建议多关注下X (推特)\n\nx 上面有很多玩ai的，很多人把那个当作朋友圈发，但都是高质量的信息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m038",
+      "time": "2026-10-30 11:17:56",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "比如我在七月底的时候，那会大家对于读取微信聊天记录，还在用比较受限的skill，但是我在x上就看到了一个能力更强且不限制微信版本的skill，所以直到现在，很多用那个yichen 开头的读取微信聊天记录的skill，基本都是从我这里得到的分享",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m039",
+      "time": "2026-10-30 11:19:30",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "https://my.feishu.cn/wiki/YtmlwH4FdiWEZfkuM9HccHHpnvc",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/YtmlwH4FdiWEZfkuM9HccHHpnvc"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m040",
+      "time": "2026-10-30 11:20:21",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "还没有装这个skill的可以装下，直接读取到微信里 私信 群聊 朋友圈 收藏这几个板块信息",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m041",
+      "time": "2026-10-30 11:21:26",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "群聊的聊天记录\n石更新（23:00睡觉）: [图片]\n石更新（23:00睡觉）: [图片]\n石更新（23:00睡觉）: [图片]\n石更新（23:00睡觉）: 刚才让 AI 把我的微信收藏整理了一下，然后存档到 Obsidian 里面了\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "date": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-10-23 14:40:06",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/minutes/obcn1s6m89636f6hez926uq7?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-10-23 14:40:15",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "https://my.feishu.cn/wiki/CGEVwfXZVipMtikSqgGcgJc1nKb",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/CGEVwfXZVipMtikSqgGcgJc1nKb"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-10-23 14:41:19",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "增长和业务模式目前有遇到瓶颈或者要调整的，可以看下这两篇老内容。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-10-23 14:44:03",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "自媒体获客很好，但不代表只有自媒体获客。\n\n低转高很好，但不代表没有其他的合适方式。\n\n这两句是这两天接受问题的体感，一个是咱们社群伙伴问到的，一个是一个行业头部IP咨询问到的。\n\n都是真实问题真实反馈，所以也强烈建议，没事的时候可以翻一翻我过往发的内容，去看看哪个符合你当下的困惑和思考",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-10-23 15:16:37",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[666]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-10-23 15:23:31",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"生财初阳AI\" 的头像",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-10-23 17:02:31",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"一月语文\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

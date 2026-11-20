@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "date": "2026-11-02",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-02 17:24:52",
+      "sender": "张雨晴疗愈",
+      "avatar": "./assets/members/sync-20261120-28.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "这个skill windows系统有类似的吗？",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-02 17:26:20",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "你装下这个试试",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-02 17:26:29",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "wechat-windows-vault-share-v0.4.0(4).zip",
+      "links": [
+        {
+          "label": "下载：wechat-windows-vault-share-v0.4.0(4).zip",
+          "url": "./assets/chat/2026-11-02/file-003.zip"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-11-02 17:26:34",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "这是windows版本",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-02 17:27:21",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "如果中间出现不适配问题，你就告诉你的ai，自行解决，目的就是要实现读取微信的聊天记录",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-02 20:08:53",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "每周一刻 今日一刻\n\n讲一下我最近是怎么开始读书的。\n\n两个月前我刷到一篇公众号文章，作者是做线下教培的。我觉得内容写得不错，文末刚好有一个共读打卡活动，我就加了他微信私信联系。\n\n9 月份我跟着他打卡学习了梁宁老师的《真需求》。\n\n后来他又邀请我加入长期的年度共读营，营里的第一本书就是《人性的弱点》。\n\n虽然我不知道接下来的书单是什么，但就前面这两本书来说，确确实实都是我这些年一直听说、却从没翻开看过的。\n\n认识他之后我确实读完了两本书，觉得这点还挺好的。所以我有时非常喜欢公域结合我的喜好给我推荐一些作者和 IP。\n\n今天我把上次读书的内容分享给大家。\n\nhttps://my.feishu.cn/docx/FyqudjFAboJLgtxCECScsT22nJg",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/docx/FyqudjFAboJLgtxCECScsT22nJg"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-11-02 20:30:26",
+      "sender": "张聪（IP线下课变现操盘）",
+      "avatar": "./assets/members/sync-20261120-27.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "[强][强][强]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-11-02 21:53:12",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"张聪（IP线下课变现操盘）\" IP线下课变现专家[庆祝]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

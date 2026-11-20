@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "date": "2026-11-03",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-03 14:23:12",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "大家谁有视频号小二的联系方式呀",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-03 14:25:34",
+      "sender": "考拉丸子",
+      "avatar": "./assets/members/sync-20261120-52.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "想问个问题，视频号对外籍友人的实名认证跟内容会不会审核更严格啊[破涕为笑]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-03 14:26:04",
+      "sender": "考拉丸子",
+      "avatar": "./assets/members/sync-20261120-52.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "没做过外籍友人（美国籍）的业务[捂脸]",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-11-03 15:46:41",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "遇到什么问题了呢，视频号没有小二",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-03 15:48:59",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "内容审核貌似一样，不能区别对待\n\n实名认证会严格一些。\n\n官方有说明过外国人注册账号的条件，需要护照",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-03 15:49:35",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "视频号还有一个肖像授权功能，不知道外国人能不能走这条路",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-11-03 15:49:35",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "image",
+      "text": "",
+      "links": [],
+      "media": {
+        "kind": "image",
+        "url": "./assets/chat/2026-11-03/image-007.jpg",
+        "alt": "冯诗童 coco分享的图片"
+      },
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-11-03 15:49:59",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "账号被封了一个月[流泪]申诉无效",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-11-03 15:54:02",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "和WorkBuddy的对话: 外国人申请视频号并认证\n腾讯WorkBuddy\n原内容没有可公开访问的跳转链接",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-11-03 15:54:02",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "你看看这个 @丸子",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-11-03 15:54:42",
+      "sender": "考拉丸子",
+      "avatar": "./assets/members/sync-20261120-52.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "好的[偷笑]，我刚刚也问了一下AI",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-11-03 15:54:53",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "只能等，和重新建号。\n\n据说最近旅游行业的违规率比较高，前几天恰好有一个旅游行业的朋友咨询时提到来着，她也经常遇到这个问题",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-11-03 15:55:10",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "👌",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "date": "2026-11-05",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-05 19:28:07",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "今天，我申请的微信小程序 ai 类目终于下来了！卡住了半个月。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-05 19:28:12",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "上个月我发出来小程序的时候，有几位朋友我看也想搞一个小程序，然后我写了一份文档。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-05 19:28:20",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "https://my.feishu.cn/wiki/Cjcaw9j3IiBpMPkC9R1cbQEvnnc?from=from_copylink",
+      "links": [
+        {
+          "label": "打开分享链接",
+          "url": "https://my.feishu.cn/wiki/Cjcaw9j3IiBpMPkC9R1cbQEvnnc?from=from_copylink"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m004",
+      "time": "2026-11-05 19:28:27",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我在写这个的时候，我想把教程步骤还原，想把我踩的坑还原，但是我觉得吧，没有啥用！\n\n里面的第一章，有必要看看，因为这个决定了你是不是真的需要做一个智能问答小程序。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-05 19:28:31",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "其次就是，别的可看可不看，多看肯定多一些信息，少看也没有啥事，因为当你确定要做问答小程序的时候，我可以协助你把这条路跑通。具体需要啥材料资质，啥流程，我都会单独和你说。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-05 19:28:33",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "咱们社群的朋友有需要的跟我说，毕竟我已经跑过一遍了，多少还是有点经验。",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-11-05 22:49:38",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"大头\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-11-05 22:49:41",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"生财初阳AI\" 的头像",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-11-05 22:57:31",
+      "sender": "未知群友",
+      "avatar": "",
+      "side": "left",
+      "type": "text",
+      "text": "\"北京-自媒体-王昀\" 拍了拍 \"石更新（23:00睡觉）\"",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "date": "2026-11-10",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-10 08:15:06",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "对 我以前也刷到过，她那个也挺有意思的，不过她那个我记得更多是段子娱乐性质，克克这种以营销为目的，给的还不那么反感",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-10 08:17:18",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "天选ip",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m003",
+      "time": "2026-11-10 11:47:57",
+      "sender": "考拉丸子",
+      "avatar": "./assets/members/sync-20261120-52.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "你这个质量也太高了吧[强][强][强]，我将逐帧学习",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m005",
+      "time": "2026-11-10 11:58:14",
+      "sender": "生财初阳AI",
+      "avatar": "./assets/members/sync-20261120-41.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "太强了",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m006",
+      "time": "2026-11-10 12:46:55",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "[呲牙][呲牙]我 继续努力",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m007",
+      "time": "2026-11-10 12:47:05",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"考拉丸子\" 瞬间少了2斤肉",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m008",
+      "time": "2026-11-10 12:47:06",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "我拍了拍 \"生财初阳AI\" 的头像",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m009",
+      "time": "2026-11-10 12:57:33",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "这周末的群响大课群里有小伙伴去吗，周末可以约一约",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m010",
+      "time": "2026-11-10 13:21:04",
+      "sender": "北京-自媒体-王昀",
+      "avatar": "./assets/members/sync-20261120-15.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "在哪里啊",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m011",
+      "time": "2026-11-10 13:21:06",
+      "sender": "北京-自媒体-王昀",
+      "avatar": "./assets/members/sync-20261120-15.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "杭州吗",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m012",
+      "time": "2026-11-10 13:23:28",
+      "sender": "冯诗童 coco",
+      "avatar": "./assets/members/sync-20261120-14.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "对滴",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m013",
+      "time": "2026-11-10 15:29:14",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "网易出品的这个AI工具，竟然直接终身免费了",
+      "links": [
+        {
+          "label": "打开原内容",
+          "url": "https://mp.weixin.qq.com/s/2I4POlb_nxtTyFGCb49FXg"
+        }
+      ],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m014",
+      "time": "2026-11-10 15:30:44",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "上次初阳提到的网易叭哥说输入法，宣布永久免费。\n\nUU远程也是免费，这也是免费，网易这是在用免费打法做品牌广告吗hh",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m015",
+      "time": "2026-11-10 15:38:45",
+      "sender": "卡车之家Robin 邵震",
+      "avatar": "./assets/members/sync-20261120-16.jpg",
+      "side": "left",
+      "type": "text",
+      "text": "可能是路径依赖做用户池，他们很多项目冷启动都有基础用量了。\n\n比如网易 邮箱是很好的用户池，早期他们很多项目的都是通过邮箱导流的",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m016",
+      "time": "2026-11-10 15:42:17",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261120-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "OK大哥，明白了，这个打法挺好。\n\n就跟知识付费似的，搞几个钩子拉到私域，推付费品",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}
