@@ -79,6 +79,8 @@ def safe_url(value: str) -> str | None:
     value = (value or "").strip()
     parsed = urlparse(value)
     host = (parsed.hostname or "").lower()
+    if host == "mp.weixin.qq.com" and parsed.path == "/mp/waerrpage":
+        return None
     if host in {"localhost", "wxapp.tenpay.com", "support.weixin.qq.com"} or host.endswith(".local"):
         return None
     try:
@@ -234,7 +236,7 @@ def convert(raw: dict, date: str, owner: str, avatars: dict[str, str], media_map
                 elif app_subtype == 51 or "当前微信版本不支持展示该内容" in title:
                     readable_title = "" if "当前微信版本不支持展示该内容" in title else f"：{title}"
                     text = f"视频号内容{readable_title}\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转"
-                elif app_subtype == 33 and not links:
+                elif app_subtype in {33, 36, 44} and not links:
                     text = f"小程序内容：{title}\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转"
                 elif app_subtype == 5 and not links:
                     text = f"公众号或网页内容：{title}\n原内容没有提供可公开访问的跳转链接"

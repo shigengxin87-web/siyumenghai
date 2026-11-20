@@ -27,13 +27,8 @@
       "avatar": "./assets/members/sync-20261120-01.jpg",
       "side": "right",
       "type": "link",
-      "text": "石董会 · 一起成长朋友圈\n更新石董会",
-      "links": [
-        {
-          "label": "打开原内容",
-          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx8518a4f16ab72d70&type=upgrade&upgradetype=3#wechat_redirect"
-        }
-      ],
+      "text": "小程序内容：石董会 · 一起成长朋友圈\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
+      "links": [],
       "media": null,
       "redacted": false
     },
@@ -44,13 +39,8 @@
       "avatar": "./assets/members/sync-20261120-01.jpg",
       "side": "right",
       "type": "link",
-      "text": "石董会 · AI 问答\n更新石董会",
-      "links": [
-        {
-          "label": "打开原内容",
-          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx8518a4f16ab72d70&type=upgrade&upgradetype=3#wechat_redirect"
-        }
-      ],
+      "text": "小程序内容：石董会 · AI 问答\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
+      "links": [],
       "media": null,
       "redacted": false
     },

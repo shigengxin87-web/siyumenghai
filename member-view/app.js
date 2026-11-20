@@ -2108,13 +2108,6 @@ const days = {
       "text": "在 7 月份我做了一个网站：https://siyumenghai.cn/member-view/ ，把「社群内容、知识库」放上去了，这个月我开发了一个小程序，前阵子刚备案通过。\n\n目前有两个主要的功能迭代\n\n原来是只有「视频号下载」功能，我增加了「抖音」和「",
       "url": "https://siyumenghai.cn/member-view/",
       "linkLabel": "查看资料"
-    },
-    {
-      "kind": "资料",
-      "title": "打开原内容",
-      "text": "石董会 · 一起成长朋友圈\n更新石董会",
-      "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx8518a4f16ab72d70&type=upgrade&upgradetype=3#wechat_redirect",
-      "linkLabel": "查看资料"
     }
   ],
   "themes": [
@@ -3730,13 +3723,6 @@ const days = {
     }
   ],
   "resources": [
-    {
-      "kind": "资料",
-      "title": "打开原内容",
-      "text": "我是杨莉萍，邀请您与我交换名片",
-      "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx7b0f660b9058a98a&type=upgrade&upgradetype=3#wechat_redirect",
-      "linkLabel": "查看资料"
-    },
     {
       "kind": "资料",
       "title": "石更新（11.20-11.30闭关） · 21:59 分享资料",

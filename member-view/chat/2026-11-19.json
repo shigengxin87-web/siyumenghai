@@ -982,13 +982,8 @@
       "avatar": "./assets/members/sync-20261120-01.jpg",
       "side": "right",
       "type": "link",
-      "text": "我是杨莉萍，邀请您与我交换名片",
-      "links": [
-        {
-          "label": "打开原内容",
-          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx7b0f660b9058a98a&type=upgrade&upgradetype=3#wechat_redirect"
-        }
-      ],
+      "text": "小程序内容：我是杨莉萍，邀请您与我交换名片\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
+      "links": [],
       "media": null,
       "redacted": false
     },
@@ -1383,13 +1378,8 @@
       "avatar": "./assets/members/sync-20261120-01.jpg",
       "side": "right",
       "type": "link",
-      "text": "我是杨莉萍，邀请您与我交换名片",
-      "links": [
-        {
-          "label": "打开原内容",
-          "url": "https://mp.weixin.qq.com/mp/waerrpage?appid=wx7b0f660b9058a98a&type=upgrade&upgradetype=3#wechat_redirect"
-        }
-      ],
+      "text": "小程序内容：我是杨莉萍，邀请您与我交换名片\n因为微信未提供可公开访问的小程序链接，当前无法从网页跳转",
+      "links": [],
       "media": null,
       "redacted": false
     },
