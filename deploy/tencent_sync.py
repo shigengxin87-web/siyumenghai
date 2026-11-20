@@ -193,6 +193,7 @@ def main() -> None:
         shutil.copytree(active, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
         if SEED_DIR:
             shutil.copytree(SEED_DIR, staging, dirs_exist_ok=True, symlinks=True, copy_function=shutil.copy2)
+            staging.chmod(0o755)
         if FAILPOINT == "download_timeout":
             raise RuntimeError("injected GitHub large-file timeout")
 
