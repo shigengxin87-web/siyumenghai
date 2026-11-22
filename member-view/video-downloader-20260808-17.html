@@ -154,6 +154,8 @@
                     <div class="final-transcript-actions"><button type="button" data-transcript-retry hidden>重试校正</button><button type="button" data-transcript-edit>编辑</button><button type="button" data-transcript-copy-kind="corrected">复制逐字稿</button></div>
                   </div>
                   <textarea data-transcript-corrected-text aria-label="最终完整逐字稿" readonly></textarea>
+                  <p class="transcript-seek-hint" data-transcript-seek-hint role="status" aria-live="polite" hidden></p>
+                  <div class="transcript-reader" data-transcript-reader role="region" aria-label="可点击回听的逐字稿" hidden></div>
                   <div class="final-transcript-meta" data-transcript-meta></div>
                 </div>
               </div>
@@ -190,7 +192,8 @@
     </main>
   </div>
   <!-- Render local history before loading optional Excel and text helpers. -->
-  <script src="./video-downloader-c-app.js?v=20261122-transcript-reliability-1"></script>
+  <script src="./video-transcript-seek.js?v=20261122-transcript-seek-1"></script>
+  <script src="./video-downloader-c-app.js?v=20261122-transcript-seek-1"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>

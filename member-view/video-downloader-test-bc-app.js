@@ -233,6 +233,7 @@
     renderedJobId = payload.id;
     renderedShareUrl = shareUrl;
     editStatus(hasDraft ? '未保存 · 已恢复草稿' : (saved ? '已保存' : ''));
+    window.videoTranscriptSeek?.render(payload, finalText, hasDraft);
     container.hidden = false;
 
     const action = document.querySelector('[data-transcript-action]');
@@ -266,7 +267,7 @@
     const raw = String(payload.raw_text || payload.text || '');
     const corrected = String(payload.corrected_text || payload.text || '');
     if (!raw.trim()) return;
-    const signature = `${payload.id}:${payload.status}:${raw.length}:${corrected.length}:${payload.char_count || payload.correction_count || 0}`;
+    const signature = `${payload.id}:${payload.status}:${raw.length}:${corrected.length}:${payload.char_count || payload.correction_count || 0}:${JSON.stringify(payload.segments || [])}:${payload.timing_status || ''}`;
     if (productionC) {
       // Polling and other page updates must not overwrite an active edit.
       if (renderedJobId === payload.id && renderedShareUrl === payload.share_url
@@ -373,9 +374,12 @@
       copied = await navigator.clipboard.writeText(value).then(() => true, () => false);
     } catch { /* fallback below */ }
     if (!copied) {
+      const wasHidden = node.hidden;
+      node.hidden = false;
       node.focus();
       node.select();
       try { copied = document.execCommand('copy'); } catch { copied = false; }
+      node.hidden = wasHidden;
     }
     const original = button.textContent;
     button.textContent = copied ? '已复制' : '请手动复制';
@@ -410,6 +414,7 @@
       if (node.readOnly) {
         node.readOnly = false;
         edit.textContent = '保存';
+        window.videoTranscriptSeek?.setEditing(true);
         node.focus();
       } else {
         const edits = readJson(editsKey, {});
@@ -422,6 +427,7 @@
         }
         node.readOnly = true;
         edit.textContent = '编辑';
+        window.videoTranscriptSeek?.render(readJson(payloadCacheKey, {})[renderedShareUrl] || { id: renderedJobId, share_url: renderedShareUrl, timing_status: 'unavailable' }, node.value, false);
         editStatus('已保存');
         // Saved text remains authoritative even if clearing the draft fails.
         const drafts = readJson(draftsKey, {});
@@ -452,6 +458,7 @@
       return;
     }
     const container = document.querySelector('[data-transcript-dual]');
+    window.videoTranscriptSeek?.clear();
     if (container) container.hidden = true;
     const action = document.querySelector('[data-transcript-action]');
     if (action) action.hidden = false;
