@@ -8,7 +8,7 @@
   const openLink=document.querySelector('[data-feishu-open]');
   const retryButton=document.querySelector('[data-feishu-retry]');
   const ownerKey='siyumenghai-feishu-owner-v1';
-  const jobsKey='siyumenghai-feishu-deliveries-v1';
+  const jobsKey='siyumenghai-feishu-deliveries-v2';
   const endpoint='/api/feishu-sync';
   let config=null;
   let timer=0;
@@ -47,8 +47,17 @@
     openLink.hidden=!url;
     if (url) { openLink.href=url;openLink.textContent=label; }
   }
-  function remember(source,id) {
-    const jobs=read(jobsKey,{});delete jobs[source];jobs[source]=id;
+  function snapshot() {
+    const source=share();
+    const node=document.querySelector('[data-transcript-corrected-text]');
+    return {source_url:source,title:document.querySelector('[data-video-description]')?.textContent||'视频号视频',author:document.querySelector('[data-author-name]')?.textContent||'',transcript:window.videoTranscriptEditor?.savedText(source)??node?.value??''};
+  }
+  async function fingerprint(payload) {
+    const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(payload.transcript));
+    return Array.from(new Uint8Array(bytes),n=>n.toString(16).padStart(2,'0')).join('');
+  }
+  function remember(source,id,content) {
+    const jobs=read(jobsKey,{});delete jobs[source];jobs[source]={id,content};
     try { localStorage.setItem(jobsKey,JSON.stringify(Object.fromEntries(Object.entries(jobs).slice(-20)))); } catch { /* Server status remains available during this visit. */ }
   }
   function showDelivery(job,source) {
@@ -59,15 +68,15 @@
       message('已保存到飞书。再次保存会更新同一条记录。');
       setLink(job.record_url,'查看记录');
     } else if (job.status==='error') {
-      message(job.error||'飞书未接收，请检查配置后重试。',true);
+      message(job.error||'保存失败，请检查配置后重试。',true);
       setLink(config?.table_url,'打开素材库');
     } else {
-      message(job.error||'已发送，待飞书确认写入。');
+      message(job.error||'正在核对飞书保存结果…');
       setLink(config?.table_url,'打开素材库');
       retryButton.hidden=job.retry_after>0;
       clearTimeout(timer);
       if (polls++<30) timer=setTimeout(()=>checkDelivery(job.request_id,source),3000);
-      else message('仍待飞书确认，请到素材库检查；修复流程后可重试发送。');
+      else message('仍待飞书确认，请到素材库检查；检查权限后可重试发送。');
     }
   }
   async function checkDelivery(id,source) {
@@ -85,9 +94,10 @@
       const value=await loadConfig();
       form.elements.name.value=value.name||'我的视频素材库';
       form.elements.table_url.value=value.table_url||'';
-      form.elements.webhook_url.required=!value.configured;
-      form.elements.webhook_token.required=!value.configured;
-      feedback.textContent=value.configured?'已配置。接收地址和凭证留空时保留原配置。':'';
+      form.elements.app_id.value=value.app_id||'';
+      form.elements.app_secret.value='';
+      form.elements.app_secret.required=!value.configured;
+      feedback.textContent=value.configured?'已配置。同一应用的 App Secret 留空时保留原密钥。':'';
     } catch { feedback.textContent='暂时无法读取配置，请稍后再试。'; }
   }
   async function save(retry=false) {
@@ -103,9 +113,10 @@
       if (!config?.configured) { await settings();return; }
       message('正在发送到飞书…');
       setLink(config.table_url,'打开素材库');retryButton.hidden=true;
-      const payload={source_url:source,title:document.querySelector('[data-video-description]')?.textContent||'视频号视频',author:document.querySelector('[data-author-name]')?.textContent||'',transcript:window.videoTranscriptEditor?.savedText(source)??textNode.value,retry};
+      const payload={...snapshot(),retry};
+      const content=await fingerprint(payload);
       const result=await api('/save',payload);
-      if (version===epoch) { remember(source,result.request_id);polls=0;showDelivery(result,source); }
+      if (version===epoch) { remember(source,result.request_id,content);polls=0;showDelivery(result,source); }
     } catch (error) {
       if(version===epoch)message(error.name==='AbortError'?'连接超时，尚未确认保存结果；请稍后检查飞书。':error.message,true);
     } finally { busy=false;saveButton.disabled=false;retryButton.disabled=false; }
@@ -114,6 +125,7 @@
   retryButton.addEventListener('click',()=>save(true));
   document.querySelector('[data-feishu-settings]').addEventListener('click',settings);
   dialog.querySelector('[data-feishu-close]').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('close',()=>{form.elements.app_secret.value='';});
   form.addEventListener('submit',async event=>{
     event.preventDefault();
     const button=form.querySelector('[type=submit]');
@@ -121,7 +133,7 @@
     button.disabled=true;
     try {
       config=await api('/connection',Object.fromEntries(new FormData(form)));
-      form.elements.webhook_url.value='';form.elements.webhook_token.value='';
+      form.elements.app_secret.value='';
       epoch++;localStorage.removeItem(jobsKey);currentJob='';clearTimeout(timer);
       dialog.close();setLink(config.table_url,'打开素材库');
       message('飞书配置已保存。点击“保存到飞书”即可发送当前文案。');
@@ -142,9 +154,15 @@
     const source=share();
     if (document.querySelector('[data-video-result]')?.hidden || source===checkedShare) return;
     epoch++;checkedShare=source;currentJob='';clearTimeout(timer);retryButton.hidden=true;setLink('','');
-    message('首次使用请先配置飞书接收流程。');
-    const id=read(jobsKey,{})[source];
-    if (id) { polls=0;loadConfig().then(()=>checkDelivery(id,source)).catch(()=>{}); }
+    message(config?.configured?'点击“保存到飞书”保存当前文案。':'首次使用请先配置自己的飞书应用和素材库。');
+    const job=read(jobsKey,{})[source];
+    const version=epoch;
+    if (job?.id) {
+      fingerprint(snapshot()).then(content=>{
+        if(version!==epoch || content!==job.content || !document.querySelector('[data-transcript-corrected-text]')?.readOnly)return;
+        polls=0;return loadConfig().then(()=>checkDelivery(job.id,source));
+      }).catch(()=>{});
+    }
   });
   observer.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['hidden','data-video-share-url']});
 })();

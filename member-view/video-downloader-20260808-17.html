@@ -29,7 +29,7 @@
     })();
   </script>
   <link rel="stylesheet" href="./platform-switch.css?v=20261013">
-  <link rel="stylesheet" href="./video-feishu-save.css?v=20261122-feishu-1">
+  <link rel="stylesheet" href="./video-feishu-save.css?v=20261122-feishu-api-1">
 </head>
 <body class="platform-wechat">
   <div class="portal-shell tool-shell">
@@ -163,7 +163,7 @@
                     <button type="button" data-feishu-settings>飞书配置</button>
                     <button type="button" data-feishu-retry hidden>重试发送</button>
                     <a data-feishu-open target="_blank" rel="noopener noreferrer" hidden>查看记录</a>
-                    <p data-feishu-status role="status" aria-live="polite">首次使用请先配置飞书接收流程。</p>
+                    <p data-feishu-status role="status" aria-live="polite">首次使用请先配置自己的飞书应用和素材库。</p>
                   </div>
                 </div>
               </div>
@@ -205,9 +205,9 @@
     <form>
       <label>素材库名称<input name="name" autocomplete="off" maxlength="80" value="我的视频素材库"></label>
       <label>我的多维表格链接<input name="table_url" type="url" autocomplete="off" placeholder="https://…feishu.cn/base/…?table=…" required></label>
-      <label>Webhook 接收地址<input name="webhook_url" type="url" autocomplete="off" placeholder="从飞书接收流程复制" required></label>
-      <label>校验凭证<input name="webhook_token" type="password" autocomplete="new-password" placeholder="开启接收流程的凭证校验后复制" required></label>
-      <p>连接仅绑定当前浏览器。接收地址和凭证保存在服务器，不会放入网页公开文件。</p>
+      <label>App ID<input name="app_id" autocomplete="off" spellcheck="false" placeholder="cli_…" required></label>
+      <label>App Secret<input name="app_secret" type="password" autocomplete="new-password" placeholder="从专用应用的凭证页复制" required></label>
+      <p>密钥加密保存在本站服务器，当前浏览器保留连接凭证。建议使用仅授权此素材库的专用应用。</p>
       <p data-feishu-config-status role="status" aria-live="polite"></p>
       <div class="feishu-dialog-actions"><button type="button" data-feishu-close>取消</button><button type="submit">保存配置</button></div>
     </form>
@@ -215,7 +215,7 @@
   <!-- Render local history before loading optional Excel and text helpers. -->
   <script src="./video-transcript-seek.js?v=20261122-transcript-seek-1"></script>
   <script src="./video-downloader-c-app.js?v=20261122-transcript-seek-1"></script>
-  <script src="./video-feishu-save.js?v=20261122-feishu-1"></script>
+  <script src="./video-feishu-save.js?v=20261122-feishu-api-1"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>
