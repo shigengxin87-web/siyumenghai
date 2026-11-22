@@ -15,8 +15,10 @@
     : `${storagePrefix}-transcripts-production-ocr-proofread-zh-v2.0.0`;
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
+  const editsKey = `${storagePrefix}-transcript-edits-v1`;
   const jobToShare = readJson(jobShareKey, {});
   let lastRenderedSignature = '';
+  let renderedJobId = '';
 
   const style = document.createElement('style');
   style.textContent = productionC ? `
@@ -168,9 +170,15 @@
   }
 
   function renderProductionPayload(payload, container, raw, corrected) {
-    const finalText = formatTranscriptPreservingText(corrected.trim() ? corrected : raw);
+    const savedEdit = readJson(editsKey, {})[payload.id];
+    const finalText = typeof savedEdit?.text === 'string'
+      ? savedEdit.text : formatTranscriptPreservingText(corrected.trim() ? corrected : raw);
     const correctedNode = container.querySelector('[data-transcript-corrected-text]');
     correctedNode.value = finalText;
+    correctedNode.readOnly = true;
+    const edit = container.querySelector('[data-transcript-edit]');
+    if (edit) edit.textContent = '编辑';
+    renderedJobId = payload.id;
     container.hidden = false;
 
     const action = document.querySelector('[data-transcript-action]');
@@ -338,6 +346,33 @@
   }
 
   document.addEventListener('click', (event) => {
+    const edit = event.target.closest('[data-transcript-edit]');
+    if (productionC && edit && renderedJobId) {
+      const node = document.querySelector('[data-transcript-corrected-text]');
+      if (node.readOnly) {
+        node.readOnly = false;
+        edit.textContent = '保存';
+        node.focus();
+      } else {
+        const edits = readJson(editsKey, {});
+        edits[renderedJobId] = { text: node.value, saved_at: Date.now() };
+        const entries = Object.entries(edits)
+          .sort((left, right) => right[1].saved_at - left[1].saved_at)
+          .slice(0, 20);
+        try {
+          localStorage.setItem(editsKey, JSON.stringify(Object.fromEntries(entries)));
+        } catch {
+          document.querySelector('[data-transcript-status]').textContent = '保存失败，浏览器存储空间不足或不可用，请复制内容后重试。';
+          return;
+        }
+        node.readOnly = true;
+        edit.textContent = '编辑';
+        const count = textCount(node.value);
+        document.querySelector('[data-transcript-corrected-count]').textContent = `${count} 字 · 完整结果`;
+        document.querySelector('[data-transcript-status]').textContent = `逐字稿已保存，共 ${count} 字，可直接复制使用。`;
+      }
+      return;
+    }
     const copy = event.target.closest('[data-transcript-copy-kind]');
     if (copy) {
       const selector = copy.dataset.transcriptCopyKind === 'raw'
@@ -359,6 +394,7 @@
       try { localStorage.setItem(lastShareKey, shareUrl); } catch { /* no-op */ }
     }
     lastRenderedSignature = '';
+    renderedJobId = '';
   }, true);
 
   const observer = new MutationObserver(() => {
