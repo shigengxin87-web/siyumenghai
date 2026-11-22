@@ -45,6 +45,7 @@ const TRANSCRIPT_TASK_KEY = USE_TENCENT_TRANSCRIPT
   ? 'siyumenghai-video-transcript-tasks-v1-tencent'
   : 'siyumenghai-video-transcript-tasks-v3-cloud-c-ocr-final';
 const TRANSCRIPT_TASK_LIMIT = HISTORY_LIMIT;
+const transcriptPolls = new Set();
 const COMMENT_CACHE_KEY = 'siyumenghai-video-comments-v1';
 const COMMENT_CACHE_LIMIT = HISTORY_LIMIT;
 const TRANSCRIPT_API = USE_TENCENT_TRANSCRIPT
@@ -140,6 +141,8 @@ function readTranscriptCache() {
 
 function cachedTranscript(shareUrl) {
   const item = readTranscriptCache()[shareUrl];
+  const saved = window.videoTranscriptEditor?.savedText(shareUrl);
+  if (typeof saved === 'string') return { ...item, corrected: saved, raw: item?.raw ?? saved };
   if (typeof item?.corrected !== 'string' || !item.corrected.trim()) return null;
   const correctedLength = item.corrected.replace(/\s/g, '').length;
   const audioLength = typeof item.audioRaw === 'string' ? item.audioRaw.replace(/\s/g, '').length : 0;
@@ -173,7 +176,15 @@ function saveTranscript(shareUrl, result) {
 function readTranscriptTasks() {
   try {
     const value = JSON.parse(localStorage.getItem(TRANSCRIPT_TASK_KEY) || '{}');
-    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    // Recover tasks that older clients marked failed after three poll errors.
+    Object.values(value).forEach((task) => {
+      if (task?.status === 'error' && task.pollFailures >= 3 && !task.failureConfirmed) {
+        task.status = 'running';
+        task.connectionLost = true;
+      }
+    });
+    return value;
   } catch {
     return {};
   }
@@ -225,6 +236,7 @@ function normalizeTranscriptStatus(status) {
 
 function transcriptTaskLabel(task) {
   if (!task) return '';
+  if (task.connectionLost) return '逐字稿连接中断，等待重连';
   if (task.status === 'error') return '逐字稿识别失败';
   if (task.status === 'queued') {
     const ahead = Number(task.ahead || 0);
@@ -343,6 +355,13 @@ function renderHistory() {
     const actions = document.createElement('div');
     actions.className = 'history-actions';
     actions.innerHTML = `<button type="button" data-history-copy="${index}">复制原视频链接</button><button type="button" data-history-transcript="${index}">复制逐字稿</button><button type="button" data-history-comments="${index}">复制评论</button><button type="button" data-history-query="${index}">重新查询</button><button type="button" data-history-delete="${index}">删除</button>`;
+    if (task?.connectionLost) {
+      const reconnect = document.createElement('button');
+      reconnect.type = 'button';
+      reconnect.dataset.historyReconnect = String(index);
+      reconnect.textContent = '重新连接';
+      actions.appendChild(reconnect);
+    }
 
     content.append(author, title, time, taskStatus, actions);
     article.append(cover, content);
@@ -885,12 +904,14 @@ function renderResult(payload, shareUrl) {
     description: feedInfo.description || '',
     createTime: feedInfo.createtime || ''
   };
+  resultNode.dataset.videoShareUrl = shareUrl;
 
   resetTranscript();
   resetComments();
   let previousTranscript = cachedTranscript(shareUrl);
   if (previousTranscript) {
-    if (previousTranscript.raw === previousTranscript.corrected && previousTranscript.correctionCount === 0) {
+    if (typeof window.videoTranscriptEditor?.savedText(shareUrl) !== 'string'
+        && previousTranscript.raw === previousTranscript.corrected && previousTranscript.correctionCount === 0) {
       previousTranscript = buildTranscriptResult({ text: previousTranscript.raw }, currentVideo);
       saveTranscript(shareUrl, previousTranscript);
     }
@@ -1280,15 +1301,16 @@ window.addEventListener('message', (event) => {
 async function transcribeCurrentVideo() {
   if (!currentVideo?.shareUrl) return;
   const video = { ...currentVideo };
-  if (currentTranscript?.corrected) {
-    const copied = await copyText(currentTranscript.corrected);
+  const saved = window.videoTranscriptEditor?.savedText(video.shareUrl);
+  if (typeof saved === 'string' || currentTranscript?.corrected) {
+    const copied = await copyText(saved ?? currentTranscript.corrected);
     showTranscriptStatus(copied ? '逐字稿已复制到剪贴板。' : '请长按或全选下方逐字稿后复制。', copied ? '' : 'error');
     return;
   }
 
   const existingTask = transcriptTask(video.shareUrl);
   if (isActiveTranscriptTask(existingTask)) {
-    transcriptButton.textContent = '查看后台进度';
+    transcriptButton.textContent = existingTask.connectionLost ? '正在连接…' : '查看后台进度';
     showTranscriptTaskStatus(existingTask);
     await pollTranscriptTask(existingTask);
     ensureTranscriptMonitor();
@@ -1338,6 +1360,11 @@ async function transcribeCurrentVideo() {
 
 function showTranscriptTaskStatus(task) {
   if (!task) return;
+  if (task.connectionLost) {
+    transcriptButton.textContent = '重新连接';
+    showTranscriptStatus('暂时无法连接，尚未确认识别结果。系统会自动重连，也可点击“重新连接”查询原任务。', 'working');
+    return;
+  }
   if (task.status === 'error') {
     showTranscriptStatus(`逐字稿识别失败：${task.error || '请重新生成'}`, 'error');
     return;
@@ -1381,7 +1408,9 @@ async function applyTranscriptPayload(payload, originalTask) {
     stage: payload.stage || originalTask.stage || '',
     ahead: Number(payload.ahead || 0),
     error: payload.error || '',
-    pollFailures: 0
+    pollFailures: 0,
+    connectionLost: false,
+    failureConfirmed: ['error', 'failed'].includes(payload.status)
   };
 
   if (task.status === 'completed') {
@@ -1393,7 +1422,7 @@ async function applyTranscriptPayload(payload, originalTask) {
     removeTranscriptTask(task.shareUrl);
     renderHistory();
     if (currentVideo?.shareUrl === task.shareUrl) {
-      currentTranscript = result;
+      currentTranscript = cachedTranscript(task.shareUrl) || result;
       showTranscriptView('corrected');
       transcriptButton.disabled = false;
       transcriptButton.textContent = '复制逐字稿';
@@ -1423,30 +1452,36 @@ async function applyTranscriptPayload(payload, originalTask) {
 }
 
 async function pollTranscriptTask(task) {
-  if (!task?.jobId) return;
+  if (!task?.jobId || transcriptPolls.has(task.jobId)) return;
+  transcriptPolls.add(task.jobId);
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 20000);
   try {
-    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, { cache: 'no-store' });
+    const response = await fetch(`${TRANSCRIPT_API}/${encodeURIComponent(task.jobId)}`, { cache: 'no-store', signal: controller.signal });
     const payload = await readTranscriptResponse(response);
+    if (payload.id !== task.jobId || typeof payload.status !== 'string' || !payload.status) {
+      throw new Error('暂时无法读取有效的任务状态');
+    }
     await applyTranscriptPayload(payload, task);
   } catch (error) {
     const failures = Number(task.pollFailures || 0) + 1;
     const failedTask = {
       ...task,
-      status: failures >= 3 ? 'error' : (task.status || 'running'),
+      status: error.status === 404 ? 'error' : (task.status || 'running'),
+      failureConfirmed: error.status === 404,
+      connectionLost: error.status !== 404,
       pollFailures: failures,
-      error: error.message || '无法读取任务状态'
+      error: error.status === 404 ? '任务记录已过期或不存在，请重新生成逐字稿。' : (error.message || '无法读取任务状态')
     };
     saveTranscriptTask(failedTask);
     renderHistory();
     if (currentVideo?.shareUrl === task.shareUrl) {
-      if (failures >= 3) {
-        transcriptButton.textContent = '重新生成逐字稿';
-        showTranscriptTaskStatus(failedTask);
-      } else {
-        transcriptButton.textContent = '查看后台进度';
-        showTranscriptStatus('暂时无法读取进度，服务器任务仍在后台运行，系统会自动重试。', 'working');
-      }
+      transcriptButton.textContent = failedTask.connectionLost ? '重新连接' : '重新生成逐字稿';
+      showTranscriptTaskStatus(failedTask);
     }
+  } finally {
+    window.clearTimeout(timeout);
+    transcriptPolls.delete(task.jobId);
   }
 }
 
@@ -1467,7 +1502,9 @@ async function readTranscriptResponse(response) {
         : response.status >= 500
         ? '云端逐字稿服务暂时不可用，请稍后重试。'
         : `服务器返回 ${response.status}`);
-    throw new Error(message);
+    const error = new Error(message);
+    error.status = response.status;
+    throw error;
   }
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     throw new Error('云端逐字稿服务返回了无法识别的数据，请稍后重试。');
@@ -1663,12 +1700,24 @@ commentStatus.addEventListener('click', async (event) => {
 });
 
 historyList.addEventListener('click', async (event) => {
+  const reconnectTarget = event.target.closest('[data-history-reconnect]');
   const copyTarget = event.target.closest('[data-history-copy]');
   const transcriptTarget = event.target.closest('[data-history-transcript]');
   const commentsTarget = event.target.closest('[data-history-comments]');
   const queryTarget = event.target.closest('[data-history-query]');
   const deleteTarget = event.target.closest('[data-history-delete]');
   const items = readHistory();
+
+  if (reconnectTarget) {
+    const item = items[Number(reconnectTarget.dataset.historyReconnect)];
+    const task = item?.shareUrl ? transcriptTask(item.shareUrl) : null;
+    if (task && isActiveTranscriptTask(task)) {
+      reconnectTarget.disabled = true;
+      await pollTranscriptTask(task);
+      ensureTranscriptMonitor();
+    }
+    return;
+  }
 
   const showResult = (button, message) => {
     const original = button.textContent;
@@ -1688,10 +1737,10 @@ historyList.addEventListener('click', async (event) => {
   if (transcriptTarget) {
     const item = items[Number(transcriptTarget.dataset.historyTranscript)];
     const transcript = item?.shareUrl ? cachedTranscript(item.shareUrl) : null;
-    if (!transcript?.corrected) {
+    if (typeof transcript?.corrected !== 'string') {
       const task = item?.shareUrl ? transcriptTask(item.shareUrl) : null;
       return showResult(transcriptTarget, task
-        ? (task.status === 'error' ? '识别失败，请重新生成' : '后台识别中')
+        ? (task.connectionLost ? '连接中断，请重新连接' : task.status === 'error' ? '识别失败，请重新生成' : '后台识别中')
         : '暂无逐字稿');
     }
     const copied = await copyText(transcript.corrected, null);
@@ -1727,5 +1776,12 @@ clearHistoryButton.addEventListener('click', () => {
 });
 
 renderHistory();
+window.addEventListener('video-transcript-saved', (event) => {
+  if (currentVideo?.shareUrl === event.detail.shareUrl) {
+    currentTranscript = { ...currentTranscript, corrected: event.detail.text };
+    transcriptText.value = event.detail.text;
+  }
+  renderHistory();
+});
 renderLocalHelperPrompt();
 ensureTranscriptMonitor(800);

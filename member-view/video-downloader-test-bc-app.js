@@ -16,9 +16,57 @@
   const jobShareKey = `${storagePrefix}-transcript-job-share-v1`;
   const lastShareKey = `${storagePrefix}-last-transcript-share-v1`;
   const editsKey = `${storagePrefix}-transcript-edits-v1`;
+  const draftsKey = `${storagePrefix}-transcript-drafts-v1`;
   const jobToShare = readJson(jobShareKey, {});
   let lastRenderedSignature = '';
   let renderedJobId = '';
+  let renderedShareUrl = '';
+
+  function savedEdit(shareUrl, jobId) {
+    const edits = readJson(editsKey, {});
+    // Keep edits saved by the previous version, which used job IDs as keys.
+    return edits[shareUrl] || edits[jobId || readJson(payloadCacheKey, {})[shareUrl]?.id];
+  }
+
+  if (productionC) {
+    window.videoTranscriptEditor = {
+      savedText: (shareUrl) => savedEdit(shareUrl)?.text,
+    };
+  }
+
+  function writeRecent(key, entries, timeField) {
+    const recent = Object.entries(entries)
+      .sort((left, right) => Number(right[1]?.[timeField] || 0) - Number(left[1]?.[timeField] || 0))
+      .slice(0, 20);
+    localStorage.setItem(key, JSON.stringify(Object.fromEntries(recent)));
+  }
+
+  function editStatus(message) {
+    const status = document.querySelector('[data-transcript-edit-status]');
+    if (status) {
+      status.hidden = !message;
+      status.textContent = message;
+    }
+  }
+
+  function persistDraft() {
+    const node = document.querySelector('[data-transcript-corrected-text]');
+    if (!productionC || !renderedShareUrl || !node || node.readOnly) return true;
+    const drafts = readJson(draftsKey, {});
+    const saved = savedEdit(renderedShareUrl, renderedJobId);
+    const payload = readJson(payloadCacheKey, {})[renderedShareUrl];
+    const original = saved?.text ?? formatTranscriptPreservingText(payload?.corrected_text || payload?.text || payload?.raw_text || '');
+    if (node.value === original) delete drafts[renderedShareUrl];
+    else drafts[renderedShareUrl] = { text: node.value, job_id: renderedJobId, updated_at: Date.now() };
+    try {
+      writeRecent(draftsKey, drafts, 'updated_at');
+      editStatus(node.value === original ? (saved ? '已保存' : '') : '未保存 · 草稿已暂存');
+      return true;
+    } catch {
+      editStatus('未保存 · 草稿暂存失败，请及时复制');
+      return false;
+    }
+  }
 
   const style = document.createElement('style');
   style.textContent = productionC ? `
@@ -120,7 +168,7 @@
       try { shareUrl = String(JSON.parse(options.body).share_url || shareUrl); } catch { /* no-op */ }
     }
     if (!shareUrl) {
-      const tasks = readJson(`${storagePrefix}-transcript-tasks-v1`, {});
+      const tasks = readJson(productionC ? 'siyumenghai-video-transcript-tasks-v1-tencent' : `${storagePrefix}-transcript-tasks-v1`, {});
       shareUrl = Object.values(tasks).find((task) => task?.jobId === payload.id)?.shareUrl || '';
     }
     if (!shareUrl) shareUrl = document.querySelector('[data-share-url]')?.value.trim() || '';
@@ -134,7 +182,9 @@
         .sort((left, right) => Number(right[1]?.saved_at || 0) - Number(left[1]?.saved_at || 0))
         .slice(0, 20);
       writeJson(payloadCacheKey, Object.fromEntries(entries));
-      window.setTimeout(() => renderPayload(cache[shareUrl]), 0);
+      window.setTimeout(() => {
+        if (!productionC || shareUrl === document.querySelector('[data-video-result]')?.dataset.videoShareUrl) renderPayload(cache[shareUrl]);
+      }, 0);
     }
   }
 
@@ -170,15 +220,19 @@
   }
 
   function renderProductionPayload(payload, container, raw, corrected) {
-    const savedEdit = readJson(editsKey, {})[payload.id];
-    const finalText = typeof savedEdit?.text === 'string'
-      ? savedEdit.text : formatTranscriptPreservingText(corrected.trim() ? corrected : raw);
+    const shareUrl = payload.share_url || document.querySelector('[data-video-result]')?.dataset.videoShareUrl || '';
+    const saved = savedEdit(shareUrl, payload.id);
+    const draft = readJson(draftsKey, {})[shareUrl];
+    const hasDraft = typeof draft?.text === 'string' && Number(draft.updated_at) > Number(saved?.saved_at || 0);
+    const finalText = hasDraft ? draft.text : (saved?.text ?? formatTranscriptPreservingText(corrected.trim() ? corrected : raw));
     const correctedNode = container.querySelector('[data-transcript-corrected-text]');
     correctedNode.value = finalText;
-    correctedNode.readOnly = true;
+    correctedNode.readOnly = !hasDraft;
     const edit = container.querySelector('[data-transcript-edit]');
-    if (edit) edit.textContent = '编辑';
+    if (edit) edit.textContent = hasDraft ? '保存' : '编辑';
     renderedJobId = payload.id;
+    renderedShareUrl = shareUrl;
+    editStatus(hasDraft ? '未保存 · 已恢复草稿' : (saved ? '已保存' : ''));
     container.hidden = false;
 
     const action = document.querySelector('[data-transcript-action]');
@@ -214,6 +268,9 @@
     if (!raw.trim()) return;
     const signature = `${payload.id}:${payload.status}:${raw.length}:${corrected.length}:${payload.char_count || payload.correction_count || 0}`;
     if (productionC) {
+      // Polling and other page updates must not overwrite an active edit.
+      if (renderedJobId === payload.id && renderedShareUrl === payload.share_url
+          && !container.querySelector('[data-transcript-corrected-text]').readOnly) return;
       if (signature !== lastRenderedSignature) renderProductionPayload(payload, container, raw, corrected);
       lastRenderedSignature = signature;
       return;
@@ -301,7 +358,8 @@
   }
 
   function restoreForCurrentShare() {
-    const shareUrl = document.querySelector('[data-share-url]')?.value.trim() || '';
+    const shareUrl = productionC ? document.querySelector('[data-video-result]')?.dataset.videoShareUrl || ''
+      : document.querySelector('[data-share-url]')?.value.trim() || '';
     const payload = readJson(payloadCacheKey, {})[shareUrl];
     if (payload) renderPayload(payload);
   }
@@ -309,7 +367,7 @@
   async function copyFrom(selector, button) {
     const node = document.querySelector(selector);
     const value = node?.value || '';
-    if (!value) return;
+    if (!node) return;
     let copied = false;
     try {
       copied = await navigator.clipboard.writeText(value).then(() => true, () => false);
@@ -355,18 +413,21 @@
         node.focus();
       } else {
         const edits = readJson(editsKey, {});
-        edits[renderedJobId] = { text: node.value, saved_at: Date.now() };
-        const entries = Object.entries(edits)
-          .sort((left, right) => right[1].saved_at - left[1].saved_at)
-          .slice(0, 20);
+        edits[renderedShareUrl] = { text: node.value, job_id: renderedJobId, saved_at: Date.now() };
         try {
-          localStorage.setItem(editsKey, JSON.stringify(Object.fromEntries(entries)));
+          writeRecent(editsKey, edits, 'saved_at');
         } catch {
           document.querySelector('[data-transcript-status]').textContent = '保存失败，浏览器存储空间不足或不可用，请复制内容后重试。';
           return;
         }
         node.readOnly = true;
         edit.textContent = '编辑';
+        editStatus('已保存');
+        // Saved text remains authoritative even if clearing the draft fails.
+        const drafts = readJson(draftsKey, {});
+        delete drafts[renderedShareUrl];
+        writeJson(draftsKey, drafts);
+        window.dispatchEvent(new CustomEvent('video-transcript-saved', { detail: { shareUrl: renderedShareUrl, text: node.value } }));
         const count = textCount(node.value);
         document.querySelector('[data-transcript-corrected-count]').textContent = `${count} 字 · 完整结果`;
         document.querySelector('[data-transcript-status]').textContent = `逐字稿已保存，共 ${count} 字，可直接复制使用。`;
@@ -385,6 +446,11 @@
   });
   document.addEventListener('submit', (event) => {
     if (!event.target.matches('[data-download-form]')) return;
+    if (!persistDraft()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return;
+    }
     const container = document.querySelector('[data-transcript-dual]');
     if (container) container.hidden = true;
     const action = document.querySelector('[data-transcript-action]');
@@ -395,7 +461,19 @@
     }
     lastRenderedSignature = '';
     renderedJobId = '';
+    renderedShareUrl = '';
   }, true);
+
+  document.addEventListener('input', (event) => {
+    if (event.target.matches('[data-transcript-corrected-text]')) persistDraft();
+  });
+  window.addEventListener('pagehide', persistDraft);
+  window.addEventListener('beforeunload', (event) => {
+    if (!persistDraft()) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
 
   const observer = new MutationObserver(() => {
     const result = document.querySelector('[data-video-result]');
@@ -405,14 +483,14 @@
 
   const legacy = document.createElement('script');
   legacy.src = productionC
-    ? './video-downloader-app.js?v=20260920-cache-fix-1'
+    ? './video-downloader-app.js?v=20261122-transcript-reliability-1'
     : './video-downloader-test-app.js?v=20260814-abc-1';
   legacy.onload = () => {
     restoreForCurrentShare();
     const navigation = performance.getEntriesByType('navigation')[0];
-    if (navigation?.type !== 'reload') return;
     let shareUrl = '';
     try { shareUrl = localStorage.getItem(lastShareKey) || ''; } catch { /* no-op */ }
+    if (navigation?.type !== 'reload' && !readJson(draftsKey, {})[shareUrl]) return;
     if (!shareUrl || !readJson(payloadCacheKey, {})[shareUrl]) return;
     const input = document.querySelector('[data-share-url]');
     const form = document.querySelector('[data-download-form]');
