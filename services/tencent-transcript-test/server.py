@@ -6,6 +6,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import math
 import os
 import secrets
 import subprocess
@@ -53,6 +54,7 @@ CACHE_DIR = DATA_DIR / "cache"
 
 
 LOCK = threading.RLock()
+TIMING_LOCK = threading.Lock()
 EXECUTOR = ThreadPoolExecutor(max_workers=MAX_WORKERS, thread_name_prefix="tencent-asr")
 JOBS: dict[str, dict[str, Any]] = {}
 STARTED_AT = time.time()
@@ -88,6 +90,8 @@ def public_job(job: dict[str, Any]) -> dict[str, Any]:
         "coverage_end_seconds",
         "char_count",
         "text",
+        "segments",
+        "timing_status",
         "error",
         "cache_hit",
         "pipeline_version",
@@ -274,6 +278,56 @@ def poll_task(api: asr_client.AsrClient, task_id: int) -> dict[str, Any]:
     raise PublicError("识别等待超时，请稍后在历史任务中查看。")
 
 
+def sentence_segments(details: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    segments = []
+    for detail in details:
+        try:
+            start = float(detail["StartMs"]) / 1000
+            end = float(detail["EndMs"]) / 1000
+            text = str(detail.get("FinalSentence") or "").strip()
+            if not text or not math.isfinite(start) or not math.isfinite(end) or start < 0 or end <= start:
+                continue
+            segments.append({"start": start, "end": end, "text": text})
+        except (KeyError, TypeError, ValueError):
+            continue
+    return segments
+
+
+def ensure_timing(job_id: str) -> dict[str, Any]:
+    # Only retrieve existing ASR results. This path must never create an ASR task.
+    with TIMING_LOCK:
+        with LOCK:
+            job = dict(JOBS[job_id])
+        if job.get("status") != "completed" or job.get("segments") or job.get("timing_status") == "unavailable":
+            return job
+        cached = load_cache(str(job["share_url"]))
+        if cached and cached.get("text") == job.get("text") and cached.get("segments"):
+            return update_job(job_id, segments=cached["segments"], timing_status="ready")
+        with LOCK:
+            sources = [dict(item) for item in JOBS.values() if item.get("status") == "completed"
+                       and item.get("share_url") == job.get("share_url") and item.get("text") == job.get("text")
+                       and item.get("upstream_task_id")]
+        source = max(sources, key=lambda item: item.get("created_at", ""), default=job)
+        try:
+            created = datetime.fromisoformat(source.get("upstream_created_at") or source["created_at"])
+            age = (datetime.now(timezone.utc) - created).total_seconds()
+        except (KeyError, TypeError, ValueError):
+            age = 86400
+        # Tencent task IDs may be reused after 24 hours. Never query expired IDs.
+        if not source.get("upstream_task_id") or not 0 <= age < 86400:
+            return update_job(job_id, timing_status="unavailable", segments=[])
+        request = models.DescribeTaskStatusRequest()
+        request.from_json_string(json.dumps({"TaskId": source["upstream_task_id"]}))
+        data = json.loads(client().DescribeTaskStatus(request).Data.to_json_string())
+        same_text = "".join(str(data.get("Result") or "").split()) == "".join(str(job.get("text") or "").split())
+        segments = sentence_segments(data.get("ResultDetail") or []) if same_text and data.get("Status") == 2 else []
+        updated = update_job(job_id, segments=segments, timing_status="ready" if segments else "unavailable")
+        if segments and cached and cached.get("text") == job.get("text"):
+            cached.update(segments=segments, timing_status="ready")
+            atomic_json(CACHE_DIR / f"{cache_key(str(job['share_url']))}.json", cached)
+        return updated
+
+
 def process(job_id: str) -> None:
     started = time.monotonic()
     job = update_job(job_id, status="processing", stage="正在解析视频", error="")
@@ -291,6 +345,8 @@ def process(job_id: str) -> None:
                         "video_duration_seconds",
                         "coverage_end_seconds",
                         "elapsed_seconds",
+                        "segments",
+                        "timing_status",
                     )
                 },
                 status="completed",
@@ -315,12 +371,13 @@ def process(job_id: str) -> None:
         update_job(job_id, stage="正在提交识别任务")
         api = client()
         upstream_id = create_task(api, video_url)
-        update_job(job_id, stage="正在生成逐字稿", upstream_task_id=upstream_id)
+        update_job(job_id, stage="正在生成逐字稿", upstream_task_id=upstream_id, upstream_created_at=now_iso())
         data = poll_task(api, upstream_id)
         text = str(data.get("Result") or "").strip()
         if not text:
             raise PublicError("识别任务已结束，但没有返回逐字稿。")
         details = data.get("ResultDetail") or []
+        segments = sentence_segments(details)
         coverage_end = 0.0
         for detail in details:
             try:
@@ -333,6 +390,8 @@ def process(job_id: str) -> None:
             "description": description,
             "pipeline_version": PIPELINE_VERSION,
             "text": text,
+            "segments": segments,
+            "timing_status": "ready" if segments else "unavailable",
             "char_count": len("".join(text.split())),
             "video_duration_seconds": round(duration, 3),
             "coverage_end_seconds": round(coverage_end, 3),
@@ -467,12 +526,21 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
         if path.startswith("/jobs/"):
+            timing = path.endswith("/timing")
             job_id = path[len("/jobs/") :].strip("/")
+            if timing:
+                job_id = job_id.removesuffix("/timing")
             with LOCK:
                 job = JOBS.get(job_id)
             if not job:
                 self.send_json(HTTPStatus.NOT_FOUND, {"error": "任务不存在或已经清理。"})
                 return
+            if timing:
+                try:
+                    job = ensure_timing(job_id)
+                except Exception:
+                    self.send_json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "暂时无法加载句子定位，请稍后重试。"})
+                    return
             self.send_json(HTTPStatus.OK, public_job(job))
             return
         self.send_json(HTTPStatus.NOT_FOUND, {"error": "接口不存在。"})
