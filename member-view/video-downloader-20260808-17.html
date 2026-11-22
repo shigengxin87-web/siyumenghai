@@ -29,6 +29,7 @@
     })();
   </script>
   <link rel="stylesheet" href="./platform-switch.css?v=20261013">
+  <link rel="stylesheet" href="./video-feishu-save.css?v=20261122-feishu-1">
 </head>
 <body class="platform-wechat">
   <div class="portal-shell tool-shell">
@@ -157,6 +158,13 @@
                   <p class="transcript-seek-hint" data-transcript-seek-hint role="status" aria-live="polite" hidden></p>
                   <div class="transcript-reader" data-transcript-reader role="region" aria-label="可点击回听的逐字稿" hidden></div>
                   <div class="final-transcript-meta" data-transcript-meta></div>
+                  <div class="feishu-save-bar">
+                    <button type="button" data-feishu-save>保存到飞书</button>
+                    <button type="button" data-feishu-settings>飞书配置</button>
+                    <button type="button" data-feishu-retry hidden>重试发送</button>
+                    <a data-feishu-open target="_blank" rel="noopener noreferrer" hidden>查看记录</a>
+                    <p data-feishu-status role="status" aria-live="polite">首次使用请先配置飞书接收流程。</p>
+                  </div>
                 </div>
               </div>
               <div class="transcript-card" data-comment-card>
@@ -191,9 +199,23 @@
       </div>
     </main>
   </div>
+  <dialog class="feishu-dialog" data-feishu-dialog aria-labelledby="feishu-title">
+    <h2 id="feishu-title">保存到我的飞书</h2>
+    <p>配置一次，以后可直接保存最新文案。<a href="./video-feishu-setup.html" target="_blank" rel="noopener noreferrer">查看模板与配置说明</a></p>
+    <form>
+      <label>素材库名称<input name="name" autocomplete="off" maxlength="80" value="我的视频素材库"></label>
+      <label>我的多维表格链接<input name="table_url" type="url" autocomplete="off" placeholder="https://…feishu.cn/base/…?table=…" required></label>
+      <label>Webhook 接收地址<input name="webhook_url" type="url" autocomplete="off" placeholder="从飞书接收流程复制" required></label>
+      <label>校验凭证<input name="webhook_token" type="password" autocomplete="new-password" placeholder="开启接收流程的凭证校验后复制" required></label>
+      <p>连接仅绑定当前浏览器。接收地址和凭证保存在服务器，不会放入网页公开文件。</p>
+      <p data-feishu-config-status role="status" aria-live="polite"></p>
+      <div class="feishu-dialog-actions"><button type="button" data-feishu-close>取消</button><button type="submit">保存配置</button></div>
+    </form>
+  </dialog>
   <!-- Render local history before loading optional Excel and text helpers. -->
   <script src="./video-transcript-seek.js?v=20261122-transcript-seek-1"></script>
   <script src="./video-downloader-c-app.js?v=20261122-transcript-seek-1"></script>
+  <script src="./video-feishu-save.js?v=20261122-feishu-1"></script>
   <script src="./assets/vendor/xlsx.full.min.js?v=0.20.3"></script>
   <script src="./assets/vendor/opencc-t2cn.js?v=1.0.5"></script>
   <script src="./assets/vendor/pinyin-pro.js?v=3.27.0"></script>

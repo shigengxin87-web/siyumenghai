@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>保存到飞书 · 首次配置</title><style>
+body{margin:0;background:#f3f8f5;color:#1b2924;font:16px/1.8 system-ui,-apple-system,"PingFang SC",sans-serif}main{max-width:800px;margin:40px auto;padding:30px;background:white;border:1px solid #dce9e2;border-radius:18px}h1{font-size:28px;margin:0 0 12px}h2{font-size:21px;margin-top:30px}a{color:#087b58}p,li{color:#52665c}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;border:1px solid #dfebe4;padding:10px}pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;background:#f2f7f4;border-radius:10px;font-size:13px}code{font-size:14px}button{border:0;border-radius:9px;background:#059669;color:white;padding:10px 15px;font-weight:700;cursor:pointer}.note{border-left:3px solid #059669;padding-left:14px}@media(max-width:640px){main{margin:14px;padding:20px}h1{font-size:24px}}
+</style></head>
+<body><main>
+<a href="./video-downloader-20260808-17.html">← 返回视频号下载</a>
+<h1>把视频文案保存到自己的飞书</h1>
+<p>首次完成接收流程配置后，在逐字稿下方点击「保存到飞书」，即可保存最新已确认的文案。每个使用者配置自己的素材库，不会写入其他人的表格。</p>
+<h2>1. 准备自己的素材库</h2>
+<p><a href="https://my.feishu.cn/base/LqWxbWsf2ahdaDsUNAqcqpvVnab?table=tblY3ABSZtYpchC7" target="_blank" rel="noopener noreferrer">打开视频号素材库模板</a>，复制到自己的飞书空间。也可以<a href="./assets/video-feishu-template.csv" download>下载字段模板</a>导入多维表格，再按下面的流程配置。</p>
+<p>使用自己的多维表格链接（<code>https://…feishu.cn/base/…?table=…</code>）。不要填写下载工具网址或飞书群机器人地址。</p>
+<h2>2. 配置接收流程</h2>
+<p>在飞书多维表格的工作流或自动化中，选择「接收到 webhook 时」，开启「凭证校验」，复制接收地址与校验凭证。复制模板后，两项内容会重新生成，需要复制自己那一份。</p>
+<p>如果自行配置流程，先将下面示例粘贴到触发器的「输出设置」，定义收到的数据格式，然后按「素材ID」查找记录：已有记录就更新，没有就新增。</p>
+<table><thead><tr><th>表格字段</th><th>引用收到的数据</th></tr></thead><tbody><tr><td>标题</td><td>title</td></tr><tr><td>作者</td><td>author</td></tr><tr><td>原视频链接</td><td>source_url</td></tr><tr><td>逐字稿</td><td>transcript</td></tr><tr><td>素材ID</td><td>source_id</td></tr><tr><td>更新时间</td><td>updated_at</td></tr></tbody></table>
+<details><summary>查看接收格式示例</summary><p>仅用于定义字段类型，不要将示例当作实际入库请求。</p><button type="button" id="copy-sample">复制格式示例</button><pre id="sample">{
+  "schema_version": 1,
+  "request_id": "request_example",
+  "source_id": "source_example",
+  "title": "示例视频",
+  "author": "示例作者",
+  "source_url": "https://weixin.qq.com/sph/example",
+  "transcript": "第一段逐字稿。\n第二段。",
+  "updated_at": "2026-11-22 14:00:00 +08:00",
+  "callback_url": "https://siyumenghai.cn/api/feishu-sync/receipts",
+  "callback_token": "callback_example"
+}</pre></details>
+<h2>写入成功后，发送回执</h2>
+<p>在新增和更新两条分支的末尾分别添加「发送 HTTP 请求」。方法为 POST，地址为 <code>https://siyumenghai.cn/api/feishu-sync/receipts</code>，Content-Type 为 application/json。</p>
+<pre>{
+  "request_id": "引用触发器收到的 request_id",
+  "callback_token": "引用触发器收到的 callback_token",
+  "source_id": "引用触发器收到的 source_id",
+  "status": "saved",
+  "record_id": "引用前一步成功写入的记录 ID"
+}</pre>
+<p class="note">以上「引用」需要选择飞书的变量，不是把说明文字直接填入。回执必须放在写入成功之后；只有收到有效回执，工具才显示「已保存」。单条更新得到的记录 ID 如果是单元素数组，也可以直接传入。</p>
+<h2>3. 回到下载工具配置</h2>
+<p>点击「飞书配置」，填写自己的多维表格链接、Webhook 接收地址与校验凭证，保存配置。生成或修改文案后，先保存编辑，再点「保存到飞书」。</p>
+<h2>状态怎么看</h2>
+<ul><li>「已发送，待飞书确认」：请求已发出，尚未确认落表，可打开素材库检查。</li><li>「已保存」：已收到写入成功回执，可打开该记录。重复保存同一视频会更新原记录。</li><li>接收失败：检查流程是否启用、地址与凭证是否来自自己的副本。</li><li>长期待确认：检查末尾的回执节点。修复后可手动重试；等待期间不会自动反复发送。</li></ul>
+<p>连接仅绑定当前浏览器；更换设备需要重新配置。自动化运行次数受你的飞书版本和额度影响。本功能为点击保存，不会双向同步飞书里的改动。</p>
+<p><a href="https://www.feishu.cn/hc/zh-CN/articles/612376356355-使用自动化流程的-webhook-触发" target="_blank" rel="noopener noreferrer">飞书官方配置说明</a></p>
+</main><script>document.querySelector('#copy-sample').addEventListener('click',async event=>{try{await navigator.clipboard.writeText(document.querySelector('#sample').textContent);event.target.textContent='已复制';}catch{event.target.textContent='请手动复制下方示例';}});</script></body></html>
