@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "messages": [
+    {
+      "id": "m001",
+      "time": "2026-11-21 21:45:15",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261122-01.jpg",
+      "side": "right",
+      "type": "link",
+      "text": "视频号内容\n因为微信未提供可公开访问的原始链接，当前无法同步或跳转",
+      "links": [],
+      "media": null,
+      "redacted": false
+    },
+    {
+      "id": "m002",
+      "time": "2026-11-21 21:45:15",
+      "sender": "石更新（11.20-11.30闭关）",
+      "avatar": "./assets/members/sync-20261122-01.jpg",
+      "side": "right",
+      "type": "text",
+      "text": "有问题或者要聊天的可以来哦 正在压马路",
+      "links": [],
+      "media": null,
+      "redacted": false
+    }
+  ]
+}

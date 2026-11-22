@@ -3837,6 +3837,48 @@ const days = {
     }
   ]
 }
+,
+  "2026-11-21": {
+  "dateLabel": "2026 年 11 月 21 日",
+  "weekday": "星期六",
+  "messages": 2,
+  "themesCount": 1,
+  "readTime": "1 分钟",
+  "title": "散步中的邀聊：有问题，或者想聊天，都可以来",
+  "summary": "石更新在 21:45 分享视频号卡片，并留言邀请有问题或想聊天的群友加入，当时正在散步。当日共 2 条记录。",
+  "insights": [
+    {
+      "roles": [
+        "content"
+      ],
+      "tag": "成员交流",
+      "source": "石更新（11.20-11.30闭关）",
+      "time": "21:45",
+      "title": "散步时也可以带着具体问题来聊",
+      "text": "石更新分享视频号卡片，邀请有问题或想聊天的群友在他散步时加入交流。"
+    }
+  ],
+  "actions": [
+    {
+      "title": "带着具体问题交流",
+      "text": "先把想讨论的问题写清楚，留意群内后续的交流邀请。"
+    }
+  ],
+  "resources": [
+    {
+      "kind": "视频号",
+      "title": "当晚的视频号分享",
+      "text": "微信未提供可公开访问的原始链接，可回到群内查看 21:45 的视频号卡片。"
+    }
+  ],
+  "themes": [
+    {
+      "time": "21:45",
+      "title": "散步时也可以带着具体问题来聊",
+      "text": "石更新分享视频号卡片，邀请有问题或想聊天的群友在他散步时加入交流。"
+    }
+  ]
+}
 
 };
 
@@ -3845,12 +3887,12 @@ let members = [
   {
     "name": "石更新（11.20-11.30闭关）",
     "order": 1,
-    "avatar": "./assets/members/sync-20261120-01.jpg"
+    "avatar": "./assets/members/sync-20261122-01.jpg"
   },
   {
     "name": "AMY 宋【定制旅行&团建会议】",
     "order": 2,
-    "avatar": "./assets/members/sync-20261120-02.jpg"
+    "avatar": "./assets/members/sync-20261122-02.jpg"
   },
   {
     "name": "Allen@群响",
@@ -3860,12 +3902,12 @@ let members = [
   {
     "name": "Howie 陈科豪",
     "order": 4,
-    "avatar": "./assets/members/sync-20261120-04.jpg"
+    "avatar": "./assets/members/sync-20261122-04.jpg"
   },
   {
     "name": "Joey乔伊",
     "order": 5,
-    "avatar": "./assets/members/sync-20261120-05.jpg"
+    "avatar": "./assets/members/sync-20261122-05.jpg"
   },
   {
     "name": "Sean@iPlayABC 于海淼",
@@ -3875,7 +3917,7 @@ let members = [
   {
     "name": "一月语文",
     "order": 7,
-    "avatar": "./assets/members/sync-20261120-07.jpg"
+    "avatar": "./assets/members/sync-20261122-07.jpg"
   },
   {
     "name": "三江尚德易学培训-张程",
@@ -3885,7 +3927,7 @@ let members = [
   {
     "name": "付展鹏",
     "order": 9,
-    "avatar": "./assets/members/sync-20261120-09.jpg"
+    "avatar": "./assets/members/sync-20261122-09.jpg"
   },
   {
     "name": "代向前",
@@ -3895,12 +3937,12 @@ let members = [
   {
     "name": "何杰",
     "order": 11,
-    "avatar": "./assets/members/sync-20261120-11.jpg"
+    "avatar": "./assets/members/sync-20261122-11.jpg"
   },
   {
     "name": "余生姜｜AI落地",
     "order": 12,
-    "avatar": "./assets/members/sync-20261120-12.jpg"
+    "avatar": "./assets/members/sync-20261122-12.jpg"
   },
   {
     "name": "依灵-易学世家传承人",
@@ -3910,77 +3952,77 @@ let members = [
   {
     "name": "冯诗童 coco",
     "order": 14,
-    "avatar": "./assets/members/sync-20261120-14.jpg"
+    "avatar": "./assets/members/sync-20261122-14.jpg"
   },
   {
     "name": "北京-自媒体-王昀",
     "order": 15,
-    "avatar": "./assets/members/sync-20261120-15.jpg"
+    "avatar": "./assets/members/sync-20261122-15.jpg"
   },
   {
     "name": "卡车之家Robin 邵震",
     "order": 16,
-    "avatar": "./assets/members/sync-20261120-16.jpg"
+    "avatar": "./assets/members/sync-20261122-16.jpg"
   },
   {
     "name": "同仁-西安梁老师团队-望晴",
     "order": 17,
-    "avatar": "./assets/members/sync-20261120-17.jpg"
+    "avatar": "./assets/members/sync-20261122-17.jpg"
   },
   {
     "name": "大头",
     "order": 18,
-    "avatar": "./assets/members/sync-20261120-18.jpg"
+    "avatar": "./assets/members/sync-20261122-18.jpg"
   },
   {
     "name": "姚继伟",
     "order": 19,
-    "avatar": "./assets/members/sync-20261120-19.jpg"
+    "avatar": "./assets/members/sync-20261122-19.jpg"
   },
   {
     "name": "子非鱼",
     "order": 20,
-    "avatar": "./assets/members/sync-20261120-20.jpg"
+    "avatar": "./assets/members/sync-20261122-20.jpg"
   },
   {
     "name": "寒色渐远",
     "order": 21,
-    "avatar": "./assets/members/sync-20261120-21.jpg"
+    "avatar": "./assets/members/sync-20261122-21.jpg"
   },
   {
     "name": "小恒先生",
     "order": 22,
-    "avatar": "./assets/members/sync-20261120-22.jpg"
+    "avatar": "./assets/members/sync-20261122-22.jpg"
   },
   {
     "name": "小鹅通净远",
     "order": 23,
-    "avatar": "./assets/members/sync-20261120-23.jpg"
+    "avatar": "./assets/members/sync-20261122-23.jpg"
   },
   {
     "name": "康老师本人",
     "order": 24,
-    "avatar": "./assets/members/sync-20261120-24.jpg"
+    "avatar": "./assets/members/sync-20261122-24.jpg"
   },
   {
     "name": "弗蕾娅",
     "order": 25,
-    "avatar": "./assets/members/sync-20261120-25.jpg"
+    "avatar": "./assets/members/sync-20261122-25.jpg"
   },
   {
     "name": "张斌",
     "order": 26,
-    "avatar": "./assets/members/sync-20261120-26.jpg"
+    "avatar": "./assets/members/sync-20261122-26.jpg"
   },
   {
     "name": "张聪（IP线下课变现操盘）",
     "order": 27,
-    "avatar": "./assets/members/sync-20261120-27.jpg"
+    "avatar": "./assets/members/sync-20261122-27.jpg"
   },
   {
     "name": "张雨晴疗愈",
     "order": 28,
-    "avatar": "./assets/members/sync-20261120-28.jpg"
+    "avatar": "./assets/members/sync-20261122-28.jpg"
   },
   {
     "name": "录播服务商姚魁",
@@ -3990,22 +4032,22 @@ let members = [
   {
     "name": "忠仁",
     "order": 30,
-    "avatar": "./assets/members/sync-20261120-30.jpg"
+    "avatar": "./assets/members/sync-20261122-30.jpg"
   },
   {
     "name": "最懂脉法的药师",
     "order": 31,
-    "avatar": "./assets/members/sync-20261120-31.jpg"
+    "avatar": "./assets/members/sync-20261122-31.jpg"
   },
   {
     "name": "李鑫",
     "order": 32,
-    "avatar": "./assets/members/sync-20261120-32.jpg"
+    "avatar": "./assets/members/sync-20261122-32.jpg"
   },
   {
     "name": "杨光老师",
     "order": 33,
-    "avatar": "./assets/members/sync-20261120-33.jpg"
+    "avatar": "./assets/members/sync-20261122-33.jpg"
   },
   {
     "name": "杨玲",
@@ -4015,112 +4057,112 @@ let members = [
   {
     "name": "梦一世-王sir",
     "order": 35,
-    "avatar": "./assets/members/sync-20261120-35.svg"
+    "avatar": "./assets/members/sync-20261122-35.jpg"
   },
   {
     "name": "溪子",
     "order": 36,
-    "avatar": "./assets/members/sync-20261120-36.jpg"
+    "avatar": "./assets/members/sync-20261122-36.jpg"
   },
   {
     "name": "生财-王自在(天堂地狱私人号)",
     "order": 37,
-    "avatar": "./assets/members/sync-20261120-37.jpg"
+    "avatar": "./assets/members/sync-20261122-37.jpg"
   },
   {
     "name": "生财-百合",
     "order": 38,
-    "avatar": "./assets/members/sync-20261120-38.jpg"
+    "avatar": "./assets/members/sync-20261122-38.jpg"
   },
   {
     "name": "生财A梦 (知牧)",
     "order": 39,
-    "avatar": "./assets/members/sync-20261120-39.jpg"
+    "avatar": "./assets/members/sync-20261122-39.jpg"
   },
   {
     "name": "生财Jessie Zhou 卷王",
     "order": 40,
-    "avatar": "./assets/members/sync-20261120-40.jpg"
+    "avatar": "./assets/members/sync-20261122-40.jpg"
   },
   {
     "name": "生财初阳AI",
     "order": 41,
-    "avatar": "./assets/members/sync-20261120-41.jpg"
+    "avatar": "./assets/members/sync-20261122-41.jpg"
   },
   {
     "name": "生财小乐、David",
     "order": 42,
-    "avatar": "./assets/members/sync-20261120-42.jpg"
+    "avatar": "./assets/members/sync-20261122-42.jpg"
   },
   {
     "name": "生财林芳芳＃小怪瘦Leen~",
     "order": 43,
-    "avatar": "./assets/members/sync-20261120-43.jpg"
+    "avatar": "./assets/members/sync-20261122-43.jpg"
   },
   {
     "name": "生财楚川",
     "order": 44,
-    "avatar": "./assets/members/sync-20261120-44.jpg"
+    "avatar": "./assets/members/sync-20261122-44.jpg"
   },
   {
     "name": "生财王娘娘!",
     "order": 45,
-    "avatar": "./assets/members/sync-20261120-45.jpg"
+    "avatar": "./assets/members/sync-20261122-45.jpg"
   },
   {
     "name": "生财纪逐星💓Iris",
     "order": 46,
-    "avatar": "./assets/members/sync-20261120-46.jpg"
+    "avatar": "./assets/members/sync-20261122-46.jpg"
   },
   {
     "name": "白玉媛·o.",
     "order": 47,
-    "avatar": "./assets/members/sync-20261120-47.jpg"
+    "avatar": "./assets/members/sync-20261122-47.jpg"
   },
   {
     "name": "石董会-扶光",
     "order": 48,
-    "avatar": "./assets/members/sync-20261120-48.jpg"
+    "avatar": "./assets/members/sync-20261122-48.jpg"
   },
   {
     "name": "石董会-李守洲",
     "order": 49,
-    "avatar": "./assets/members/sync-20261120-49.jpg"
+    "avatar": "./assets/members/sync-20261122-49.jpg"
   },
   {
     "name": "石董会-胡天真（10月 10日线下课）",
     "order": 50,
-    "avatar": "./assets/members/sync-20261120-50.jpg"
+    "avatar": "./assets/members/sync-20261122-50.jpg"
   },
   {
     "name": "石董会-黄子妈",
     "order": 51,
-    "avatar": "./assets/members/sync-20261120-51.jpg"
+    "avatar": "./assets/members/sync-20261122-51.jpg"
   },
   {
     "name": "考拉丸子",
     "order": 52,
-    "avatar": "./assets/members/sync-20261120-52.jpg"
+    "avatar": "./assets/members/sync-20261122-52.jpg"
   },
   {
     "name": "英语韩老师【工作微信】",
     "order": 53,
-    "avatar": "./assets/members/sync-20261120-53.jpg"
+    "avatar": "./assets/members/sync-20261122-53.jpg"
   },
   {
     "name": "荣耀元",
     "order": 54,
-    "avatar": "./assets/members/sync-20261120-54.jpg"
+    "avatar": "./assets/members/sync-20261122-54.jpg"
   },
   {
     "name": "越来越好",
     "order": 55,
-    "avatar": "./assets/members/sync-20261120-55.jpg"
+    "avatar": "./assets/members/sync-20261122-55.jpg"
   },
   {
     "name": "跟谁学宋海滨",
     "order": 56,
-    "avatar": "./assets/members/sync-20261120-56.jpg"
+    "avatar": "./assets/members/sync-20261122-56.jpg"
   },
   {
     "name": "跟谁学范伟峰",
@@ -4128,42 +4170,47 @@ let members = [
     "avatar": "./assets/members/sync-20261120-57.jpg"
   },
   {
-    "name": "跟谁学蒋梦涵",
+    "name": "跟谁学董建成",
     "order": 58,
-    "avatar": "./assets/members/sync-20261120-58.jpg"
+    "avatar": "./assets/members/sync-20261122-58.jpg"
+  },
+  {
+    "name": "跟谁学蒋梦涵",
+    "order": 59,
+    "avatar": "./assets/members/sync-20261122-59.jpg"
   },
   {
     "name": "辰犀",
-    "order": 59,
-    "avatar": "./assets/members/sync-20261120-59.jpg"
+    "order": 60,
+    "avatar": "./assets/members/sync-20261122-60.jpg"
   },
   {
     "name": "闻莉🧡私人形象设计",
-    "order": 60,
-    "avatar": "./assets/members/sync-20261120-60.jpg"
+    "order": 61,
+    "avatar": "./assets/members/sync-20261122-61.jpg"
   },
   {
     "name": "青枫刘大同",
-    "order": 61,
-    "avatar": "./assets/members/sync-20261120-61.jpg"
+    "order": 62,
+    "avatar": "./assets/members/sync-20261122-62.jpg"
   },
   {
     "name": "飞儿（本人）",
-    "order": 62,
-    "avatar": "./assets/members/sync-20261120-62.jpg"
+    "order": 63,
+    "avatar": "./assets/members/sync-20261122-63.jpg"
   },
   {
     "name": "马向文",
-    "order": 63,
-    "avatar": "./assets/members/sync-20261120-63.jpg"
+    "order": 64,
+    "avatar": "./assets/members/sync-20261122-64.jpg"
   },
   {
     "name": "黄昶",
-    "order": 64,
-    "avatar": "./assets/members/sync-20261120-64.jpg"
+    "order": 65,
+    "avatar": "./assets/members/sync-20261122-65.jpg"
   }
 ];
-let membersUpdatedAt = "2026-11-20T22:03:33+08:00";
+let membersUpdatedAt = "2026-11-22T17:50:10+08:00";
 
 function pad(number) { return String(number).padStart(2, '0'); }
 function dateKey(date) { return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`; }
@@ -4207,7 +4254,7 @@ const state = {
   calendarMonth: new Date(parseDate(initialDay).getFullYear(), parseDate(initialDay).getMonth(), 1)
 };
 const chatCache = new Map();
-const chatDataVersion = '20261120-chat-backfill-1';
+const chatDataVersion = '20261122-daily-1121-1';
 const content = document.querySelector('#app-content');
 const toast = document.querySelector('.toast');
 
